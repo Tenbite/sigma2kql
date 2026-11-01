@@ -1,0 +1,21 @@
+// Title: Persistence Via Sudoers Files
+// Sigma ID: ddb26b76-4447-4807-871f-1b035b2bfa5d
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-07-05 | Modified: 2026-08-15
+// ATT&CK: privilege-escalation, persistence, T1548.003
+// Description: Detects the creation or modification of the main "/etc/sudoers" file or files within the
+//   "/etc/sudoers.d/" directory on Linux systems. Adversaries may alter sudoers configuration to
+//   execute commands with elevated privileges without supplying a password.
+// False positives:
+//   - Legitimate sudoers changes by administrators or configuration-management tools
+// References:
+//   - https://www.sudo.ws/docs/man/sudoers.man/
+//   - https://github.com/h3xduck/TripleCross/blob/1f1c3e0958af8ad9f6ebe10ab442e75de33e91de/apps/deployer.sh
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/file_event/file_event_lnx_persistence_sudoers_files.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where (FolderPath in~ ("/etc/sudoers") or FolderPath startswith "/etc/sudoers.d/") and (not((InitiatingProcessFolderPath endswith "/usr/bin/dpkg" and FolderPath =~ "/etc/sudoers.d/README.dpkg-new")))

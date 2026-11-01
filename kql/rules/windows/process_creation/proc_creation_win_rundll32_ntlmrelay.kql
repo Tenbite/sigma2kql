@@ -1,0 +1,20 @@
+// Title: Suspicious NTLM Authentication on the Printer Spooler Service
+// Sigma ID: bb76d96b-821c-47cf-944b-7ce377864492
+// Status: test | Level: high
+// Author: Elastic (idea), Tobias Michalski (Nextron Systems)
+// Date: 2022-05-04 | Modified: 2023-02-09
+// ATT&CK: privilege-escalation, credential-access, T1212
+// Description: Detects a privilege elevation attempt by coercing NTLM authentication on the Printer Spooler
+//   service
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/med0x2e/status/1520402518685200384
+//   - https://github.com/elastic/detection-rules/blob/dd224fb3f81d0b4bf8593c5f02a029d647ba2b2d/rules/windows/credential_access_relay_ntlm_auth_via_http_spoolss.toml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_rundll32_ntlmrelay.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\rundll32.exe" or ProcessVersionInfoOriginalFileName =~ "RUNDLL32.EXE") and ((ProcessCommandLine contains "C:\\windows\\system32\\davclnt.dll,DavSetCookie" and ProcessCommandLine contains "http") and (ProcessCommandLine contains "spoolss" or ProcessCommandLine contains "srvsvc" or ProcessCommandLine contains "/print/pipe/"))

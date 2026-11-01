@@ -1,0 +1,21 @@
+// Title: Copy From VolumeShadowCopy Via Cmd.EXE
+// Sigma ID: c73124a7-3e89-44a3-bdc1-25fe4df754b1
+// Status: test | Level: high
+// Author: Max Altgelt (Nextron Systems), Tobias Michalski (Nextron Systems)
+// Date: 2021-08-09 | Modified: 2023-03-07
+// ATT&CK: impact, T1490
+// Description: Detects the execution of the builtin "copy" command that targets a shadow copy (sometimes used
+//   to copy registry hives that are in use)
+// False positives:
+//   - Backup scenarios using the commandline
+// References:
+//   - https://twitter.com/vxunderground/status/1423336151860002816?s=20
+//   - https://www.virustotal.com/gui/file/03e9b8c2e86d6db450e5eceec057d7e369ee2389b9daecaf06331a95410aa5f8/detection
+//   - https://pentestlab.blog/2018/07/04/dumping-domain-password-hashes/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_cmd_shadowcopy_access.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "copy " and ProcessCommandLine contains "\\\\?\\GLOBALROOT\\Device\\HarddiskVolumeShadowCopy"

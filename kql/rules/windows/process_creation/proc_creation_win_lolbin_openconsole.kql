@@ -1,0 +1,19 @@
+// Title: Use of OpenConsole
+// Sigma ID: 814c95cc-8192-4378-a70a-f1aafd877af1
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-06-16 | Modified: -
+// ATT&CK: execution, T1059
+// Description: Detects usage of OpenConsole binary as a LOLBIN to launch other binaries to bypass application
+//   Whitelisting
+// False positives:
+//   - Legitimate use by an administrator
+// References:
+//   - https://twitter.com/nas_bench/status/1537563834478645252
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_lolbin_openconsole.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessVersionInfoOriginalFileName =~ "OpenConsole.exe" or FolderPath endswith "\\OpenConsole.exe") and (not(FolderPath startswith "C:\\Program Files\\WindowsApps\\Microsoft.WindowsTerminal"))

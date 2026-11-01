@@ -1,0 +1,21 @@
+// Title: LSASS Process Dump Artefact In CrashDumps Folder
+// Sigma ID: 6902955a-01b7-432c-b32a-6f5f81d8f625
+// Status: test | Level: high
+// Author: @pbssubhash
+// Date: 2022-12-08 | Modified: -
+// ATT&CK: credential-access, T1003.001
+// Description: Detects the presence of an LSASS dump file in the "CrashDumps" folder. This could be a sign of
+//   LSASS credential dumping. Techniques such as the LSASS Shtinkering have been seen abusing the
+//   Windows Error Reporting to dump said process.
+// False positives:
+//   - Rare legitimate dump of the process by the operating system due to a crash of lsass
+// References:
+//   - https://github.com/deepinstinct/Lsass-Shtinkering
+//   - https://media.defcon.org/DEF%20CON%2030/DEF%20CON%2030%20presentations/Asaf%20Gilboa%20-%20LSASS%20Shtinkering%20Abusing%20Windows%20Error%20Reporting%20to%20Dump%20LSASS.pdf
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_lsass_shtinkering.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath startswith "C:\\Windows\\System32\\config\\systemprofile\\AppData\\Local\\CrashDumps\\" and FolderPath contains "lsass.exe." and FolderPath endswith ".dmp"

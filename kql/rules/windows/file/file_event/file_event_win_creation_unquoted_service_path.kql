@@ -1,0 +1,21 @@
+// Title: Creation Exe for Service with Unquoted Path
+// Sigma ID: 8c3c76ca-8f8b-4b1d-aaf3-81aebcd367c9
+// Status: test | Level: high
+// Author: frack113
+// Date: 2021-12-30 | Modified: -
+// ATT&CK: privilege-escalation, persistence, T1547.009
+// Description: Adversaries may execute their own malicious payloads by hijacking vulnerable file path
+//   references. Adversaries can take advantage of paths that lack surrounding quotations by placing
+//   an executable in a higher level directory within the path, so that Windows will choose the
+//   adversary's executable to launch.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1574.009/T1574.009.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_creation_unquoted_service_path.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath =~ "C:\\program.exe"

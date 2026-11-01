@@ -1,0 +1,20 @@
+// Title: Potential Reconnaissance For Cached Credentials Via Cmdkey.EXE
+// Sigma ID: 07f8bdc2-c9b3-472a-9817-5a670b872f53
+// Status: test | Level: high
+// Author: jmallette, Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+// Date: 2019-01-16 | Modified: 2024-03-05
+// ATT&CK: credential-access, T1003.005
+// Description: Detects usage of cmdkey to look for cached credentials on the system
+// False positives:
+//   - Legitimate administrative tasks
+// References:
+//   - https://www.peew.pw/blog/2017/11/26/exploring-cmdkey-an-edge-case-for-privilege-escalation
+//   - https://technet.microsoft.com/en-us/library/cc754243(v=ws.11).aspx
+//   - https://github.com/redcanaryco/atomic-red-team/blob/b27a3cb25025161d49ac861cb216db68c46a3537/atomics/T1003.005/T1003.005.md#atomic-test-1---cached-credential-dump-via-cmdkey
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_cmdkey_recon.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\cmdkey.exe" or ProcessVersionInfoOriginalFileName =~ "cmdkey.exe") and (ProcessCommandLine contains " -l" or ProcessCommandLine contains " /l" or ProcessCommandLine contains " –l" or ProcessCommandLine contains " —l" or ProcessCommandLine contains " ―l")

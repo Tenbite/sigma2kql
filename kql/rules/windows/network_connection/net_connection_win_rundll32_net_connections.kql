@@ -1,0 +1,18 @@
+// Title: Rundll32 Internet Connection
+// Sigma ID: cdc8da7d-c303-42f8-b08c-b4ab47230263
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2017-11-04 | Modified: 2024-03-13
+// ATT&CK: stealth, T1218.011, execution
+// Description: Detects a rundll32 that communicates with public IP addresses
+// False positives:
+//   - Communication to other corporate systems that use IP addresses from public address spaces
+// References:
+//   - https://www.hybrid-analysis.com/sample/759fb4c0091a78c5ee035715afe3084686a8493f39014aea72dae36869de9ff6?environmentId=100
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/network_connection/net_connection_win_rundll32_net_connections.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceNetworkEvents
+| where InitiatingProcessFolderPath endswith "\\rundll32.exe" and (not(((ipv4_is_in_range(RemoteIP, "127.0.0.0/8") or ipv4_is_in_range(RemoteIP, "10.0.0.0/8") or ipv4_is_in_range(RemoteIP, "172.16.0.0/12") or ipv4_is_in_range(RemoteIP, "192.168.0.0/16") or ipv4_is_in_range(RemoteIP, "169.254.0.0/16") or ipv4_is_in_range(RemoteIP, "::1/128") or ipv4_is_in_range(RemoteIP, "fe80::/10") or ipv4_is_in_range(RemoteIP, "fc00::/7")) or (ipv4_is_in_range(RemoteIP, "20.0.0.0/8") or ipv4_is_in_range(RemoteIP, "51.103.0.0/16") or ipv4_is_in_range(RemoteIP, "51.104.0.0/16") or ipv4_is_in_range(RemoteIP, "51.105.0.0/16")) or InitiatingProcessCommandLine endswith "\\system32\\PcaSvc.dll,PcaPatchSdbTask" or DeviceName endswith ".internal.cloudapp.net" or (InitiatingProcessParentFileName =~ "svchost.exe" and RemotePort == 443))))

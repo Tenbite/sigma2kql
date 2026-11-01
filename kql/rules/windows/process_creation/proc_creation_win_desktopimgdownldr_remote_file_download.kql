@@ -1,0 +1,19 @@
+// Title: Remote File Download Via Desktopimgdownldr Utility
+// Sigma ID: 214641c2-c579-4ecb-8427-0cf19df6842e
+// Status: test | Level: medium
+// Author: Tim Rauch, Elastic (idea)
+// Date: 2022-09-27 | Modified: -
+// ATT&CK: command-and-control, T1105
+// Description: Detects the desktopimgdownldr utility being used to download a remote file. An adversary may use
+//   desktopimgdownldr to download arbitrary files as an alternative to certutil.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.elastic.co/guide/en/security/current/remote-file-download-via-desktopimgdownldr-utility.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_desktopimgdownldr_remote_file_download.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\desktopimgdownldr.exe" and InitiatingProcessFolderPath endswith "\\desktopimgdownldr.exe" and ProcessCommandLine contains "/lockscreenurl:http"

@@ -1,0 +1,20 @@
+// Title: Suspicious Windows Defender Folder Exclusion Added Via Reg.EXE
+// Sigma ID: 48917adc-a28e-4f5d-b729-11e75da8941f
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-02-13 | Modified: 2023-02-04
+// ATT&CK: defense-impairment, T1685
+// Description: Detects the usage of "reg.exe" to add Defender folder exclusions. Qbot has been seen using this
+//   technique to add exclusions for folders within AppData and ProgramData.
+// False positives:
+//   - Legitimate use
+// References:
+//   - https://thedfirreport.com/2022/02/07/qbot-likes-to-move-it-move-it/
+//   - https://redcanary.com/threat-detection-report/threats/qbot/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_reg_defender_exclusion.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\reg.exe" and (ProcessCommandLine contains "SOFTWARE\\Microsoft\\Windows Defender\\Exclusions\\Paths" or ProcessCommandLine contains "SOFTWARE\\Microsoft\\Microsoft Antimalware\\Exclusions\\Paths") and (ProcessCommandLine contains "ADD " and ProcessCommandLine contains "/t " and ProcessCommandLine contains "REG_DWORD " and ProcessCommandLine contains "/v " and ProcessCommandLine contains "/d " and ProcessCommandLine contains "0")

@@ -1,0 +1,19 @@
+// Title: PUA - NSudo Execution
+// Sigma ID: 771d1eb5-9587-4568-95fb-9ec44153a012
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems), Nasreddine Bencherchali
+// Date: 2022-01-24 | Modified: 2023-02-13
+// ATT&CK: execution, T1569.002, S0029
+// Description: Detects the use of NSudo tool for command execution
+// False positives:
+//   - Legitimate use by administrators
+// References:
+//   - https://web.archive.org/web/20221019044836/https://nsudo.m2team.org/en-us/
+//   - https://www.winhelponline.com/blog/run-program-as-system-localsystem-account-windows/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_pua_nsudo.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\NSudo.exe" or FolderPath endswith "\\NSudoLC.exe" or FolderPath endswith "\\NSudoLG.exe") or (ProcessVersionInfoOriginalFileName in~ ("NSudo.exe", "NSudoLC.exe", "NSudoLG.exe"))) and (ProcessCommandLine contains "-U:S " or ProcessCommandLine contains "-U:T " or ProcessCommandLine contains "-U:E " or ProcessCommandLine contains "-P:E " or ProcessCommandLine contains "-M:S " or ProcessCommandLine contains "-M:H " or ProcessCommandLine contains "-U=S " or ProcessCommandLine contains "-U=T " or ProcessCommandLine contains "-U=E " or ProcessCommandLine contains "-P=E " or ProcessCommandLine contains "-M=S " or ProcessCommandLine contains "-M=H " or ProcessCommandLine contains "-ShowWindowMode:Hide")

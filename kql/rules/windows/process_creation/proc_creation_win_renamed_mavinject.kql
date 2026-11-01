@@ -1,0 +1,26 @@
+// Title: Renamed Mavinject.EXE Execution
+// Sigma ID: e6474a1b-5390-49cd-ab41-8d88655f7394
+// Status: test | Level: high
+// Author: frack113, Florian Roth
+// Date: 2022-12-05 | Modified: 2023-02-03
+// ATT&CK: privilege-escalation, stealth, T1055.001, T1218.013
+// Description: Detects the execution of a renamed version of the "Mavinject" process. Which can be abused to
+//   perform process injection using the "/INJECTRUNNING" flag
+// False positives:
+//   - Unlikely
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218/T1218.md
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1056.004/T1056.004.md
+//   - https://posts.specterops.io/mavinject-exe-functionality-deconstructed-c29ab2cf5c0e
+//   - https://twitter.com/gN3mes1s/status/941315826107510784
+//   - https://reaqta.com/2017/12/mavinject-microsoft-injector/
+//   - https://twitter.com/Hexacorn/status/776122138063409152
+//   - https://github.com/SigmaHQ/sigma/issues/3742
+//   - https://github.com/keyboardcrunch/SentinelOne-ATTACK-Queries/blob/6a228d23eefe963ca81f2d52f94b815f61ef5ee0/Tactics/DefenseEvasion.md#t1055-process-injection
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_renamed_mavinject.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessVersionInfoOriginalFileName in~ ("mavinject32.exe", "mavinject64.exe")) and (not((FolderPath endswith "\\mavinject32.exe" or FolderPath endswith "\\mavinject64.exe")))

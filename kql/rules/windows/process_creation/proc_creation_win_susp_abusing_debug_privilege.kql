@@ -1,0 +1,18 @@
+// Title: Abused Debug Privilege by Arbitrary Parent Processes
+// Sigma ID: d522eca2-2973-4391-a3e0-ef0374321dae
+// Status: test | Level: high
+// Author: Semanur Guneysu @semanurtg, oscd.community
+// Date: 2020-10-28 | Modified: 2022-11-11
+// ATT&CK: privilege-escalation, T1548
+// Description: Detection of unusual child processes by different system processes
+// False positives:
+//   - Unknown
+// References:
+//   - https://image.slidesharecdn.com/kheirkhabarovoffzonefinal-181117201458/95/hunting-for-privilege-escalation-in-windows-environment-74-638.jpg
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_abusing_debug_privilege.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (((InitiatingProcessFolderPath endswith "\\winlogon.exe" or InitiatingProcessFolderPath endswith "\\services.exe" or InitiatingProcessFolderPath endswith "\\lsass.exe" or InitiatingProcessFolderPath endswith "\\csrss.exe" or InitiatingProcessFolderPath endswith "\\smss.exe" or InitiatingProcessFolderPath endswith "\\wininit.exe" or InitiatingProcessFolderPath endswith "\\spoolsv.exe" or InitiatingProcessFolderPath endswith "\\searchindexer.exe") and (AccountName contains "AUTHORI" or AccountName contains "AUTORI")) and ((FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\cmd.exe") or (ProcessVersionInfoOriginalFileName in~ ("PowerShell.EXE", "pwsh.dll", "Cmd.Exe")))) and (not((ProcessCommandLine contains " route " and ProcessCommandLine contains " ADD ")))

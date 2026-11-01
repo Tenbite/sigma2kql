@@ -1,0 +1,19 @@
+// Title: APT31 Judgement Panda Activity
+// Sigma ID: 03e2746e-2b31-42f1-ab7a-eb39365b2422
+// Status: test | Level: critical
+// Author: Florian Roth (Nextron Systems)
+// Date: 2019-02-21 | Modified: 2023-03-10
+// ATT&CK: collection, lateral-movement, credential-access, G0128, T1003.001, T1560.001
+// Tags: detection.emerging-threats
+// Description: Detects APT31 Judgement Panda activity as described in the Crowdstrike 2019 Global Threat Report
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.documentcloud.org/documents/5743766-Global-Threat-Report-2019.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2019/TA/APT31/proc_creation_win_apt_apt31_judgement_panda.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "ldifde" and ProcessCommandLine contains "-f -n" and ProcessCommandLine contains "eprod.ldf") or ((ProcessCommandLine contains "copy \\\\" and ProcessCommandLine contains "c$") and (ProcessCommandLine contains "\\aaaa\\procdump64.exe" or ProcessCommandLine contains "\\aaaa\\netsess.exe" or ProcessCommandLine contains "\\aaaa\\7za.exe" or ProcessCommandLine contains "\\c$\\aaaa\\"))

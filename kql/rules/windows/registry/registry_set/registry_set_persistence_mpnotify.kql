@@ -1,0 +1,19 @@
+// Title: Potential Persistence Via Mpnotify
+// Sigma ID: 92772523-d9c1-4c93-9547-b0ca500baba3
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-07-21 | Modified: 2023-08-17
+// ATT&CK: persistence
+// Description: Detects when an attacker register a new SIP provider for persistence and defense evasion
+// False positives:
+//   - Might trigger if a legitimate new SIP provider is registered. But this is not a common occurrence in an environment and should be investigated either way
+// References:
+//   - https://persistence-info.github.io/Data/mpnotify.html
+//   - https://www.youtube.com/watch?v=ggY3srD9dYs&ab_channel=GrzegorzTworek
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_persistence_mpnotify.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey contains "\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\mpnotify"

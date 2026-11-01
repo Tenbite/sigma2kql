@@ -1,0 +1,18 @@
+// Title: WinRAR Execution in Non-Standard Folder
+// Sigma ID: 4ede543c-e098-43d9-a28f-dd784a13132f
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems), Tigzy
+// Date: 2021-11-17 | Modified: 2025-07-16
+// ATT&CK: collection, T1560.001
+// Description: Detects a suspicious WinRAR execution in a folder which is not the default installation folder
+// False positives:
+//   - Legitimate use of WinRAR in a folder of a software that bundles WinRAR
+// References:
+//   - https://twitter.com/cyb3rops/status/1460978167628406785
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_winrar_uncommon_folder_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\rar.exe" or FolderPath endswith "\\winrar.exe") or (ProcessVersionInfoFileDescription in~ ("Command line RAR", "WinRAR"))) and (not((FolderPath endswith "\\UnRAR.exe" or (FolderPath contains ":\\Program Files (x86)\\WinRAR\\" or FolderPath contains ":\\Program Files\\WinRAR\\")))) and (not(FolderPath contains ":\\Windows\\Temp\\"))

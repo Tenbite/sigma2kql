@@ -1,0 +1,20 @@
+// Title: Potentially Suspicious Child Process Of VsCode
+// Sigma ID: 5a3164f2-b373-4152-93cf-090b13c12d27
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-01-26 | Modified: 2023-10-25
+// ATT&CK: execution, stealth, T1218, T1202
+// Description: Detects uncommon or suspicious child processes spawning from a VsCode "code.exe" process. This
+//   could indicate an attempt of persistence via VsCode tasks or terminal profiles.
+// False positives:
+//   - In development environment where VsCode is used heavily. False positives may occur when developers use task to compile or execute different types of code. Remove or add processes accordingly
+// References:
+//   - https://twitter.com/nas_bench/status/1618021838407495681
+//   - https://twitter.com/nas_bench/status/1618021415852335105
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_vscode_child_processes_anomalies.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\code.exe" and ((FolderPath endswith "\\calc.exe" or FolderPath endswith "\\regsvr32.exe" or FolderPath endswith "\\rundll32.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\wscript.exe") or ((FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\cmd.exe") and (ProcessCommandLine contains "Invoke-Expressions" or ProcessCommandLine contains "IEX" or ProcessCommandLine contains "Invoke-Command" or ProcessCommandLine contains "ICM" or ProcessCommandLine contains "DownloadString" or ProcessCommandLine contains "rundll32" or ProcessCommandLine contains "regsvr32" or ProcessCommandLine contains "wscript" or ProcessCommandLine contains "cscript")) or (FolderPath contains ":\\Users\\Public\\" or FolderPath contains ":\\Windows\\Temp\\" or FolderPath contains ":\\Temp\\"))

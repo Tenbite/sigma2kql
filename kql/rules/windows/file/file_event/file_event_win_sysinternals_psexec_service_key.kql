@@ -1,0 +1,20 @@
+// Title: PSEXEC Remote Execution File Artefact
+// Sigma ID: 304afd73-55a5-4bb9-8c21-0b1fc84ea9e4
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-01-21 | Modified: 2023-02-23
+// ATT&CK: lateral-movement, privilege-escalation, execution, persistence, T1136.002, T1543.003, T1570, S0029
+// Description: Detects creation of the PSEXEC key file. Which is created anytime a PsExec command is executed.
+//   It gets written to the file system and will be recorded in the USN Journal on the target system
+// False positives:
+//   - Unlikely
+// References:
+//   - https://aboutdfir.com/the-key-to-identify-psexec/
+//   - https://twitter.com/davisrichardg/status/1616518800584704028
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_sysinternals_psexec_service_key.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath startswith "C:\\Windows\\PSEXEC-" and FolderPath endswith ".key"

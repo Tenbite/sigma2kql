@@ -1,0 +1,20 @@
+// Title: Potential Ruby Reverse Shell
+// Sigma ID: b8bdac18-c06e-4016-ac30-221553e74f59
+// Status: test | Level: medium
+// Author: @d4ns4n_
+// Date: 2023-04-07 | Modified: -
+// ATT&CK: execution
+// Description: Detects execution of ruby with the "-e" flag and calls to "socket" related functions. This could
+//   be an indication of a potential attempt to setup a reverse shell
+// False positives:
+//   - Unknown
+// References:
+//   - https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
+//   - https://www.revshells.com/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_ruby_reverse_shell.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath contains "ruby" and (ProcessCommandLine contains " -e" and ProcessCommandLine contains "rsocket" and ProcessCommandLine contains "TCPSocket") and (ProcessCommandLine contains " ash" or ProcessCommandLine contains " bash" or ProcessCommandLine contains " bsh" or ProcessCommandLine contains " csh" or ProcessCommandLine contains " ksh" or ProcessCommandLine contains " pdksh" or ProcessCommandLine contains " sh" or ProcessCommandLine contains " tcsh")

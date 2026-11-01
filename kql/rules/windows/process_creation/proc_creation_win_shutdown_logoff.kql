@@ -1,0 +1,19 @@
+// Title: Suspicious Execution of Shutdown to Log Out
+// Sigma ID: ec290c06-9b6b-4338-8b6b-095c0f284f10
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-10-01 | Modified: -
+// ATT&CK: impact, T1529
+// Description: Detects the rare use of the command line tool shutdown to logoff a user
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/9e5b12c4912c07562aec7500447b11fa3e17e254/atomics/T1529/T1529.md
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/shutdown
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_shutdown_logoff.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\shutdown.exe" and ProcessCommandLine contains "/l"

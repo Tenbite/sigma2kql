@@ -1,0 +1,19 @@
+// Title: Potential PowerShell Execution Policy Tampering
+// Sigma ID: fad91067-08c5-4d1a-8d8c-d96a21b37814
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-01-11 | Modified: 2023-12-14
+// ATT&CK: defense-impairment
+// Description: Detects changes to the PowerShell execution policy in order to bypass signing requirements for
+//   script execution
+// False positives:
+//   - Unknown
+// References:
+//   - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-7.3
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_powershell_execution_policy.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where ((RegistryKey endswith "\\ShellIds\\Microsoft.PowerShell\\ExecutionPolicy" or RegistryKey endswith "\\Policies\\Microsoft\\Windows\\PowerShell\\ExecutionPolicy") and (RegistryValueData contains "Bypass" or RegistryValueData contains "Unrestricted")) and (not((InitiatingProcessFolderPath contains ":\\Windows\\System32\\" or InitiatingProcessFolderPath contains ":\\Windows\\SysWOW64\\")))

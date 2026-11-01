@@ -1,0 +1,20 @@
+// Title: Equation Group DLL_U Export Function Load
+// Sigma ID: d465d1d8-27a2-4cca-9621-a800f37cf72e
+// Status: stable | Level: critical
+// Author: Florian Roth (Nextron Systems)
+// Date: 2019-03-04 | Modified: 2023-03-09
+// ATT&CK: stealth, G0020, T1218.011
+// Tags: detection.emerging-threats
+// Description: Detects a specific export function name used by one of EquationGroup tools
+// False positives:
+//   - Unlikely
+// References:
+//   - https://github.com/00derp/EquationGroupLeak/search?utf8=%E2%9C%93&q=dll_u&type=
+//   - https://twitter.com/cyb3rops/status/972186477512839170
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2019/TA/EquationGroup/proc_creation_win_apt_equationgroup_dll_u_load.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "-export dll_u" or (ProcessCommandLine endswith ",dll_u" or ProcessCommandLine endswith " dll_u")

@@ -1,0 +1,23 @@
+// Title: Suspicious ShellExec_RunDLL Call Via Ordinal
+// Sigma ID: 8823e85d-31d8-473e-b7f4-92da070f0fc6
+// Status: test | Level: high
+// Author: Swachchhanda Shrawan Poudel
+// Date: 2024-12-01 | Modified: -
+// ATT&CK: stealth, T1218.011
+// Description: Detects suspicious call to the "ShellExec_RunDLL" exported function of SHELL32.DLL through the
+//   ordinal number to launch other commands. Adversary might only use the ordinal number in order to
+//   bypass existing detection that alert on usage of ShellExec_RunDLL on CommandLine.
+// False positives:
+//   - Unknown
+// References:
+//   - https://redcanary.com/blog/raspberry-robin/
+//   - https://www.microsoft.com/en-us/security/blog/2022/10/27/raspberry-robin-worm-part-of-larger-ecosystem-facilitating-pre-ransomware-activity/
+//   - https://github.com/SigmaHQ/sigma/issues/1009
+//   - https://strontic.github.io/xcyclopedia/library/shell32.dll-65DA072F25DE83D9F83653E3FEA3644D.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_rundll32_susp_shellexec_ordinal_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (InitiatingProcessCommandLine contains "SHELL32.DLL" and (InitiatingProcessCommandLine contains "#568" or InitiatingProcessCommandLine contains "#570" or InitiatingProcessCommandLine contains "#572" or InitiatingProcessCommandLine contains "#576")) and (((InitiatingProcessCommandLine contains "comspec" or InitiatingProcessCommandLine contains "iex" or InitiatingProcessCommandLine contains "Invoke-" or InitiatingProcessCommandLine contains "msiexec" or InitiatingProcessCommandLine contains "odbcconf" or InitiatingProcessCommandLine contains "regsvr32") or (InitiatingProcessCommandLine contains "\\Desktop\\" or InitiatingProcessCommandLine contains "\\ProgramData\\" or InitiatingProcessCommandLine contains "\\Temp\\" or InitiatingProcessCommandLine contains "\\Users\\Public\\")) or (FolderPath endswith "\\bash.exe" or FolderPath endswith "\\bitsadmin.exe" or FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\curl.exe" or FolderPath endswith "\\mshta.exe" or FolderPath endswith "\\msiexec.exe" or FolderPath endswith "\\msxsl.exe" or FolderPath endswith "\\odbcconf.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\regsvr32.exe" or FolderPath endswith "\\schtasks.exe" or FolderPath endswith "\\wmic.exe" or FolderPath endswith "\\wscript.exe"))

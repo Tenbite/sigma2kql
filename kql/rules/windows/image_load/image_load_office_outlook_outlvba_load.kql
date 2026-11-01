@@ -1,0 +1,18 @@
+// Title: Microsoft VBA For Outlook Addin Loaded Via Outlook
+// Sigma ID: 9a0b8719-cd3c-4f0a-90de-765a4cb3f5ed
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-02-08 | Modified: 2024-03-12
+// ATT&CK: execution, T1204.002
+// Description: Detects outlvba (Microsoft VBA for Outlook Addin) DLL being loaded by the outlook process
+// False positives:
+//   - Legitimate macro usage. Add the appropriate filter according to your environment
+// References:
+//   - https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=58
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/image_load/image_load_office_outlook_outlvba_load.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceImageLoadEvents
+| where InitiatingProcessFolderPath endswith "\\outlook.exe" and FolderPath endswith "\\outlvba.dll"

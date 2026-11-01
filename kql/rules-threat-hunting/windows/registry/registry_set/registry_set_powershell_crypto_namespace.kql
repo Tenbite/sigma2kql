@@ -1,0 +1,23 @@
+// Title: Registry Set With Crypto-Classes From The "Cryptography" PowerShell Namespace
+// Sigma ID: 1c2a3268-3881-414a-80af-a5b313b14c0e
+// Status: test | Level: medium
+// Author: Andreas Braathen (mnemonic.io)
+// Date: 2023-12-01 | Modified: -
+// ATT&CK: execution, persistence, privilege-escalation, stealth, T1059.001, T1027.010, T1547.001
+// Tags: detection.threat-hunting
+// Description: Detects the setting of a registry inside the "\Shell\Open\Command" value with PowerShell classes
+//   from the "System.Security.Cryptography" namespace. The PowerShell namespace
+//   "System.Security.Cryptography" provides classes for on-the-fly encryption and decryption. These
+//   can be used for example in decrypting malicious payload for defense evasion.
+// False positives:
+//   - Classes are legitimately used, but less so when e.g. parents with low prevalence or decryption of content in temporary folders.
+// References:
+//   - https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography?view=net-8.0
+//   - https://squiblydoo.blog/2023/11/07/october-2023-solarmarker/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-threat-hunting/windows/registry/registry_set/registry_set_powershell_crypto_namespace.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey contains "\\Shell\\Open\\Command" and (RegistryValueData contains "powershell" or RegistryValueData contains "pwsh") and RegistryValueData contains "System.Security.Cryptography." and (RegistryValueData contains ".AesCryptoServiceProvider" or RegistryValueData contains ".DESCryptoServiceProvider" or RegistryValueData contains ".DSACryptoServiceProvider" or RegistryValueData contains ".RC2CryptoServiceProvider" or RegistryValueData contains ".Rijndael" or RegistryValueData contains ".RSACryptoServiceProvider" or RegistryValueData contains ".TripleDESCryptoServiceProvider")

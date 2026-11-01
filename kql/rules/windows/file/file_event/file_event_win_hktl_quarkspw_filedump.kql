@@ -1,0 +1,18 @@
+// Title: HackTool - QuarksPwDump Dump File
+// Sigma ID: 847def9e-924d-4e90-b7c4-5f581395a2b4
+// Status: test | Level: critical
+// Author: Florian Roth (Nextron Systems)
+// Date: 2018-02-10 | Modified: 2024-06-27
+// ATT&CK: credential-access, T1003.002
+// Description: Detects a dump file written by QuarksPwDump password dumper
+// False positives:
+//   - Unknown
+// References:
+//   - https://jpcertcc.github.io/ToolAnalysisResultSheet/details/QuarksPWDump.htm
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_hktl_quarkspw_filedump.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath contains "\\AppData\\Local\\Temp\\SAM-" and FolderPath contains ".dmp"

@@ -1,0 +1,20 @@
+// Title: Suspicious Program Location Whitelisted In Firewall Via Netsh.EXE
+// Sigma ID: a35f5a72-f347-4e36-8895-9869b0d5fc6d
+// Status: test | Level: high
+// Author: Sander Wiebing, Jonhnathan Ribeiro, Daniil Yugoslavskiy, oscd.community
+// Date: 2020-05-25 | Modified: 2023-12-11
+// ATT&CK: defense-impairment, T1686.003
+// Description: Detects Netsh command execution that whitelists a program located in a suspicious location in
+//   the Windows Firewall
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.virusradar.com/en/Win32_Kasidet.AD/description
+//   - https://www.hybrid-analysis.com/sample/07e789f4f2f3259e7559fdccb36e96814c2dbff872a21e1fa03de9ee377d581f?environmentId=100
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_netsh_fw_allow_program_in_susp_location.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\netsh.exe" or ProcessVersionInfoOriginalFileName =~ "netsh.exe") and ((ProcessCommandLine contains "firewall" and ProcessCommandLine contains "add" and ProcessCommandLine contains "allowedprogram") or (ProcessCommandLine contains "advfirewall" and ProcessCommandLine contains "firewall" and ProcessCommandLine contains "add" and ProcessCommandLine contains "rule" and ProcessCommandLine contains "action=allow" and ProcessCommandLine contains "program=")) and (ProcessCommandLine contains ":\\$Recycle.bin\\" or ProcessCommandLine contains ":\\RECYCLER.BIN\\" or ProcessCommandLine contains ":\\RECYCLERS.BIN\\" or ProcessCommandLine contains ":\\SystemVolumeInformation\\" or ProcessCommandLine contains ":\\Temp\\" or ProcessCommandLine contains ":\\Users\\Default\\" or ProcessCommandLine contains ":\\Users\\Desktop\\" or ProcessCommandLine contains ":\\Users\\Public\\" or ProcessCommandLine contains ":\\Windows\\addins\\" or ProcessCommandLine contains ":\\Windows\\cursors\\" or ProcessCommandLine contains ":\\Windows\\debug\\" or ProcessCommandLine contains ":\\Windows\\drivers\\" or ProcessCommandLine contains ":\\Windows\\fonts\\" or ProcessCommandLine contains ":\\Windows\\help\\" or ProcessCommandLine contains ":\\Windows\\system32\\tasks\\" or ProcessCommandLine contains ":\\Windows\\Tasks\\" or ProcessCommandLine contains ":\\Windows\\Temp\\" or ProcessCommandLine contains "\\Downloads\\" or ProcessCommandLine contains "\\Local Settings\\Temporary Internet Files\\" or ProcessCommandLine contains "\\Temporary Internet Files\\Content.Outlook\\" or ProcessCommandLine contains "%Public%\\" or ProcessCommandLine contains "%TEMP%" or ProcessCommandLine contains "%TMP%")

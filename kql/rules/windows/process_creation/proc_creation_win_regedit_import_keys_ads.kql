@@ -1,0 +1,19 @@
+// Title: Imports Registry Key From an ADS
+// Sigma ID: 0b80ade5-6997-4b1d-99a1-71701778ea61
+// Status: test | Level: high
+// Author: Oddvar Moe, Sander Wiebing, oscd.community
+// Date: 2020-10-12 | Modified: 2024-03-13
+// ATT&CK: persistence, defense-impairment, T1112
+// Description: Detects the import of a alternate datastream to the registry with regedit.exe.
+// False positives:
+//   - Unknown
+// References:
+//   - https://lolbas-project.github.io/lolbas/Binaries/Regedit/
+//   - https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_regedit_import_keys_ads.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\regedit.exe" or ProcessVersionInfoOriginalFileName =~ "REGEDIT.EXE") and ((ProcessCommandLine contains " /i " or ProcessCommandLine contains ".reg") and ProcessCommandLine matches regex ":[^ \\\\]")) and (not((ProcessCommandLine contains " -e " or ProcessCommandLine contains " /e " or ProcessCommandLine contains " –e " or ProcessCommandLine contains " —e " or ProcessCommandLine contains " ―e " or ProcessCommandLine contains " -a " or ProcessCommandLine contains " /a " or ProcessCommandLine contains " –a " or ProcessCommandLine contains " —a " or ProcessCommandLine contains " ―a " or ProcessCommandLine contains " -c " or ProcessCommandLine contains " /c " or ProcessCommandLine contains " –c " or ProcessCommandLine contains " —c " or ProcessCommandLine contains " ―c ")))

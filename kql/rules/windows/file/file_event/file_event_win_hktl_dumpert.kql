@@ -1,0 +1,20 @@
+// Title: HackTool - Dumpert Process Dumper Default File
+// Sigma ID: 93d94efc-d7ad-4161-ad7d-1638c4f908d8
+// Status: test | Level: critical
+// Author: Florian Roth (Nextron Systems)
+// Date: 2020-02-04 | Modified: 2023-05-09
+// ATT&CK: credential-access, T1003.001
+// Description: Detects the creation of the default dump file used by Outflank Dumpert tool. A process dumper,
+//   which dumps the lsass process memory
+// False positives:
+//   - Very unlikely
+// References:
+//   - https://github.com/outflanknl/Dumpert
+//   - https://unit42.paloaltonetworks.com/actors-still-exploiting-sharepoint-vulnerability/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_hktl_dumpert.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath endswith "dumpert.dmp"

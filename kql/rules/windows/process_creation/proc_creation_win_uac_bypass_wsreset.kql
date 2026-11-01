@@ -1,0 +1,22 @@
+// Title: Bypass UAC via WSReset.exe
+// Sigma ID: d797268e-28a9-49a7-b9a8-2f5039011c5c
+// Status: test | Level: high
+// Author: E.M. Anhaus (originally from Atomic Blue Detections, Tony Lambert), oscd.community, Florian Roth
+// Date: 2019-10-24 | Modified: 2022-05-13
+// ATT&CK: privilege-escalation, T1548.002
+// Description: Detects use of WSReset.exe to bypass User Account Control (UAC). Adversaries use this technique
+//   to execute privileged processes.
+// False positives:
+//   - Unknown sub processes of Wsreset.exe
+// References:
+//   - https://eqllib.readthedocs.io/en/latest/analytics/532b5ed4-7930-11e9-8f5c-d46d6d62a49e.html
+//   - https://lolbas-project.github.io/lolbas/Binaries/Wsreset/
+//   - https://www.activecyber.us/activelabs/windows-uac-bypass
+//   - https://twitter.com/ReaQta/status/1222548288731217921
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_uac_bypass_wsreset.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\wsreset.exe" and (not((FolderPath endswith "\\conhost.exe" or ProcessVersionInfoOriginalFileName =~ "CONHOST.EXE")))

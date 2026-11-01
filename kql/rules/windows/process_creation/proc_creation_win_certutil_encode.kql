@@ -1,0 +1,21 @@
+// Title: File Encoded To Base64 Via Certutil.EXE
+// Sigma ID: e62a9f0c-ca1e-46b2-85d5-a6da77f86d1a
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2019-02-24 | Modified: 2024-03-05
+// ATT&CK: stealth, T1027
+// Description: Detects the execution of certutil with the "encode" flag to encode a file to base64. This can be
+//   abused by threat actors and attackers for data exfiltration
+// False positives:
+//   - As this is a general purpose rule, legitimate usage of the encode functionality will trigger some false positives. Apply additional filters accordingly
+// References:
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/certutil
+//   - https://unit42.paloaltonetworks.com/new-babyshark-malware-targets-u-s-national-security-think-tanks/
+//   - https://lolbas-project.github.io/lolbas/Binaries/Certutil/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_certutil_encode.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\certutil.exe" or ProcessVersionInfoOriginalFileName =~ "CertUtil.exe") and (ProcessCommandLine contains "-encode" or ProcessCommandLine contains "/encode" or ProcessCommandLine contains "–encode" or ProcessCommandLine contains "—encode" or ProcessCommandLine contains "―encode")

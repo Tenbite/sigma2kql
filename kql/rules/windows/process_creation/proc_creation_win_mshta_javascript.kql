@@ -1,0 +1,19 @@
+// Title: Suspicious JavaScript Execution Via Mshta.EXE
+// Sigma ID: 67f113fa-e23d-4271-befa-30113b3e08b1
+// Status: test | Level: high
+// Author: E.M. Anhaus (originally from Atomic Blue Detections, Endgame), oscd.community
+// Date: 2019-10-24 | Modified: 2023-02-07
+// ATT&CK: stealth, T1218.005
+// Description: Detects execution of javascript code using "mshta.exe".
+// False positives:
+//   - Unknown
+// References:
+//   - https://eqllib.readthedocs.io/en/latest/analytics/6bc283c4-21f2-4aed-a05c-a9a3ffa95dd4.html
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.005/T1218.005.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_mshta_javascript.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\mshta.exe" or ProcessVersionInfoOriginalFileName =~ "MSHTA.EXE") and ProcessCommandLine contains "javascript"

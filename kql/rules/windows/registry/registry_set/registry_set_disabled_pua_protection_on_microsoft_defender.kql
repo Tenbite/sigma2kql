@@ -1,0 +1,18 @@
+// Title: Disable PUA Protection on Windows Defender
+// Sigma ID: 8ffc5407-52e3-478f-9596-0a7371eafe13
+// Status: test | Level: high
+// Author: Austin Songer @austinsonger
+// Date: 2021-08-04 | Modified: 2023-08-17
+// ATT&CK: defense-impairment, T1685
+// Description: Detects disabling Windows Defender PUA protection
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.tenforums.com/tutorials/32236-enable-disable-microsoft-defender-pua-protection-windows-10-a.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_disabled_pua_protection_on_microsoft_defender.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey contains "\\Policies\\Microsoft\\Windows Defender\\PUAProtection" and RegistryValueData =~ "DWORD (0x00000000)"

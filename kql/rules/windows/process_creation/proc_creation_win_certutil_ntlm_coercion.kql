@@ -1,0 +1,18 @@
+// Title: Potential NTLM Coercion Via Certutil.EXE
+// Sigma ID: 6c6d9280-e6d0-4b9d-80ac-254701b64916
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-09-01 | Modified: 2023-02-14
+// ATT&CK: stealth, T1218
+// Description: Detects possible NTLM coercion via certutil using the 'syncwithWU' flag
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/LOLBAS-Project/LOLBAS/issues/243
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_certutil_ntlm_coercion.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\certutil.exe" or ProcessVersionInfoOriginalFileName =~ "CertUtil.exe") and (ProcessCommandLine contains " -syncwithWU " and ProcessCommandLine contains " \\\\")

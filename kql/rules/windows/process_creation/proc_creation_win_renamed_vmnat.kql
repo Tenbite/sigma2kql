@@ -1,0 +1,18 @@
+// Title: Renamed Vmnat.exe Execution
+// Sigma ID: 7b4f794b-590a-4ad4-ba18-7964a2832205
+// Status: test | Level: high
+// Author: elhoim
+// Date: 2022-09-09 | Modified: 2023-02-03
+// ATT&CK: privilege-escalation, persistence, execution, stealth, T1574.001
+// Description: Detects renamed vmnat.exe or portable version that can be used for DLL side-loading
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/malmoeb/status/1525901219247845376
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_renamed_vmnat.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessVersionInfoOriginalFileName =~ "vmnat.exe" and (not(FolderPath endswith "vmnat.exe"))

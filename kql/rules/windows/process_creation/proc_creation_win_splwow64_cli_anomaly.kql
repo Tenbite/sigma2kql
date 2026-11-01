@@ -1,0 +1,18 @@
+// Title: Suspicious Splwow64 Without Params
+// Sigma ID: 1f1a8509-2cbb-44f5-8751-8e1571518ce2
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2021-08-23 | Modified: 2022-12-25
+// ATT&CK: stealth, T1202
+// Description: Detects suspicious Splwow64.exe process without any command line parameters
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/sbousseaden/status/1429401053229891590?s=12
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_splwow64_cli_anomaly.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\splwow64.exe" and ProcessCommandLine endswith "splwow64.exe"

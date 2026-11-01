@@ -1,0 +1,20 @@
+// Title: Suspicious File Creation Activity From Fake Recycle.Bin Folder
+// Sigma ID: cd8b36ac-8e4a-4c2f-a402-a29b8fbd5bca
+// Status: test | Level: high
+// Author: X__Junior (Nextron Systems)
+// Date: 2023-07-12 | Modified: 2023-12-11
+// ATT&CK: persistence, stealth
+// Description: Detects file write event from/to a fake recycle bin folder that is often used as a staging
+//   directory for malware
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.mandiant.com/resources/blog/infected-usb-steal-secrets
+//   - https://unit42.paloaltonetworks.com/cloaked-ursa-phishing/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_susp_recycle_bin_fake_exec.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where (InitiatingProcessFolderPath contains "RECYCLERS.BIN\\" or InitiatingProcessFolderPath contains "RECYCLER.BIN\\") or (FolderPath contains "RECYCLERS.BIN\\" or FolderPath contains "RECYCLER.BIN\\")

@@ -1,0 +1,20 @@
+// Title: File Deleted Via Sysinternals SDelete
+// Sigma ID: 6ddab845-b1b8-49c2-bbf7-1a11967f64bc
+// Status: test | Level: medium
+// Author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+// Date: 2020-05-02 | Modified: 2023-02-15
+// ATT&CK: stealth, T1070.004
+// Description: Detects the deletion of files by the Sysinternals SDelete utility. It looks for the common name
+//   pattern used to rename files.
+// False positives:
+//   - Legitimate usage
+// References:
+//   - https://github.com/OTRF/detection-hackathon-apt29/issues/9
+//   - https://github.com/OTRF/ThreatHunter-Playbook/blob/2d4257f630f4c9770f78d0c1df059f891ffc3fec/docs/evals/apt29/detections/4.B.4_83D62033-105A-4A02-8B75-DAB52D8D51EC.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_delete/file_delete_win_sysinternals_sdelete_file_deletion.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where (FolderPath endswith ".AAA" or FolderPath endswith ".ZZZ") and (not(FolderPath endswith "\\Wireshark\\radius\\dictionary.alcatel-lucent.aaa"))

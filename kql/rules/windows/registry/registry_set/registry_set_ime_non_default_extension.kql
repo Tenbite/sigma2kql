@@ -1,0 +1,23 @@
+// Title: Uncommon Extension In Keyboard Layout IME File Registry Value
+// Sigma ID: b888e3f2-224d-4435-b00b-9dd66e9ea1f1
+// Status: test | Level: high
+// Author: X__Junior (Nextron Systems)
+// Date: 2023-11-21 | Modified: -
+// ATT&CK: defense-impairment, T1685
+// Description: Detects usage of Windows Input Method Editor (IME) keyboard layout feature, which allows an
+//   attacker to load a DLL into the process after sending the WM_INPUTLANGCHANGEREQUEST message.
+//   Before doing this, the client needs to register the DLL in a special registry key that is
+//   assumed to implement this keyboard layout. This registry key should store a value named "Ime
+//   File" with a DLL path. IMEs are essential for languages that have more characters than can be
+//   represented on a standard keyboard, such as Chinese, Japanese, and Korean.
+// False positives:
+//   - IMEs are essential for languages that have more characters than can be represented on a standard keyboard, such as Chinese, Japanese, and Korean.
+// References:
+//   - https://www.linkedin.com/pulse/guntior-story-advanced-bootkit-doesnt-rely-windows-disk-baranov-wue8e/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_ime_non_default_extension.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey endswith "\\Control\\Keyboard Layouts*" and RegistryKey contains "Ime File") and (not(RegistryValueData endswith ".ime"))

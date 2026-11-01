@@ -1,0 +1,21 @@
+// Title: EvilNum APT Golden Chickens Deployment Via OCX Files
+// Sigma ID: 8acf3cfa-1e8c-4099-83de-a0c4038e18f0
+// Status: test | Level: critical
+// Author: Florian Roth (Nextron Systems)
+// Date: 2020-07-10 | Modified: 2023-03-09
+// ATT&CK: stealth, T1218.011
+// Tags: detection.emerging-threats
+// Description: Detects Golden Chickens deployment method as used by Evilnum and described in ESET July 2020
+//   report
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.welivesecurity.com/2020/07/09/more-evil-deep-look-evilnum-toolset/
+//   - https://app.any.run/tasks/33d37fdf-158d-4930-aa68-813e1d5eb8ba/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2020/TA/Evilnum/proc_creation_win_apt_evilnum_jul20.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "regsvr32" and ProcessCommandLine contains "/s" and ProcessCommandLine contains "/i" and ProcessCommandLine contains "\\AppData\\Roaming\\" and ProcessCommandLine contains ".ocx"

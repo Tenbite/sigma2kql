@@ -1,0 +1,21 @@
+// Title: Use Short Name Path in Image
+// Sigma ID: a96970af-f126-420d-90e1-d37bf25e50e1
+// Status: test | Level: medium
+// Author: frack113, Nasreddine Bencherchali
+// Date: 2022-08-07 | Modified: 2025-10-20
+// ATT&CK: stealth, T1564.004
+// Description: Detect use of the Windows 8.3 short name. Which could be used as a method to avoid Image
+//   detection
+// False positives:
+//   - Applications could use this notation occasionally which might generate some false positives. In that case Investigate the parent and child process.
+// References:
+//   - https://www.acunetix.com/blog/articles/windows-short-8-3-filenames-web-security-problem/
+//   - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-2000-server/cc959352(v=technet.10)
+//   - https://twitter.com/frack113/status/1555830623633375232
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_ntfs_short_name_path_use_image.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath contains "~1\\" or FolderPath contains "~2\\") and (not(((InitiatingProcessFolderPath in~ ("C:\\Windows\\System32\\Dism.exe", "C:\\Windows\\System32\\cleanmgr.exe")) or ((FolderPath contains "\\AppData\\" and FolderPath contains "\\Temp\\") or (FolderPath endswith "~1\\unzip.exe" or FolderPath endswith "~1\\7zG.exe"))))) and (not((InitiatingProcessFolderPath endswith "\\WebEx\\WebexHost.exe" or InitiatingProcessFolderPath endswith "\\thor\\thor64.exe" or (ProcessVersionInfoProductName =~ "InstallShield (R)" or ProcessVersionInfoFileDescription =~ "InstallShield (R) Setup Engine" or ProcessVersionInfoCompanyName =~ "InstallShield Software Corporation"))))

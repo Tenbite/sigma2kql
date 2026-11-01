@@ -1,0 +1,20 @@
+// Title: Potential Product Reconnaissance Via Wmic.EXE
+// Sigma ID: 15434e33-5027-4914-88d5-3d4145ec25a9
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali
+// Date: 2023-02-14 | Modified: 2025-12-15
+// ATT&CK: execution, T1047
+// Description: Detects the execution of WMIC in order to get a list of firewall and antivirus products
+// False positives:
+//   - Unknown
+// References:
+//   - https://thedfirreport.com/2023/03/06/2022-year-in-review/
+//   - https://www.yeahhub.com/list-installed-programs-version-path-windows/
+//   - https://learn.microsoft.com/en-us/answers/questions/253555/software-list-inventory-wmic-product
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_wmic_recon_product.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\wmic.exe" or ProcessVersionInfoOriginalFileName =~ "wmic.exe") and ProcessCommandLine contains "Product") and (not(((ProcessCommandLine contains " uninstall" or ProcessCommandLine contains " install") or ProcessCommandLine contains "csproduct")))

@@ -1,0 +1,21 @@
+// Title: Potential CommandLine Obfuscation Using Unicode Characters From Suspicious Image
+// Sigma ID: 584bca0f-3608-4402-80fd-4075ff6072e3
+// Status: test | Level: high
+// Author: frack113, Florian Roth (Nextron Systems), Josh Nickels
+// Date: 2024-09-02 | Modified: 2025-05-30
+// ATT&CK: stealth, T1027
+// Description: Detects potential commandline obfuscation using unicode characters. Adversaries may attempt to
+//   make an executable or file difficult to discover or analyze by encrypting, encoding, or
+//   otherwise obfuscating its contents on the system or in transit.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.wietzebeukema.nl/blog/windows-command-line-obfuscation
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1027/T1027.md#atomic-test-6---dlp-evasion-via-sensitive-data-in-vba-macro-over-http
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_cli_obfuscation_unicode_img.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\powershell_ise.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\wscript.exe") and (ProcessVersionInfoOriginalFileName in~ ("Cmd.EXE", "cscript.exe", "PowerShell.EXE", "PowerShell_ISE.EXE", "pwsh.dll", "wscript.exe"))) and (ProcessCommandLine contains "ˣ" or ProcessCommandLine contains "˪" or ProcessCommandLine contains "ˢ" or ProcessCommandLine contains "∕" or ProcessCommandLine contains "⁄" or ProcessCommandLine contains "―" or ProcessCommandLine contains "—" or ProcessCommandLine contains " " or ProcessCommandLine contains "¯" or ProcessCommandLine contains "®" or ProcessCommandLine contains "¶" or ProcessCommandLine contains "⠀")

@@ -1,0 +1,23 @@
+// Title: EVTX Created In Uncommon Location
+// Sigma ID: 65236ec7-ace0-4f0c-82fd-737b04fd4dcb
+// Status: test | Level: medium
+// Author: D3F7A5105
+// Date: 2023-01-02 | Modified: 2026-10-13
+// ATT&CK: defense-impairment, T1685.001
+// Description: Detects the creation of new files with the ".evtx" extension in non-common or non-standard
+//   location. This could indicate tampering with default EVTX locations in order to evade security
+//   controls or simply exfiltration of event log to search for sensitive information within. Note
+//   that backup software and legitimate administrator might perform similar actions during
+//   troubleshooting.
+// False positives:
+//   - Administrator or backup activity
+//   - An unknown bug seems to trigger the Windows "svchost" process to drop EVTX files in the "C:\Windows\Temp" directory in the form "<log_name">_<uuid>.evtx". See https://superuser.com/questions/1371229/low-disk-space-after-filling-up-c-windows-temp-with-evtx-and-txt-files
+// References:
+//   - https://learn.microsoft.com/en-us/windows/win32/eventlog/eventlog-key
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_create_evtx_non_common_locations.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath endswith ".evtx" and (not((FolderPath startswith "C:\\Windows\\System32\\winevt\\Logs\\" or (FolderPath startswith "C:\\ProgramData\\Microsoft\\Windows\\Containers\\BaseImages\\" and FolderPath contains "\\Windows\\System32\\winevt\\Logs\\"))))

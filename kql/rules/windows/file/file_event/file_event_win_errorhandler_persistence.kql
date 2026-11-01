@@ -1,0 +1,22 @@
+// Title: Potential Persistence Attempt Via ErrorHandler.Cmd
+// Sigma ID: 15904280-565c-4b73-9303-3291f964e7f9
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-08-09 | Modified: 2022-12-19
+// ATT&CK: persistence
+// Description: Detects creation of a file named "ErrorHandler.cmd" in the "C:\WINDOWS\Setup\Scripts\" directory
+//   which could be used as a method of persistence The content of
+//   C:\WINDOWS\Setup\Scripts\ErrorHandler.cmd is read whenever some tools under
+//   C:\WINDOWS\System32\oobe\ (e.g. Setup.exe) fail to run for any reason.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.hexacorn.com/blog/2022/01/16/beyond-good-ol-run-key-part-135/
+//   - https://github.com/last-byte/PersistenceSniper
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_errorhandler_persistence.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath endswith "\\WINDOWS\\Setup\\Scripts\\ErrorHandler.cmd"

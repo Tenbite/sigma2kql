@@ -1,0 +1,19 @@
+// Title: Potential RjvPlatform.DLL Sideloading From Non-Default Location
+// Sigma ID: 0e0bc253-07ed-43f1-816d-e1b220fe8971
+// Status: test | Level: high
+// Author: X__Junior (Nextron Systems)
+// Date: 2023-06-09 | Modified: -
+// ATT&CK: persistence, privilege-escalation, execution, stealth, T1574.001
+// Description: Detects potential DLL sideloading of "RjvPlatform.dll" by "SystemResetPlatform.exe" located in a
+//   non-default location.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://twitter.com/0gtweet/status/1666716511988330499
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/image_load/image_load_side_load_rjvplatform_non_default_location.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceImageLoadEvents
+| where (FolderPath endswith "\\RjvPlatform.dll" and InitiatingProcessFolderPath =~ "\\SystemResetPlatform.exe") and (not(InitiatingProcessFolderPath startswith "C:\\Windows\\System32\\SystemResetPlatform\\"))

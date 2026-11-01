@@ -1,0 +1,24 @@
+// Title: Monitoring For Persistence Via BITS
+// Sigma ID: b9cbbc17-d00d-4e3d-a827-b06d03d2380d
+// Status: test | Level: medium
+// Author: Sreeman
+// Date: 2020-10-29 | Modified: 2024-01-25
+// ATT&CK: persistence, execution, stealth, T1197
+// Description: BITS will allow you to schedule a command to execute after a successful download to notify you
+//   that the job is finished. When the job runs on the system the command specified in the BITS job
+//   will be executed. This can be abused by actors to create a backdoor within the system and for
+//   persistence. It will be chained in a BITS job to schedule the download of malware/additional
+//   binaries and execute the program after being downloaded.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html
+//   - http://0xthem.blogspot.com/2014/03/t-emporal-persistence-with-and-schtasks.html
+//   - https://isc.sans.edu/diary/Wipe+the+drive+Stealthy+Malware+Persistence+Mechanism+-+Part+1/15394
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_bitsadmin_potential_persistence.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\bitsadmin.exe" or ProcessVersionInfoOriginalFileName =~ "bitsadmin.exe") and ((ProcessCommandLine contains "/SetNotifyCmdLine" and (ProcessCommandLine contains "%COMSPEC%" or ProcessCommandLine contains "cmd.exe" or ProcessCommandLine contains "regsvr32.exe")) or (ProcessCommandLine contains "/Addfile" and (ProcessCommandLine contains "http:" or ProcessCommandLine contains "https:" or ProcessCommandLine contains "ftp:" or ProcessCommandLine contains "ftps:")))

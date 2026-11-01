@@ -1,0 +1,19 @@
+// Title: Chromium Browser Headless Execution To Mockbin Like Site
+// Sigma ID: 1c526788-0abe-4713-862f-b520da5e5316
+// Status: test | Level: high
+// Author: X__Junior (Nextron Systems)
+// Date: 2023-09-11 | Modified: -
+// ATT&CK: execution
+// Description: Detects the execution of a Chromium based browser process with the "headless" flag and a URL
+//   pointing to the mockbin.org service (which can be used to exfiltrate data).
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.zscaler.com/blogs/security-research/steal-it-campaign
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_browsers_chromium_mockbin_abuse.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\brave.exe" or FolderPath endswith "\\chrome.exe" or FolderPath endswith "\\msedge.exe" or FolderPath endswith "\\opera.exe" or FolderPath endswith "\\vivaldi.exe") and ProcessCommandLine contains "--headless" and (ProcessCommandLine contains "://run.mocky" or ProcessCommandLine contains "://mockbin")

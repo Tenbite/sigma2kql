@@ -1,0 +1,19 @@
+// Title: User Added To Root/Sudoers Group Using Usermod
+// Sigma ID: 6a50f16c-3b7b-42d1-b081-0fdd3ba70a73
+// Status: test | Level: medium
+// Author: TuanLe (GTSC)
+// Date: 2022-12-21 | Modified: -
+// ATT&CK: privilege-escalation, persistence
+// Description: Detects usage of the "usermod" binary to add users add users to the root or suoders groups
+// False positives:
+//   - Legitimate administrator activities
+// References:
+//   - https://pberba.github.io/security/2021/11/23/linux-threat-hunting-for-persistence-account-creation-manipulation/
+//   - https://www.configserverfirewall.com/ubuntu-linux/ubuntu-add-user-to-root-group/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_usermod_susp_group.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "/usermod" and (ProcessCommandLine contains "-aG root" or ProcessCommandLine contains "-aG sudoers")

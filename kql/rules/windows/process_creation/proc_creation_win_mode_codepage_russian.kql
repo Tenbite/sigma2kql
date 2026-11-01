@@ -1,0 +1,22 @@
+// Title: CodePage Modification Via MODE.COM To Russian Language
+// Sigma ID: 12fbff88-16b5-4b42-9754-cd001a789fb3
+// Status: test | Level: medium
+// Author: Joseliyo Sanchez, @Joseliyo_Jstnk
+// Date: 2024-01-17 | Modified: -
+// ATT&CK: stealth, T1036
+// Description: Detects a CodePage modification using the "mode.com" utility to Russian language. This behavior
+//   has been used by threat actors behind Dharma ransomware.
+// False positives:
+//   - Russian speaking people changing the CodePage
+// References:
+//   - https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/mode
+//   - https://strontic.github.io/xcyclopedia/library/mode.com-59D1ED51ACB8C3D50F1306FD75F20E99.html
+//   - https://www.virustotal.com/gui/file/5e75ef02517afd6e8ba6462b19217dc4a5a574abb33d10eb0f2bab49d8d48c22/behavior
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_mode_codepage_russian.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\mode.com" or ProcessVersionInfoOriginalFileName =~ "MODE.COM") and ((ProcessCommandLine contains " con " and ProcessCommandLine contains " cp " and ProcessCommandLine contains " select=") and (ProcessCommandLine endswith "=1251" or ProcessCommandLine endswith "=866"))

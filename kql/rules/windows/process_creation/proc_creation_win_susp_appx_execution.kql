@@ -1,0 +1,20 @@
+// Title: Potentially Suspicious Windows App Activity
+// Sigma ID: f91ed517-a6ba-471d-9910-b3b4a398c0f3
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-01-12 | Modified: 2025-10-07
+// ATT&CK: stealth
+// Description: Detects potentially suspicious child process of applications launched from inside the
+//   WindowsApps directory. This could be a sign of a rogue ".appx" package installation/execution
+// False positives:
+//   - Legitimate packages that make use of external binaries such as Windows Terminal
+// References:
+//   - https://news.sophos.com/en-us/2021/11/11/bazarloader-call-me-back-attack-abuses-windows-10-apps-mechanism/
+//   - https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_appx_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath contains "C:\\Program Files\\WindowsApps\\" and ((FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\mshta.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\powershell_ise.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\regsvr32.exe" or FolderPath endswith "\\rundll32.exe" or FolderPath endswith "\\wscript.exe") or (ProcessCommandLine contains "cmd /c" or ProcessCommandLine contains "Invoke-" or ProcessCommandLine contains "Base64")) and (not(((InitiatingProcessFolderPath contains ":\\Program Files\\WindowsApps\\Microsoft.WindowsTerminal" and InitiatingProcessFolderPath endswith "\\WindowsTerminal.exe" and (FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\pwsh.exe")) or (InitiatingProcessFolderPath startswith "C:\\Program Files\\WindowsApps\\Microsoft.SysinternalsSuite" and FolderPath endswith "\\cmd.exe"))))

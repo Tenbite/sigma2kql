@@ -1,0 +1,18 @@
+// Title: Potential Data Exfiltration Activity Via CommandLine Tools
+// Sigma ID: 7d1aaf3d-4304-425c-b7c3-162055e0b3ab
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-08-02 | Modified: 2025-10-19
+// ATT&CK: execution, T1059.001
+// Description: Detects the use of various CLI utilities exfiltrating data via web requests
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.sentinelone.com/blog/living-off-windows-defender-lockbit-ransomware-sideloads-cobalt-strike-through-microsoft-security-tool/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_data_exfiltration_via_cli.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (((FolderPath endswith "\\powershell_ise.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\cmd.exe") and (ProcessCommandLine contains "curl " or ProcessCommandLine contains "Invoke-RestMethod" or ProcessCommandLine contains "Invoke-WebRequest" or ProcessCommandLine contains "irm " or ProcessCommandLine contains "iwr " or ProcessCommandLine contains "wget ") and (ProcessCommandLine contains " -ur" and ProcessCommandLine contains " -me" and ProcessCommandLine contains " -b" and ProcessCommandLine contains " POST ")) or ((FolderPath endswith "\\curl.exe" and ProcessCommandLine contains "--ur") and (ProcessCommandLine contains " -d " or ProcessCommandLine contains " --data ")) or (FolderPath endswith "\\wget.exe" and (ProcessCommandLine contains "--post-data" or ProcessCommandLine contains "--post-file"))) and ((ProcessCommandLine matches regex "net\\s+view" or ProcessCommandLine matches regex "sc\\s+query") or (ProcessCommandLine contains "Get-Content" or ProcessCommandLine contains "GetBytes" or ProcessCommandLine contains "hostname" or ProcessCommandLine contains "ifconfig" or ProcessCommandLine contains "ipconfig" or ProcessCommandLine contains "netstat" or ProcessCommandLine contains "nltest" or ProcessCommandLine contains "qprocess" or ProcessCommandLine contains "systeminfo" or ProcessCommandLine contains "tasklist" or ProcessCommandLine contains "ToBase64String" or ProcessCommandLine contains "whoami") or (ProcessCommandLine contains "type " and ProcessCommandLine contains " > " and ProcessCommandLine contains " C:\\"))

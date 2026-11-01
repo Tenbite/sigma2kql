@@ -1,0 +1,20 @@
+// Title: Driver Added To Disallowed Images In HVCI - Registry
+// Sigma ID: 555155a2-03bf-4fe7-af74-d176b3fdbe16
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems), Omar Khaled (@beacon_exe)
+// Date: 2023-12-05 | Modified: 2024-08-21
+// ATT&CK: stealth
+// Description: Detects changes to the "HVCIDisallowedImages" registry value to potentially add a driver to the
+//   list, in order to prevent it from loading.
+// False positives:
+//   - Legitimate usage of this key would also trigger this. Investigate the driver being added and make sure its intended
+// References:
+//   - https://github.com/yardenshafir/conference_talks/blob/3de1f5d7c02656c35117f067fbff0a219c304b09/OffensiveCon_2023_Your_Mitigations_are_My_Opportunities.pdf
+//   - https://x.com/yarden_shafir/status/1822667605175324787
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_hvci_disallowed_images.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey endswith "\\Control\\CI*" and RegistryKey contains "\\HVCIDisallowedImages"

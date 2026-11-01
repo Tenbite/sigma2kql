@@ -1,0 +1,23 @@
+// Title: NewActiveScriptEventConsumer Creation Attempt via Wmic.EXE
+// Sigma ID: ebef4391-1a81-4761-a40a-1db446c0e625
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2021-06-25 | Modified: 2026-06-19
+// ATT&CK: privilege-escalation, persistence, T1546.003
+// Description: Detects the attempt to create an ActiveScriptEventConsumer via WMIC.EXE. An
+//   ActiveScriptEventConsumer is a built-in Windows Management Instrumentation (WMI) class that
+//   automatically executes a predefined script (in VBScript or JScript) whenever a specific system
+//   event occurs. Adversaries often abuse ActiveScriptEventConsumer to maintain persistence on a
+//   compromised host by executing a malicious script whenever a specific event occurs.
+// False positives:
+//   - Legitimate software creating script event consumers
+// References:
+//   - https://twitter.com/johnlatwc/status/1408062131321270282?s=12
+//   - https://www.fireeye.com/content/dam/fireeye-www/global/en/current-threats/pdfs/wp-windows-management-instrumentation.pdf
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_wmic_eventconsumer_creation.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessVersionInfoOriginalFileName =~ "wmic.exe" or FolderPath endswith "\\WMIC.exe") and (ProcessCommandLine contains "ActiveScriptEventConsumer" and ProcessCommandLine contains " CREATE ")

@@ -1,0 +1,21 @@
+// Title: ESXi VSAN Information Discovery Via ESXCLI
+// Sigma ID: d54c2f06-aca9-4e2b-81c9-5317858f4b79
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems), Cedric Maurugeon
+// Date: 2023-09-04 | Modified: -
+// ATT&CK: discovery, execution, T1033, T1007, T1059.012
+// Description: Detects execution of the "esxcli" command with the "vsan" flag in order to retrieve information
+//   about virtual storage. Seen used by malware such as DarkSide.
+// False positives:
+//   - Legitimate administration activities
+// References:
+//   - https://www.trendmicro.com/en_us/research/21/e/darkside-linux-vms-targeted.html
+//   - https://www.trendmicro.com/en_us/research/22/a/analysis-and-Impact-of-lockbit-ransomwares-first-linux-and-vmware-esxi-variant.html
+//   - https://developer.broadcom.com/xapis/esxcli-command-reference/7.0.0/namespace/esxcli_vsan.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_esxcli_vsan_discovery.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "/esxcli" and ProcessCommandLine contains "vsan") and (ProcessCommandLine contains " get" or ProcessCommandLine contains " list")

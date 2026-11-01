@@ -1,0 +1,21 @@
+// Title: Potential Persistence Via Outlook Home Page
+// Sigma ID: ddd171b5-2cc6-4975-9e78-f0eccd08cc76
+// Status: test | Level: high
+// Author: Tobias Michalski (Nextron Systems), David Bertho (@dbertho) & Eirik Sveen (@0xSV1), Storebrand
+// Date: 2021-06-09 | Modified: 2024-08-07
+// ATT&CK: persistence, defense-impairment, T1112
+// Description: Detects potential persistence activity via outlook home page. An attacker can set a home page to
+//   achieve code execution and persistence by editing the WebView registry keys.
+// False positives:
+//   - Unknown
+// References:
+//   - https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=70
+//   - https://support.microsoft.com/en-us/topic/outlook-home-page-feature-is-missing-in-folder-properties-d207edb7-aa02-46c5-b608-5d9dbed9bd04?ui=en-us&rs=en-us&ad=us
+//   - https://trustedsec.com/blog/specula-turning-outlook-into-a-c2-with-one-registry-change
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_persistence_outlook_homepage.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey endswith "\\Software\\Microsoft\\Office*" and RegistryKey endswith "\\Outlook\\WebView*") and RegistryKey endswith "\\URL"

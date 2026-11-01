@@ -1,0 +1,19 @@
+// Title: Triple Cross eBPF Rootkit Execve Hijack
+// Sigma ID: 0326c3c8-7803-4a0f-8c5c-368f747f7c3e
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-07-05 | Modified: -
+// ATT&CK: privilege-escalation, stealth
+// Description: Detects execution of a the file "execve_hijack" which is used by the Triple Cross rootkit as a
+//   way to elevate privileges
+// False positives:
+//   - Unlikely
+// References:
+//   - https://github.com/h3xduck/TripleCross/blob/1f1c3e0958af8ad9f6ebe10ab442e75de33e91de/src/helpers/execve_hijack.c#L275
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_triple_cross_rootkit_execve_hijack.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "/sudo" and ProcessCommandLine contains "execve_hijack"

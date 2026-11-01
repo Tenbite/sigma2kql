@@ -1,0 +1,20 @@
+// Title: Potential Perl Reverse Shell Execution
+// Sigma ID: 259df6bc-003f-4306-9f54-4ff1a08fa38e
+// Status: test | Level: high
+// Author: @d4ns4n_, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-04-07 | Modified: -
+// ATT&CK: execution
+// Description: Detects execution of the perl binary with the "-e" flag and common strings related to potential
+//   reverse shell activity
+// False positives:
+//   - Unlikely
+// References:
+//   - https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
+//   - https://www.revshells.com/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_perl_reverse_shell.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "/perl" and ProcessCommandLine contains " -e ") and ((ProcessCommandLine contains "fdopen(" and ProcessCommandLine contains "::Socket::INET") or (ProcessCommandLine contains "Socket" and ProcessCommandLine contains "connect" and ProcessCommandLine contains "open" and ProcessCommandLine contains "exec"))

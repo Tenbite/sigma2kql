@@ -1,0 +1,23 @@
+// Title: Potential Persistence Via App Paths Default Property
+// Sigma ID: 707e097c-e20f-4f67-8807-1f72ff4500d6
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-08-10 | Modified: 2023-08-17
+// ATT&CK: privilege-escalation, persistence, T1546.012
+// Description: Detects changes to the "Default" property for keys located in the
+//   \Software\Microsoft\Windows\CurrentVersion\App Paths\ registry. Which might be used as a method
+//   of persistence The entries found under App Paths are used primarily for the following purposes.
+//   First, to map an application's executable file name to that file's fully qualified path. Second,
+//   to prepend information to the PATH environment variable on a per-application, per-process basis.
+// False positives:
+//   - Legitimate applications registering their binary from on of the suspicious locations mentioned above (tune it)
+// References:
+//   - https://www.hexacorn.com/blog/2013/01/19/beyond-good-ol-run-key-part-3/
+//   - https://learn.microsoft.com/en-us/windows/win32/shell/app-registration
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_persistence_app_paths.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey contains "\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths" and (RegistryKey endswith "(Default)" or RegistryKey endswith "Path") and (RegistryValueData contains "\\Users\\Public" or RegistryValueData contains "\\AppData\\Local\\Temp\\" or RegistryValueData contains "\\Windows\\Temp\\" or RegistryValueData contains "\\Desktop\\" or RegistryValueData contains "\\Downloads\\" or RegistryValueData contains "%temp%" or RegistryValueData contains "%tmp%" or RegistryValueData contains "iex" or RegistryValueData contains "Invoke-" or RegistryValueData contains "rundll32" or RegistryValueData contains "regsvr32" or RegistryValueData contains "mshta" or RegistryValueData contains "cscript" or RegistryValueData contains "wscript" or RegistryValueData contains ".bat" or RegistryValueData contains ".hta" or RegistryValueData contains ".dll" or RegistryValueData contains ".ps1")

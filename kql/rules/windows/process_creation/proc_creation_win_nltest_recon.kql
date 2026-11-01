@@ -1,0 +1,25 @@
+// Title: Potential Recon Activity Via Nltest.EXE
+// Sigma ID: 5cc90652-4cbd-4241-aa3b-4b462fa5a248
+// Status: test | Level: medium
+// Author: Craig Young, oscd.community, Georg Lauenstein
+// Date: 2021-07-24 | Modified: 2023-12-15
+// ATT&CK: discovery, T1016, T1482
+// Description: Detects nltest commands that can be used for information discovery
+// False positives:
+//   - Legitimate administration use but user and host must be investigated
+// References:
+//   - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc731935(v=ws.11)
+//   - https://thedfirreport.com/2021/08/16/trickbot-leads-up-to-fake-1password-installation/
+//   - https://thedfirreport.com/2020/10/18/ryuk-in-5-hours/
+//   - https://book.hacktricks.xyz/windows/basic-cmd-for-pentesters
+//   - https://research.nccgroup.com/2022/08/19/back-in-black-unlocking-a-lockbit-3-0-ransomware-attack/
+//   - https://eqllib.readthedocs.io/en/latest/analytics/03e231a6-74bc-467a-acb1-e5676b0fb55e.html
+//   - https://redcanary.com/blog/how-one-hospital-thwarted-a-ryuk-ransomware-outbreak/
+//   - https://github.com/redcanaryco/atomic-red-team/blob/5360c9d9ffa3b25f6495f7a16e267b719eba2c37/atomics/T1482/T1482.md#atomic-test-2---windows---discover-domain-trusts-with-nltest
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_nltest_recon.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\nltest.exe" or ProcessVersionInfoOriginalFileName =~ "nltestrk.exe") and ((ProcessCommandLine contains "server" and ProcessCommandLine contains "query") or (ProcessCommandLine contains "/user" or ProcessCommandLine contains "all_trusts" or ProcessCommandLine contains "dclist:" or ProcessCommandLine contains "dnsgetdc:" or ProcessCommandLine contains "domain_trusts" or ProcessCommandLine contains "dsgetdc:" or ProcessCommandLine contains "parentdomain" or ProcessCommandLine contains "trusted_domains"))

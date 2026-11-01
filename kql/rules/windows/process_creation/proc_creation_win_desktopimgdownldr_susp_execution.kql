@@ -1,0 +1,20 @@
+// Title: Suspicious Desktopimgdownldr Command
+// Sigma ID: bb58aa4a-b80b-415a-a2c0-2f65a4c81009
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2020-07-03 | Modified: 2021-11-27
+// ATT&CK: command-and-control, T1105
+// Description: Detects a suspicious Microsoft desktopimgdownldr execution with parameters used to download
+//   files from the Internet
+// False positives:
+//   - False positives depend on scripts and administrative tools used in the monitored environment
+// References:
+//   - https://labs.sentinelone.com/living-off-windows-land-a-new-native-file-downldr/
+//   - https://twitter.com/SBousseaden/status/1278977301745741825
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_desktopimgdownldr_susp_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains " /lockscreenurl:" and (not((ProcessCommandLine contains ".jpg" or ProcessCommandLine contains ".jpeg" or ProcessCommandLine contains ".png")))) or (ProcessCommandLine contains "reg delete" and ProcessCommandLine contains "\\PersonalizationCSP")

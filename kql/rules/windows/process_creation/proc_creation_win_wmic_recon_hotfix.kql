@@ -1,0 +1,20 @@
+// Title: Windows Hotfix Updates Reconnaissance Via Wmic.EXE
+// Sigma ID: dfd2fcb7-8bd5-4daa-b132-5adb61d6ad45
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-06-20 | Modified: 2023-02-14
+// ATT&CK: execution, T1047
+// Description: Detects the execution of wmic with the "qfe" flag in order to obtain information about installed
+//   hotfix updates on the system. This is often used by pentester and attacker enumeration scripts
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/carlospolop/PEASS-ng/blob/fa0f2e17fbc1d86f1fd66338a40e665e7182501d/winPEAS/winPEASbat/winPEAS.bat
+//   - https://sushant747.gitbooks.io/total-oscp-guide/content/privilege_escalation_windows.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_wmic_recon_hotfix.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessVersionInfoOriginalFileName =~ "wmic.exe" or FolderPath endswith "\\WMIC.exe") and ProcessCommandLine contains " qfe"

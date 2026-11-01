@@ -1,0 +1,21 @@
+// Title: Remote Access Tool - ScreenConnect Potential Suspicious Remote Command Execution
+// Sigma ID: 7b582f1a-b318-4c6a-bf4e-66fe49bf55a5
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems), @Kostastsale
+// Date: 2022-02-25 | Modified: 2024-02-28
+// ATT&CK: command-and-control, T1219.002
+// Description: Detects potentially suspicious child processes launched via the ScreenConnect client service.
+// False positives:
+//   - If the script being executed make use of any of the utilities mentioned in the detection then they should filtered out or allowed.
+// References:
+//   - https://www.mandiant.com/resources/telegram-malware-iranian-espionage
+//   - https://docs.connectwise.com/ConnectWise_Control_Documentation/Get_started/Host_client/View_menu/Backstage_mode
+//   - https://www.huntress.com/blog/slashandgrab-screen-connect-post-exploitation-in-the-wild-cve-2024-1709-cve-2024-1708
+//   - https://www.trendmicro.com/en_us/research/24/b/threat-actor-groups-including-black-basta-are-exploiting-recent-.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_remote_access_tools_screenconnect_remote_execution_susp.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (InitiatingProcessCommandLine contains ":\\Windows\\TEMP\\ScreenConnect\\" and InitiatingProcessCommandLine contains "run.cmd") and (FolderPath endswith "\\bitsadmin.exe" or FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\curl.exe" or FolderPath endswith "\\dllhost.exe" or FolderPath endswith "\\net.exe" or FolderPath endswith "\\nltest.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\rundll32.exe" or FolderPath endswith "\\wevtutil.exe")

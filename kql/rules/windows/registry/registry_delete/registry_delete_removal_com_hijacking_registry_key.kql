@@ -1,0 +1,24 @@
+// Title: Removal of Potential COM Hijacking Registry Keys
+// Sigma ID: 96f697b0-b499-4e5d-9908-a67bec11cdb6
+// Status: test | Level: medium
+// Author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+// Date: 2020-05-02 | Modified: 2025-10-07
+// ATT&CK: persistence, defense-impairment, T1112
+// Description: Detects any deletion of entries in ".*\shell\open\command" registry keys. These registry keys
+//   might have been used for COM hijacking activities by a threat actor or an attacker and the
+//   deletion could indicate steps to remove its tracks.
+// False positives:
+//   - Legitimate software (un)installations are known to cause false positives. Please add them as a filter when encountered
+// References:
+//   - https://github.com/OTRF/detection-hackathon-apt29/issues/7
+//   - https://github.com/OTRF/ThreatHunter-Playbook/blob/2d4257f630f4c9770f78d0c1df059f891ffc3fec/docs/evals/apt29/detections/3.C.1_22A46621-7A92-48C1-81BF-B3937EB4FDC3.md
+//   - https://learn.microsoft.com/en-us/windows/win32/shell/launch
+//   - https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-iexecutecommand
+//   - https://learn.microsoft.com/en-us/windows/win32/shell/shell-and-managed-code
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_delete/registry_delete_removal_com_hijacking_registry_key.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey endswith "\\shell\\open\\command" and (not((InitiatingProcessFolderPath endswith "C:\\Windows\\explorer.exe" or InitiatingProcessFolderPath =~ "C:\\Windows\\system32\\svchost.exe" or (InitiatingProcessFolderPath in~ ("C:\\Windows\\System32\\msiexec.exe", "C:\\Windows\\SysWOW64\\msiexec.exe")) or (InitiatingProcessFolderPath startswith "C:\\Program Files\\" or InitiatingProcessFolderPath startswith "C:\\Program Files (x86)\\") or InitiatingProcessFolderPath =~ "C:\\Windows\\System32\\OpenWith.exe"))) and (not(((InitiatingProcessFolderPath endswith "\\Dropbox.exe" and RegistryKey contains "\\Dropbox.") or (InitiatingProcessFolderPath endswith "\\AppData\\Local\\Temp\\Wireshark_uninstaller.exe" and RegistryKey endswith "\\wireshark-capture-file*") or (InitiatingProcessFolderPath contains "peazip" and RegistryKey contains "\\PeaZip.") or (InitiatingProcessFolderPath endswith "\\Everything.exe" and RegistryKey contains "\\Everything.") or InitiatingProcessFolderPath startswith "C:\\Windows\\Installer\\MSI" or (InitiatingProcessFolderPath startswith "C:\\Program Files (x86)\\Java\\" and InitiatingProcessFolderPath endswith "\\installer.exe" and RegistryKey contains "\\Classes\\WOW6432Node\\CLSID\\{4299124F-F2C3-41b4-9C73-9236B2AD0E8F}") or InitiatingProcessFolderPath contains "\\Microsoft\\EdgeUpdate\\Install" or ((InitiatingProcessFolderPath in~ ("C:\\Program Files (x86)\\Avira\\Antivirus\\", "C:\\Program Files\\Avira\\Antivirus\\")) and (RegistryKey endswith "\\CLSID\\{305CA226-D286-468e-B848-2B2E8E697B74}\\Shell\\Open\\Command" or RegistryKey endswith "\\AntiVir.Keyfile\\shell\\open\\command")) or ((InitiatingProcessFolderPath contains "AppData\\Local\\Temp" and InitiatingProcessFolderPath contains "\\setup.exe") or (InitiatingProcessFolderPath contains "\\Temp\\is-" and InitiatingProcessFolderPath contains "\\target.tmp")) or InitiatingProcessFolderPath endswith "\\ninite.exe" or (InitiatingProcessFolderPath endswith "\\reg.exe" and RegistryKey endswith "\\Discord\\shell\\open\\command") or (InitiatingProcessFolderPath endswith "\\Spotify.exe" and RegistryKey endswith "\\Spotify\\shell\\open\\command") or (InitiatingProcessFolderPath endswith "C:\\eclipse\\eclipse.exe" and RegistryKey contains "_Classes\\eclipse+") or (InitiatingProcessFolderPath contains "\\Temp" and InitiatingProcessFolderPath contains "\\TeamViewer"))))

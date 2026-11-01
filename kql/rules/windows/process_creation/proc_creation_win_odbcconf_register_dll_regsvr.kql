@@ -1,0 +1,24 @@
+// Title: New DLL Registered Via Odbcconf.EXE
+// Sigma ID: 9f0a8bf3-a65b-440a-8c1e-5cb1547c8e70
+// Status: test | Level: medium
+// Author: Kirill Kiryanov, Beyu Denis, Daniil Yugoslavskiy, oscd.community, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-05-22 | Modified: -
+// ATT&CK: stealth, T1218.008
+// Description: Detects execution of "odbcconf" with "REGSVR" in order to register a new DLL (equivalent to
+//   running regsvr32). Attackers abuse this to install and run malicious DLLs.
+// False positives:
+//   - Legitimate DLLs being registered via "odbcconf" will generate false positives. Investigate the path of the DLL and its content to determine if the action is authorized.
+// References:
+//   - https://learn.microsoft.com/en-us/sql/odbc/odbcconf-exe?view=sql-server-ver16
+//   - https://lolbas-project.github.io/lolbas/Binaries/Odbcconf/
+//   - https://redcanary.com/blog/raspberry-robin/
+//   - https://web.archive.org/web/20191023232753/https://twitter.com/Hexacorn/status/1187143326673330176
+//   - https://www.hexacorn.com/blog/2020/08/23/odbcconf-lolbin-trifecta/
+//   - https://www.trendmicro.com/en_us/research/17/h/backdoor-carrying-emails-set-sights-on-russian-speaking-businesses.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_odbcconf_register_dll_regsvr.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\odbcconf.exe" or ProcessVersionInfoOriginalFileName =~ "odbcconf.exe") and (ProcessCommandLine contains "REGSVR " and ProcessCommandLine contains ".dll")

@@ -1,0 +1,18 @@
+// Title: HackTool - SharpUp PrivEsc Tool Execution
+// Sigma ID: c484e533-ee16-4a93-b6ac-f0ea4868b2f1
+// Status: test | Level: critical
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-08-20 | Modified: 2023-02-13
+// ATT&CK: persistence, privilege-escalation, discovery, execution, stealth, T1615, T1569.002, T1574.005
+// Description: Detects the use of SharpUp, a tool for local privilege escalation
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/GhostPack/SharpUp
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_sharpup.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\SharpUp.exe" or ProcessVersionInfoFileDescription =~ "SharpUp" or (ProcessCommandLine contains "HijackablePaths" or ProcessCommandLine contains "UnquotedServicePath" or ProcessCommandLine contains "ProcessDLLHijack" or ProcessCommandLine contains "ModifiableServiceBinaries" or ProcessCommandLine contains "ModifiableScheduledTask" or ProcessCommandLine contains "DomainGPPPassword" or ProcessCommandLine contains "CachedGPPPassword")

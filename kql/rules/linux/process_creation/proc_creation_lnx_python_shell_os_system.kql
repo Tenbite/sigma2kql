@@ -1,0 +1,19 @@
+// Title: Inline Python Execution - Spawn Shell Via OS System Library
+// Sigma ID: 2d2f44ff-4611-4778-a8fc-323a0e9850cc
+// Status: test | Level: high
+// Author: Li Ling, Andy Parkidomo, Robert Rakowski, Blake Hartstein (Bloomberg L.P.)
+// Date: 2024-09-02 | Modified: -
+// ATT&CK: execution, T1059
+// Description: Detects execution of inline Python code via the "-c" in order to call the "system" function from
+//   the "os" library, and spawn a shell.
+// False positives:
+//   - Unknown
+// References:
+//   - https://gtfobins.github.io/gtfobins/python/#shell
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_python_shell_os_system.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "/python" or FolderPath endswith "/python2" or FolderPath endswith "/python3") or (FolderPath contains "/python2." or FolderPath contains "/python3.")) and ((ProcessCommandLine contains " -c " and ProcessCommandLine contains "os.system(") and (ProcessCommandLine contains "/bin/bash" or ProcessCommandLine contains "/bin/dash" or ProcessCommandLine contains "/bin/fish" or ProcessCommandLine contains "/bin/sh" or ProcessCommandLine contains "/bin/zsh"))

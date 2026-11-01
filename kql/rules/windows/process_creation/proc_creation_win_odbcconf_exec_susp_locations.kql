@@ -1,0 +1,21 @@
+// Title: Odbcconf.EXE Suspicious DLL Location
+// Sigma ID: 6b65c28e-11f3-46cb-902a-68f2cafaf474
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-05-22 | Modified: 2023-05-26
+// ATT&CK: stealth, T1218.008
+// Description: Detects execution of "odbcconf" where the path of the DLL being registered is located in a
+//   potentially suspicious location.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://learn.microsoft.com/en-us/sql/odbc/odbcconf-exe?view=sql-server-ver16
+//   - https://www.trendmicro.com/en_us/research/17/h/backdoor-carrying-emails-set-sights-on-russian-speaking-businesses.html
+//   - https://securityintelligence.com/posts/raspberry-robin-worm-dridex-malware/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_odbcconf_exec_susp_locations.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\odbcconf.exe" or ProcessVersionInfoOriginalFileName =~ "odbcconf.exe") and (ProcessCommandLine contains ":\\PerfLogs\\" or ProcessCommandLine contains ":\\ProgramData\\" or ProcessCommandLine contains ":\\Temp\\" or ProcessCommandLine contains ":\\Users\\Public\\" or ProcessCommandLine contains ":\\Windows\\Registration\\CRMLog" or ProcessCommandLine contains ":\\Windows\\System32\\com\\dmp\\" or ProcessCommandLine contains ":\\Windows\\System32\\FxsTmp\\" or ProcessCommandLine contains ":\\Windows\\System32\\Microsoft\\Crypto\\RSA\\MachineKeys\\" or ProcessCommandLine contains ":\\Windows\\System32\\spool\\drivers\\color\\" or ProcessCommandLine contains ":\\Windows\\System32\\spool\\PRINTERS\\" or ProcessCommandLine contains ":\\Windows\\System32\\spool\\SERVERS\\" or ProcessCommandLine contains ":\\Windows\\System32\\Tasks_Migrated\\" or ProcessCommandLine contains ":\\Windows\\System32\\Tasks\\Microsoft\\Windows\\SyncCenter\\" or ProcessCommandLine contains ":\\Windows\\SysWOW64\\com\\dmp\\" or ProcessCommandLine contains ":\\Windows\\SysWOW64\\FxsTmp\\" or ProcessCommandLine contains ":\\Windows\\SysWOW64\\Tasks\\Microsoft\\Windows\\PLA\\System\\" or ProcessCommandLine contains ":\\Windows\\SysWOW64\\Tasks\\Microsoft\\Windows\\SyncCenter\\" or ProcessCommandLine contains ":\\Windows\\Tasks\\" or ProcessCommandLine contains ":\\Windows\\Temp\\" or ProcessCommandLine contains ":\\Windows\\Tracing\\" or ProcessCommandLine contains "\\AppData\\Local\\Temp\\" or ProcessCommandLine contains "\\AppData\\Roaming\\")

@@ -1,0 +1,21 @@
+// Title: ScreenSaver Registry Key Set
+// Sigma ID: 40b6e656-4e11-4c0c-8772-c1cc6dae34ce
+// Status: test | Level: medium
+// Author: Jose Luis Sanchez Martinez (@Joseliyo_Jstnk)
+// Date: 2022-05-04 | Modified: 2023-08-17
+// ATT&CK: stealth, T1218.011
+// Description: Detects registry key established after masqueraded .scr file execution using Rundll32 through
+//   desk.cpl
+// False positives:
+//   - Legitimate use of screen saver
+// References:
+//   - https://twitter.com/VakninHai/status/1517027824984547329
+//   - https://twitter.com/pabraeken/status/998627081360695297
+//   - https://jstnk9.github.io/jstnk9/research/InstallScreenSaver-SCR-files
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_scr_file_executed_by_rundll32.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where InitiatingProcessFolderPath endswith "\\rundll32.exe" and (RegistryKey contains "\\Control Panel\\Desktop\\SCRNSAVE.EXE" and RegistryValueData endswith ".scr") and (not((RegistryValueData contains "C:\\Windows\\System32\\" or RegistryValueData contains "C:\\Windows\\SysWOW64\\")))

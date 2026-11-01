@@ -1,0 +1,18 @@
+// Title: Suspicious Userinit Child Process
+// Sigma ID: b655a06a-31c0-477a-95c2-3726b83d649d
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems), Samir Bousseaden (idea)
+// Date: 2019-06-17 | Modified: 2025-10-17
+// ATT&CK: privilege-escalation, stealth, T1055
+// Description: Detects a suspicious child process of userinit
+// False positives:
+//   - Administrative scripts
+// References:
+//   - https://twitter.com/SBousseaden/status/1139811587760562176
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_userinit_child.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\userinit.exe" and (not((ProcessCommandLine contains "\\netlogon\\" or (FolderPath endswith "\\explorer.exe" or ProcessVersionInfoOriginalFileName =~ "explorer.exe" or ProcessCommandLine =~ "C:\\Windows\\Explorer.EXE") or isnull(FolderPath))))

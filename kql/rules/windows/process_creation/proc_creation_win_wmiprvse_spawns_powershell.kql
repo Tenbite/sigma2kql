@@ -1,0 +1,21 @@
+// Title: Potential WMI Lateral Movement WmiPrvSE Spawned PowerShell
+// Sigma ID: 692f0bec-83ba-4d04-af7e-e884a96059b6
+// Status: stable | Level: medium
+// Author: Markus Neis @Karneades
+// Date: 2019-04-03 | Modified: 2023-03-29
+// ATT&CK: execution, T1047, T1059.001
+// Description: Detects Powershell as a child of the WmiPrvSE process. Which could be a sign of lateral movement
+//   via WMI.
+// False positives:
+//   - AppvClient
+//   - CCM
+//   - WinRM
+// References:
+//   - https://any.run/report/68bc255f9b0db6a0d30a8f2dadfbee3256acfe12497bf93943bc1eab0735e45e/a2385d6f-34f7-403c-90d3-b1f9d2a90a5e
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_wmiprvse_spawns_powershell.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\WmiPrvSE.exe" and ((FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe") or (ProcessVersionInfoOriginalFileName in~ ("PowerShell.EXE", "pwsh.dll")))

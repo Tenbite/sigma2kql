@@ -1,0 +1,18 @@
+// Title: Access To Potentially Sensitive Sysvol Files By Uncommon Applications
+// Sigma ID: d51694fe-484a-46ac-92d6-969e76d60d10
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2023-12-21 | Modified: 2024-07-29
+// ATT&CK: credential-access, T1552.006
+// Description: Detects file access requests to potentially sensitive files hosted on the Windows Sysvol share.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/vletoux/pingcastle
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_access/file_access_win_susp_gpo_files.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where (FileName startswith "\\" and (FileName contains "\\sysvol\\" and FileName contains "\\Policies\\") and (FileName endswith "audit.csv" or FileName endswith "Files.xml" or FileName endswith "GptTmpl.inf" or FileName endswith "groups.xml" or FileName endswith "Registry.pol" or FileName endswith "Registry.xml" or FileName endswith "scheduledtasks.xml" or FileName endswith "scripts.ini" or FileName endswith "services.xml")) and (not(((InitiatingProcessFolderPath startswith "C:\\Program Files (x86)\\" or InitiatingProcessFolderPath startswith "C:\\Program Files\\" or InitiatingProcessFolderPath startswith "C:\\Windows\\system32\\" or InitiatingProcessFolderPath startswith "C:\\Windows\\SysWOW64\\") or InitiatingProcessFolderPath =~ "C:\\Windows\\explorer.exe")))

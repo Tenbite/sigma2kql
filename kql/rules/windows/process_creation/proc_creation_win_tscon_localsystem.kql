@@ -1,0 +1,20 @@
+// Title: Suspicious TSCON Start as SYSTEM
+// Sigma ID: 9847f263-4a81-424f-970c-875dab15b79b
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2018-03-17 | Modified: 2022-05-27
+// ATT&CK: command-and-control, T1219.002
+// Description: Detects a tscon.exe start as LOCAL SYSTEM
+// False positives:
+//   - Unknown
+// References:
+//   - http://www.korznikov.com/2017/03/0-day-or-feature-privilege-escalation.html
+//   - https://medium.com/@networksecurity/rdp-hijacking-how-to-hijack-rds-and-remoteapp-sessions-transparently-to-move-through-an-da2a1e73a5f6
+//   - https://www.ired.team/offensive-security/lateral-movement/t1076-rdp-hijacking-for-lateral-movement
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_tscon_localsystem.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (AccountName contains "AUTHORI" or AccountName contains "AUTORI") and FolderPath endswith "\\tscon.exe"

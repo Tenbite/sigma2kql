@@ -1,0 +1,19 @@
+// Title: Use of W32tm as Timer
+// Sigma ID: 6da2c9f5-7c53-401b-aacb-92c040ce1215
+// Status: test | Level: high
+// Author: frack113
+// Date: 2022-09-25 | Modified: -
+// ATT&CK: discovery, T1124
+// Description: When configured with suitable command line arguments, w32tm can act as a delay mechanism
+// False positives:
+//   - Legitimate use
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/d0dad62dbcae9c60c519368e82c196a3db577055/atomics/T1124/T1124.md
+//   - https://blogs.blackberry.com/en/2022/05/dirty-deeds-done-dirt-cheap-russian-rat-offers-backdoor-bargains
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_w32tm.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\w32tm.exe" or ProcessVersionInfoOriginalFileName =~ "w32time.dll") and (ProcessCommandLine contains "/stripchart" and ProcessCommandLine contains "/computer:" and ProcessCommandLine contains "/period:" and ProcessCommandLine contains "/dataonly" and ProcessCommandLine contains "/samples:")

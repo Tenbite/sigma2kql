@@ -1,0 +1,25 @@
+// Title: Finger.EXE Execution
+// Sigma ID: af491bca-e752-4b44-9c86-df5680533dbc
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems), omkar72, oscd.community
+// Date: 2021-02-24 | Modified: 2024-06-27
+// ATT&CK: command-and-control, T1105
+// Description: Detects execution of the "finger.exe" utility. Finger.EXE or "TCPIP Finger Command" is an old
+//   utility that is still present on modern Windows installation. It Displays information about
+//   users on a specified remote computer (typically a UNIX computer) that is running the finger
+//   service or daemon. Due to the old nature of this utility and the rareness of machines having the
+//   finger service. Any execution of "finger.exe" can be considered "suspicious" and worth
+//   investigating.
+// False positives:
+//   - Admin activity (unclear what they do nowadays with finger.exe)
+// References:
+//   - https://twitter.com/bigmacjpg/status/1349727699863011328?s=12
+//   - https://app.any.run/tasks/40115012-a919-4208-bfed-41e82cb3dadf/
+//   - http://hyp3rlinx.altervista.org/advisories/Windows_TCPIP_Finger_Command_C2_Channel_and_Bypassing_Security_Software.txt
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_finger_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessVersionInfoOriginalFileName =~ "finger.exe" or FolderPath endswith "\\finger.exe"

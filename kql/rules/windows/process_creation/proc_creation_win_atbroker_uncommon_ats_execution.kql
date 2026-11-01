@@ -1,0 +1,19 @@
+// Title: Uncommon  Assistive Technology Applications Execution Via AtBroker.EXE
+// Sigma ID: f24bcaea-0cd1-11eb-adc1-0242ac120002
+// Status: test | Level: medium
+// Author: Mateusz Wydra, oscd.community
+// Date: 2020-10-12 | Modified: 2024-03-06
+// ATT&CK: stealth, T1218
+// Description: Detects the start of a non built-in assistive technology applications via "Atbroker.EXE".
+// False positives:
+//   - Legitimate, non-default assistive technology applications execution
+// References:
+//   - http://www.hexacorn.com/blog/2016/07/22/beyond-good-ol-run-key-part-42/
+//   - https://lolbas-project.github.io/lolbas/Binaries/Atbroker/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_atbroker_uncommon_ats_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\AtBroker.exe" or ProcessVersionInfoOriginalFileName =~ "AtBroker.exe") and ProcessCommandLine contains "start") and (not((ProcessCommandLine contains "animations" or ProcessCommandLine contains "audiodescription" or ProcessCommandLine contains "caretbrowsing" or ProcessCommandLine contains "caretwidth" or ProcessCommandLine contains "colorfiltering" or ProcessCommandLine contains "cursorindicator" or ProcessCommandLine contains "cursorscheme" or ProcessCommandLine contains "filterkeys" or ProcessCommandLine contains "focusborderheight" or ProcessCommandLine contains "focusborderwidth" or ProcessCommandLine contains "highcontrast" or ProcessCommandLine contains "keyboardcues" or ProcessCommandLine contains "keyboardpref" or ProcessCommandLine contains "livecaptions" or ProcessCommandLine contains "magnifierpane" or ProcessCommandLine contains "messageduration" or ProcessCommandLine contains "minimumhitradius" or ProcessCommandLine contains "mousekeys" or ProcessCommandLine contains "Narrator" or ProcessCommandLine contains "osk" or ProcessCommandLine contains "overlappedcontent" or ProcessCommandLine contains "showsounds" or ProcessCommandLine contains "soundsentry" or ProcessCommandLine contains "speechreco" or ProcessCommandLine contains "stickykeys" or ProcessCommandLine contains "togglekeys" or ProcessCommandLine contains "voiceaccess" or ProcessCommandLine contains "windowarranging" or ProcessCommandLine contains "windowtracking" or ProcessCommandLine contains "windowtrackingtimeout" or ProcessCommandLine contains "windowtrackingzorder"))) and (not(ProcessCommandLine contains "Oracle_JavaAccessBridge"))

@@ -1,0 +1,22 @@
+// Title: Suspicious Msiexec Execute Arbitrary DLL
+// Sigma ID: 6f4191bb-912b-48a8-9ce7-682769541e6d
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-01-16 | Modified: 2026-01-09
+// ATT&CK: stealth, T1218.007
+// Description: Adversaries may abuse msiexec.exe to proxy execution of malicious payloads. Msiexec.exe is the
+//   command-line utility for the Windows Installer and is thus commonly associated with executing
+//   installation packages (.msi)
+// False positives:
+//   - Legitimate script
+// References:
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.007/T1218.007.md
+//   - https://twitter.com/_st0pp3r_/status/1583914515996897281
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_msiexec_execute_dll.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\msiexec.exe" and (ProcessCommandLine contains " -Y" or ProcessCommandLine contains " /Y" or ProcessCommandLine contains " –Y" or ProcessCommandLine contains " —Y" or ProcessCommandLine contains " ―Y")) and (not((ProcessCommandLine contains "\\MsiExec.exe\" /Y \"C:\\Program Files\\" or ProcessCommandLine contains "\\MsiExec.exe\" /Y \"C:\\Program Files (x86)\\" or ProcessCommandLine contains "\\MsiExec.exe\" /Y \"C:\\Windows\\System32\\" or ProcessCommandLine contains "\\MsiExec.exe\" /Y \"C:\\Windows\\SysWOW64\\")))

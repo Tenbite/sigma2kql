@@ -1,0 +1,21 @@
+// Title: Phishing Pattern ISO in Archive
+// Sigma ID: fcdf69e5-a3d3-452a-9724-26f2308bf2b1
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-06-07 | Modified: -
+// ATT&CK: initial-access, T1566
+// Description: Detects cases in which an ISO files is opend within an archiver like 7Zip or Winrar, which is a
+//   sign of phishing as threat actors put small ISO files in archives as email attachments to bypass
+//   certain filters and protective measures (mark of web)
+// False positives:
+//   - Legitimate cases in which archives contain ISO or IMG files and the user opens the archive and the image via clicking and not extraction
+// References:
+//   - https://twitter.com/1ZRR4H/status/1534259727059787783
+//   - https://app.any.run/tasks/e1fe6a62-bce8-4323-a49a-63795d9afd5d/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_archiver_iso_phishing.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (InitiatingProcessFolderPath endswith "\\Winrar.exe" or InitiatingProcessFolderPath endswith "\\7zFM.exe" or InitiatingProcessFolderPath endswith "\\peazip.exe") and (FolderPath endswith "\\isoburn.exe" or FolderPath endswith "\\PowerISO.exe" or FolderPath endswith "\\ImgBurn.exe")

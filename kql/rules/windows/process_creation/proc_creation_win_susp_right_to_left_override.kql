@@ -1,0 +1,24 @@
+// Title: Potential Defense Evasion Via Right-to-Left Override
+// Sigma ID: ad691d92-15f2-4181-9aa4-723c74f9ddc3
+// Status: test | Level: high
+// Author: Micah Babinski, @micahbabinski, Swachchhanda Shrawan Poudel (Nextron Systems), Luc Génaux
+// Date: 2023-02-15 | Modified: 2026-03-20
+// ATT&CK: stealth, T1036.002
+// Description: Detects the presence of the "u202+E" character, which causes a terminal, browser, or operating
+//   system to render text in a right-to-left sequence. This character is used as an obfuscation and
+//   masquerading techniques by adversaries to trick users into opening malicious files.
+// False positives:
+//   - Commandlines that contains scriptures such as arabic or hebrew might make use of this character
+// References:
+//   - https://redcanary.com/blog/right-to-left-override/
+//   - https://www.malwarebytes.com/blog/news/2014/01/the-rtlo-method
+//   - https://unicode-explorer.com/c/202E
+//   - https://tria.ge/241015-l98snsyeje/behavioral2
+//   - https://unprotect.it/technique/right-to-left-override-rlo-extension-spoofing/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_right_to_left_override.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "\\u202e" or ProcessCommandLine contains "[U+202E]" or ProcessCommandLine contains "‮"

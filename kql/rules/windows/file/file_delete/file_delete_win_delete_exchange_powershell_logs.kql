@@ -1,0 +1,20 @@
+// Title: Exchange PowerShell Cmdlet History Deleted
+// Sigma ID: a55349d8-9588-4c5a-8e3b-1925fe2a4ffe
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-10-26 | Modified: 2026-10-13
+// ATT&CK: stealth, T1070
+// Description: Detects the deletion of the Exchange PowerShell cmdlet History logs which may indicate an
+//   attempt to destroy forensic evidence
+// False positives:
+//   - Possible FP during log rotation
+// References:
+//   - https://web.archive.org/web/20221012062917/https://m365internals.com/2022/10/07/hunting-in-on-premises-exchange-server-logs/
+//   - https://www.it-server-room.com/en/exchange-server-log-file-locations-and-cleanup-guide/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_delete/file_delete_win_delete_exchange_powershell_logs.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath contains "\\Logging\\CmdletInfra\\LocalPowerShell\\Cmdlet\\" and FolderPath contains "_Cmdlet_"

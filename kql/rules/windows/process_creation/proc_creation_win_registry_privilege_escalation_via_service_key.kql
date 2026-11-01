@@ -1,0 +1,20 @@
+// Title: Potential Privilege Escalation via Service Permissions Weakness
+// Sigma ID: 0f9c21f1-6a73-4b0e-9809-cb562cb8d981
+// Status: test | Level: high
+// Author: Teymur Kheirkhabarov
+// Date: 2019-10-26 | Modified: 2024-12-01
+// ATT&CK: persistence, privilege-escalation, execution, stealth, T1574.011
+// Description: Detect modification of services configuration (ImagePath, FailureCommand and ServiceDLL) in
+//   registry by processes with Medium integrity level
+// False positives:
+//   - Unknown
+// References:
+//   - https://speakerdeck.com/heirhabarov/hunting-for-privilege-escalation-in-windows-environment
+//   - https://pentestlab.blog/2017/03/31/insecure-registry-permissions/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_registry_privilege_escalation_via_service_key.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessIntegrityLevel in~ ("Medium", "S-1-16-8192")) and (ProcessCommandLine contains "ControlSet" and ProcessCommandLine contains "services") and (ProcessCommandLine contains "\\ImagePath" or ProcessCommandLine contains "\\FailureCommand" or ProcessCommandLine contains "\\ServiceDll")

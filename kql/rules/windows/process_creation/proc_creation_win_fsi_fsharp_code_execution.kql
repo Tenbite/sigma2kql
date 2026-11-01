@@ -1,0 +1,22 @@
+// Title: Use of FSharp Interpreters
+// Sigma ID: b96b2031-7c17-4473-afe7-a30ce714db29
+// Status: test | Level: medium
+// Author: Christopher Peacock @SecurePeacock, SCYTHE @scythe_io
+// Date: 2022-06-02 | Modified: 2024-04-23
+// ATT&CK: execution, T1059
+// Description: Detects the execution of FSharp Interpreters "FsiAnyCpu.exe" and "FSi.exe" Both can be used for
+//   AWL bypass and to execute F# code via scripts or inline.
+// False positives:
+//   - Legitimate use by a software developer.
+// References:
+//   - https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac
+//   - https://bohops.com/2020/11/02/exploring-the-wdac-microsoft-recommended-block-rules-part-ii-wfc-fsi/
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/FsiAnyCpu/
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Fsi/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_fsi_fsharp_code_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\fsi.exe" or FolderPath endswith "\\fsianycpu.exe") or (ProcessVersionInfoOriginalFileName in~ ("fsi.exe", "fsianycpu.exe"))

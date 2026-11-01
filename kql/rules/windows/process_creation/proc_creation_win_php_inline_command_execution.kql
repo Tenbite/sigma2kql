@@ -1,0 +1,21 @@
+// Title: Php Inline Command Execution
+// Sigma ID: d81871ef-5738-47ab-9797-7a9c90cd4bfb
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-01-02 | Modified: -
+// ATT&CK: execution, T1059
+// Description: Detects execution of php using the "-r" flag. This is could be used as a way to launch a reverse
+//   shell or execute live php code.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.php.net/manual/en/features.commandline.php
+//   - https://www.revshells.com/
+//   - https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_php_inline_command_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\php.exe" or ProcessVersionInfoOriginalFileName =~ "php.exe") and ProcessCommandLine contains " -r"

@@ -1,0 +1,19 @@
+// Title: Computer System Reconnaissance Via Wmic.EXE
+// Sigma ID: 9d7ca793-f6bd-471c-8d0f-11e68b2f0d2f
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-09-08 | Modified: 2023-02-14
+// ATT&CK: discovery, execution, T1047
+// Description: Detects execution of wmic utility with the "computersystem" flag in order to obtain information
+//   about the machine such as the domain, username, model, etc.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.microsoft.com/security/blog/2022/09/07/profiling-dev-0270-phosphorus-ransomware-operations/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_wmic_recon_computersystem.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\wmic.exe" or ProcessVersionInfoOriginalFileName =~ "wmic.exe") and ProcessCommandLine contains "computersystem"

@@ -1,0 +1,19 @@
+// Title: Persistence Via Hhctrl.ocx
+// Sigma ID: f10ed525-97fe-4fed-be7c-2feecca941b1
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-07-21 | Modified: 2023-08-17
+// ATT&CK: persistence
+// Description: Detects when an attacker modifies the registry value of the "hhctrl" to point to a custom binary
+// False positives:
+//   - Unlikely
+// References:
+//   - https://persistence-info.github.io/Data/hhctrl.html
+//   - https://www.hexacorn.com/blog/2018/04/23/beyond-good-ol-run-key-part-77/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_hhctrl_persistence.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey contains "\\CLSID\\{52A2AAAE-085D-4187-97EA-8C30DB990436}\\InprocServer32\\(Default)" and (not(RegistryValueData =~ "C:\\Windows\\System32\\hhctrl.ocx"))

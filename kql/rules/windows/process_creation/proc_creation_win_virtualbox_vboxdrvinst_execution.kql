@@ -1,0 +1,21 @@
+// Title: Suspicious VBoxDrvInst.exe Parameters
+// Sigma ID: b7b19cb6-9b32-4fc4-a108-73f19acfe262
+// Status: test | Level: medium
+// Author: Konstantin Grishchenko, oscd.community
+// Date: 2020-10-06 | Modified: 2021-11-27
+// ATT&CK: persistence, defense-impairment, T1112
+// Description: Detect VBoxDrvInst.exe run with parameters allowing processing INF file. This allows to create
+//   values in the registry and install drivers. For example one could use this technique to obtain
+//   persistence via modifying one of Run or RunOnce registry keys
+// False positives:
+//   - Legitimate use of VBoxDrvInst.exe utility by VirtualBox Guest Additions installation process
+// References:
+//   - https://github.com/LOLBAS-Project/LOLBAS/blob/4db780e0f0b2e2bb8cb1fa13e09196da9b9f1834/yml/LOLUtilz/OtherBinaries/VBoxDrvInst.yml
+//   - https://twitter.com/pabraeken/status/993497996179492864
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_virtualbox_vboxdrvinst_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\VBoxDrvInst.exe" and (ProcessCommandLine contains "driver" and ProcessCommandLine contains "executeinf")

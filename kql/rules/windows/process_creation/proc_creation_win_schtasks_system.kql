@@ -1,0 +1,19 @@
+// Title: Schtasks Creation Or Modification With SYSTEM Privileges
+// Sigma ID: 89ca78fd-b37c-4310-b3d3-81a023f83936
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-07-28 | Modified: 2025-02-15
+// ATT&CK: privilege-escalation, execution, persistence, T1053.005
+// Description: Detects the creation or update of a scheduled task to run with "NT AUTHORITY\SYSTEM" privileges
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.elastic.co/security-labs/exploring-the-qbot-attack-pattern
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_schtasks_system.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\schtasks.exe" and (ProcessCommandLine contains " /change " or ProcessCommandLine contains " /create ")) and ProcessCommandLine contains "/ru " and (ProcessCommandLine contains "NT AUT" or ProcessCommandLine contains " SYSTEM ")) and (not(((FolderPath endswith "\\schtasks.exe" and (ProcessCommandLine contains "/TN TVInstallRestore" and ProcessCommandLine contains "\\TeamViewer_.exe")) or (ProcessCommandLine contains "Subscription Heartbeat" and ProcessCommandLine contains "\\HeartbeatConfig.xml" and ProcessCommandLine contains "\\Microsoft Shared\\OFFICE") or (ProcessCommandLine contains "/Create /F /RU System /SC WEEKLY /TN AviraSystemSpeedupVerify /TR " or ProcessCommandLine contains ":\\Program Files (x86)\\Avira\\System Speedup\\setup\\avira_speedup_setup.exe" or ProcessCommandLine contains "/VERIFY /VERYSILENT /NOSTART /NODOTNET /NORESTART\" /RL HIGHEST"))))

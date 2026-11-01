@@ -1,0 +1,18 @@
+// Title: Registry Entries For Azorult Malware
+// Sigma ID: f7f9ab88-7557-4a69-b30e-0a8f91b3a0e7
+// Status: test | Level: critical
+// Author: Trent Liffick
+// Date: 2020-05-08 | Modified: 2021-11-27
+// ATT&CK: persistence, execution, defense-impairment, T1112
+// Description: Detects the presence of a registry key created during Azorult execution
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.trendmicro.com/vinfo/us/threat-encyclopedia/malware/trojan.win32.azoruit.a
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_event/registry_event_mal_azorult.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey endswith "SYSTEM*" and RegistryKey endswith "\\services\\localNETService"

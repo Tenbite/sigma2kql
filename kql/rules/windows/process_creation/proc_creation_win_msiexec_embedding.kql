@@ -1,0 +1,18 @@
+// Title: Suspicious MsiExec Embedding Parent
+// Sigma ID: 4a2a2c3e-209f-4d01-b513-4155a540b469
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-04-16 | Modified: 2022-07-14
+// ATT&CK: stealth, T1218.007
+// Description: Adversaries may abuse msiexec.exe to proxy the execution of malicious payloads
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.007/T1218.007.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_msiexec_embedding.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\cmd.exe") and (InitiatingProcessCommandLine contains "MsiExec.exe" and InitiatingProcessCommandLine contains "-Embedding ")) and (not(((FolderPath endswith ":\\Windows\\System32\\cmd.exe" and ProcessCommandLine contains "C:\\Program Files\\SplunkUniversalForwarder\\bin\\") or (ProcessCommandLine contains "\\DismFoDInstall.cmd" or (InitiatingProcessCommandLine contains "\\MsiExec.exe -Embedding " and InitiatingProcessCommandLine contains "Global\\MSI0000")))))

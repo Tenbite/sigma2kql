@@ -1,0 +1,20 @@
+// Title: HackTool - winPEAS Execution
+// Sigma ID: 98b53e78-ebaf-46f8-be06-421aafd176d9
+// Status: test | Level: high
+// Author: Georg Lauenstein (sure[secure])
+// Date: 2022-09-19 | Modified: 2023-03-23
+// ATT&CK: privilege-escalation, discovery, T1082, T1087, T1046
+// Description: WinPEAS is a script that search for possible paths to escalate privileges on Windows hosts. The
+//   checks are explained on book.hacktricks.xyz
+// False positives:
+//   - Unlikely
+// References:
+//   - https://github.com/carlospolop/PEASS-ng
+//   - https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_winpeas.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessVersionInfoOriginalFileName =~ "winPEAS.exe" or (FolderPath endswith "\\winPEASany_ofs.exe" or FolderPath endswith "\\winPEASany.exe" or FolderPath endswith "\\winPEASx64_ofs.exe" or FolderPath endswith "\\winPEASx64.exe" or FolderPath endswith "\\winPEASx86_ofs.exe" or FolderPath endswith "\\winPEASx86.exe")) or (ProcessCommandLine contains " applicationsinfo" or ProcessCommandLine contains " browserinfo" or ProcessCommandLine contains " eventsinfo" or ProcessCommandLine contains " fileanalysis" or ProcessCommandLine contains " filesinfo" or ProcessCommandLine contains " processinfo" or ProcessCommandLine contains " servicesinfo" or ProcessCommandLine contains " windowscreds") or ProcessCommandLine contains "https://github.com/carlospolop/PEASS-ng/releases/latest/download/" or (InitiatingProcessCommandLine endswith " -linpeas" or ProcessCommandLine endswith " -linpeas")

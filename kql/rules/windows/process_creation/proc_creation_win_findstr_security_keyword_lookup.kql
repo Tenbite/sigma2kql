@@ -1,0 +1,23 @@
+// Title: Security Tools Keyword Lookup Via Findstr.EXE
+// Sigma ID: 4fe074b4-b833-4081-8f24-7dcfeca72b42
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems), frack113
+// Date: 2023-10-20 | Modified: 2023-11-14
+// ATT&CK: discovery, T1518.001
+// Description: Detects execution of "findstr" to search for common names of security tools. Attackers often
+//   pipe the results of recon commands such as "tasklist" or "whoami" to "findstr" in order to
+//   filter out the results. This detection focuses on the keywords that the attacker might use as a
+//   filter.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/987e3ca988ae3cff4b9f6e388c139c05bf44bbb8/atomics/T1518.001/T1518.001.md#atomic-test-1---security-software-discovery
+//   - https://www.microsoft.com/en-us/security/blog/2023/10/18/multiple-north-korean-threat-actors-exploiting-the-teamcity-cve-2023-42793-vulnerability/
+//   - https://www.hhs.gov/sites/default/files/manage-engine-vulnerability-sector-alert-tlpclear.pdf
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_findstr_security_keyword_lookup.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\find.exe" or FolderPath endswith "\\findstr.exe") or (ProcessVersionInfoOriginalFileName in~ ("FIND.EXE", "FINDSTR.EXE"))) and (ProcessCommandLine endswith " avira" or ProcessCommandLine endswith " avira\"" or ProcessCommandLine endswith " cb" or ProcessCommandLine endswith " cb\"" or ProcessCommandLine endswith " cylance" or ProcessCommandLine endswith " cylance\"" or ProcessCommandLine endswith " defender" or ProcessCommandLine endswith " defender\"" or ProcessCommandLine endswith " kaspersky" or ProcessCommandLine endswith " kaspersky\"" or ProcessCommandLine endswith " kes" or ProcessCommandLine endswith " kes\"" or ProcessCommandLine endswith " mc" or ProcessCommandLine endswith " mc\"" or ProcessCommandLine endswith " sec" or ProcessCommandLine endswith " sec\"" or ProcessCommandLine endswith " sentinel" or ProcessCommandLine endswith " sentinel\"" or ProcessCommandLine endswith " symantec" or ProcessCommandLine endswith " symantec\"" or ProcessCommandLine endswith " virus" or ProcessCommandLine endswith " virus\"")

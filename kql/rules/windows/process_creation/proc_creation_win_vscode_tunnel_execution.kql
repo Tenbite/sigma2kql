@@ -1,0 +1,21 @@
+// Title: Visual Studio Code Tunnel Execution
+// Sigma ID: 90d6bd71-dffb-4989-8d86-a827fedd6624
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems), citron_ninja
+// Date: 2023-10-25 | Modified: 2025-10-29
+// ATT&CK: command-and-control, T1071.001, T1219
+// Description: Detects Visual Studio Code tunnel execution. Attackers can abuse this functionality to establish
+//   a C2 channel
+// False positives:
+//   - Legitimate use of Visual Studio Code tunnel
+// References:
+//   - https://ipfyx.fr/post/visual-studio-code-tunnel/
+//   - https://badoption.eu/blog/2023/01/31/code_c2.html
+//   - https://code.visualstudio.com/docs/remote/tunnels
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_vscode_tunnel_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (isnull(ProcessVersionInfoOriginalFileName) and ProcessCommandLine endswith ".exe tunnel") or (ProcessCommandLine contains ".exe tunnel" and ProcessCommandLine contains "--accept-server-license-terms") or (InitiatingProcessCommandLine endswith " tunnel" and FolderPath endswith "\\cmd.exe" and (ProcessCommandLine contains "/d /c " and ProcessCommandLine contains "\\servers\\Stable-" and ProcessCommandLine contains "code-server.cmd"))

@@ -1,0 +1,20 @@
+// Title: Potential UAC Bypass Via Sdclt.EXE
+// Sigma ID: 40f9af16-589d-4984-b78d-8c2aec023197
+// Status: test | Level: medium
+// Author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+// Date: 2020-05-02 | Modified: 2024-12-01
+// ATT&CK: privilege-escalation, T1548.002
+// Description: A General detection for sdclt being spawned as an elevated process. This could be an indicator
+//   of sdclt being used for bypass UAC techniques.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/OTRF/detection-hackathon-apt29/issues/6
+//   - https://github.com/OTRF/ThreatHunter-Playbook/blob/2d4257f630f4c9770f78d0c1df059f891ffc3fec/docs/evals/apt29/detections/3.B.2_C36B49B5-DF58-4A34-9FE9-56189B9DEFEA.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_uac_bypass_sdclt.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "sdclt.exe" and (ProcessIntegrityLevel in~ ("High", "S-1-16-12288"))

@@ -1,0 +1,20 @@
+// Title: Windows Defender Service Disabled - Registry
+// Sigma ID: e1aa95de-610a-427d-b9e7-9b46cfafbe6a
+// Status: test | Level: high
+// Author: Ján Trenčanský, frack113, AlertIQ, Nasreddine Bencherchali
+// Date: 2022-08-01 | Modified: 2024-03-25
+// ATT&CK: defense-impairment, T1685
+// Description: Detects when an attacker or tool disables the Windows Defender service (WinDefend) via the
+//   registry
+// False positives:
+//   - Administrator actions
+// References:
+//   - https://thedfirreport.com/2021/10/18/icedid-to-xinglocker-ransomware-in-24-hours/
+//   - https://gist.github.com/anadr/7465a9fde63d41341136949f14c21105
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_disable_windows_defender_service.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey endswith "\\Services\\WinDefend\\Start" and RegistryValueData =~ "DWORD (0x00000004)"

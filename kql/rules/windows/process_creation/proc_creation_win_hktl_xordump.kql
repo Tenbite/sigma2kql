@@ -1,0 +1,18 @@
+// Title: HackTool - XORDump Execution
+// Sigma ID: 66e563f9-1cbd-4a22-a957-d8b7c0f44372
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-01-28 | Modified: 2023-02-08
+// ATT&CK: stealth, T1036, T1003.001, credential-access
+// Description: Detects suspicious use of XORDump process memory dumping utility
+// False positives:
+//   - Another tool that uses the command line switches of XORdump
+// References:
+//   - https://github.com/audibleblink/xordump
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_xordump.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\xordump.exe" or (ProcessCommandLine contains " -process lsass.exe " or ProcessCommandLine contains " -m comsvcs " or ProcessCommandLine contains " -m dbghelp " or ProcessCommandLine contains " -m dbgcore ")

@@ -1,0 +1,20 @@
+// Title: Audio Capture via PowerShell
+// Sigma ID: 932fb0d8-692b-4b0f-a26e-5643a50fe7d6
+// Status: test | Level: medium
+// Author: E.M. Anhaus (originally from Atomic Blue Detections, Endgame), oscd.community, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2019-10-24 | Modified: 2023-04-06
+// ATT&CK: collection, T1123
+// Description: Detects audio capture via PowerShell Cmdlet.
+// False positives:
+//   - Legitimate audio capture by legitimate user.
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1123/T1123.md
+//   - https://eqllib.readthedocs.io/en/latest/analytics/ab7a6ef4-0983-4275-a4f1-5c6bd3c31c23.html
+//   - https://github.com/frgnca/AudioDeviceCmdlets
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_powershell_audio_capture.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "WindowsAudioDevice-Powershell-Cmdlet" or ProcessCommandLine contains "Toggle-AudioDevice" or ProcessCommandLine contains "Get-AudioDevice " or ProcessCommandLine contains "Set-AudioDevice " or ProcessCommandLine contains "Write-AudioDevice "

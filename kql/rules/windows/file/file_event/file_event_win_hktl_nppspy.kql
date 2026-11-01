@@ -1,0 +1,20 @@
+// Title: HackTool - NPPSpy Hacktool Usage
+// Sigma ID: cad1fe90-2406-44dc-bd03-59d0b58fe722
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2021-11-29 | Modified: 2024-06-27
+// ATT&CK: credential-access
+// Description: Detects the use of NPPSpy hacktool that stores cleartext passwords of users that logged in to a
+//   local file
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003/T1003.md#atomic-test-2---credential-dumping-with-nppspy
+//   - https://twitter.com/0gtweet/status/1465282548494487554
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_hktl_nppspy.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath endswith "\\NPPSpy.txt" or FolderPath endswith "\\NPPSpy.dll"

@@ -1,0 +1,23 @@
+// Title: Modify User Shell Folders Startup Value
+// Sigma ID: 9c226817-8dc9-46c2-a58d-66655aafd7dc
+// Status: test | Level: high
+// Author: frack113, Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2022-10-01 | Modified: 2026-01-05
+// ATT&CK: persistence, privilege-escalation, T1547.001
+// Description: Detect modification of the User Shell Folders registry values for Startup or Common Startup
+//   which could indicate persistence attempts. Attackers may modify User Shell Folders registry keys
+//   to point to malicious executables or scripts that will be executed during startup. This
+//   technique is often used to maintain persistence on a compromised system by ensuring that the
+//   malicious payload is executed automatically.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/9e5b12c4912c07562aec7500447b11fa3e17e254/atomics/T1547.001/T1547.001.md
+//   - https://www.welivesecurity.com/en/eset-research/muddywater-snakes-riverbank/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_susp_user_shell_folders.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where ((RegistryKey contains "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders" or RegistryKey contains "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders") and (RegistryKey endswith "\\Common Startup" or RegistryKey endswith "\\Startup")) and (not((isnull(RegistryValueData) or (RegistryValueData contains "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup" or RegistryValueData contains "%ProgramData%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup") or (RegistryValueData contains "%USERPROFILE%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup" or RegistryValueData contains "%%USERPROFILE%%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup") or (RegistryValueData contains "C:\\Users\\" and RegistryValueData contains "\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup"))))

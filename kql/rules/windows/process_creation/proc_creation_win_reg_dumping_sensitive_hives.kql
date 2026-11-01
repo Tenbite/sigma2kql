@@ -1,0 +1,24 @@
+// Title: Dumping of Sensitive Hives Via Reg.EXE
+// Sigma ID: fd877b94-9bb5-4191-bb25-d79cbd93c167
+// Status: test | Level: high
+// Author: Teymur Kheirkhabarov, Endgame, JHasenbusch, Daniil Yugoslavskiy, oscd.community, frack113
+// Date: 2019-10-22 | Modified: 2023-12-13
+// ATT&CK: credential-access, T1003.002, T1003.004, T1003.005
+// Tags: car.2013-07-001
+// Description: Detects the usage of "reg.exe" in order to dump sensitive registry hives. This includes SAM,
+//   SYSTEM and SECURITY hives.
+// False positives:
+//   - Dumping hives for legitimate purpouse i.e. backup or forensic investigation
+// References:
+//   - https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment
+//   - https://eqllib.readthedocs.io/en/latest/analytics/aed95fc6-5e3f-49dc-8b35-06508613f979.html
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003/T1003.md
+//   - https://www.wietzebeukema.nl/blog/windows-command-line-obfuscation
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003.002/T1003.002.md#atomic-test-1---registry-dump-of-sam-creds-and-secrets
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_reg_dumping_sensitive_hives.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\reg.exe" or ProcessVersionInfoOriginalFileName =~ "reg.exe") and (ProcessCommandLine contains " save " or ProcessCommandLine contains " export " or ProcessCommandLine contains " ˢave " or ProcessCommandLine contains " eˣport ") and (ProcessCommandLine contains "hklm" or ProcessCommandLine contains "hk˪m" or ProcessCommandLine contains "hkey_local_machine" or ProcessCommandLine contains "hkey_˪ocal_machine" or ProcessCommandLine contains "hkey_loca˪_machine" or ProcessCommandLine contains "hkey_˪oca˪_machine") and (ProcessCommandLine contains "\\system" or ProcessCommandLine contains "\\sam" or ProcessCommandLine contains "\\security" or ProcessCommandLine contains "\\ˢystem" or ProcessCommandLine contains "\\syˢtem" or ProcessCommandLine contains "\\ˢyˢtem" or ProcessCommandLine contains "\\ˢam" or ProcessCommandLine contains "\\ˢecurity")

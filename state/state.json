@@ -1,0 +1,12 @@
+{
+ "fingerprint": "962685277d8cdceedc6cd10ddf1e7f5ac1d6571a5e37bcd90e4ce454e2aae61f",
+ "last_mode": "full",
+ "last_run": "2026-11-01 23:27 UTC",
+ "sigma_sha": "05d1031f537e830b76da53bae2400c5814c89165",
+ "target": "microsoft_xdr",
+ "versions": {
+  "kusto-language": "12.4.1",
+  "pySigma": "1.5.1",
+  "pySigma-backend-kusto": "1.0.1"
+ }
+}

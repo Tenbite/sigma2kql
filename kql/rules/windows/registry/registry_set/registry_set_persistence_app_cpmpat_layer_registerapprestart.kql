@@ -1,0 +1,20 @@
+// Title: Potential Persistence Via AppCompat RegisterAppRestart Layer
+// Sigma ID: b86852fb-4c77-48f9-8519-eb1b2c308b59
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2024-01-01 | Modified: -
+// ATT&CK: privilege-escalation, persistence, T1546.011
+// Description: Detects the setting of the REGISTERAPPRESTART compatibility layer on an application. This
+//   compatibility layer allows an application to register for restart using the
+//   "RegisterApplicationRestart" API. This can be potentially abused as a persistence mechanism.
+// False positives:
+//   - Legitimate applications making use of this feature for compatibility reasons
+// References:
+//   - https://github.com/nasbench/Misc-Research/blob/d114d6a5e0a437d3818e492ef9864367152543e7/Other/Persistence-Via-RegisterAppRestart-Shim.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_persistence_app_cpmpat_layer_registerapprestart.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey endswith "\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers*" and RegistryValueData contains "REGISTERAPPRESTART"

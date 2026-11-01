@@ -1,0 +1,21 @@
+// Title: JAMF MDM Potential Suspicious Child Process
+// Sigma ID: 2316929c-01aa-438c-970f-099145ab1ee6
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-08-22 | Modified: -
+// ATT&CK: execution
+// Description: Detects potential suspicious child processes of "jamf". Could be a sign of potential abuse of
+//   Jamf as a C2 server as seen by Typhon MythicAgent.
+// False positives:
+//   - Legitimate execution of custom scripts or commands by Jamf administrators. Apply additional filters accordingly
+// References:
+//   - https://github.com/MythicAgents/typhon/
+//   - https://www.zoocoup.org/casper/jamf_cheatsheet.pdf
+//   - https://docs.jamf.com/10.30.0/jamf-pro/administrator-guide/Components_Installed_on_Managed_Computers.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_jamf_susp_child.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "/jamf" and (FolderPath endswith "/bash" or FolderPath endswith "/sh")

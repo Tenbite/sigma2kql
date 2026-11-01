@@ -1,0 +1,20 @@
+// Title: Console CodePage Lookup Via CHCP
+// Sigma ID: 7090adee-82e2-4269-bd59-80691e7c6338
+// Status: test | Level: medium
+// Author: _pete_0, TheDFIRReport
+// Date: 2022-02-21 | Modified: 2024-03-05
+// ATT&CK: discovery, T1614.001
+// Description: Detects use of chcp to look up the system locale value as part of host discovery
+// False positives:
+//   - During Anaconda update the 'conda.exe' process will eventually execution the 'chcp' command.
+//   - Discord was seen using chcp to look up code pages
+// References:
+//   - https://thedfirreport.com/2022/04/04/stolen-images-campaign-ends-in-conti-ransomware/
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/chcp
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_chcp_codepage_lookup.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\cmd.exe" and (InitiatingProcessCommandLine contains " -c " or InitiatingProcessCommandLine contains " /c " or InitiatingProcessCommandLine contains " –c " or InitiatingProcessCommandLine contains " —c " or InitiatingProcessCommandLine contains " ―c " or InitiatingProcessCommandLine contains " -r " or InitiatingProcessCommandLine contains " /r " or InitiatingProcessCommandLine contains " –r " or InitiatingProcessCommandLine contains " —r " or InitiatingProcessCommandLine contains " ―r " or InitiatingProcessCommandLine contains " -k " or InitiatingProcessCommandLine contains " /k " or InitiatingProcessCommandLine contains " –k " or InitiatingProcessCommandLine contains " —k " or InitiatingProcessCommandLine contains " ―k ") and FolderPath endswith "\\chcp.com" and (ProcessCommandLine endswith "chcp" or ProcessCommandLine endswith "chcp " or ProcessCommandLine endswith "chcp  ")

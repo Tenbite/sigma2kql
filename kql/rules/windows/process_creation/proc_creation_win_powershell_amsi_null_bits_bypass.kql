@@ -1,0 +1,18 @@
+// Title: Potential AMSI Bypass Using NULL Bits
+// Sigma ID: 92a974db-ab84-457f-9ec0-55db83d7a825
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-01-04 | Modified: 2023-05-09
+// ATT&CK: defense-impairment, T1685
+// Description: Detects usage of special strings/null bits in order to potentially bypass AMSI functionalities
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/r00t-3xp10it/hacking-material-books/blob/43cb1e1932c16ff1f58b755bc9ab6b096046853f/obfuscation/simple_obfuscation.md#amsi-bypass-using-null-bits-satoshi
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_powershell_amsi_null_bits_bypass.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "if(0){{{0}}}' -f $(0 -as [char]) +" or ProcessCommandLine contains "#<NULL>"

@@ -1,0 +1,19 @@
+// Title: Exports Critical Registry Keys To a File
+// Sigma ID: 82880171-b475-4201-b811-e9c826cd5eaa
+// Status: test | Level: high
+// Author: Oddvar Moe, Sander Wiebing, oscd.community
+// Date: 2020-10-12 | Modified: 2024-03-13
+// ATT&CK: exfiltration, discovery, T1012
+// Description: Detects the export of a crital Registry key to a file.
+// False positives:
+//   - Dumping hives for legitimate purpouse i.e. backup or forensic investigation
+// References:
+//   - https://lolbas-project.github.io/lolbas/Binaries/Regedit/
+//   - https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_regedit_export_critical_keys.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\regedit.exe" or ProcessVersionInfoOriginalFileName =~ "REGEDIT.EXE") and (ProcessCommandLine contains " -E " or ProcessCommandLine contains " /E " or ProcessCommandLine contains " –E " or ProcessCommandLine contains " —E " or ProcessCommandLine contains " ―E ") and (ProcessCommandLine contains "hklm" or ProcessCommandLine contains "hkey_local_machine") and (ProcessCommandLine endswith "\\system" or ProcessCommandLine endswith "\\sam" or ProcessCommandLine endswith "\\security")

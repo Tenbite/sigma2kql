@@ -1,0 +1,18 @@
+// Title: Suspicious Service Binary Directory
+// Sigma ID: 883faa95-175a-4e22-8181-e5761aeb373c
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2021-03-09 | Modified: 2022-10-09
+// ATT&CK: stealth, T1202
+// Description: Detects a service binary running in a suspicious directory
+// False positives:
+//   - Unknown
+// References:
+//   - https://blog.truesec.com/2021/03/07/exchange-zero-day-proxylogon-and-hafnium/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_service_dir.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath contains "\\Users\\Public\\" or FolderPath contains "\\$Recycle.bin" or FolderPath contains "\\Users\\All Users\\" or FolderPath contains "\\Users\\Default\\" or FolderPath contains "\\Users\\Contacts\\" or FolderPath contains "\\Users\\Searches\\" or FolderPath contains "C:\\Perflogs\\" or FolderPath contains "\\config\\systemprofile\\" or FolderPath contains "\\Windows\\Fonts\\" or FolderPath contains "\\Windows\\IME\\" or FolderPath contains "\\Windows\\addins\\") and (InitiatingProcessFolderPath endswith "\\services.exe" or InitiatingProcessFolderPath endswith "\\svchost.exe")

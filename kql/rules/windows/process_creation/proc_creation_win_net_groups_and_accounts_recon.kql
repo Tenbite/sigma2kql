@@ -1,0 +1,22 @@
+// Title: Suspicious Group And Account Reconnaissance Activity Using Net.EXE
+// Sigma ID: d95de845-b83c-4a9a-8a6a-4fc802ebf6c0
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems), omkar72, @svch0st, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2019-01-16 | Modified: 2023-03-02
+// ATT&CK: discovery, T1087.001, T1087.002
+// Description: Detects suspicious reconnaissance command line activity on Windows systems using Net.EXE Check
+//   if the user that executed the commands is suspicious (e.g. service accounts, LOCAL_SYSTEM)
+// False positives:
+//   - Inventory tool runs
+//   - Administrative activity
+// References:
+//   - https://redcanary.com/blog/how-one-hospital-thwarted-a-ryuk-ransomware-outbreak/
+//   - https://thedfirreport.com/2020/10/18/ryuk-in-5-hours/
+//   - https://research.nccgroup.com/2022/08/19/back-in-black-unlocking-a-lockbit-3-0-ransomware-attack/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_net_groups_and_accounts_recon.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\net.exe" or FolderPath endswith "\\net1.exe") or (ProcessVersionInfoOriginalFileName in~ ("net.exe", "net1.exe"))) and ((((ProcessCommandLine contains " group " or ProcessCommandLine contains " localgroup ") and (ProcessCommandLine contains "domain admins" or ProcessCommandLine contains " administrator" or ProcessCommandLine contains " administrateur" or ProcessCommandLine contains "enterprise admins" or ProcessCommandLine contains "Exchange Trusted Subsystem" or ProcessCommandLine contains "Remote Desktop Users" or ProcessCommandLine contains "Utilisateurs du Bureau à distance" or ProcessCommandLine contains "Usuarios de escritorio remoto" or ProcessCommandLine contains " /do")) and (not(ProcessCommandLine contains " /add"))) or (ProcessCommandLine contains " accounts " and ProcessCommandLine contains " /do"))

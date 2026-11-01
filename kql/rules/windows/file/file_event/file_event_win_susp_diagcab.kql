@@ -1,0 +1,19 @@
+// Title: Creation of a Diagcab
+// Sigma ID: 3d0ed417-3d94-4963-a562-4a92c940656a
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-06-08 | Modified: -
+// ATT&CK: resource-development
+// Description: Detects the creation of diagcab file, which could be caused by some legitimate installer or is a
+//   sign of exploitation (review the filename and its location)
+// False positives:
+//   - Legitimate microsoft diagcab
+// References:
+//   - https://threadreaderapp.com/thread/1533879688141086720.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_susp_diagcab.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath endswith ".diagcab"

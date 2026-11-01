@@ -1,0 +1,22 @@
+// Title: Deleted Data Overwritten Via Cipher.EXE
+// Sigma ID: 4b046706-5789-4673-b111-66f25fe99534
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2021-12-26 | Modified: 2023-02-21
+// ATT&CK: impact, T1485
+// Description: Detects usage of the "cipher" built-in utility in order to overwrite deleted data from disk.
+//   Adversaries may destroy data and files on specific systems or in large numbers on a network to
+//   interrupt availability to systems, services, and network resources. Data destruction is likely
+//   to render stored data irrecoverable by forensic techniques through overwriting files or data on
+//   local and remote drives
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1485/T1485.md#atomic-test-3---overwrite-deleted-data-on-c-drive
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_cipher_overwrite_deleted_data.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessVersionInfoOriginalFileName =~ "CIPHER.EXE" or FolderPath endswith "\\cipher.exe") and ProcessCommandLine contains " /w:"

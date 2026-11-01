@@ -1,0 +1,18 @@
+// Title: MsiExec Web Install
+// Sigma ID: f7b5f842-a6af-4da5-9e95-e32478f3cd2f
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2018-02-09 | Modified: 2022-01-07
+// ATT&CK: stealth, T1218.007, command-and-control, T1105
+// Description: Detects suspicious msiexec process starts with web addresses as parameter
+// False positives:
+//   - False positives depend on scripts and administrative tools used in the monitored environment
+// References:
+//   - https://blog.trendmicro.com/trendlabs-security-intelligence/attack-using-windows-installer-msiexec-exe-leads-lokibot/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_msiexec_web_install.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains " msiexec" and ProcessCommandLine contains "://"

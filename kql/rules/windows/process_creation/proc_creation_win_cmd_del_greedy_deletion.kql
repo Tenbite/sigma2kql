@@ -1,0 +1,21 @@
+// Title: Greedy File Deletion Using Del
+// Sigma ID: 204b17ae-4007-471b-917b-b917b315c5db
+// Status: test | Level: medium
+// Author: frack113 , X__Junior (Nextron Systems)
+// Date: 2021-12-02 | Modified: 2023-09-11
+// ATT&CK: stealth, T1070.004
+// Description: Detects execution of the "del" builtin command to remove files using greedy/wildcard expression.
+//   This is often used by malware to delete content of folders that perhaps contains the initial
+//   malware infection or to delete evidence.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.joesandbox.com/analysis/509330/0/html#1044F3BDBE3BB6F734E357235F4D5898582D
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/erase
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_cmd_del_greedy_deletion.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\cmd.exe" or ProcessVersionInfoOriginalFileName =~ "Cmd.Exe") and (ProcessCommandLine contains "del " or ProcessCommandLine contains "erase ") and (ProcessCommandLine contains "\\*.au3" or ProcessCommandLine contains "\\*.dll" or ProcessCommandLine contains "\\*.exe" or ProcessCommandLine contains "\\*.js")

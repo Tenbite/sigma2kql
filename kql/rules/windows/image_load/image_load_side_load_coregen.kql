@@ -1,0 +1,19 @@
+// Title: Potential DLL Sideloading Using Coregen.exe
+// Sigma ID: 0fa66f66-e3f6-4a9c-93f8-4f2610b00171
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-12-31 | Modified: -
+// ATT&CK: privilege-escalation, stealth, T1218, T1055
+// Description: Detect usage of the "coregen.exe" (Microsoft CoreCLR Native Image Generator) binary to sideload
+//   arbitrary DLLs.
+// False positives:
+//   - Unknown
+// References:
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Coregen/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/image_load/image_load_side_load_coregen.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceImageLoadEvents
+| where InitiatingProcessFolderPath endswith "\\coregen.exe" and (not((FolderPath startswith "C:\\Program Files (x86)\\Microsoft Silverlight\\" or FolderPath startswith "C:\\Program Files\\Microsoft Silverlight\\" or FolderPath startswith "C:\\Windows\\System32\\" or FolderPath startswith "C:\\Windows\\SysWOW64\\")))

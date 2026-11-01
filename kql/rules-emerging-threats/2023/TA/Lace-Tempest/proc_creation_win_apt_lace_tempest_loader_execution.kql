@@ -1,0 +1,20 @@
+// Title: Lace Tempest Malware Loader Execution
+// Sigma ID: 745ea50b-9673-4ba7-9426-cb45cf4a8e6d
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-11-09 | Modified: -
+// ATT&CK: execution
+// Tags: detection.emerging-threats
+// Description: Detects execution of a specific binary based on filename and hash used by Lace Tempest to load
+//   additional malware as reported by SysAid Team
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.sysaid.com/blog/service-desk/on-premise-software-security-vulnerability-notification
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2023/TA/Lace-Tempest/proc_creation_win_apt_lace_tempest_loader_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith ":\\Program Files\\SysAidServer\\tomcat\\webapps\\usersfiles\\user.exe" or SHA256 startswith "B5ACF14CDAC40BE590318DEE95425D0746E85B1B7B1CBD14DA66F21F2522BF4D"

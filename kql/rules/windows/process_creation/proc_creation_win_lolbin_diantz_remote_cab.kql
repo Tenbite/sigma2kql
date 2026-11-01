@@ -1,0 +1,18 @@
+// Title: Suspicious Diantz Download and Compress Into a CAB File
+// Sigma ID: 185d7418-f250-42d0-b72e-0c8b70661e93
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2021-11-26 | Modified: 2022-08-13
+// ATT&CK: command-and-control, T1105
+// Description: Download and compress a remote file and store it in a cab file on local machine.
+// False positives:
+//   - Unknown
+// References:
+//   - https://lolbas-project.github.io/lolbas/Binaries/Diantz/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_lolbin_diantz_remote_cab.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "diantz.exe" and ProcessCommandLine contains " \\\\" and ProcessCommandLine contains ".cab"

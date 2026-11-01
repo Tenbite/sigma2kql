@@ -1,0 +1,19 @@
+// Title: PUA - System Informer Execution
+// Sigma ID: 5722dff1-4bdd-4949-86ab-fbaf707e767a
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2023-05-08 | Modified: 2024-11-23
+// ATT&CK: persistence, privilege-escalation, discovery, stealth, T1082, T1564, T1543
+// Description: Detects the execution of System Informer, a task manager tool to view and manipulate processes,
+//   kernel options and other low level operations
+// False positives:
+//   - System Informer is regularly used legitimately by system administrators or developers. Apply additional filters accordingly
+// References:
+//   - https://github.com/winsiderss/systeminformer
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_pua_system_informer.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\SystemInformer.exe" or ProcessVersionInfoOriginalFileName =~ "SystemInformer.exe" or ProcessVersionInfoFileDescription =~ "System Informer" or ProcessVersionInfoProductName =~ "System Informer" or (MD5 startswith "19426363A37C03C3ED6FEDF57B6696EC" or SHA1 startswith "8B12C6DA8FAC0D5E8AB999C31E5EA04AF32D53DC" or SHA256 startswith "8EE9D84DE50803545937A63C686822388A3338497CDDB660D5D69CF68B68F287")

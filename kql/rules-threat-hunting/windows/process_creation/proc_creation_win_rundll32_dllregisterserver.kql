@@ -1,0 +1,23 @@
+// Title: Rundll32.EXE Calling DllRegisterServer Export Function Explicitly
+// Sigma ID: d81a9fc6-55db-4461-b962-0e78fea5b0ad
+// Status: test | Level: medium
+// Author: Andreas Braathen (mnemonic.io)
+// Date: 2023-10-17 | Modified: -
+// ATT&CK: stealth, T1218
+// Tags: detection.threat-hunting
+// Description: Detects when the DLL export function 'DllRegisterServer' is called in the commandline by
+//   Rundll32 explicitly where the DLL is located in a non-standard path.
+// False positives:
+//   - Legitimate usage as part of application installation, but less likely from e.g. temporary paths.
+//   - Not every instance is considered malicious, but this rule will capture the malicious usages.
+// References:
+//   - https://thedfirreport.com/2023/08/28/html-smuggling-leads-to-domain-wide-ransomware/
+//   - https://www.virustotal.com/gui/file/94816439312563db982cd038cf77cbc5ef4c7003e3edee86e2b0f99e675ed4ed/behavior
+//   - https://learn.microsoft.com/en-us/windows/win32/api/olectl/nf-olectl-dllregisterserver
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-threat-hunting/windows/process_creation/proc_creation_win_rundll32_dllregisterserver.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\rundll32.exe" or ProcessVersionInfoOriginalFileName =~ "RUNDLL32.EXE") and ProcessCommandLine contains "DllRegisterServer") and (not((ProcessCommandLine contains ":\\Program Files (x86)" or ProcessCommandLine contains ":\\Program Files\\" or ProcessCommandLine contains ":\\Windows\\System32\\" or ProcessCommandLine contains ":\\Windows\\SysWOW64\\")))

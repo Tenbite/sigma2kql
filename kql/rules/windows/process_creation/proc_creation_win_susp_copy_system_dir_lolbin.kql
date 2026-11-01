@@ -1,0 +1,23 @@
+// Title: LOL-Binary Copied From System Directory
+// Sigma ID: f5d19838-41b5-476c-98d8-ba8af4929ee2
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-08-29 | Modified: 2025-11-27
+// ATT&CK: stealth, T1036.003
+// Description: Detects a suspicious copy operation that tries to copy a known LOLBIN from system (System32,
+//   SysWOW64, WinSxS) directories to another on disk in order to bypass detections based on
+//   locations.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.hybrid-analysis.com/sample/8da5b75b6380a41eee3a399c43dfe0d99eeefaa1fd21027a07b1ecaa4cd96fdd?environmentId=120
+//   - https://web.archive.org/web/20180331144337/https://www.fireeye.com/blog/threat-research/2018/03/sanny-malware-delivery-method-updated-in-recently-observed-attacks.html
+//   - https://thedfirreport.com/2023/08/28/html-smuggling-leads-to-domain-wide-ransomware/
+//   - https://www.virustotal.com/gui/file/14e722855605ba78dc1d21153f0e1be90e7528149f2cd2d7d6eba8ef27534bdc/behavior
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_copy_system_dir_lolbin.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\cmd.exe" and ProcessCommandLine contains "copy ") or ((FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe") and (ProcessCommandLine contains "copy-item" or ProcessCommandLine contains " copy " or ProcessCommandLine contains "cpi " or ProcessCommandLine contains " cp ")) or ((FolderPath endswith "\\robocopy.exe" or FolderPath endswith "\\xcopy.exe") or (ProcessVersionInfoOriginalFileName in~ ("robocopy.exe", "XCOPY.EXE")))) and ((ProcessCommandLine contains "\\System32" or ProcessCommandLine contains "\\SysWOW64" or ProcessCommandLine contains "\\WinSxS") and (ProcessCommandLine contains "\\bitsadmin.exe" or ProcessCommandLine contains "\\calc.exe" or ProcessCommandLine contains "\\certutil.exe" or ProcessCommandLine contains "\\cmdl32.exe" or ProcessCommandLine contains "\\cscript.exe" or ProcessCommandLine contains "\\mshta.exe" or ProcessCommandLine contains "\\rundll32.exe" or ProcessCommandLine contains "\\wscript.exe" or ProcessCommandLine contains "\\ie4uinit.exe"))

@@ -1,0 +1,20 @@
+// Title: Diagnostic Library Sdiageng.DLL Loaded By Msdt.EXE
+// Sigma ID: ec8c4047-fad9-416a-8c81-0f479353d7f6
+// Status: test | Level: high
+// Author: Greg (rule)
+// Date: 2022-06-17 | Modified: 2023-02-17
+// ATT&CK: stealth, T1202
+// Tags: cve.2022-30190
+// Description: Detects both of CVE-2022-30190 (Follina) and DogWalk vulnerabilities exploiting msdt.exe binary
+//   to load the "sdiageng.dll" library
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.securonix.com/blog/detecting-microsoft-msdt-dogwalk/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/image_load/image_load_dll_sdiageng_load_by_msdt.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceImageLoadEvents
+| where InitiatingProcessFolderPath endswith "\\msdt.exe" and FolderPath endswith "\\sdiageng.dll"

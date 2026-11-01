@@ -1,0 +1,20 @@
+// Title: Suspicious Redirection to Local Admin Share
+// Sigma ID: ab9e3b40-0c85-4ba1-aede-455d226fd124
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-01-16 | Modified: 2023-12-28
+// ATT&CK: exfiltration, T1048
+// Description: Detects a suspicious output redirection to the local admins share, this technique is often found
+//   in malicious scripts or hacktool stagers
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.microsoft.com/security/blog/2022/01/15/destructive-malware-targeting-ukrainian-organizations/
+//   - http://blog.talosintelligence.com/2022/09/lazarus-three-rats.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_redirect_local_admin_share.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains ">" and (ProcessCommandLine contains "\\\\127.0.0.1\\admin$\\" or ProcessCommandLine contains "\\\\localhost\\admin$\\")

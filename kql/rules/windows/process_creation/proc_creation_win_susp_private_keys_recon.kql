@@ -1,0 +1,19 @@
+// Title: Private Keys Reconnaissance Via CommandLine Tools
+// Sigma ID: 213d6a77-3d55-4ce8-ba74-fcfef741974e
+// Status: test | Level: medium
+// Author: frack113, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2021-07-20 | Modified: 2023-03-06
+// ATT&CK: credential-access, T1552.004
+// Description: Adversaries may search for private key certificate files on compromised systems for insecurely
+//   stored credential
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1552.004/T1552.004.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_private_keys_recon.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains ".key" or ProcessCommandLine contains ".pgp" or ProcessCommandLine contains ".gpg" or ProcessCommandLine contains ".ppk" or ProcessCommandLine contains ".p12" or ProcessCommandLine contains ".pem" or ProcessCommandLine contains ".pfx" or ProcessCommandLine contains ".cer" or ProcessCommandLine contains ".p7b" or ProcessCommandLine contains ".asc") and (((FolderPath endswith "\\cmd.exe" or ProcessVersionInfoOriginalFileName =~ "Cmd.Exe") and ProcessCommandLine contains "dir ") or (((FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe") or (ProcessVersionInfoOriginalFileName in~ ("PowerShell.EXE", "pwsh.dll"))) and ProcessCommandLine contains "Get-ChildItem ") or (FolderPath endswith "\\findstr.exe" or ProcessVersionInfoOriginalFileName =~ "FINDSTR.EXE"))

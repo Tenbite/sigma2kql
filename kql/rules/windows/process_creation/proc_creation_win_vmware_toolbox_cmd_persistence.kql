@@ -1,0 +1,20 @@
+// Title: Potential Persistence Via VMwareToolBoxCmd.EXE VM State Change Script
+// Sigma ID: 7aa4e81a-a65c-4e10-9f81-b200eb229d7d
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-06-14 | Modified: -
+// ATT&CK: execution, persistence, T1059
+// Description: Detects execution of the "VMwareToolBoxCmd.exe" with the "script" and "set" flag to setup a
+//   specific script to run for a specific VM state
+// False positives:
+//   - Unknown
+// References:
+//   - https://bohops.com/2021/10/08/analyzing-and-detecting-a-vmtools-persistence-technique/
+//   - https://www.hexacorn.com/blog/2017/01/14/beyond-good-ol-run-key-part-53/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_vmware_toolbox_cmd_persistence.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\VMwareToolBoxCmd.exe" or ProcessVersionInfoOriginalFileName =~ "toolbox-cmd.exe") and (ProcessCommandLine contains " script " and ProcessCommandLine contains " set ")

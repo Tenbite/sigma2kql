@@ -1,0 +1,21 @@
+// Title: Wab/Wabmig Unusual Parent Or Child Processes
+// Sigma ID: 63d1ccc0-2a43-4f4b-9289-361b308991ff
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-08-12 | Modified: 2022-09-27
+// ATT&CK: execution, stealth
+// Description: Detects unusual parent or children of the wab.exe (Windows Contacts) and Wabmig.exe (Microsoft
+//   Address Book Import Tool) processes as seen being used with bumblebee activity
+// False positives:
+//   - Unknown
+// References:
+//   - https://thedfirreport.com/2022/08/08/bumblebee-roasts-its-way-to-domain-admin/
+//   - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/bumblebee-loader-cybercrime
+//   - https://thedfirreport.com/2022/09/26/bumblebee-round-two/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_wab_unusual_parents.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((InitiatingProcessFolderPath endswith "\\WmiPrvSE.exe" or InitiatingProcessFolderPath endswith "\\svchost.exe" or InitiatingProcessFolderPath endswith "\\dllhost.exe") and (FolderPath endswith "\\wab.exe" or FolderPath endswith "\\wabmig.exe")) or (InitiatingProcessFolderPath endswith "\\wab.exe" or InitiatingProcessFolderPath endswith "\\wabmig.exe")

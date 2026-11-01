@@ -1,0 +1,21 @@
+// Title: APT29 2018 Phishing Campaign CommandLine Indicators
+// Sigma ID: 7453575c-a747-40b9-839b-125a0aae324b
+// Status: stable | Level: critical
+// Author: Florian Roth (Nextron Systems), @41thexplorer
+// Date: 2018-11-20 | Modified: 2023-03-08
+// ATT&CK: execution, stealth, T1218.011
+// Tags: detection.emerging-threats
+// Description: Detects indicators of APT 29 (Cozy Bear) phishing-campaign as reported by mandiant
+// False positives:
+//   - Unlikely
+// References:
+//   - https://twitter.com/DrunkBinary/status/1063075530180886529
+//   - https://www.microsoft.com/security/blog/2018/12/03/analysis-of-cyberattack-on-u-s-think-tanks-non-profits-public-sector-by-unidentified-attackers/
+//   - https://www.mandiant.com/resources/blog/not-so-cozy-an-uncomfortable-examination-of-a-suspected-apt29-phishing-campaign
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2018/TA/APT29-CozyBear/proc_creation_win_apt_apt29_phishing_campaign_indicators.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "-noni -ep bypass $" or (ProcessCommandLine contains "cyzfc.dat," and ProcessCommandLine contains "PointFunctionCall")

@@ -1,0 +1,19 @@
+// Title: Suspicious RunAs-Like Flag Combination
+// Sigma ID: 50d66fb0-03f8-4da0-8add-84e77d12a020
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-11-11 | Modified: -
+// ATT&CK: privilege-escalation
+// Description: Detects suspicious command line flags that let the user set a target user and command as e.g.
+//   seen in PsExec-like tools
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.trendmicro.com/en_us/research/22/k/hack-the-real-box-apt41-new-subgroup-earth-longzhi.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_privilege_escalation_cli_patterns.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains " -u system " or ProcessCommandLine contains " --user system " or ProcessCommandLine contains " -u NT" or ProcessCommandLine contains " -u \"NT" or ProcessCommandLine contains " -u 'NT" or ProcessCommandLine contains " --system " or ProcessCommandLine contains " -u administrator ") and (ProcessCommandLine contains " -c cmd" or ProcessCommandLine contains " -c \"cmd" or ProcessCommandLine contains " -c powershell" or ProcessCommandLine contains " -c \"powershell" or ProcessCommandLine contains " --command cmd" or ProcessCommandLine contains " --command powershell" or ProcessCommandLine contains " -c whoami" or ProcessCommandLine contains " -c wscript" or ProcessCommandLine contains " -c cscript")

@@ -1,0 +1,23 @@
+// Title: Potential SMB Relay Attack Tool Execution
+// Sigma ID: 5589ab4f-a767-433c-961d-c91f3f704db1
+// Status: test | Level: critical
+// Author: Florian Roth (Nextron Systems)
+// Date: 2021-07-24 | Modified: 2023-02-14
+// ATT&CK: collection, execution, credential-access, T1557.001
+// Description: Detects different hacktools used for relay attacks on Windows for privilege escalation
+// False positives:
+//   - Legitimate files with these rare hacktool names
+// References:
+//   - https://foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/
+//   - https://pentestlab.blog/2017/04/13/hot-potato/
+//   - https://github.com/ohpe/juicy-potato
+//   - https://hunter2.gitbook.io/darthsidious/other/war-stories/domain-admin-in-30-minutes
+//   - https://hunter2.gitbook.io/darthsidious/execution/responder-with-ntlm-relay-and-empire
+//   - https://www.localpotato.com/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_relay_attacks_tools.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath contains "PetitPotam" or FolderPath contains "RottenPotato" or FolderPath contains "HotPotato" or FolderPath contains "JuicyPotato" or FolderPath contains "\\just_dce_" or FolderPath contains "Juicy Potato" or FolderPath contains "\\temp\\rot.exe" or FolderPath contains "\\Potato.exe" or FolderPath contains "\\SpoolSample.exe" or FolderPath contains "\\Responder.exe" or FolderPath contains "\\smbrelayx" or FolderPath contains "\\ntlmrelayx" or FolderPath contains "\\LocalPotato") or (ProcessCommandLine contains "Invoke-Tater" or ProcessCommandLine contains " smbrelay" or ProcessCommandLine contains " ntlmrelay" or ProcessCommandLine contains "cme smb " or ProcessCommandLine contains " /ntlm:NTLMhash " or ProcessCommandLine contains "Invoke-PetitPotam" or (ProcessCommandLine contains ".exe -t " and ProcessCommandLine contains " -p ")) or (ProcessCommandLine contains ".exe -c \"{" and ProcessCommandLine endswith "}\" -z")) and (not((FolderPath contains "HotPotatoes6" or FolderPath contains "HotPotatoes7" or FolderPath contains "HotPotatoes ")))

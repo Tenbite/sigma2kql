@@ -1,0 +1,19 @@
+// Title: Suspicious Teams Application Related ObjectAcess Event
+// Sigma ID: 25cde13e-8e20-4c29-b949-4e795b76f16f
+// Status: test | Level: high
+// Author: @SerkinValery
+// Date: 2022-09-16 | Modified: -
+// ATT&CK: credential-access, T1528
+// Description: Detects an access to authentication tokens and accounts of Microsoft Teams desktop application.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.bleepingcomputer.com/news/security/microsoft-teams-stores-auth-tokens-as-cleartext-in-windows-linux-macs/
+//   - https://www.vectra.ai/blogpost/undermining-microsoft-teams-security-by-mining-tokens
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/builtin/security/win_security_teams_suspicious_objectaccess.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey contains "\\Microsoft\\Teams\\Cookies" or RegistryKey contains "\\Microsoft\\Teams\\Local Storage\\leveldb") and (not(InitiatingProcessFolderPath contains "\\Microsoft\\Teams\\current\\Teams.exe"))

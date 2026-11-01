@@ -1,0 +1,20 @@
+// Title: Disk Image Creation Via Hdiutil - MacOS
+// Sigma ID: 1cf98dc2-fcb0-47c9-8aea-654c9284d1ae
+// Status: test | Level: medium
+// Author: Omar Khaled (@beacon_exe)
+// Date: 2024-08-10 | Modified: -
+// ATT&CK: exfiltration
+// Description: Detects the execution of the hdiutil utility in order to create a disk image.
+// False positives:
+//   - Legitimate usage of hdiutil by administrators and users.
+// References:
+//   - https://www.loobins.io/binaries/hdiutil/
+//   - https://www.sentinelone.com/blog/from-the-front-linesunsigned-macos-orat-malware-gambles-for-the-win/
+//   - https://ss64.com/mac/hdiutil.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_hdiutil_create.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "/hdiutil" and ProcessCommandLine contains "create"

@@ -1,0 +1,19 @@
+// Title: Office Application Startup - Office Test
+// Sigma ID: 3d27f6dd-1c74-4687-b4fa-ca849d128d1c
+// Status: test | Level: medium
+// Author: omkar72
+// Date: 2020-10-25 | Modified: 2023-11-08
+// ATT&CK: persistence, T1137.002
+// Description: Detects the addition of office test registry that allows a user to specify an arbitrary DLL that
+//   will be executed every time an Office application is started
+// False positives:
+//   - Unlikely
+// References:
+//   - https://unit42.paloaltonetworks.com/unit42-technical-walkthrough-office-test-persistence-method-used-in-recent-sofacy-attacks/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_event/registry_event_office_test_regadd.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey contains "\\Software\\Microsoft\\Office test\\Special\\Perf"

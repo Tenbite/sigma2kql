@@ -1,0 +1,20 @@
+// Title: HackTool - Default PowerSploit/Empire Scheduled Task Creation
+// Sigma ID: 56c217c3-2de2-479b-990f-5c109ba8458f
+// Status: test | Level: high
+// Author: Markus Neis, @Karneades
+// Date: 2018-03-06 | Modified: 2023-03-03
+// ATT&CK: execution, persistence, privilege-escalation, S0111, G0022, G0060, T1053.005, T1059.001
+// Tags: car.2013-08-001
+// Description: Detects the creation of a schtask via PowerSploit or Empire Default Configuration.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://github.com/0xdeadbeefJERKY/PowerSploit/blob/8690399ef70d2cad10213575ac67e8fa90ddf7c3/Persistence/Persistence.psm1
+//   - https://github.com/EmpireProject/Empire/blob/08cbd274bef78243d7a8ed6443b8364acd1fc48b/lib/modules/powershell/persistence/userland/schtasks.py
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_powersploit_empire_default_schtasks.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (InitiatingProcessFolderPath endswith "\\powershell.exe" or InitiatingProcessFolderPath endswith "\\pwsh.exe") and FolderPath endswith "\\schtasks.exe" and (ProcessCommandLine contains "/Create" and ProcessCommandLine contains "powershell.exe -NonI" and ProcessCommandLine contains "/TN Updater /TR") and (ProcessCommandLine contains "/SC ONLOGON" or ProcessCommandLine contains "/SC DAILY /ST" or ProcessCommandLine contains "/SC ONIDLE" or ProcessCommandLine contains "/SC HOURLY")

@@ -1,0 +1,22 @@
+// Title: Start of NT Virtual DOS Machine
+// Sigma ID: 16905e21-66ee-42fe-b256-1318ada2d770
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-07-16 | Modified: -
+// ATT&CK: stealth
+// Description: Ntvdm.exe allows the execution of 16-bit Windows applications on 32-bit Windows operating
+//   systems, as well as the execution of both 16-bit and 32-bit DOS applications
+// False positives:
+//   - Legitimate use
+// References:
+//   - https://learn.microsoft.com/en-us/windows/compatibility/ntvdm-and-16-bit-app-support
+//   - https://support.microsoft.com/fr-fr/topic/an-ms-dos-based-program-that-uses-the-ms-dos-protected-mode-interface-crashes-on-a-computer-that-is-running-windows-7-5dc739ea-987b-b458-15e4-d28d5cca63c7
+//   - https://app.any.run/tasks/93fe92fa-8b2b-4d92-8c09-a841aed2e793/
+//   - https://app.any.run/tasks/214094a7-0abc-4a7b-a564-1b757faed79d/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_16bit_application.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\ntvdm.exe" or FolderPath endswith "\\csrstub.exe"

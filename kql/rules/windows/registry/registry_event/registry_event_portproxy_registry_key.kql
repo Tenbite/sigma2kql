@@ -1,0 +1,21 @@
+// Title: New PortProxy Registry Entry Added
+// Sigma ID: a54f842a-3713-4b45-8c84-5f136fdebd3c
+// Status: test | Level: medium
+// Author: Andreas Hunkeler (@Karneades)
+// Date: 2021-06-22 | Modified: 2024-03-25
+// ATT&CK: lateral-movement, command-and-control, T1090
+// Description: Detects the modification of the PortProxy registry key which is used for port forwarding.
+// False positives:
+//   - WSL2 network bridge PowerShell script used for WSL/Kubernetes/Docker (e.g. https://github.com/microsoft/WSL/issues/4150#issuecomment-504209723)
+//   - Synergy Software KVM (https://symless.com/synergy)
+// References:
+//   - https://www.fireeye.com/blog/threat-research/2019/01/bypassing-network-restrictions-through-rdp-tunneling.html
+//   - https://adepts.of0x.cc/netsh-portproxy-code/
+//   - https://www.dfirnotes.net/portproxy_detection/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_event/registry_event_portproxy_registry_key.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey endswith "\\Services\\PortProxy\\v4tov4\\tcp*"

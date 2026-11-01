@@ -1,0 +1,20 @@
+// Title: HackTool - SharPersist Execution
+// Sigma ID: 26488ad0-f9fd-4536-876f-52fea846a2e4
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-09-15 | Modified: 2023-02-04
+// ATT&CK: privilege-escalation, execution, persistence, T1053
+// Description: Detects the execution of the hacktool SharPersist - used to deploy various different kinds of
+//   persistence mechanisms
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.mandiant.com/resources/blog/sharpersist-windows-persistence-toolkit
+//   - https://github.com/mandiant/SharPersist
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_sharpersist.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\SharPersist.exe" or ProcessVersionInfoProductName =~ "SharPersist") or (ProcessCommandLine contains " -t schtask -c " or ProcessCommandLine contains " -t startupfolder -c ") or (ProcessCommandLine contains " -t reg -c " and ProcessCommandLine contains " -m add") or (ProcessCommandLine contains " -t service -c " and ProcessCommandLine contains " -m add") or (ProcessCommandLine contains " -t schtask -c " and ProcessCommandLine contains " -m add")

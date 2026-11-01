@@ -1,0 +1,20 @@
+// Title: OneNote.EXE Execution of Malicious Embedded Scripts
+// Sigma ID: 84b1706c-932a-44c4-ae28-892b28a25b94
+// Status: test | Level: high
+// Author: @kostastsale
+// Date: 2023-02-02 | Modified: -
+// ATT&CK: stealth, T1218.001
+// Description: Detects the execution of malicious OneNote documents that contain embedded scripts. When a user
+//   clicks on a OneNote attachment and then on the malicious link inside the ".one" file, it exports
+//   and executes the malicious embedded script from specific directories.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://bazaar.abuse.ch/browse/tag/one/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_office_onenote_embedded_script_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\onenote.exe" and (FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\mshta.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\wscript.exe") and (ProcessCommandLine contains "\\exported\\" or ProcessCommandLine contains "\\onenoteofflinecache_files\\")

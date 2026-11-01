@@ -1,0 +1,20 @@
+// Title: Shell Execution via Find - Linux
+// Sigma ID: 6adfbf8f-52be-4444-9bac-81b539624146
+// Status: test | Level: high
+// Author: Li Ling, Andy Parkidomo, Robert Rakowski, Blake Hartstein (Bloomberg L.P.)
+// Date: 2024-09-02 | Modified: -
+// ATT&CK: discovery, T1083
+// Description: Detects the use of the find command to execute a shell. Such behavior may be associated with
+//   privilege escalation, unauthorized command execution, or exploitation attempt.
+// False positives:
+//   - Unknown
+// References:
+//   - https://gtfobins.github.io/gtfobins/find/#shell
+//   - https://www.elastic.co/guide/en/security/current/linux-restricted-shell-breakout-via-linux-binary-s.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_find_shell_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "/find" and (ProcessCommandLine contains " . " and ProcessCommandLine contains "-exec")) and (ProcessCommandLine contains "/bin/bash" or ProcessCommandLine contains "/bin/dash" or ProcessCommandLine contains "/bin/fish" or ProcessCommandLine contains "/bin/sh" or ProcessCommandLine contains "/bin/zsh")

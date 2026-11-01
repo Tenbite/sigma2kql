@@ -1,0 +1,18 @@
+// Title: Suspicious Use of CSharp Interactive Console
+// Sigma ID: a9e416a8-e613-4f8b-88b8-a7d1d1af2f61
+// Status: test | Level: high
+// Author: Michael R. (@nahamike01)
+// Date: 2020-03-08 | Modified: 2022-07-14
+// ATT&CK: execution, stealth, T1127
+// Description: Detects the execution of CSharp interactive console by PowerShell
+// False positives:
+//   - Possible depending on environment. Pair with other factors such as net connections, command-line args, etc.
+// References:
+//   - https://redcanary.com/blog/detecting-attacks-leveraging-the-net-framework/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_csi_use_of_csharp_console.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\csi.exe" and (InitiatingProcessFolderPath endswith "\\powershell.exe" or InitiatingProcessFolderPath endswith "\\pwsh.exe" or InitiatingProcessFolderPath endswith "\\powershell_ise.exe") and ProcessVersionInfoOriginalFileName =~ "csi.exe"

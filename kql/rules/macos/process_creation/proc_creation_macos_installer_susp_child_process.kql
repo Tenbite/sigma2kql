@@ -1,0 +1,20 @@
+// Title: Suspicious Installer Package Child Process
+// Sigma ID: e0cfaecd-602d-41af-988d-f6ccebb2af26
+// Status: test | Level: medium
+// Author: Sohan G (D4rkCiph3r)
+// Date: 2023-02-18 | Modified: -
+// ATT&CK: T1059, T1059.007, T1071, T1071.001, execution, command-and-control
+// Description: Detects the execution of suspicious child processes from macOS installer package parent process.
+//   This includes osascript, JXA, curl and wget amongst other interpreters
+// False positives:
+//   - Legitimate software uses the scripts (preinstall, postinstall)
+// References:
+//   - https://redcanary.com/blog/clipping-silver-sparrows-wings/
+//   - https://github.com/elastic/detection-rules/blob/4312d8c9583be524578a14fe6295c3370b9a9307/rules/macos/execution_installer_package_spawned_network_event.toml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_installer_susp_child_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (InitiatingProcessFolderPath endswith "/package_script_service" or InitiatingProcessFolderPath endswith "/installer") and (FolderPath endswith "/sh" or FolderPath endswith "/bash" or FolderPath endswith "/dash" or FolderPath endswith "/python" or FolderPath endswith "/ruby" or FolderPath endswith "/perl" or FolderPath endswith "/php" or FolderPath endswith "/javascript" or FolderPath endswith "/osascript" or FolderPath endswith "/tclsh" or FolderPath endswith "/curl" or FolderPath endswith "/wget") and (ProcessCommandLine contains "preinstall" or ProcessCommandLine contains "postinstall")

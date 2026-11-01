@@ -1,0 +1,20 @@
+// Title: Potential PowerShell Downgrade Attack
+// Sigma ID: b3512211-c67e-4707-bedc-66efc7848863
+// Status: test | Level: medium
+// Author: Harish Segar (rule)
+// Date: 2020-03-20 | Modified: 2023-01-04
+// ATT&CK: execution, T1059.001
+// Description: Detects PowerShell downgrade attack by comparing the host versions with the actually used engine
+//   version 2.0
+// False positives:
+//   - Unknown
+// References:
+//   - http://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/
+//   - https://github.com/r00t-3xp10it/hacking-material-books/blob/43cb1e1932c16ff1f58b755bc9ab6b096046853f/obfuscation/simple_obfuscation.md#bypass-or-avoid-amsi-by-version-downgrade-
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_powershell_downgrade_attack.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\powershell.exe" and (ProcessCommandLine contains " -version 2 " or ProcessCommandLine contains " -versio 2 " or ProcessCommandLine contains " -versi 2 " or ProcessCommandLine contains " -vers 2 " or ProcessCommandLine contains " -ver 2 " or ProcessCommandLine contains " -ve 2 " or ProcessCommandLine contains " -v 2 ")

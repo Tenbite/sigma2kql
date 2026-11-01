@@ -1,0 +1,20 @@
+// Title: Potential WWlib.DLL Sideloading
+// Sigma ID: e2e01011-5910-4267-9c3b-4149ed5479cf
+// Status: test | Level: medium
+// Author: X__Junior (Nextron Systems)
+// Date: 2023-05-18 | Modified: -
+// ATT&CK: persistence, privilege-escalation, execution, stealth, T1574.001
+// Description: Detects potential DLL sideloading of "wwlib.dll"
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/WhichbufferArda/status/1658829954182774784
+//   - https://news.sophos.com/en-us/2022/11/03/family-tree-dll-sideloading-cases-may-be-related/
+//   - https://securelist.com/apt-luminousmoth/103332/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/image_load/image_load_side_load_wwlib.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceImageLoadEvents
+| where FolderPath endswith "\\wwlib.dll" and (not(((InitiatingProcessFolderPath startswith "C:\\Program Files (x86)\\Microsoft Office\\" or InitiatingProcessFolderPath startswith "C:\\Program Files\\Microsoft Office\\") and InitiatingProcessFolderPath endswith "\\winword.exe" and (FolderPath startswith "C:\\Program Files (x86)\\Microsoft Office\\" or FolderPath startswith "C:\\Program Files\\Microsoft Office\\"))))

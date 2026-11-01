@@ -1,0 +1,27 @@
+// Title: Suspicious Active Directory Database Snapshot Via ADExplorer
+// Sigma ID: ef61af62-bc74-4f58-b49b-626448227652
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-03-14 | Modified: 2025-07-09
+// ATT&CK: discovery, T1087.002, T1069.002, T1482
+// Description: Detects the execution of Sysinternals ADExplorer with the "-snapshot" flag in order to save a
+//   local copy of the active directory database to a suspicious directory. This can be used by
+//   attackers to extract data for Bloodhound, usernames for password spraying or use the meta data
+//   for social engineering. The snapshot doesn't contain password hashes but there have been cases,
+//   where administrators put passwords in the comment field.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.documentcloud.org/documents/5743766-Global-Threat-Report-2019.html
+//   - https://learn.microsoft.com/de-de/sysinternals/downloads/adexplorer
+//   - https://github.com/c3c/ADExplorerSnapshot.py/tree/f700904defac330802bbfedd1d8ffd9248f4ee24
+//   - https://www.packetlabs.net/posts/scattered-spider-is-a-young-ransomware-gang-exploiting-large-corporations/
+//   - https://www.nccgroup.com/us/research-blog/lapsus-recent-techniques-tactics-and-procedures/
+//   - https://trustedsec.com/blog/adexplorer-on-engagements
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_sysinternals_adexplorer_susp_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\ADExp.exe" or FolderPath endswith "\\ADExplorer.exe" or FolderPath endswith "\\ADExplorer64.exe" or FolderPath endswith "\\ADExplorer64a.exe") or ProcessVersionInfoOriginalFileName =~ "AdExp" or ProcessVersionInfoFileDescription =~ "Active Directory Editor" or ProcessVersionInfoProductName =~ "Sysinternals ADExplorer") and ProcessCommandLine contains "snapshot" and (ProcessCommandLine contains "\\Downloads\\" or ProcessCommandLine contains "\\Users\\Public\\" or ProcessCommandLine contains "\\AppData\\" or ProcessCommandLine contains "\\Windows\\Temp\\")

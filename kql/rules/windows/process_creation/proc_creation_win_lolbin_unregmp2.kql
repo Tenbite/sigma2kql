@@ -1,0 +1,19 @@
+// Title: Lolbin Unregmp2.exe Use As Proxy
+// Sigma ID: 727454c0-d851-48b0-8b89-385611ab0704
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-12-29 | Modified: 2024-06-04
+// ATT&CK: stealth, T1218
+// Description: Detect usage of the "unregmp2.exe" binary as a proxy to launch a custom version of
+//   "wmpnscfg.exe"
+// False positives:
+//   - Unknown
+// References:
+//   - https://lolbas-project.github.io/lolbas/Binaries/Unregmp2/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_lolbin_unregmp2.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\unregmp2.exe" or ProcessVersionInfoOriginalFileName =~ "unregmp2.exe") and (ProcessCommandLine contains " -HideWMP" or ProcessCommandLine contains " /HideWMP" or ProcessCommandLine contains " –HideWMP" or ProcessCommandLine contains " —HideWMP" or ProcessCommandLine contains " ―HideWMP")

@@ -1,0 +1,19 @@
+// Title: Potentially Suspicious Compression Tool Parameters
+// Sigma ID: 27a72a60-7e5e-47b1-9d17-909c9abafdcd
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems), Samir Bousseaden
+// Date: 2019-10-15 | Modified: 2023-08-29
+// ATT&CK: collection, T1560.001
+// Tags: detection.threat-hunting
+// Description: Detects potentially suspicious command line arguments of common data compression tools
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/SBousseaden/status/1184067445612535811
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-threat-hunting/windows/process_creation/proc_creation_win_susp_compression_params.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (((ProcessVersionInfoOriginalFileName contains "7z" and ProcessVersionInfoOriginalFileName contains ".exe") or ProcessVersionInfoOriginalFileName endswith "rar.exe" or (ProcessVersionInfoOriginalFileName contains "Command" and ProcessVersionInfoOriginalFileName contains "Line" and ProcessVersionInfoOriginalFileName contains "RAR")) and (ProcessCommandLine contains " -p" or ProcessCommandLine contains " -ta" or ProcessCommandLine contains " -tb" or ProcessCommandLine contains " -sdel" or ProcessCommandLine contains " -dw" or ProcessCommandLine contains " -hp")) and (not((InitiatingProcessFolderPath contains ":\\Program Files\\" or InitiatingProcessFolderPath contains ":\\Program Files (x86)\\")))

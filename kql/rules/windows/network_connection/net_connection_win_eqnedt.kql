@@ -1,0 +1,20 @@
+// Title: Network Connection Initiated By Eqnedt32.EXE
+// Sigma ID: a66bc059-c370-472c-a0d7-f8fd1bf9d583
+// Status: test | Level: high
+// Author: Max Altgelt (Nextron Systems)
+// Date: 2022-04-14 | Modified: 2024-05-31
+// ATT&CK: execution, T1203
+// Description: Detects network connections from the Equation Editor process "eqnedt32.exe".
+// False positives:
+//   - Unlikely
+// References:
+//   - https://twitter.com/forensicitguy/status/1513538712986079238
+//   - https://forensicitguy.github.io/xloader-formbook-velvetsweatshop-spreadsheet/
+//   - https://news.sophos.com/en-us/2019/07/18/a-new-equation-editor-exploit-goes-commercial-as-maldoc-attacks-using-it-spike/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/network_connection/net_connection_win_eqnedt.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceNetworkEvents
+| where InitiatingProcessFolderPath endswith "\\eqnedt32.exe"

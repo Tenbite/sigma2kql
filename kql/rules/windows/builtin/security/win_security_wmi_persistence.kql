@@ -1,0 +1,20 @@
+// Title: WMI Persistence - Security
+// Sigma ID: f033f3f3-fd24-4995-97d8-a3bb17550a88
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems), Gleb Sukhodolskiy, Timur Zinniatullin oscd.community
+// Date: 2017-08-22 | Modified: 2022-11-29
+// ATT&CK: persistence, privilege-escalation, T1546.003
+// Description: Detects suspicious WMI event filter and command line event consumer based on WMI and Security
+//   Logs.
+// False positives:
+//   - Unknown (data set is too small; further testing needed)
+// References:
+//   - https://twitter.com/mattifestation/status/899646620148539397
+//   - https://www.eideon.com/2018-03-02-THL03-WMIBackdoors/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/builtin/security/win_security_wmi_persistence.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey contains "subscription"

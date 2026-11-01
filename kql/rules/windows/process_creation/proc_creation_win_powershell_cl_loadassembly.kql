@@ -1,0 +1,21 @@
+// Title: Assembly Loading Via CL_LoadAssembly.ps1
+// Sigma ID: c57872c7-614f-4d7f-a40d-b78c8df2d30d
+// Status: test | Level: medium
+// Author: frack113, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-05-21 | Modified: 2023-08-17
+// ATT&CK: stealth, T1216
+// Description: Detects calls to "LoadAssemblyFromPath" or "LoadAssemblyFromNS" that are part of the
+//   "CL_LoadAssembly.ps1" script. This can be abused to load different assemblies and bypass App
+//   locker controls.
+// False positives:
+//   - Unknown
+// References:
+//   - https://bohops.com/2018/01/07/executing-commands-and-bypassing-applocker-with-powershell-diagnostic-scripts/
+//   - https://lolbas-project.github.io/lolbas/Scripts/CL_LoadAssembly/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_powershell_cl_loadassembly.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "LoadAssemblyFromPath " or ProcessCommandLine contains "LoadAssemblyFromNS "

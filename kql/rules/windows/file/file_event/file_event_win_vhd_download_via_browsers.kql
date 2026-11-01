@@ -1,0 +1,21 @@
+// Title: VHD Image Download Via Browser
+// Sigma ID: 8468111a-ef07-4654-903b-b863a80bbc95
+// Status: test | Level: medium
+// Author: frack113, Christopher Peacock '@securepeacock', SCYTHE '@scythe_io'
+// Date: 2021-10-25 | Modified: 2023-05-05
+// ATT&CK: resource-development, T1587.001
+// Description: Detects creation of ".vhd"/".vhdx" files by browser processes. Malware can use mountable Virtual
+//   Hard Disk ".vhd" files to encapsulate payloads and evade security controls.
+// False positives:
+//   - Legitimate downloads of ".vhd" files would also trigger this
+// References:
+//   - https://redcanary.com/blog/intelligence-insights-october-2021/
+//   - https://www.kaspersky.com/blog/lazarus-vhd-ransomware/36559/
+//   - https://securelist.com/lazarus-on-the-hunt-for-big-game/97757/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_vhd_download_via_browsers.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where (InitiatingProcessFolderPath endswith "\\brave.exe" or InitiatingProcessFolderPath endswith "\\chrome.exe" or InitiatingProcessFolderPath endswith "\\firefox.exe" or InitiatingProcessFolderPath endswith "\\iexplore.exe" or InitiatingProcessFolderPath endswith "\\maxthon.exe" or InitiatingProcessFolderPath endswith "\\MicrosoftEdge.exe" or InitiatingProcessFolderPath endswith "\\msedge.exe" or InitiatingProcessFolderPath endswith "\\msedgewebview2.exe" or InitiatingProcessFolderPath endswith "\\opera.exe" or InitiatingProcessFolderPath endswith "\\safari.exe" or InitiatingProcessFolderPath endswith "\\seamonkey.exe" or InitiatingProcessFolderPath endswith "\\vivaldi.exe" or InitiatingProcessFolderPath endswith "\\whale.exe") and FolderPath contains ".vhd"

@@ -1,0 +1,25 @@
+// Title: File Decoded From Base64/Hex Via Certutil.EXE
+// Sigma ID: cc9cbe82-7bc0-4ef5-bc23-bbfb83947be7
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community
+// Date: 2023-02-15 | Modified: 2025-06-04
+// ATT&CK: stealth, T1027
+// Description: Detects the execution of certutil with either the "decode" or "decodehex" flags to decode base64
+//   or hex encoded files. This can be abused by attackers to decode an encoded payload before
+//   execution
+// False positives:
+//   - Unknown
+// References:
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/certutil
+//   - https://unit42.paloaltonetworks.com/new-babyshark-malware-targets-u-s-national-security-think-tanks/
+//   - https://news.sophos.com/en-us/2021/04/13/compromised-exchange-server-hosting-cryptojacker-targeting-other-exchange-servers/
+//   - https://twitter.com/JohnLaTwC/status/835149808817991680
+//   - https://learn.microsoft.com/en-us/archive/blogs/pki/basic-crl-checking-with-certutil
+//   - https://lolbas-project.github.io/lolbas/Binaries/Certutil/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_certutil_decode.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\certutil.exe" or ProcessVersionInfoOriginalFileName =~ "CertUtil.exe") and (ProcessCommandLine contains "-decode " or ProcessCommandLine contains "/decode " or ProcessCommandLine contains "–decode " or ProcessCommandLine contains "—decode " or ProcessCommandLine contains "―decode " or ProcessCommandLine contains "-decodehex " or ProcessCommandLine contains "/decodehex " or ProcessCommandLine contains "–decodehex " or ProcessCommandLine contains "—decodehex " or ProcessCommandLine contains "―decodehex ")

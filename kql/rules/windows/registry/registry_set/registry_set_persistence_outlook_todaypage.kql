@@ -1,0 +1,20 @@
+// Title: Potential Persistence Via Outlook Today Page
+// Sigma ID: 487bb375-12ef-41f6-baae-c6a1572b4dd1
+// Status: test | Level: high
+// Author: Tobias Michalski (Nextron Systems), David Bertho (@dbertho) & Eirik Sveen (@0xSV1), Storebrand
+// Date: 2021-06-10 | Modified: 2024-08-07
+// ATT&CK: persistence, defense-impairment, T1112
+// Description: Detects potential persistence activity via outlook today page. An attacker can set a custom page
+//   to execute arbitrary code and link to it via the registry values "URL" and "UserDefinedUrl".
+// False positives:
+//   - Unknown
+// References:
+//   - https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=74
+//   - https://trustedsec.com/blog/specula-turning-outlook-into-a-c2-with-one-registry-change
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_persistence_outlook_todaypage.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey endswith "Software\\Microsoft\\Office*" and RegistryKey endswith "\\Outlook\\Today*") and ((RegistryKey endswith "\\Stamp" and RegistryValueData =~ "DWORD (0x00000001)") or (RegistryKey endswith "\\URL" or RegistryKey endswith "\\UserDefinedUrl")) and (not(((InitiatingProcessFolderPath startswith "C:\\Program Files\\Common Files\\Microsoft Shared\\ClickToRun\\" or InitiatingProcessFolderPath startswith "C:\\Program Files\\Common Files\\Microsoft Shared\\ClickToRun\\Updates\\") and InitiatingProcessFolderPath endswith "\\OfficeClickToRun.exe")))

@@ -1,0 +1,19 @@
+// Title: File Download Via Windows Defender MpCmpRun.EXE
+// Sigma ID: 46123129-1024-423e-9fae-43af4a0fa9a5
+// Status: test | Level: high
+// Author: Matthew Matchen
+// Date: 2020-09-04 | Modified: 2023-11-09
+// ATT&CK: stealth, T1218, command-and-control, T1105
+// Description: Detects the use of Windows Defender MpCmdRun.EXE to download files
+// False positives:
+//   - Unknown
+// References:
+//   - https://web.archive.org/web/20200903194959/https://twitter.com/djmtshepana/status/1301608169496612866
+//   - https://lolbas-project.github.io/lolbas/Binaries/MpCmdRun/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_mpcmdrun_download_arbitrary_file.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessVersionInfoOriginalFileName =~ "MpCmdRun.exe" or FolderPath endswith "\\MpCmdRun.exe" or ProcessCommandLine contains "MpCmdRun.exe" or ProcessVersionInfoFileDescription =~ "Microsoft Malware Protection Command Line Utility") and (ProcessCommandLine contains "DownloadFile" and ProcessCommandLine contains "url")

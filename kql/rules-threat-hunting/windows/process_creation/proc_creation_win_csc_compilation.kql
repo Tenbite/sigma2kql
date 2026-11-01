@@ -1,0 +1,23 @@
+// Title: Dynamic .NET Compilation Via Csc.EXE - Hunting
+// Sigma ID: acf2807c-805b-4042-aab9-f86b6ba9cb2b
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-08-02 | Modified: -
+// ATT&CK: stealth, T1027.004
+// Tags: detection.threat-hunting
+// Description: Detects execution of "csc.exe" to compile .NET code. Attackers often leverage this to compile
+//   code on the fly and use it in other stages.
+// False positives:
+//   - Many legitimate applications make use of dynamic compilation. Use this rule to hunt for anomalies
+// References:
+//   - https://securityboulevard.com/2019/08/agent-tesla-evading-edr-by-removing-api-hooks/
+//   - https://www.clearskysec.com/wp-content/uploads/2018/11/MuddyWater-Operations-in-Lebanon-and-Oman.pdf
+//   - https://app.any.run/tasks/c6993447-d1d8-414e-b856-675325e5aa09/
+//   - https://twitter.com/gN3mes1s/status/1206874118282448897
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-threat-hunting/windows/process_creation/proc_creation_win_csc_compilation.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\csc.exe" and ProcessCommandLine contains "/noconfig /fullpaths @"

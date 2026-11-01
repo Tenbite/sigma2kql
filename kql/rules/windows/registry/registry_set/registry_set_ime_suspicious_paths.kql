@@ -1,0 +1,23 @@
+// Title: Suspicious Path In Keyboard Layout IME File Registry Value
+// Sigma ID: 9d8f9bb8-01af-4e15-a3a2-349071530530
+// Status: test | Level: high
+// Author: X__Junior (Nextron Systems)
+// Date: 2023-11-21 | Modified: -
+// ATT&CK: defense-impairment, T1685
+// Description: Detects usage of Windows Input Method Editor (IME) keyboard layout feature, which allows an
+//   attacker to load a DLL into the process after sending the WM_INPUTLANGCHANGEREQUEST message.
+//   Before doing this, the client needs to register the DLL in a special registry key that is
+//   assumed to implement this keyboard layout. This registry key should store a value named "Ime
+//   File" with a DLL path. IMEs are essential for languages that have more characters than can be
+//   represented on a standard keyboard, such as Chinese, Japanese, and Korean.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.linkedin.com/pulse/guntior-story-advanced-bootkit-doesnt-rely-windows-disk-baranov-wue8e/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_ime_suspicious_paths.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey endswith "\\Control\\Keyboard Layouts*" and RegistryKey contains "Ime File") and ((RegistryValueData contains ":\\Perflogs\\" or RegistryValueData contains ":\\Users\\Public\\" or RegistryValueData contains ":\\Windows\\Temp\\" or RegistryValueData contains "\\AppData\\Local\\Temp\\" or RegistryValueData contains "\\AppData\\Roaming\\" or RegistryValueData contains "\\Temporary Internet") or ((RegistryValueData contains ":\\Users\\" and RegistryValueData contains "\\Favorites\\") or (RegistryValueData contains ":\\Users\\" and RegistryValueData contains "\\Favourites\\") or (RegistryValueData contains ":\\Users\\" and RegistryValueData contains "\\Contacts\\")))

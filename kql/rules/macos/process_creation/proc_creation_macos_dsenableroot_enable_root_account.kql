@@ -1,0 +1,20 @@
+// Title: Root Account Enable Via Dsenableroot
+// Sigma ID: 821bcf4d-46c7-4b87-bc57-9509d3ba7c11
+// Status: test | Level: medium
+// Author: Sohan G (D4rkCiph3r)
+// Date: 2023-08-22 | Modified: -
+// ATT&CK: privilege-escalation, stealth, T1078, T1078.001, T1078.003, initial-access, persistence
+// Description: Detects attempts to enable the root account via "dsenableroot"
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/b27a3cb25025161d49ac861cb216db68c46a3537/atomics/T1078.003/T1078.003.md
+//   - https://github.com/elastic/detection-rules/blob/4312d8c9583be524578a14fe6295c3370b9a9307/rules/macos/persistence_enable_root_account.toml
+//   - https://ss64.com/osx/dsenableroot.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_dsenableroot_enable_root_account.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "/dsenableroot" and (not(ProcessCommandLine contains " -d "))

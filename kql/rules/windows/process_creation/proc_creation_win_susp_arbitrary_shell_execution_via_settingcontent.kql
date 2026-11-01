@@ -1,0 +1,20 @@
+// Title: Arbitrary Shell Command Execution Via Settingcontent-Ms
+// Sigma ID: 24de4f3b-804c-4165-b442-5a06a2302c7e
+// Status: test | Level: medium
+// Author: Sreeman
+// Date: 2020-03-13 | Modified: 2022-04-14
+// ATT&CK: T1204, T1566.001, execution, initial-access
+// Description: The .SettingContent-ms file type was introduced in Windows 10 and allows a user to create
+//   "shortcuts" to various Windows 10 setting pages. These files are simply XML and contain paths to
+//   various Windows 10 settings binaries.
+// False positives:
+//   - Unknown
+// References:
+//   - https://posts.specterops.io/the-tale-of-settingcontent-ms-files-f1ea253e4d39
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_arbitrary_shell_execution_via_settingcontent.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains ".SettingContent-ms" and (not(ProcessCommandLine contains "immersivecontrolpanel"))

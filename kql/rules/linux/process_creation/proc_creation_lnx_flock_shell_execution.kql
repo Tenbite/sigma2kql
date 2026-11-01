@@ -1,0 +1,21 @@
+// Title: Shell Execution via Flock - Linux
+// Sigma ID: 4b09c71e-4269-4111-9cdd-107d8867f0cc
+// Status: test | Level: high
+// Author: Li Ling, Andy Parkidomo, Robert Rakowski, Blake Hartstein (Bloomberg L.P.)
+// Date: 2024-09-02 | Modified: -
+// ATT&CK: discovery, T1083
+// Description: Detects the use of the "flock" command to execute a shell. Such behavior may be associated with
+//   privilege escalation, unauthorized command execution, or to break out from restricted
+//   environments.
+// False positives:
+//   - Unknown
+// References:
+//   - https://gtfobins.github.io/gtfobins/flock/#shell
+//   - https://www.elastic.co/guide/en/security/current/linux-restricted-shell-breakout-via-linux-binary-s.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_flock_shell_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "/flock" and ProcessCommandLine contains " -u ") and (ProcessCommandLine contains "/bin/bash" or ProcessCommandLine contains "/bin/dash" or ProcessCommandLine contains "/bin/fish" or ProcessCommandLine contains "/bin/sh" or ProcessCommandLine contains "/bin/zsh")

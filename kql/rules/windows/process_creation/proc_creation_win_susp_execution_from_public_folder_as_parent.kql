@@ -1,0 +1,20 @@
+// Title: Potentially Suspicious Execution From Parent Process In Public Folder
+// Sigma ID: 69bd9b97-2be2-41b6-9816-fb08757a4d1a
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-02-25 | Modified: 2024-07-12
+// ATT&CK: execution, stealth, T1564, T1059
+// Description: Detects a potentially suspicious execution of a parent process located in the "\Users\Public"
+//   folder executing a child process containing references to shell or scripting binaries and
+//   commandlines.
+// False positives:
+//   - Unknown
+// References:
+//   - https://redcanary.com/blog/blackbyte-ransomware/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_execution_from_public_folder_as_parent.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath contains ":\\Users\\Public\\" and ((FolderPath endswith "\\bitsadmin.exe" or FolderPath endswith "\\certutil.exe" or FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\mshta.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\regsvr32.exe" or FolderPath endswith "\\rundll32.exe" or FolderPath endswith "\\wscript.exe") or (ProcessCommandLine contains "bitsadmin" or ProcessCommandLine contains "certutil" or ProcessCommandLine contains "cscript" or ProcessCommandLine contains "mshta" or ProcessCommandLine contains "powershell" or ProcessCommandLine contains "regsvr32" or ProcessCommandLine contains "rundll32" or ProcessCommandLine contains "wscript"))

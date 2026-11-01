@@ -1,0 +1,18 @@
+// Title: Service Binary in Suspicious Folder
+// Sigma ID: a07f0359-4c90-4dc4-a681-8ffea40b4f47
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems), frack113
+// Date: 2022-05-02 | Modified: 2025-10-07
+// ATT&CK: persistence, defense-impairment, T1112
+// Description: Detect the creation of a service with a service binary located in a suspicious directory
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_creation_service_susp_folder.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where ((RegistryKey =~ "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet001\\Services*" and RegistryKey endswith "\\Start" and (InitiatingProcessFolderPath contains "\\Users\\Public\\" or InitiatingProcessFolderPath contains "\\Perflogs\\" or InitiatingProcessFolderPath contains "\\ADMIN$\\" or InitiatingProcessFolderPath contains "\\Temp\\") and (RegistryValueData in~ ("DWORD (0x00000000)", "DWORD (0x00000001)", "DWORD (0x00000002)"))) or (RegistryKey =~ "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet001\\Services*" and RegistryKey endswith "\\ImagePath" and (RegistryValueData contains "\\Users\\Public\\" or RegistryValueData contains "\\Perflogs\\" or RegistryValueData contains "\\ADMIN$\\" or RegistryValueData contains "\\Temp\\"))) and (not(((InitiatingProcessFolderPath contains "\\Common Files\\" and InitiatingProcessFolderPath contains "\\Temp\\") or (RegistryKey endswith "\\CurrentControlSet\\Services\\MBAMInstallerService\\ImagePath" and RegistryValueData endswith "\\AppData\\Local\\Temp\\MBAMInstallerService.exe\"" and InitiatingProcessFolderPath =~ "C:\\Windows\\system32\\services.exe"))))

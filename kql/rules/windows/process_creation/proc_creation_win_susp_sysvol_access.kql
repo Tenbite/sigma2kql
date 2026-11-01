@@ -1,0 +1,19 @@
+// Title: Suspicious SYSVOL Domain Group Policy Access
+// Sigma ID: 05f3c945-dcc8-4393-9f3d-af65077a8f86
+// Status: test | Level: medium
+// Author: Markus Neis, Jonhnathan Ribeiro, oscd.community
+// Date: 2018-04-09 | Modified: 2022-01-07
+// ATT&CK: credential-access, T1552.006
+// Description: Detects Access to Domain Group Policies stored in SYSVOL
+// False positives:
+//   - Administrative activity
+// References:
+//   - https://adsecurity.org/?p=2288
+//   - https://www.hybrid-analysis.com/sample/f2943f5e45befa52fb12748ca7171d30096e1d4fc3c365561497c618341299d5?environmentId=100
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_sysvol_access.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "\\SYSVOL\\" and ProcessCommandLine contains "\\policies\\"

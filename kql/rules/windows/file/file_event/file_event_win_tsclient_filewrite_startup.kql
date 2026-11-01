@@ -1,0 +1,19 @@
+// Title: Hijack Legit RDP Session to Move Laterally
+// Sigma ID: 52753ea4-b3a0-4365-910d-36cff487b789
+// Status: test | Level: high
+// Author: Samir Bousseaden
+// Date: 2019-02-21 | Modified: 2021-11-27
+// ATT&CK: command-and-control, T1219.002
+// Description: Detects the usage of tsclient share to place a backdoor on the RDP source machine's startup
+//   folder
+// False positives:
+//   - Unlikely
+// References:
+//   - Internal Research
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_tsclient_filewrite_startup.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where InitiatingProcessFolderPath endswith "\\mstsc.exe" and FolderPath contains "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\"

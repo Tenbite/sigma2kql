@@ -1,0 +1,20 @@
+// Title: Linux Logs Clearing Attempts
+// Sigma ID: 80915f59-9b56-4616-9de0-fd0dea6c12fe
+// Status: stable | Level: medium
+// Author: Ömer Günal, oscd.community
+// Date: 2020-10-07 | Modified: 2026-03-18
+// ATT&CK: defense-impairment, T1685.006
+// Description: Detects logs clearing attempts on Linux systems via utilities such as 'rm', 'rmdir', 'shred',
+//   and 'unlink' targeting log files and directories. Adversaries often try to clear logs to cover
+//   their tracks after performing malicious activities.
+// False positives:
+//   - Legitimate administration activities
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.002/T1070.002.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_clear_logs.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "/rm" or FolderPath endswith "/rmdir" or FolderPath endswith "/shred" or FolderPath endswith "/unlink") and (ProcessCommandLine contains "/var/log" or ProcessCommandLine contains "/var/spool/mail")) and (not(((FolderPath endswith "/rm" and ProcessCommandLine startswith "rm -f /var/log/sysstat/") or (FolderPath endswith "/rm" and ProcessCommandLine startswith "rm -f -- /var/log//dmesg"))))

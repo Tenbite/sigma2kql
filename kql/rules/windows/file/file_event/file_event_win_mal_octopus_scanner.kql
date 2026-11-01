@@ -1,0 +1,18 @@
+// Title: Octopus Scanner Malware
+// Sigma ID: 805c55d9-31e6-4846-9878-c34c75054fe9
+// Status: test | Level: high
+// Author: NVISO
+// Date: 2020-06-09 | Modified: 2021-11-27
+// ATT&CK: initial-access, T1195, T1195.001
+// Description: Detects Octopus Scanner Malware.
+// False positives:
+//   - Unknown
+// References:
+//   - https://securitylab.github.com/research/octopus-scanner-malware-open-source-supply-chain
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_mal_octopus_scanner.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath endswith "\\AppData\\Local\\Microsoft\\Cache134.dat" or FolderPath endswith "\\AppData\\Local\\Microsoft\\ExplorerSync.db"

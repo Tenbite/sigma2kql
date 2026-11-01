@@ -1,0 +1,20 @@
+// Title: Potentially Suspicious Rundll32.EXE Execution of UDL File
+// Sigma ID: 0ea52357-cd59-4340-9981-c46c7e900428
+// Status: test | Level: medium
+// Author: @kostastsale
+// Date: 2024-08-16 | Modified: -
+// ATT&CK: execution, command-and-control, stealth, T1218.011, T1071
+// Description: Detects the execution of rundll32.exe with the oledb32.dll library to open a UDL file. Threat
+//   actors can abuse this technique as a phishing vector to capture authentication credentials or
+//   other sensitive data.
+// False positives:
+//   - UDL files serve as a convenient and flexible tool for managing and testing database connections in various development and administrative scenarios.
+// References:
+//   - https://trustedsec.com/blog/oops-i-udld-it-again
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_rundll32_udl_exec.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\explorer.exe" and (FolderPath endswith "\\rundll32.exe" or ProcessVersionInfoOriginalFileName =~ "RUNDLL32.EXE") and ((ProcessCommandLine contains "oledb32.dll" and ProcessCommandLine contains ",OpenDSLFile " and (ProcessCommandLine contains "\\Users\\" and ProcessCommandLine contains "\\Downloads\\")) and ProcessCommandLine endswith ".udl")

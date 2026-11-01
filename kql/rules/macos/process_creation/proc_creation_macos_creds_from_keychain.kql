@@ -1,0 +1,19 @@
+// Title: Credentials from Password Stores - Keychain
+// Sigma ID: b120b587-a4c2-4b94-875d-99c9807d6955
+// Status: test | Level: medium
+// Author: Tim Ismilyaev, oscd.community, Florian Roth (Nextron Systems)
+// Date: 2020-10-19 | Modified: 2021-11-27
+// ATT&CK: credential-access, T1555.001
+// Description: Detects passwords dumps from Keychain
+// False positives:
+//   - Legitimate administration activities
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1555.001/T1555.001.md
+//   - https://gist.github.com/Capybara/6228955
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_creds_from_keychain.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath =~ "/usr/bin/security" and (ProcessCommandLine contains "find-certificate" or ProcessCommandLine contains " export ")) or (ProcessCommandLine contains " dump-keychain " or ProcessCommandLine contains " login-keychain ")

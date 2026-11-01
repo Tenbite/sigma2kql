@@ -1,0 +1,20 @@
+// Title: Suspect Svchost Activity
+// Sigma ID: 16c37b52-b141-42a5-a3ea-bbe098444397
+// Status: test | Level: high
+// Author: David Burkett, @signalblur
+// Date: 2019-12-28 | Modified: 2022-06-27
+// ATT&CK: privilege-escalation, stealth, T1055
+// Description: It is extremely abnormal for svchost.exe to spawn without any CLI arguments and is normally
+//   observed when a malicious process spawns the process and injects code into the process memory
+//   space.
+// False positives:
+//   - Rpcnet.exe / rpcnetp.exe which is a lojack style software. https://www.blackhat.com/docs/us-14/materials/us-14-Kamlyuk-Kamluk-Computrace-Backdoor-Revisited.pdf
+// References:
+//   - https://web.archive.org/web/20180718061628/https://securitybytes.io/blue-team-fundamentals-part-two-windows-processes-759fe15965e2
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_svchost_execution_with_no_cli_flags.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine endswith "svchost.exe" and FolderPath endswith "\\svchost.exe") and (not(((InitiatingProcessFolderPath endswith "\\rpcnet.exe" or InitiatingProcessFolderPath endswith "\\rpcnetp.exe") or isnull(ProcessCommandLine))))

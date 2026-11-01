@@ -1,0 +1,18 @@
+// Title: Uncommon One Time Only Scheduled Task At 00:00
+// Sigma ID: 970823b7-273b-460a-8afc-3a6811998529
+// Status: test | Level: high
+// Author: pH-T (Nextron Systems)
+// Date: 2022-07-15 | Modified: 2023-02-03
+// ATT&CK: execution, persistence, privilege-escalation, T1053.005
+// Description: Detects scheduled task creation events that include suspicious actions, and is run once at 00:00
+// False positives:
+//   - Software installation
+// References:
+//   - https://www.trendmicro.com/vinfo/us/security/news/ransomware-spotlight/ransomware-spotlight-blackbyte
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_schtasks_one_time_only_midnight_task.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath contains "\\schtasks.exe" or ProcessVersionInfoOriginalFileName =~ "schtasks.exe") and (ProcessCommandLine contains "wscript" or ProcessCommandLine contains "vbscript" or ProcessCommandLine contains "cscript" or ProcessCommandLine contains "wmic " or ProcessCommandLine contains "wmic.exe" or ProcessCommandLine contains "regsvr32.exe" or ProcessCommandLine contains "powershell" or ProcessCommandLine contains "\\AppData\\") and (ProcessCommandLine contains "once" and ProcessCommandLine contains "00:00")

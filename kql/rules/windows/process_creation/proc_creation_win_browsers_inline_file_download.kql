@@ -1,0 +1,21 @@
+// Title: File Download From Browser Process Via Inline URL
+// Sigma ID: 94771a71-ba41-4b6e-a757-b531372eaab6
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-01-11 | Modified: 2025-10-27
+// ATT&CK: command-and-control, T1105
+// Description: Detects execution of a browser process with a URL argument pointing to a file with a potentially
+//   interesting extension. This can be abused to download arbitrary files or to hide from the user
+//   for example by launching the browser in a minimized state.
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/mrd0x/status/1478116126005641220
+//   - https://lolbas-project.github.io/lolbas/Binaries/Msedge/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_browsers_inline_file_download.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\brave.exe" or FolderPath endswith "\\chrome.exe" or FolderPath endswith "\\msedge.exe" or FolderPath endswith "\\opera.exe" or FolderPath endswith "\\vivaldi.exe") and ProcessCommandLine contains "http" and ((ProcessCommandLine endswith ".7z" or ProcessCommandLine endswith ".dat" or ProcessCommandLine endswith ".dll" or ProcessCommandLine endswith ".exe" or ProcessCommandLine endswith ".hta" or ProcessCommandLine endswith ".ps1" or ProcessCommandLine endswith ".psm1" or ProcessCommandLine endswith ".txt" or ProcessCommandLine endswith ".vbe" or ProcessCommandLine endswith ".vbs" or ProcessCommandLine endswith ".zip") or (ProcessCommandLine contains ".7z\"" or ProcessCommandLine contains ".dat\"" or ProcessCommandLine contains ".dll\"" or ProcessCommandLine contains ".hta\"" or ProcessCommandLine contains ".ps1\"" or ProcessCommandLine contains ".psm1\"" or ProcessCommandLine contains ".txt\"" or ProcessCommandLine contains ".vbe\"" or ProcessCommandLine contains ".vbs\"" or ProcessCommandLine contains ".zip\""))

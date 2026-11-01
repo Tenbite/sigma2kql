@@ -1,0 +1,21 @@
+// Title: HackTool - Empire PowerShell Launch Parameters
+// Sigma ID: 79f4ede3-402e-41c8-bc3e-ebbf5f162581
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2019-04-20 | Modified: 2023-02-21
+// ATT&CK: execution, T1059.001
+// Description: Detects suspicious powershell command line parameters used in Empire
+// False positives:
+//   - Other tools that incidentally use the same command line parameters
+// References:
+//   - https://github.com/EmpireProject/Empire/blob/c2ba61ca8d2031dad0cfc1d5770ba723e8b710db/lib/common/helpers.py#L165
+//   - https://github.com/EmpireProject/Empire/blob/e37fb2eef8ff8f5a0a689f1589f424906fe13055/lib/modules/powershell/persistence/powerbreach/deaduser.py#L191
+//   - https://github.com/EmpireProject/Empire/blob/e37fb2eef8ff8f5a0a689f1589f424906fe13055/lib/modules/powershell/persistence/powerbreach/resolver.py#L178
+//   - https://github.com/EmpireProject/Empire/blob/e37fb2eef8ff8f5a0a689f1589f424906fe13055/data/module_source/privesc/Invoke-EventVwrBypass.ps1#L64
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_empire_powershell_launch.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains " -NoP -sta -NonI -W Hidden -Enc " or ProcessCommandLine contains " -noP -sta -w 1 -enc " or ProcessCommandLine contains " -NoP -NonI -W Hidden -enc " or ProcessCommandLine contains " -noP -sta -w 1 -enc" or ProcessCommandLine contains " -enc  SQB" or ProcessCommandLine contains " -nop -exec bypass -EncodedCommand "

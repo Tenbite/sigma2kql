@@ -1,0 +1,18 @@
+// Title: Suspicious PowerShell Invocations - Specific - ProcessCreation
+// Sigma ID: 536e2947-3729-478c-9903-745aaffe60d2
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-01-05 | Modified: -
+// ATT&CK: stealth
+// Description: Detects suspicious PowerShell invocation command parameters
+// False positives:
+//   - Unknown
+// References:
+//   - Internal Research
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_powershell_invocation_specific.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((ProcessCommandLine contains "-nop" and ProcessCommandLine contains " -w " and ProcessCommandLine contains "hidden" and ProcessCommandLine contains " -c " and ProcessCommandLine contains "[Convert]::FromBase64String") or (ProcessCommandLine contains " -w " and ProcessCommandLine contains "hidden" and ProcessCommandLine contains "-noni" and ProcessCommandLine contains "-nop" and ProcessCommandLine contains " -c " and ProcessCommandLine contains "iex" and ProcessCommandLine contains "New-Object") or (ProcessCommandLine contains " -w " and ProcessCommandLine contains "hidden" and ProcessCommandLine contains "-ep" and ProcessCommandLine contains "bypass" and ProcessCommandLine contains "-Enc") or (ProcessCommandLine contains "powershell" and ProcessCommandLine contains "reg" and ProcessCommandLine contains "add" and ProcessCommandLine contains "\\software\\") or (ProcessCommandLine contains "bypass" and ProcessCommandLine contains "-noprofile" and ProcessCommandLine contains "-windowstyle" and ProcessCommandLine contains "hidden" and ProcessCommandLine contains "new-object" and ProcessCommandLine contains "system.net.webclient" and ProcessCommandLine contains ".download") or (ProcessCommandLine contains "iex" and ProcessCommandLine contains "New-Object" and ProcessCommandLine contains "Net.WebClient" and ProcessCommandLine contains ".Download")) and (not((ProcessCommandLine contains "(New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1" or ProcessCommandLine contains "Write-ChocolateyWarning")))

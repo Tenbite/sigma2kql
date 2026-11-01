@@ -1,0 +1,20 @@
+// Title: Add Debugger Entry To Hangs Key For Persistence
+// Sigma ID: 833ef470-fa01-4631-a79b-6f291c9ac498
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-07-21 | Modified: 2023-08-17
+// ATT&CK: persistence
+// Description: Detects when an attacker adds a new "Debugger" value to the "Hangs" key in order to achieve
+//   persistence which will get invoked when an application crashes
+// False positives:
+//   - This value is not set by default but could be rarly used by administrators
+// References:
+//   - https://persistence-info.github.io/Data/wer_debugger.html
+//   - https://www.hexacorn.com/blog/2019/09/20/beyond-good-ol-run-key-part-116/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_hangs_debugger_persistence.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey contains "\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting\\Hangs\\Debugger"

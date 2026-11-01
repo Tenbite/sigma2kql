@@ -1,0 +1,18 @@
+// Title: Suspicious Key Manager Access
+// Sigma ID: a4694263-59a8-4608-a3a0-6f8d3a51664c
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-04-21 | Modified: 2023-02-09
+// ATT&CK: credential-access, T1555.004
+// Description: Detects the invocation of the Stored User Names and Passwords dialogue (Key Manager)
+// False positives:
+//   - Administrative activity
+// References:
+//   - https://twitter.com/NinjaParanoid/status/1516442028963659777
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_rundll32_keymgr.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\rundll32.exe" or ProcessVersionInfoOriginalFileName =~ "RUNDLL32.EXE") and (ProcessCommandLine contains "keymgr" and ProcessCommandLine contains "KRShowKeyMgr")

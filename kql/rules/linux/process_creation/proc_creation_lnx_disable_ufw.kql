@@ -1,0 +1,23 @@
+// Title: UFW Disable Attempt
+// Sigma ID: 84c9e83c-599a-458a-a0cb-0ecce44e807a
+// Status: test | Level: medium
+// Author: Joseliyo Sanchez, @Joseliyo_Jstnk
+// Date: 2023-01-18 | Modified: 2026-05-04
+// ATT&CK: defense-impairment, T1686
+// Description: Detects attempts to disable the Uncomplicated Firewall (UFW) on Linux systems. UFW is a popular
+//   firewall management tool that provides an easy-to-use interface for configuring firewall rules.
+//   Disabling UFW can leave a system vulnerable to attacks, as it may allow unauthorized access to
+//   network services and resources.
+// False positives:
+//   - Legitimate actions by system administrators to disable UFW.
+// References:
+//   - https://twitter.com/Joseliyo_Jstnk/status/1620131033474822144
+//   - https://manpages.debian.org/unstable/ufw/ufw-framework.8.en.html
+//   - https://www.cyberciti.biz/faq/linux-disable-firewall-command/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_disable_ufw.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "/ufw-init" and (ProcessCommandLine contains " force-stop" or ProcessCommandLine contains " stop" or ProcessCommandLine contains " flush")) or (ProcessCommandLine contains "ufw " and ProcessCommandLine contains "disable")

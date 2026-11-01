@@ -1,0 +1,20 @@
+// Title: Ps.exe Renamed SysInternals Tool
+// Sigma ID: 18da1007-3f26-470f-875d-f77faf1cab31
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2017-10-22 | Modified: 2023-05-02
+// ATT&CK: stealth, G0035, T1036.003
+// Tags: car.2013-05-009, detection.emerging-threats
+// Description: Detects renamed SysInternals tool execution with a binary named ps.exe as used by Dragonfly APT
+//   group and documented in TA17-293A report
+// False positives:
+//   - Renamed SysInternals tool
+// References:
+//   - https://www.us-cert.gov/ncas/alerts/TA17-293A
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2017/TA/Dragonfly/proc_creation_win_apt_ta17_293a_ps.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "ps.exe -accepteula" and ProcessCommandLine contains "-s cmd /c netstat"

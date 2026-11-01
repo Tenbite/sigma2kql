@@ -1,0 +1,21 @@
+// Title: Python Inline Command Execution
+// Sigma ID: 899133d5-4d7c-4a7f-94ee-27355c879d90
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-01-02 | Modified: 2025-10-07
+// ATT&CK: execution, T1059
+// Description: Detects execution of python using the "-c" flag. This is could be used as a way to launch a
+//   reverse shell or execute live python code.
+// False positives:
+//   - Python libraries that use a flag starting with "-c". Filter according to your environment
+// References:
+//   - https://docs.python.org/3/using/cmdline.html#cmdoption-c
+//   - https://www.revshells.com/
+//   - https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_python_inline_command_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((ProcessVersionInfoOriginalFileName =~ "python.exe" or (FolderPath endswith "python.exe" or FolderPath endswith "python3.exe" or FolderPath endswith "python2.exe")) and ProcessCommandLine contains " -c") and (not((((InitiatingProcessFolderPath startswith "C:\\Program Files\\Python" or InitiatingProcessFolderPath startswith "C:\\Program Files (x86)\\Python") and InitiatingProcessFolderPath endswith "\\python.exe" and InitiatingProcessCommandLine contains "-E -s -m ensurepip -U --default-pip") or ((InitiatingProcessFolderPath startswith "C:\\Program Files\\Python" or InitiatingProcessFolderPath startswith "C:\\Program Files (x86)\\Python") and (ProcessCommandLine contains "-W ignore::DeprecationWarning" and ProcessCommandLine contains "['install', '--no-cache-dir', '--no-index', '--find-links'," and ProcessCommandLine contains "'--upgrade', 'pip'"))))) and (not(((InitiatingProcessFolderPath endswith "\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe" or (InitiatingProcessFolderPath in~ ("C:\\Program Files\\Microsoft VS Code\\Code.exe", "C:\\Program Files (x86)\\Microsoft VS Code\\Code.exe"))) or (ProcessCommandLine contains "<pip-setuptools-caller>" and ProcessCommandLine contains "exec(compile("))))

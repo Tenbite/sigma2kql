@@ -1,0 +1,22 @@
+// Title: HackTool - PowerTool Execution
+// Sigma ID: a34f79a3-8e5f-4cc3-b765-de00695452c2
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-11-29 | Modified: 2023-02-04
+// ATT&CK: defense-impairment, T1685
+// Description: Detects the execution of the tool PowerTool which has the ability to kill a process, delete its
+//   process file, unload drivers, and delete the driver files
+// False positives:
+//   - Unlikely
+// References:
+//   - https://thedfirreport.com/2022/11/28/emotet-strikes-again-lnk-file-leads-to-domain-wide-ransomware/
+//   - https://www.trendmicro.com/en_us/research/22/i/play-ransomware-s-attack-playbook-unmasks-it-as-another-hive-aff.html
+//   - https://twitter.com/gbti_sa/status/1249653895900602375?lang=en
+//   - https://www.softpedia.com/get/Antivirus/Removal-Tools/ithurricane-PowerTool.shtml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_powertool.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\PowerTool.exe" or FolderPath endswith "\\PowerTool64.exe") or ProcessVersionInfoOriginalFileName =~ "PowerTool.exe"

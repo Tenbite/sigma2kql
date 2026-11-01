@@ -1,0 +1,24 @@
+// Title: Process Initiated Network Connection To Ngrok Domain
+// Sigma ID: 18249279-932f-45e2-b37a-8925f2597670
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-07-16 | Modified: 2025-07-30
+// ATT&CK: exfiltration, command-and-control, T1567, T1572, T1102
+// Description: Detects an executable initiating a network connection to "ngrok" domains. Attackers were seen
+//   using this "ngrok" in order to store their second stage payloads and malware. While
+//   communication with such domains can be legitimate, often times is a sign of either data
+//   exfiltration by malicious actors or additional download.
+// False positives:
+//   - Legitimate use of the ngrok service.
+// References:
+//   - https://ngrok.com/
+//   - https://ngrok.com/blog-post/new-ngrok-domains
+//   - https://www.virustotal.com/gui/file/cca0c1182ac114b44dc52dd2058fcd38611c20bb6b5ad84710681d38212f835a/
+//   - https://www.rnbo.gov.ua/files/2023_YEAR/CYBERCENTER/november/APT29%20attacks%20Embassies%20using%20CVE-2023-38831%20-%20report%20en.pdf
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/network_connection/net_connection_win_domain_ngrok.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceNetworkEvents
+| where RemoteUrl endswith ".ngrok-free.app" or RemoteUrl endswith ".ngrok-free.dev" or RemoteUrl endswith ".ngrok.app" or RemoteUrl endswith ".ngrok.dev" or RemoteUrl endswith ".ngrok.io"

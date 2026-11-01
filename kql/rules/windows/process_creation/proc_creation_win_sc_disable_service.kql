@@ -1,0 +1,18 @@
+// Title: Service StartupType Change Via Sc.EXE
+// Sigma ID: 85c312b7-f44d-4a51-a024-d671c40b49fc
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-08-01 | Modified: 2023-03-04
+// ATT&CK: execution, defense-impairment, T1685
+// Description: Detect the use of "sc.exe" to change the startup type of a service to "disabled" or "demand"
+// False positives:
+//   - False positives may occur with troubleshooting scripts
+// References:
+//   - https://www.virustotal.com/gui/file/38283b775552da8981452941ea74191aa0d203edd3f61fb2dee7b0aea3514955
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_sc_disable_service.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\sc.exe" or ProcessVersionInfoOriginalFileName =~ "sc.exe") and ((ProcessCommandLine contains " config " and ProcessCommandLine contains "start") and (ProcessCommandLine contains "disabled" or ProcessCommandLine contains "demand"))

@@ -1,0 +1,19 @@
+// Title: SafeBoot Registry Key Deleted Via Reg.EXE
+// Sigma ID: fc0e89b5-adb0-43c1-b749-c12a10ec37de
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems), Tim Shelton
+// Date: 2022-08-08 | Modified: 2023-02-04
+// ATT&CK: defense-impairment, T1685
+// Description: Detects execution of "reg.exe" commands with the "delete" flag on safe boot registry keys. Often
+//   used by attacker to prevent safeboot execution of security products
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.trendmicro.com/en_us/research/22/e/avoslocker-ransomware-variant-abuses-driver-file-to-disable-anti-Virus-scans-log4shell.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_reg_delete_safeboot.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "reg.exe" or ProcessVersionInfoOriginalFileName =~ "reg.exe") and (ProcessCommandLine contains " delete " and ProcessCommandLine contains "\\SYSTEM\\CurrentControlSet\\Control\\SafeBoot")

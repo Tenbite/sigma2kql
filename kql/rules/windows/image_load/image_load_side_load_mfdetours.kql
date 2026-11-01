@@ -1,0 +1,20 @@
+// Title: Potential Mfdetours.DLL Sideloading
+// Sigma ID: d2605a99-2218-4894-8fd3-2afb7946514d
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-08-03 | Modified: -
+// ATT&CK: persistence, privilege-escalation, execution, stealth, T1574.001
+// Description: Detects potential DLL sideloading of "mfdetours.dll". While using "mftrace.exe" it can be abused
+//   to attach to an arbitrary process and force load any DLL named "mfdetours.dll" from the current
+//   directory of execution.
+// False positives:
+//   - Unlikely
+// References:
+//   - Internal Research
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/image_load/image_load_side_load_mfdetours.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceImageLoadEvents
+| where FolderPath endswith "\\mfdetours.dll" and (not(FolderPath contains ":\\Program Files (x86)\\Windows Kits\\10\\bin\\"))

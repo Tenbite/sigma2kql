@@ -1,0 +1,19 @@
+// Title: HackTool - Bloodhound/Sharphound Execution
+// Sigma ID: f376c8a7-a2d0-4ddc-aa0c-16c17236d962
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2019-12-20 | Modified: 2023-02-04
+// ATT&CK: discovery, T1087.001, T1087.002, T1482, T1069.001, T1069.002, execution, T1059.001
+// Description: Detects command line parameters used by Bloodhound and Sharphound hack tools
+// False positives:
+//   - Other programs that use these command line option and accepts an 'All' parameter
+// References:
+//   - https://github.com/BloodHoundAD/BloodHound
+//   - https://github.com/BloodHoundAD/SharpHound
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_bloodhound_sharphound.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessVersionInfoProductName contains "SharpHound" or ProcessVersionInfoFileDescription contains "SharpHound" or (ProcessVersionInfoCompanyName contains "SpecterOps" or ProcessVersionInfoCompanyName contains "evil corp") or (FolderPath contains "\\Bloodhound.exe" or FolderPath contains "\\SharpHound.exe")) or (ProcessCommandLine contains " -CollectionMethod All " or ProcessCommandLine contains " --CollectionMethods Session " or ProcessCommandLine contains " --Loop --Loopduration " or ProcessCommandLine contains " --PortScanTimeout " or ProcessCommandLine contains ".exe -c All -d " or ProcessCommandLine contains "Invoke-Bloodhound" or ProcessCommandLine contains "Get-BloodHoundData") or (ProcessCommandLine contains " -JsonFolder " and ProcessCommandLine contains " -ZipFileName ") or (ProcessCommandLine contains " DCOnly " and ProcessCommandLine contains " --NoSaveCache ")

@@ -1,0 +1,19 @@
+// Title: HackTool - SecurityXploded Execution
+// Sigma ID: 7679d464-4f74-45e2-9e01-ac66c5eb041a
+// Status: stable | Level: critical
+// Author: Florian Roth (Nextron Systems)
+// Date: 2018-12-19 | Modified: 2023-02-04
+// ATT&CK: credential-access, T1555
+// Description: Detects the execution of SecurityXploded Tools
+// False positives:
+//   - Unlikely
+// References:
+//   - https://securityxploded.com/
+//   - https://web.archive.org/web/20200601000524/https://cyberx-labs.com/blog/gangnam-industrial-style-apt-campaign-targets-korean-industrial-companies/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_secutyxploded.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessVersionInfoCompanyName =~ "SecurityXploded" or FolderPath endswith "PasswordDump.exe" or ProcessVersionInfoOriginalFileName endswith "PasswordDump.exe"

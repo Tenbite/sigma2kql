@@ -1,0 +1,21 @@
+// Title: Suspicious Double Extension File Execution
+// Sigma ID: 1cdd9a09-06c9-4769-99ff-626e2b3991b8
+// Status: stable | Level: high
+// Author: Florian Roth (Nextron Systems), @blu3_team (idea), Nasreddine Bencherchali (Nextron Systems)
+// Date: 2019-06-26 | Modified: 2025-05-30
+// ATT&CK: initial-access, T1566.001
+// Description: Detects suspicious use of an .exe extension after a non-executable file extension like .pdf.exe,
+//   a set of spaces or underlines to cloak the executable file in spear phishing campaigns
+// False positives:
+//   - Unknown
+// References:
+//   - https://blu3-team.blogspot.com/2019/06/misleading-extensions-xlsexe-docexe.html
+//   - https://twitter.com/blackorbird/status/1140519090961825792
+//   - https://cloud.google.com/blog/topics/threat-intelligence/cybercriminals-weaponize-fake-ai-websites
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_double_extension.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "      .exe" or FolderPath endswith "______.exe" or FolderPath endswith ".doc.exe" or FolderPath endswith ".doc.js" or FolderPath endswith ".docx.exe" or FolderPath endswith ".docx.js" or FolderPath endswith ".gif.exe" or FolderPath endswith ".jpeg.exe" or FolderPath endswith ".jpg.exe" or FolderPath endswith ".mkv.exe" or FolderPath endswith ".mov.exe" or FolderPath endswith ".mp3.exe" or FolderPath endswith ".mp4.exe" or FolderPath endswith ".pdf.exe" or FolderPath endswith ".pdf.js" or FolderPath endswith ".png.exe" or FolderPath endswith ".ppt.exe" or FolderPath endswith ".ppt.js" or FolderPath endswith ".pptx.exe" or FolderPath endswith ".pptx.js" or FolderPath endswith ".rtf.exe" or FolderPath endswith ".rtf.js" or FolderPath endswith ".svg.exe" or FolderPath endswith ".txt.exe" or FolderPath endswith ".txt.js" or FolderPath endswith ".xls.exe" or FolderPath endswith ".xls.js" or FolderPath endswith ".xlsx.exe" or FolderPath endswith ".xlsx.js" or FolderPath endswith "⠀⠀⠀⠀⠀⠀.exe") and (ProcessCommandLine contains "      .exe" or ProcessCommandLine contains "______.exe" or ProcessCommandLine contains ".doc.exe" or ProcessCommandLine contains ".doc.js" or ProcessCommandLine contains ".docx.exe" or ProcessCommandLine contains ".docx.js" or ProcessCommandLine contains ".gif.exe" or ProcessCommandLine contains ".jpeg.exe" or ProcessCommandLine contains ".jpg.exe" or ProcessCommandLine contains ".mkv.exe" or ProcessCommandLine contains ".mov.exe" or ProcessCommandLine contains ".mp3.exe" or ProcessCommandLine contains ".mp4.exe" or ProcessCommandLine contains ".pdf.exe" or ProcessCommandLine contains ".pdf.js" or ProcessCommandLine contains ".png.exe" or ProcessCommandLine contains ".ppt.exe" or ProcessCommandLine contains ".ppt.js" or ProcessCommandLine contains ".pptx.exe" or ProcessCommandLine contains ".pptx.js" or ProcessCommandLine contains ".rtf.exe" or ProcessCommandLine contains ".rtf.js" or ProcessCommandLine contains ".svg.exe" or ProcessCommandLine contains ".txt.exe" or ProcessCommandLine contains ".txt.js" or ProcessCommandLine contains ".xls.exe" or ProcessCommandLine contains ".xls.js" or ProcessCommandLine contains ".xlsx.exe" or ProcessCommandLine contains ".xlsx.js" or ProcessCommandLine contains "⠀⠀⠀⠀⠀⠀.exe")

@@ -1,0 +1,26 @@
+// Title: RDP Sensitive Settings Changed to Zero
+// Sigma ID: a2863fbc-d5cb-48d5-83fb-d976d4b1743b
+// Status: test | Level: medium
+// Author: Samir Bousseaden, David ANDRE, Roberto Rodriguez @Cyb3rWard0g, Nasreddine Bencherchali
+// Date: 2022-09-29 | Modified: 2022-11-26
+// ATT&CK: persistence, defense-impairment, T1112
+// Description: Detects tampering of RDP Terminal Service/Server sensitive settings. Such as allowing
+//   unauthorized users access to a system via the 'fAllowUnsolicited' or enabling RDP via
+//   'fDenyTSConnections', etc.
+// False positives:
+//   - Some of the keys mentioned here could be modified by an administrator while setting group policy (it should be investigated either way)
+// References:
+//   - https://web.archive.org/web/20200929062532/https://blog.menasec.net/2019/02/threat-hunting-rdp-hijacking-via.html
+//   - http://woshub.com/rds-shadow-how-to-connect-to-a-user-session-in-windows-server-2012-r2/
+//   - https://twitter.com/SagieSec/status/1469001618863624194?t=HRf0eA0W1YYzkTSHb-Ky1A&s=03
+//   - https://threathunterplaybook.com/hunts/windows/190407-RegModEnableRDPConnections/notebook.html
+//   - https://bazaar.abuse.ch/sample/6f3aa9362d72e806490a8abce245331030d1ab5ac77e400dd475748236a6cc81/
+//   - http://etutorials.org/Microsoft+Products/microsoft+windows+server+2003+terminal+services/Chapter+6+Registry/Registry+Keys+for+Terminal+Services/
+//   - https://admx.help/HKLM/SOFTWARE/Policies/Microsoft/Windows%20NT/Terminal%20Services
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_terminal_server_suspicious.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey endswith "\\fDenyTSConnections" or RegistryKey endswith "\\fSingleSessionPerUser" or RegistryKey endswith "\\UserAuthentication") and RegistryValueData =~ "DWORD (0x00000000)"

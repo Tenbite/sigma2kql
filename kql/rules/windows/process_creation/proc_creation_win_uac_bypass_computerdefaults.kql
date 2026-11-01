@@ -1,0 +1,18 @@
+// Title: UAC Bypass Tools Using ComputerDefaults
+// Sigma ID: 3c05e90d-7eba-4324-9972-5d7f711a60a8
+// Status: test | Level: high
+// Author: Christian Burkard (Nextron Systems)
+// Date: 2021-08-31 | Modified: 2024-12-01
+// ATT&CK: privilege-escalation, T1548.002
+// Description: Detects tools such as UACMe used to bypass UAC with computerdefaults.exe (UACMe 59)
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/hfiref0x/UACME
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_uac_bypass_computerdefaults.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((ProcessIntegrityLevel in~ ("High", "System", "S-1-16-16384", "S-1-16-12288")) and FolderPath =~ "C:\\Windows\\System32\\ComputerDefaults.exe") and (not((InitiatingProcessFolderPath contains ":\\Windows\\System32" or InitiatingProcessFolderPath contains ":\\Program Files")))

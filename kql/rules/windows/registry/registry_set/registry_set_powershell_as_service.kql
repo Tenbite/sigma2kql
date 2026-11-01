@@ -1,0 +1,18 @@
+// Title: PowerShell as a Service in Registry
+// Sigma ID: 4a5f5a5e-ac01-474b-9b4e-d61298c9df1d
+// Status: test | Level: high
+// Author: oscd.community, Natalia Shornikova
+// Date: 2020-10-06 | Modified: 2023-08-17
+// ATT&CK: execution, T1569.002
+// Description: Detects that a powershell code is written to the registry as a service.
+// False positives:
+//   - Unknown
+// References:
+//   - https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_powershell_as_service.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey endswith "\\Services*" and RegistryKey endswith "\\ImagePath" and (RegistryValueData contains "powershell" or RegistryValueData contains "pwsh")

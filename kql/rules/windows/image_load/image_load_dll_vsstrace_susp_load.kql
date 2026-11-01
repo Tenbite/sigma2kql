@@ -1,0 +1,18 @@
+// Title: Potentially Suspicious Volume Shadow Copy Vsstrace.dll Load
+// Sigma ID: 48bfd177-7cf2-412b-ad77-baf923489e82
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2023-02-17 | Modified: 2026-08-27
+// ATT&CK: impact, T1490
+// Description: Detects the image load of VSS DLL by uncommon executables
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/ORCx41/DeleteShadowCopies
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/image_load/image_load_dll_vsstrace_susp_load.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceImageLoadEvents
+| where FolderPath endswith "\\vsstrace.dll" and (not((((InitiatingProcessFolderPath in~ ("C:\\Windows\\explorer.exe", "C:\\Windows\\ImmersiveControlPanel\\SystemSettings.exe", "C:\\Windows\\servicing\\TrustedInstaller.exe")) or (InitiatingProcessFolderPath startswith "C:\\Windows\\System32\\" or InitiatingProcessFolderPath startswith "C:\\Windows\\SysWOW64\\" or InitiatingProcessFolderPath startswith "C:\\Windows\\Temp\\{" or InitiatingProcessFolderPath startswith "C:\\Windows\\WinSxS\\" or InitiatingProcessFolderPath startswith "C:\\ProgramData\\Package Cache\\{")) or (InitiatingProcessFolderPath startswith "C:\\Program Files\\" or InitiatingProcessFolderPath startswith "C:\\Program Files (x86)\\") or isnull(InitiatingProcessFolderPath)))) and (not((InitiatingProcessFolderPath startswith "C:\\$WinREAgent\\Scratch\\" or (InitiatingProcessFolderPath contains "\\temp\\is-" and InitiatingProcessFolderPath contains "\\avira_system_speedup.tmp"))))

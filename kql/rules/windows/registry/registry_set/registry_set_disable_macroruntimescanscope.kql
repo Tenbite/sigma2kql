@@ -1,0 +1,21 @@
+// Title: Disable Macro Runtime Scan Scope
+// Sigma ID: ab871450-37dc-4a3a-997f-6662aa8ae0f1
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-10-25 | Modified: 2023-08-17
+// ATT&CK: defense-impairment
+// Description: Detects tampering with the MacroRuntimeScanScope registry key to disable runtime scanning of
+//   enabled macros
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.microsoft.com/en-us/security/blog/2018/09/12/office-vba-amsi-parting-the-veil-on-malicious-macros/
+//   - https://admx.help/?Category=Office2016&Policy=office16.Office.Microsoft.Policies.Windows::L_MacroRuntimeScanScope
+//   - https://github.com/S3cur3Th1sSh1t/OffensiveVBA/blob/28cc6a2802d8176195ac19b3c8e9a749009a82a3/src/AMSIbypasses.vba
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_disable_macroruntimescanscope.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey endswith "\\SOFTWARE*" and RegistryKey endswith "\\Microsoft\\Office*" and RegistryKey contains "\\Common\\Security") and RegistryKey endswith "\\MacroRuntimeScanScope" and RegistryValueData =~ "DWORD (0x00000000)"

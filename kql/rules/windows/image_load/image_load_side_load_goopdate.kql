@@ -1,0 +1,19 @@
+// Title: Potential Goopdate.DLL Sideloading
+// Sigma ID: b6188d2f-b3c4-4d2c-a17d-9706e0851af0
+// Status: test | Level: medium
+// Author: X__Junior (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-05-15 | Modified: 2025-10-07
+// ATT&CK: persistence, privilege-escalation, execution, stealth, T1574.001
+// Description: Detects potential DLL sideloading of "goopdate.dll", a DLL used by googleupdate.exe
+// False positives:
+//   - False positives are expected from Google Chrome installations running from user locations (AppData) and other custom locations. Apply additional filters accordingly.
+//   - Other third party chromium browsers located in AppData
+// References:
+//   - https://www.ncsc.gov.uk/static-assets/documents/malware-analysis-reports/goofy-guineapig/NCSC-MAR-Goofy-Guineapig.pdf
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/image_load/image_load_side_load_goopdate.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceImageLoadEvents
+| where FolderPath endswith "\\goopdate.dll" and (not((FolderPath startswith "C:\\Program Files (x86)\\" or FolderPath startswith "C:\\Program Files\\"))) and (not((((InitiatingProcessFolderPath contains "\\AppData\\Local\\Temp\\GUM" and InitiatingProcessFolderPath contains ".tmp\\Dropbox") and (FolderPath contains "\\AppData\\Local\\Temp\\GUM" and FolderPath contains ".tmp\\goopdate.dll")) or ((InitiatingProcessFolderPath contains "\\AppData\\Local\\Temp\\GUM" or InitiatingProcessFolderPath contains ":\\Windows\\SystemTemp\\GUM") and InitiatingProcessFolderPath endswith ".tmp\\GoogleUpdate.exe" and (FolderPath contains "\\AppData\\Local\\Temp\\GUM" or FolderPath contains ":\\Windows\\SystemTemp\\GUM")))))

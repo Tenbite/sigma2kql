@@ -1,0 +1,20 @@
+// Title: Atbroker Registry Change
+// Sigma ID: 9577edbb-851f-4243-8c91-1d5b50c1a39b
+// Status: test | Level: medium
+// Author: Mateusz Wydra, oscd.community
+// Date: 2020-10-13 | Modified: 2023-01-19
+// ATT&CK: privilege-escalation, stealth, T1218, persistence, T1547
+// Description: Detects creation/modification of Assistive Technology applications and persistence with usage of
+//   'at'
+// False positives:
+//   - Creation of non-default, legitimate at usage
+// References:
+//   - http://www.hexacorn.com/blog/2016/07/22/beyond-good-ol-run-key-part-42/
+//   - https://lolbas-project.github.io/lolbas/Binaries/Atbroker/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_event/registry_event_susp_atbroker_change.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey contains "Software\\Microsoft\\Windows NT\\CurrentVersion\\Accessibility\\ATs" or RegistryKey contains "Software\\Microsoft\\Windows NT\\CurrentVersion\\Accessibility\\Configuration") and (not(((InitiatingProcessFolderPath =~ "C:\\Windows\\system32\\atbroker.exe" and RegistryKey contains "\\Microsoft\\Windows NT\\CurrentVersion\\Accessibility\\Configuration" and RegistryValueData =~ "(Empty)") or (InitiatingProcessFolderPath startswith "C:\\Windows\\Installer\\MSI" and RegistryKey contains "Software\\Microsoft\\Windows NT\\CurrentVersion\\Accessibility\\ATs"))))

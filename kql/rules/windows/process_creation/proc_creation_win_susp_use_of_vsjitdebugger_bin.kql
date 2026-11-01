@@ -1,0 +1,23 @@
+// Title: Malicious PE Execution by Microsoft Visual Studio Debugger
+// Sigma ID: 15c7904e-6ad1-4a45-9b46-5fb25df37fd2
+// Status: test | Level: medium
+// Author: Agro (@agro_sev), Ensar Şamil (@sblmsrsn), oscd.community
+// Date: 2020-10-14 | Modified: 2022-10-09
+// ATT&CK: stealth, T1218
+// Description: There is an option for a MS VS Just-In-Time Debugger "vsjitdebugger.exe" to launch specified
+//   executable and attach a debugger. This option may be used adversaries to execute malicious code
+//   by signed verified binary. The debugger is installed alongside with Microsoft Visual Studio
+//   package.
+// False positives:
+//   - The process spawned by vsjitdebugger.exe is uncommon.
+// References:
+//   - https://twitter.com/pabraeken/status/990758590020452353
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Vsjitdebugger/
+//   - https://learn.microsoft.com/en-us/visualstudio/debugger/debug-using-the-just-in-time-debugger?view=vs-2019
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_use_of_vsjitdebugger_bin.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\vsjitdebugger.exe" and (not(((FolderPath contains "\\vsimmersiveactivatehelper" and FolderPath contains ".exe") or FolderPath endswith "\\devenv.exe")))

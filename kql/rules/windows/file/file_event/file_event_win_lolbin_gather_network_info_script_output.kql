@@ -1,0 +1,20 @@
+// Title: GatherNetworkInfo.VBS Reconnaissance Script Output
+// Sigma ID: f92a6f1e-a512-4a15-9735-da09e78d7273
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-02-08 | Modified: -
+// ATT&CK: discovery
+// Description: Detects creation of files which are the results of executing the built-in reconnaissance script
+//   "C:\Windows\System32\gatherNetworkInfo.vbs".
+// False positives:
+//   - Unknown
+// References:
+//   - https://posts.slayerlabs.com/living-off-the-land/#gathernetworkinfovbs
+//   - https://www.mandiant.com/resources/blog/trojanized-windows-installers-ukrainian-government
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_lolbin_gather_network_info_script_output.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath startswith "C:\\Windows\\System32\\config" and (FolderPath endswith "\\Hotfixinfo.txt" or FolderPath endswith "\\netiostate.txt" or FolderPath endswith "\\sysportslog.txt" or FolderPath endswith "\\VmSwitchLog.evtx")

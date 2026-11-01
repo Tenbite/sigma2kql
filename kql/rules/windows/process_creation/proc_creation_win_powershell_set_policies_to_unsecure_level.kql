@@ -1,0 +1,22 @@
+// Title: Change PowerShell Policies to an Insecure Level
+// Sigma ID: 87e3c4e8-a6a8-4ad9-bb4f-46e7ff99a180
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2021-11-01 | Modified: 2025-10-07
+// ATT&CK: execution, T1059.001
+// Description: Detects changing the PowerShell script execution policy to a potentially insecure level using
+//   the "-ExecutionPolicy" flag.
+// False positives:
+//   - Administrator scripts
+// References:
+//   - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-7.4
+//   - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.4
+//   - https://adsecurity.org/?p=2604
+//   - https://thedfirreport.com/2021/11/01/from-zero-to-domain-admin/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_powershell_set_policies_to_unsecure_level.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (((ProcessVersionInfoOriginalFileName in~ ("powershell_ise.exe", "PowerShell.EXE", "pwsh.dll")) or (FolderPath endswith "\\powershell_ise.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe")) and (ProcessCommandLine contains "-executionpolicy " or ProcessCommandLine contains " -ep " or ProcessCommandLine contains " -exec ") and (ProcessCommandLine contains "Bypass" or ProcessCommandLine contains "Unrestricted")) and (not(((InitiatingProcessFolderPath in~ ("C:\\Windows\\SysWOW64\\msiexec.exe", "C:\\Windows\\System32\\msiexec.exe")) and (ProcessCommandLine contains "-NoProfile -ExecutionPolicy Bypass -File \"C:\\Program Files\\PowerShell\\7\\" or ProcessCommandLine contains "-NoProfile -ExecutionPolicy Bypass -File \"C:\\Program Files (x86)\\PowerShell\\7\\")))) and (not(((InitiatingProcessFolderPath contains "C:\\Program Files\\Avast Software\\Avast\\" or InitiatingProcessFolderPath contains "C:\\Program Files (x86)\\Avast Software\\Avast\\" or InitiatingProcessFolderPath contains "\\instup.exe") and (ProcessCommandLine contains "-ExecutionPolicy ByPass -File \"C:\\Program Files\\Avast Software\\Avast" or ProcessCommandLine contains "-ExecutionPolicy ByPass -File \"C:\\Program Files (x86)\\Avast Software\\Avast\\"))))

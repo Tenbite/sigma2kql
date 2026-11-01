@@ -1,0 +1,19 @@
+// Title: AWL Bypass with Winrm.vbs and Malicious WsmPty.xsl/WsmTxt.xsl
+// Sigma ID: 074e0ded-6ced-4ebd-8b4d-53f55908119d
+// Status: test | Level: medium
+// Author: Julia Fomina, oscd.community
+// Date: 2020-10-06 | Modified: 2022-10-09
+// ATT&CK: stealth, T1216
+// Description: Detects execution of attacker-controlled WsmPty.xsl or WsmTxt.xsl via winrm.vbs and copied
+//   cscript.exe (can be renamed)
+// False positives:
+//   - Unlikely
+// References:
+//   - https://posts.specterops.io/application-whitelisting-bypass-and-arbitrary-unsigned-code-execution-technique-in-winrm-vbs-c8c24fb40404
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_winrm_awl_bypass.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "winrm" and ((ProcessCommandLine contains "format:pretty" or ProcessCommandLine contains "format:\"pretty\"" or ProcessCommandLine contains "format:\"text\"" or ProcessCommandLine contains "format:text") and (not((FolderPath startswith "C:\\Windows\\System32\\" or FolderPath startswith "C:\\Windows\\SysWOW64\\"))))

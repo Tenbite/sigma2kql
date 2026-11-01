@@ -1,0 +1,21 @@
+// Title: Deny Service Access Using Security Descriptor Tampering Via Sc.EXE
+// Sigma ID: 99cf1e02-00fb-4c0d-8375-563f978dfd37
+// Status: test | Level: high
+// Author: Jonhnathan Ribeiro, oscd.community
+// Date: 2020-10-16 | Modified: 2023-02-28
+// ATT&CK: privilege-escalation, persistence, T1543.003
+// Description: Detects suspicious DACL modifications to deny access to a service that affects critical
+//   trustees. This can be used to hide services or make them unstoppable.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.sans.org/blog/red-team-tactics-hiding-windows-services/
+//   - https://itconnect.uw.edu/tools-services-support/it-systems-infrastructure/msinf/other-help/understanding-sddl-syntax/
+//   - https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-strings
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_sc_sdset_deny_service_access.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\sc.exe" or ProcessVersionInfoOriginalFileName =~ "sc.exe") and (ProcessCommandLine contains "sdset" and ProcessCommandLine contains "D;") and (ProcessCommandLine contains ";IU" or ProcessCommandLine contains ";SU" or ProcessCommandLine contains ";BA" or ProcessCommandLine contains ";SY" or ProcessCommandLine contains ";WD")

@@ -1,0 +1,18 @@
+// Title: File Time Attribute Change
+// Sigma ID: 88c0f9d8-30a8-4120-bb6b-ebb54abcf2a0
+// Status: test | Level: medium
+// Author: Igor Fits, Mikhail Larin, oscd.community
+// Date: 2020-10-19 | Modified: 2022-01-12
+// ATT&CK: stealth, T1070.006
+// Description: Detect file time attribute change to hide new or changes to existing files
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.006/T1070.006.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_change_file_time_attr.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "/touch" and (ProcessCommandLine contains "-t" or ProcessCommandLine contains "-acmr" or ProcessCommandLine contains "-d" or ProcessCommandLine contains "-r")

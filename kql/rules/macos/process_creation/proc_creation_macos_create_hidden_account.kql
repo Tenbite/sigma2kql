@@ -1,0 +1,18 @@
+// Title: Hidden User Creation
+// Sigma ID: b22a5b36-2431-493a-8be1-0bae56c28ef3
+// Status: test | Level: medium
+// Author: Daniil Yugoslavskiy, oscd.community
+// Date: 2020-10-10 | Modified: 2021-11-27
+// ATT&CK: stealth, T1564.002
+// Description: Detects creation of a hidden user account on macOS (UserID < 500) or with IsHidden option
+// False positives:
+//   - Legitimate administration activities
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1564.002/T1564.002.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_create_hidden_account.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "/dscl" and ProcessCommandLine contains "create") and (ProcessCommandLine contains "UniqueID" and ProcessCommandLine matches regex "([0-9]|[1-9][0-9]|[1-4][0-9]{2})")) or ((FolderPath endswith "/dscl" and ProcessCommandLine contains "create") and (ProcessCommandLine contains "IsHidden" and (ProcessCommandLine contains "true" or ProcessCommandLine contains "yes" or ProcessCommandLine contains "1")))

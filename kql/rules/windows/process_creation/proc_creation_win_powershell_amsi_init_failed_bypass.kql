@@ -1,0 +1,19 @@
+// Title: Potential AMSI Bypass Via .NET Reflection
+// Sigma ID: 30edb182-aa75-42c0-b0a9-e998bb29067c
+// Status: test | Level: high
+// Author: Markus Neis, @Kostastsale
+// Date: 2018-08-17 | Modified: 2023-02-03
+// ATT&CK: defense-impairment, T1685
+// Description: Detects Request to "amsiInitFailed" that can be used to disable AMSI Scanning
+// False positives:
+//   - Unlikely
+// References:
+//   - https://s3cur3th1ssh1t.github.io/Bypass_AMSI_by_manual_modification/
+//   - https://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_powershell_amsi_init_failed_bypass.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "System.Management.Automation.AmsiUtils" and ProcessCommandLine contains "amsiInitFailed") or (ProcessCommandLine contains "[Ref].Assembly.GetType" and ProcessCommandLine contains "SetValue($null,$true)" and ProcessCommandLine contains "NonPublic,Static")

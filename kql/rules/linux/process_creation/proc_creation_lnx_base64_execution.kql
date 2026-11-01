@@ -1,0 +1,20 @@
+// Title: Linux Base64 Encoded Pipe to Shell
+// Sigma ID: ba592c6d-6888-43c3-b8c6-689b8fe47337
+// Status: test | Level: medium
+// Author: pH-T (Nextron Systems)
+// Date: 2022-07-26 | Modified: 2023-06-16
+// ATT&CK: stealth, T1140
+// Description: Detects suspicious process command line that uses base64 encoded input for execution with a
+//   shell
+// False positives:
+//   - Legitimate administration activities
+// References:
+//   - https://github.com/arget13/DDexec
+//   - https://www.mandiant.com/resources/blog/barracuda-esg-exploited-globally
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_base64_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "base64 " and ((ProcessCommandLine contains "| bash " or ProcessCommandLine contains "| sh " or ProcessCommandLine contains "|bash " or ProcessCommandLine contains "|sh ") or (ProcessCommandLine endswith " |sh" or ProcessCommandLine endswith "| bash" or ProcessCommandLine endswith "| sh" or ProcessCommandLine endswith "|bash"))

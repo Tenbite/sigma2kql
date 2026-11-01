@@ -1,0 +1,18 @@
+// Title: Potentially Suspicious Child Process of KeyScrambler.exe
+// Sigma ID: ca5583e9-8f80-46ac-ab91-7f314d13b984
+// Status: test | Level: medium
+// Author: Swachchhanda Shrawan Poudel
+// Date: 2024-05-13 | Modified: -
+// ATT&CK: persistence, execution, privilege-escalation, stealth, T1203, T1574.001
+// Description: Detects potentially suspicious child processes of KeyScrambler.exe
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/DTCERT/status/1712785421845790799
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_keyscrambler_susp_child_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\KeyScrambler.exe" and ((FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\mshta.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\regsvr32.exe" or FolderPath endswith "\\rundll32.exe" or FolderPath endswith "\\wscript.exe") or (ProcessVersionInfoOriginalFileName in~ ("Cmd.Exe", "cscript.exe", "mshta.exe", "PowerShell.EXE", "pwsh.dll", "regsvr32.exe", "RUNDLL32.EXE", "wscript.exe")))

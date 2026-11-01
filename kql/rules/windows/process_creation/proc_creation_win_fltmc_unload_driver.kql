@@ -1,0 +1,19 @@
+// Title: Filter Driver Unloaded Via Fltmc.EXE
+// Sigma ID: 4931188c-178e-4ee7-a348-39e8a7a56821
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-02-13 | Modified: 2025-10-07
+// ATT&CK: stealth, defense-impairment, T1070, T1685, T1685.001
+// Description: Detect filter driver unloading activity via fltmc.exe
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.darkoperator.com/blog/2018/10/5/operating-offensively-against-sysmon
+//   - https://www.cybereason.com/blog/threat-analysis-report-lockbit-2.0-all-paths-lead-to-ransom
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_fltmc_unload_driver.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\fltMC.exe" or ProcessVersionInfoOriginalFileName =~ "fltMC.exe") and ProcessCommandLine contains "unload") and (not((((InitiatingProcessFolderPath contains "\\AppData\\Local\\Temp\\" or InitiatingProcessFolderPath contains ":\\Windows\\Temp\\") and InitiatingProcessFolderPath endswith "\\endpoint-protection-installer-x64.tmp" and (ProcessCommandLine endswith "unload rtp_filesystem_filter" or ProcessCommandLine endswith "unload rtp_filter")) or (InitiatingProcessFolderPath =~ "C:\\Program Files (x86)\\ManageEngine\\uems_agent\\bin\\dcfaservice64.exe" and ProcessCommandLine endswith "unload DFMFilter"))))

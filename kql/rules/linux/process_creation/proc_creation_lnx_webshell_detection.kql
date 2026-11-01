@@ -1,0 +1,19 @@
+// Title: Linux Webshell Indicators
+// Sigma ID: 818f7b24-0fba-4c49-a073-8b755573b9c7
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+// Date: 2021-10-15 | Modified: 2026-08-19
+// ATT&CK: persistence, T1505.003
+// Description: Detects suspicious sub processes of web server processes
+// False positives:
+//   - Web applications that invoke Linux command line tools
+// References:
+//   - https://www.acunetix.com/blog/articles/web-shells-101-using-php-introduction-web-shells-part-2/
+//   - https://media.defense.gov/2020/Jun/09/2002313081/-1/-1/0/CSI-DETECT-AND-PREVENT-WEB-SHELL-MALWARE-20200422.PDF
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_webshell_detection.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((InitiatingProcessFolderPath endswith "/httpd" or InitiatingProcessFolderPath endswith "/lighttpd" or InitiatingProcessFolderPath endswith "/nginx" or InitiatingProcessFolderPath endswith "/apache2" or InitiatingProcessFolderPath endswith "/node" or InitiatingProcessFolderPath endswith "/caddy") or (InitiatingProcessCommandLine contains "/bin/java" and InitiatingProcessCommandLine contains "tomcat") or (InitiatingProcessCommandLine contains "/bin/java" and InitiatingProcessCommandLine contains "websphere")) and (FolderPath endswith "/whoami" or FolderPath endswith "/ifconfig" or FolderPath endswith "/ip" or FolderPath endswith "/bin/uname" or FolderPath endswith "/bin/cat" or FolderPath endswith "/bin/crontab" or FolderPath endswith "/hostname" or FolderPath endswith "/iptables" or FolderPath endswith "/netstat" or FolderPath endswith "/pwd" or FolderPath endswith "/route") and (not((InitiatingProcessFolderPath endswith "/node" and ProcessCommandLine contains "ip neigh show")))

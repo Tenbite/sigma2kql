@@ -1,0 +1,19 @@
+// Title: DLL Execution Via Register-cimprovider.exe
+// Sigma ID: a2910908-e86f-4687-aeba-76a5f996e652
+// Status: test | Level: medium
+// Author: Ivan Dyachkov, Yulia Fomina, oscd.community
+// Date: 2020-10-07 | Modified: 2021-11-27
+// ATT&CK: privilege-escalation, persistence, execution, stealth, T1574
+// Description: Detects using register-cimprovider.exe to execute arbitrary dll file.
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/PhilipTsukerman/status/992021361106268161
+//   - https://lolbas-project.github.io/lolbas/Binaries/Register-cimprovider/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_registry_cimprovider_dll_load.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\register-cimprovider.exe" and (ProcessCommandLine contains "-path" and ProcessCommandLine contains "dll")

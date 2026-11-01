@@ -1,0 +1,18 @@
+// Title: New Virtual Smart Card Created Via TpmVscMgr.EXE
+// Sigma ID: c633622e-cab9-4eaa-bb13-66a1d68b3e47
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-06-15 | Modified: -
+// ATT&CK: execution
+// Description: Detects execution of "Tpmvscmgr.exe" to create a new virtual smart card.
+// False positives:
+//   - Legitimate usage by an administrator
+// References:
+//   - https://learn.microsoft.com/en-us/windows/security/identity-protection/virtual-smart-cards/virtual-smart-card-tpmvscmgr
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_tpmvscmgr_add_virtual_smartcard.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\tpmvscmgr.exe" and ProcessVersionInfoOriginalFileName =~ "TpmVscMgr.exe") and ProcessCommandLine contains "create"

@@ -1,0 +1,19 @@
+// Title: Java Running with Remote Debugging
+// Sigma ID: 8f88e3f6-2a49-48f5-a5c4-2f7eedf78710
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2019-01-16 | Modified: 2023-02-01
+// ATT&CK: T1203, execution
+// Description: Detects a JAVA process running with remote debugging allowing more than just localhost to
+//   connect
+// False positives:
+//   - Unknown
+// References:
+//   - https://dzone.com/articles/remote-debugging-java-applications-with-jdwp
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_java_remote_debugging.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "transport=dt_socket,address=" and (ProcessCommandLine contains "jre1." or ProcessCommandLine contains "jdk1.")) and (not((ProcessCommandLine contains "address=127.0.0.1" or ProcessCommandLine contains "address=localhost")))

@@ -1,0 +1,24 @@
+// Title: DNS-over-HTTPS Enabled by Registry
+// Sigma ID: 04b45a8a-d11d-49e4-9acc-4a1b524407a5
+// Status: test | Level: medium
+// Author: Austin Songer
+// Date: 2021-07-22 | Modified: 2023-08-17
+// ATT&CK: persistence, stealth, defense-impairment, T1140, T1112
+// Description: Detects when a user enables DNS-over-HTTPS. This can be used to hide internet activity or be
+//   used to hide the process of exfiltrating data. With this enabled organization will lose
+//   visibility into data such as query type, response and originating IP that are used to determine
+//   bad actors.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.tenforums.com/tutorials/151318-how-enable-disable-dns-over-https-doh-microsoft-edge.html
+//   - https://github.com/elastic/detection-rules/issues/1371
+//   - https://chromeenterprise.google/policies/?policy=DnsOverHttpsMode
+//   - https://admx.help/HKLM/Software/Policies/Mozilla/Firefox/DNSOverHTTPS
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_dns_over_https_enabled.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey endswith "\\SOFTWARE\\Policies\\Microsoft\\Edge\\BuiltInDnsClientEnabled" and RegistryValueData =~ "DWORD (0x00000001)") or (RegistryKey endswith "\\SOFTWARE\\Google\\Chrome\\DnsOverHttpsMode" and RegistryValueData =~ "secure") or (RegistryKey endswith "\\SOFTWARE\\Policies\\Mozilla\\Firefox\\DNSOverHTTPS\\Enabled" and RegistryValueData =~ "DWORD (0x00000001)")

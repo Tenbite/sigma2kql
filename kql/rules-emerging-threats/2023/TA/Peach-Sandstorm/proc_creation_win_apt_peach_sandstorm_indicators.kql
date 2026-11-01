@@ -1,0 +1,20 @@
+// Title: Peach Sandstorm APT Process Activity Indicators
+// Sigma ID: 2e7bbd54-2f26-476e-b4a1-ba5f1a012614
+// Status: test | Level: high
+// Author: X__Junior (Nextron Systems)
+// Date: 2024-01-15 | Modified: -
+// ATT&CK: execution
+// Tags: detection.emerging-threats
+// Description: Detects process creation activity related to Peach Sandstorm APT
+// False positives:
+//   - Unlikely
+// References:
+//   - https://twitter.com/MsftSecIntel/status/1737895710169628824
+//   - https://www.virustotal.com/gui/file/364275326bbfc4a3b89233dabdaf3230a3d149ab774678342a40644ad9f8d614/details
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2023/TA/Peach-Sandstorm/proc_creation_win_apt_peach_sandstorm_indicators.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "QP's*(58vaP!tF4"

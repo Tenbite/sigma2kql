@@ -1,0 +1,23 @@
+// Title: System Information Discovery Using Ioreg
+// Sigma ID: 2d5e7a8b-f484-4a24-945d-7f0efd52eab0
+// Status: test | Level: medium
+// Author: Joseliyo Sanchez, @Joseliyo_Jstnk
+// Date: 2023-12-20 | Modified: 2024-01-02
+// ATT&CK: discovery, T1082
+// Description: Detects the use of "ioreg" which will show I/O Kit registry information. This process is used
+//   for system information discovery. It has been observed in-the-wild by calling this process
+//   directly or using bash and grep to look for specific strings.
+// False positives:
+//   - Legitimate administrative activities
+// References:
+//   - https://www.virustotal.com/gui/file/0373d78db6c3c0f6f6dcc409821bf89e1ad8c165d6f95c5c80ecdce2219627d7/behavior
+//   - https://www.virustotal.com/gui/file/4ffdc72d1ff1ee8228e31691020fc275afd1baee5a985403a71ca8c7bd36e2e4/behavior
+//   - https://www.virustotal.com/gui/file/5907d59ec1303cfb5c0a0f4aaca3efc0830707d86c732ba6b9e842b5730b95dc/behavior
+//   - https://www.trendmicro.com/en_ph/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_ioreg_discovery.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "/ioreg" or ProcessCommandLine contains "ioreg") and (ProcessCommandLine contains "-l" or ProcessCommandLine contains "-c") and (ProcessCommandLine contains "AppleAHCIDiskDriver" or ProcessCommandLine contains "IOPlatformExpertDevice" or ProcessCommandLine contains "Oracle" or ProcessCommandLine contains "Parallels" or ProcessCommandLine contains "USB Vendor Name" or ProcessCommandLine contains "VirtualBox" or ProcessCommandLine contains "VMware")

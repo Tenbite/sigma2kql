@@ -1,0 +1,21 @@
+// Title: Screen Capture Activity Via Psr.EXE
+// Sigma ID: 2158f96f-43c2-43cb-952a-ab4580f32382
+// Status: test | Level: medium
+// Author: Beyu Denis, oscd.community
+// Date: 2019-10-12 | Modified: 2024-01-04
+// ATT&CK: collection, T1113
+// Description: Detects execution of Windows Problem Steps Recorder (psr.exe), a utility used to record the user
+//   screen and clicks.
+// False positives:
+//   - Unknown
+// References:
+//   - https://lolbas-project.github.io/lolbas/Binaries/Psr/
+//   - https://web.archive.org/web/20200229201156/https://www.sans.org/cyber-security-summit/archives/file/summit-archive-1493861893.pdf
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1560.001/T1560.001.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_psr_capture_screenshots.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\Psr.exe" and (ProcessCommandLine contains "/start" or ProcessCommandLine contains "-start")

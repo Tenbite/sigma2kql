@@ -1,0 +1,19 @@
+// Title: PowerShell SAM Copy
+// Sigma ID: 1af57a4b-460a-4738-9034-db68b880c665
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2021-07-29 | Modified: 2023-01-06
+// ATT&CK: credential-access, T1003.002
+// Description: Detects suspicious PowerShell scripts accessing SAM hives
+// False positives:
+//   - Some rare backup scenarios
+//   - PowerShell scripts fixing HiveNightmare / SeriousSAM ACLs
+// References:
+//   - https://twitter.com/splinter_code/status/1420546784250769408
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_powershell_sam_access.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "\\HarddiskVolumeShadowCopy" and ProcessCommandLine contains "System32\\config\\sam") and (ProcessCommandLine contains "Copy-Item" or ProcessCommandLine contains "cp $_." or ProcessCommandLine contains "cpi $_." or ProcessCommandLine contains "copy $_." or ProcessCommandLine contains ".File]::Copy(")

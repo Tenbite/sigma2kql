@@ -1,0 +1,18 @@
+// Title: Potential File Overwrite Via Sysinternals SDelete
+// Sigma ID: a4824fca-976f-4964-b334-0621379e84c4
+// Status: test | Level: high
+// Author: frack113
+// Date: 2021-06-03 | Modified: 2023-02-28
+// ATT&CK: impact, T1485
+// Description: Detects the use of SDelete to erase a file not the free space
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1485/T1485.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_sysinternals_sdelete.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessVersionInfoOriginalFileName =~ "sdelete.exe" and (not((ProcessCommandLine contains " -h" or ProcessCommandLine contains " -c" or ProcessCommandLine contains " -z" or ProcessCommandLine contains " /?")))

@@ -1,0 +1,17 @@
+// Title: Renamed Gpg.EXE Execution
+// Sigma ID: ec0722a3-eb5c-4a56-8ab2-bf6f20708592
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems), frack113
+// Date: 2023-08-09 | Modified: -
+// ATT&CK: impact, T1486
+// Description: Detects the execution of a renamed "gpg.exe". Often used by ransomware and loaders to
+//   decrypt/encrypt data.
+// References:
+//   - https://securelist.com/locked-out/68960/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_renamed_gpg4win.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessVersionInfoOriginalFileName =~ "gpg.exe" and (not((FolderPath endswith "\\gpg.exe" or FolderPath endswith "\\gpg2.exe")))

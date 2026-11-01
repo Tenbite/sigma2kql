@@ -1,0 +1,19 @@
+// Title: Renamed Plink Execution
+// Sigma ID: 1c12727d-02bf-45ff-a9f3-d49806a3cf43
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-06-06 | Modified: 2023-02-03
+// ATT&CK: stealth, T1036
+// Description: Detects the execution of a renamed version of the Plink binary
+// False positives:
+//   - Unknown
+// References:
+//   - https://thedfirreport.com/2022/06/06/will-the-real-msiexec-please-stand-up-exploit-leads-to-data-exfiltration/
+//   - https://the.earth.li/~sgtatham/putty/0.58/htmldoc/Chapter7.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_renamed_plink.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessVersionInfoOriginalFileName =~ "Plink" or (ProcessCommandLine contains " -l forward" and ProcessCommandLine contains " -P " and ProcessCommandLine contains " -R ")) and (not(FolderPath endswith "\\plink.exe"))

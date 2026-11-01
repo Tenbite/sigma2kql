@@ -1,0 +1,25 @@
+// Title: Potentially Suspicious Desktop Background Change Via Registry
+// Sigma ID: 85b88e05-dadc-430b-8a9e-53ff1cd30aae
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems), Stephen Lincoln @slincoln-aiq (AttackIQ)
+// Date: 2023-12-21 | Modified: 2025-10-17
+// ATT&CK: persistence, impact, defense-impairment, T1112, T1491.001
+// Description: Detects registry value settings that would replace the user's desktop background. This is a
+//   common technique used by malware to change the desktop background to a ransom note or other
+//   image.
+// False positives:
+//   - Administrative scripts that change the desktop background to a company logo or other image.
+// References:
+//   - https://www.attackiq.com/2023/09/20/emulating-rhysida/
+//   - https://research.checkpoint.com/2023/the-rhysida-ransomware-activity-analysis-and-ties-to-vice-society/
+//   - https://www.trendmicro.com/en_us/research/23/h/an-overview-of-the-new-rhysida-ransomware.html
+//   - https://www.virustotal.com/gui/file/a864282fea5a536510ae86c77ce46f7827687783628e4f2ceb5bf2c41b8cd3c6/behavior
+//   - https://admx.help/?Category=Windows_10_2016&Policy=Microsoft.Policies.WindowsDesktop::Wallpaper
+//   - https://admx.help/?Category=Windows_10_2016&Policy=Microsoft.Policies.ControlPanelDisplay::CPL_Personalization_NoDesktopBackgroundUI
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_desktop_background_change.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey contains "Control Panel\\Desktop" or RegistryKey contains "CurrentVersion\\Policies\\ActiveDesktop" or RegistryKey contains "CurrentVersion\\Policies\\System") and ((RegistryKey endswith "NoChangingWallpaper" and RegistryValueData =~ "DWORD (0x00000001)") or RegistryKey endswith "\\Wallpaper" or (RegistryKey endswith "\\WallpaperStyle" and RegistryValueData =~ "2")) and (not((InitiatingProcessFolderPath endswith "\\svchost.exe" or (RegistryKey endswith "\\Control Panel\\Desktop\\Wallpaper" and RegistryValueData =~ "(Empty)") or InitiatingProcessFolderPath endswith "C:\\Windows\\Explorer.EXE"))) and (not(((InitiatingProcessFolderPath in~ ("C:\\Program Files\\Amazon\\EC2Launch\\EC2Launch.exe", "C:\\Program Files (x86)\\Amazon\\EC2Launch\\EC2Launch.exe")) and RegistryKey endswith "\\Control Panel\\Desktop\\Wallpaper")))

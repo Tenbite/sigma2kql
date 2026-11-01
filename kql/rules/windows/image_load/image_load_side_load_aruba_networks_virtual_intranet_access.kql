@@ -1,0 +1,19 @@
+// Title: Aruba Network Service Potential DLL Sideloading
+// Sigma ID: 90ae0469-0cee-4509-b67f-e5efcef040f7
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-01-22 | Modified: 2023-03-15
+// ATT&CK: privilege-escalation, persistence, execution, stealth, T1574.001
+// Description: Detects potential DLL sideloading activity via the Aruba Networks Virtual Intranet Access
+//   "arubanetsvc.exe" process using DLL Search Order Hijacking
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/wdormann/status/1616581559892545537?t=XLCBO9BziGzD7Bmbt8oMEQ&s=09
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/image_load/image_load_side_load_aruba_networks_virtual_intranet_access.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceImageLoadEvents
+| where (InitiatingProcessFolderPath endswith "\\arubanetsvc.exe" and (FolderPath endswith "\\wtsapi32.dll" or FolderPath endswith "\\msvcr100.dll" or FolderPath endswith "\\msvcp100.dll" or FolderPath endswith "\\dbghelp.dll" or FolderPath endswith "\\dbgcore.dll" or FolderPath endswith "\\wininet.dll" or FolderPath endswith "\\iphlpapi.dll" or FolderPath endswith "\\version.dll" or FolderPath endswith "\\cryptsp.dll" or FolderPath endswith "\\cryptbase.dll" or FolderPath endswith "\\wldp.dll" or FolderPath endswith "\\profapi.dll" or FolderPath endswith "\\sspicli.dll" or FolderPath endswith "\\winsta.dll" or FolderPath endswith "\\dpapi.dll")) and (not((FolderPath startswith "C:\\Windows\\System32\\" or FolderPath startswith "C:\\Windows\\SysWOW64\\" or FolderPath startswith "C:\\Windows\\WinSxS\\")))

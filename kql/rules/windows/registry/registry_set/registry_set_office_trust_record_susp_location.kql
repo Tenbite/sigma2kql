@@ -1,0 +1,20 @@
+// Title: Macro Enabled In A Potentially Suspicious Document
+// Sigma ID: a166f74e-bf44-409d-b9ba-ea4b2dd8b3cd
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-06-21 | Modified: 2023-08-17
+// ATT&CK: persistence, defense-impairment, T1112
+// Description: Detects registry changes to Office trust records where the path is located in a potentially
+//   suspicious location
+// False positives:
+//   - Unlikely
+// References:
+//   - https://twitter.com/inversecos/status/1494174785621819397
+//   - Internal Research
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_office_trust_record_susp_location.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey contains "\\Security\\Trusted Documents\\TrustRecords" and (RegistryKey contains "/AppData/Local/Microsoft/Windows/INetCache/" or RegistryKey contains "/AppData/Local/Temp/" or RegistryKey contains "/PerfLogs/" or RegistryKey contains "C:/Users/Public/" or RegistryKey contains "file:///D:/" or RegistryKey contains "file:///E:/")

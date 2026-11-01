@@ -1,0 +1,19 @@
+// Title: Recon Information for Export with Command Prompt
+// Sigma ID: aa2efee7-34dd-446e-8a37-40790a66efd7
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2021-07-30 | Modified: 2022-09-13
+// ATT&CK: collection, T1119
+// Description: Once established within a system or network, an adversary may use automated techniques for
+//   collecting internal data.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1119/T1119.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_recon.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\tree.com" or FolderPath endswith "\\WMIC.exe" or FolderPath endswith "\\doskey.exe" or FolderPath endswith "\\sc.exe") or (ProcessVersionInfoOriginalFileName in~ ("wmic.exe", "DOSKEY.EXE", "sc.exe"))) and (InitiatingProcessCommandLine contains " > %TEMP%\\" or InitiatingProcessCommandLine contains " > %TMP%\\")

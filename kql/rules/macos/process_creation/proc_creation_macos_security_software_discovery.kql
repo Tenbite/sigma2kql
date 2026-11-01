@@ -1,0 +1,18 @@
+// Title: Security Software Discovery - MacOs
+// Sigma ID: 0ed75b9c-c73b-424d-9e7d-496cd565fbe0
+// Status: test | Level: medium
+// Author: Daniil Yugoslavskiy, oscd.community
+// Date: 2020-10-19 | Modified: 2022-11-27
+// ATT&CK: discovery, T1518.001
+// Description: Detects usage of system utilities (only grep for now) to discover security software discovery
+// False positives:
+//   - Legitimate activities
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1518.001/T1518.001.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_security_software_discovery.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath =~ "/usr/bin/grep" and ((ProcessCommandLine contains "nessusd" or ProcessCommandLine contains "santad" or ProcessCommandLine contains "CbDefense" or ProcessCommandLine contains "falcond" or ProcessCommandLine contains "td-agent" or ProcessCommandLine contains "packetbeat" or ProcessCommandLine contains "filebeat" or ProcessCommandLine contains "auditbeat" or ProcessCommandLine contains "osqueryd" or ProcessCommandLine contains "BlockBlock" or ProcessCommandLine contains "LuLu") or (ProcessCommandLine contains "Little" and ProcessCommandLine contains "Snitch"))

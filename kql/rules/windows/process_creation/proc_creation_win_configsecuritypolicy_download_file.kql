@@ -1,0 +1,20 @@
+// Title: Arbitrary File Download Via ConfigSecurityPolicy.EXE
+// Sigma ID: 1f0f6176-6482-4027-b151-00071af39d7e
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2021-11-26 | Modified: 2022-05-16
+// ATT&CK: exfiltration, T1567
+// Description: Detects the execution of "ConfigSecurityPolicy.EXE", a binary part of Windows Defender used to
+//   manage settings in Windows Defender. Users can configure different pilot collections for each of
+//   the co-management workloads. It can be abused by attackers in order to upload or download files.
+// False positives:
+//   - Unknown
+// References:
+//   - https://lolbas-project.github.io/lolbas/Binaries/ConfigSecurityPolicy/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_configsecuritypolicy_download_file.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "ConfigSecurityPolicy.exe" or FolderPath endswith "\\ConfigSecurityPolicy.exe" or ProcessVersionInfoOriginalFileName =~ "ConfigSecurityPolicy.exe") and (ProcessCommandLine contains "ftp://" or ProcessCommandLine contains "http://" or ProcessCommandLine contains "https://")

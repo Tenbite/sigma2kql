@@ -1,0 +1,18 @@
+// Title: Linux Recon Indicators
+// Sigma ID: 0cf7a157-8879-41a2-8f55-388dd23746b7
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-06-20 | Modified: -
+// ATT&CK: reconnaissance, T1592.004, credential-access, T1552.001
+// Description: Detects events with patterns found in commands used for reconnaissance on linux systems
+// False positives:
+//   - Legitimate administration activities
+// References:
+//   - https://github.com/sleventyeleven/linuxprivchecker/blob/0d701080bbf92efd464e97d71a70f97c6f2cd658/linuxprivchecker.py
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_susp_recon_indicators.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains " -name .htpasswd" or ProcessCommandLine contains " -perm -4000 "

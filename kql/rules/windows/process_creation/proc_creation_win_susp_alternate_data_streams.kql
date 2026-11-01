@@ -1,0 +1,19 @@
+// Title: Execute From Alternate Data Streams
+// Sigma ID: 7f43c430-5001-4f8b-aaa9-c3b88f18fa5c
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2021-09-01 | Modified: 2022-10-09
+// ATT&CK: stealth, T1564.004
+// Description: Detects execution from an Alternate Data Stream (ADS). Adversaries may use NTFS file attributes
+//   to hide their malicious data in order to evade detection
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1564.004/T1564.004.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_alternate_data_streams.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "txt:" and ((ProcessCommandLine contains "type " and ProcessCommandLine contains " > ") or (ProcessCommandLine contains "makecab " and ProcessCommandLine contains ".cab") or (ProcessCommandLine contains "reg " and ProcessCommandLine contains " export ") or (ProcessCommandLine contains "regedit " and ProcessCommandLine contains " /E ") or (ProcessCommandLine contains "esentutl " and ProcessCommandLine contains " /y " and ProcessCommandLine contains " /d " and ProcessCommandLine contains " /o "))

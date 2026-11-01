@@ -1,0 +1,21 @@
+// Title: Arbitrary File Download Via Squirrel.EXE
+// Sigma ID: 1e75c1cc-c5d4-42aa-ac3d-91b0b68b3b4c
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems), Karneades / Markus Neis, Jonhnathan Ribeiro, oscd.community
+// Date: 2022-06-09 | Modified: 2023-11-09
+// ATT&CK: execution, stealth, T1218
+// Description: Detects the usage of the "Squirrel.exe" to download arbitrary files. This binary is part of
+//   multiple Electron based software installations (Slack, Teams, Discord, etc.)
+// False positives:
+//   - Expected FP with some Electron based applications such as (1Clipboard, Beaker Browser, Caret, Discord, GitHub Desktop, etc.)
+// References:
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Squirrel/
+//   - http://www.hexacorn.com/blog/2019/03/30/sqirrel-packages-manager-as-a-lolbin-a-k-a-many-electron-apps-are-lolbins-by-default/
+//   - http://www.hexacorn.com/blog/2018/08/16/squirrel-as-a-lolbin/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_squirrel_download.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\squirrel.exe" or FolderPath endswith "\\update.exe") and (ProcessCommandLine contains " --download " or ProcessCommandLine contains " --update " or ProcessCommandLine contains " --updateRollback=") and ProcessCommandLine contains "http"

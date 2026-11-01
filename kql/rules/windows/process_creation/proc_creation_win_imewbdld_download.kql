@@ -1,0 +1,19 @@
+// Title: Arbitrary File Download Via IMEWDBLD.EXE
+// Sigma ID: 863218bd-c7d0-4c52-80cd-0a96c09f54af
+// Status: test | Level: high
+// Author: Swachchhanda Shrawan Poudel
+// Date: 2023-11-09 | Modified: -
+// ATT&CK: execution, stealth, T1218
+// Description: Detects usage of "IMEWDBLD.exe" to download arbitrary files
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1105/T1105.md#atomic-test-10---windows---powershell-download
+//   - https://lolbas-project.github.io/lolbas/Binaries/IMEWDBLD/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_imewbdld_download.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\IMEWDBLD.exe" or ProcessVersionInfoOriginalFileName =~ "imewdbld.exe") and (ProcessCommandLine contains "http://" or ProcessCommandLine contains "https://")

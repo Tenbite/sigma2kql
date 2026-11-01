@@ -1,0 +1,18 @@
+// Title: Disable Security Tools
+// Sigma ID: ff39f1a6-84ac-476f-a1af-37fcdf53d7c0
+// Status: test | Level: medium
+// Author: Daniil Yugoslavskiy, oscd.community
+// Date: 2020-10-19 | Modified: 2021-11-27
+// ATT&CK: defense-impairment, T1685
+// Description: Detects disabling security tools
+// False positives:
+//   - Legitimate activities
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_disable_security_tools.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath =~ "/bin/launchctl" and ProcessCommandLine contains "unload") and (ProcessCommandLine contains "com.objective-see.lulu.plist" or ProcessCommandLine contains "com.objective-see.blockblock.plist" or ProcessCommandLine contains "com.google.santad.plist" or ProcessCommandLine contains "com.carbonblack.defense.daemon.plist" or ProcessCommandLine contains "com.carbonblack.daemon.plist" or ProcessCommandLine contains "at.obdev.littlesnitchd.plist" or ProcessCommandLine contains "com.tenablesecurity.nessusagent.plist" or ProcessCommandLine contains "com.opendns.osx.RoamingClientConfigUpdater.plist" or ProcessCommandLine contains "com.crowdstrike.falcond.plist" or ProcessCommandLine contains "com.crowdstrike.userdaemon.plist" or ProcessCommandLine contains "osquery" or ProcessCommandLine contains "filebeat" or ProcessCommandLine contains "auditbeat" or ProcessCommandLine contains "packetbeat" or ProcessCommandLine contains "td-agent")) or (FolderPath =~ "/usr/sbin/spctl" and ProcessCommandLine contains "disable")

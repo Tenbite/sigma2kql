@@ -1,0 +1,19 @@
+// Title: HackTool - Htran/NATBypass Execution
+// Sigma ID: f5e3b62f-e577-4e59-931e-0a15b2b94e1e
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-12-27 | Modified: 2023-02-04
+// ATT&CK: command-and-control, T1090, S0040
+// Description: Detects executable names or flags used by Htran or Htran-like tools (e.g. NATBypass)
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/HiwinCN/HTran
+//   - https://github.com/cw1997/NATBypass
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_htran_or_natbypass.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\htran.exe" or FolderPath endswith "\\lcx.exe") or (ProcessCommandLine contains ".exe -tran " or ProcessCommandLine contains ".exe -slave ")

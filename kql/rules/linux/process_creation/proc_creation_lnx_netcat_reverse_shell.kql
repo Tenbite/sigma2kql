@@ -1,0 +1,23 @@
+// Title: Potential Netcat Reverse Shell Execution
+// Sigma ID: 7f734ed0-4f47-46c0-837f-6ee62505abd9
+// Status: test | Level: high
+// Author: @d4ns4n_, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-04-07 | Modified: 2026-09-24
+// ATT&CK: execution, T1059
+// Description: Detects execution of netcat with the "-e" or "-c" flags followed by common shells, which are
+//   commonly used to spawn reverse shells.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
+//   - https://www.revshells.com/
+//   - https://www.hackingtutorials.org/networking/hacking-netcat-part-2-bind-reverse-shells/
+//   - https://www.infosecademy.com/netcat-reverse-shells/
+//   - https://man7.org/linux/man-pages/man1/ncat.1.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_netcat_reverse_shell.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "/nc.openbsd" or FolderPath endswith "/nc.traditional" or FolderPath endswith "/nc" or FolderPath endswith "/ncat" or FolderPath endswith "/netcat.openbsd" or FolderPath endswith "/netcat.traditional" or FolderPath endswith "/netcat") and (ProcessCommandLine contains " -c " or ProcessCommandLine contains " -e ") and (ProcessCommandLine contains " ash" or ProcessCommandLine contains " bash" or ProcessCommandLine contains " bsh" or ProcessCommandLine contains " csh" or ProcessCommandLine contains " ksh" or ProcessCommandLine contains " pdksh" or ProcessCommandLine contains " sh" or ProcessCommandLine contains " tcsh" or ProcessCommandLine contains "/bin/ash" or ProcessCommandLine contains "/bin/bash" or ProcessCommandLine contains "/bin/bsh" or ProcessCommandLine contains "/bin/csh" or ProcessCommandLine contains "/bin/ksh" or ProcessCommandLine contains "/bin/pdksh" or ProcessCommandLine contains "/bin/sh" or ProcessCommandLine contains "/bin/tcsh" or ProcessCommandLine contains "/bin/zsh" or ProcessCommandLine contains "$IFSash" or ProcessCommandLine contains "$IFSbash" or ProcessCommandLine contains "$IFSbsh" or ProcessCommandLine contains "$IFScsh" or ProcessCommandLine contains "$IFSksh" or ProcessCommandLine contains "$IFSpdksh" or ProcessCommandLine contains "$IFSsh" or ProcessCommandLine contains "$IFStcsh" or ProcessCommandLine contains "$IFSzsh")

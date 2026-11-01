@@ -1,0 +1,21 @@
+// Title: Network Connection Initiated To DevTunnels Domain
+// Sigma ID: 9501f8e6-8e3d-48fc-a8a6-1089dd5d7ef4
+// Status: test | Level: medium
+// Author: Kamran Saifullah
+// Date: 2023-11-20 | Modified: -
+// ATT&CK: exfiltration, command-and-control, T1567.001, T1572
+// Description: Detects network connections to Devtunnels domains initiated by a process on a system. Attackers
+//   can abuse that feature to establish a reverse shell or persistence on a machine.
+// False positives:
+//   - Legitimate use of Devtunnels will also trigger this.
+// References:
+//   - https://blueteamops.medium.com/detecting-dev-tunnels-16f0994dc3e2
+//   - https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/security
+//   - https://cydefops.com/devtunnels-unleashed
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/network_connection/net_connection_win_domain_devtunnels.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceNetworkEvents
+| where RemoteUrl endswith ".devtunnels.ms"

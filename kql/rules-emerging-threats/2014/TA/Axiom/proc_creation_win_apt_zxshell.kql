@@ -1,0 +1,20 @@
+// Title: ZxShell Malware
+// Sigma ID: f0b70adb-0075-43b0-9745-e82a1c608fcc
+// Status: test | Level: critical
+// Author: Florian Roth (Nextron Systems), oscd.community, Jonhnathan Ribeiro
+// Date: 2017-07-20 | Modified: 2021-11-27
+// ATT&CK: execution, stealth, T1059.003, T1218.011, S0412, G0001
+// Tags: detection.emerging-threats
+// Description: Detects a ZxShell start by the called and well-known function name
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.hybrid-analysis.com/sample/5d2a4cde9fa7c2fdbf39b2e2ffd23378d0c50701a3095d1e91e3cf922d7b0b16?environmentId=100
+//   - https://pub-7cb8ac806c1b4c4383e585c474a24719.r2.dev/116309e7121bc8b0e66e4166c06f7b818e1d3629.pdf
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2014/TA/Axiom/proc_creation_win_apt_zxshell.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\rundll32.exe" and (ProcessCommandLine contains "zxFunction" or ProcessCommandLine contains "RemoteDiskXXXXX")

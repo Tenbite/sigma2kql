@@ -1,0 +1,20 @@
+// Title: Scheduled TaskCache Change by Uncommon Program
+// Sigma ID: 4720b7df-40c3-48fd-bbdf-fd4b3c464f0d
+// Status: test | Level: high
+// Author: Syed Hasan (@syedhasan009)
+// Date: 2021-06-18 | Modified: 2025-10-22
+// ATT&CK: privilege-escalation, execution, persistence, T1053, T1053.005
+// Description: Monitor the creation of a new key under 'TaskCache' when a new scheduled task is registered by a
+//   process that is not svchost.exe, which is suspicious
+// False positives:
+//   - Unknown
+// References:
+//   - https://thedfirreport.com/2021/03/29/sodinokibi-aka-revil-ransomware/
+//   - https://labs.f-secure.com/blog/scheduled-task-tampering/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_taskcache_entry.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey endswith "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache*" and (not((RegistryValueData =~ "(Empty)" or isnull(RegistryValueData) or (RegistryKey contains "Microsoft\\Windows\\UpdateOrchestrator" or RegistryKey contains "Microsoft\\Windows\\SoftwareProtectionPlatform\\SvcRestartTask\\Index" or RegistryKey contains "Microsoft\\Windows\\Flighting\\OneSettings\\RefreshCache\\Index") or InitiatingProcessFolderPath endswith "C:\\Windows\\System32\\MoUsoCoreWorker.exe" or InitiatingProcessFolderPath endswith "C:\\Windows\\System32\\services.exe" or (InitiatingProcessFolderPath startswith "C:\\Windows\\" and InitiatingProcessFolderPath endswith "\\TiWorker.exe") or InitiatingProcessFolderPath =~ "C:\\WINDOWS\\system32\\svchost.exe" or (InitiatingProcessFolderPath startswith "C:\\Windows\\Microsoft.NET\\Framework" and InitiatingProcessFolderPath endswith "\\ngen.exe" and (RegistryKey contains "\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tasks\\{B66B135D-DA06-4FC4-95F8-7458E1D10129}" or RegistryKey contains "\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tree\\Microsoft\\Windows\\.NET Framework\\.NET Framework NGEN")) or (InitiatingProcessFolderPath in~ ("C:\\Program Files\\Microsoft Office\\root\\Integration\\Integrator.exe", "C:\\Program Files (x86)\\Microsoft Office\\root\\Integration\\Integrator.exe", "C:\\Program Files\\Common Files\\microsoft shared\\ClickToRun\\OfficeC2RClient.exe", "C:\\Program Files (x86)\\Common Files\\microsoft shared\\ClickToRun\\OfficeC2RClient.exe")) or InitiatingProcessFolderPath =~ "C:\\Windows\\System32\\msiexec.exe" or (InitiatingProcessFolderPath =~ "C:\\Windows\\explorer.exe" and RegistryKey endswith "\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tree\\Microsoft\\Windows\\PLA\\Server Manager Performance Monitor*") or InitiatingProcessFolderPath =~ "System" or InitiatingProcessFolderPath =~ "C:\\Windows\\System32\\RuntimeBroker.exe"))) and (not(((InitiatingProcessFolderPath in~ ("C:\\Program Files (x86)\\Dropbox\\Update\\DropboxUpdate.exe", "C:\\Program Files\\Dropbox\\Update\\DropboxUpdate.exe")) or (InitiatingProcessFolderPath endswith "C:\\Program Files (x86)\\Microsoft\\EdgeUpdate\\MicrosoftEdgeUpdate.exe" or InitiatingProcessFolderPath endswith "C:\\Program Files\\Microsoft\\EdgeUpdate\\MicrosoftEdgeUpdate.exe") or (InitiatingProcessFolderPath endswith "C:\\Program Files (x86)\\Microsoft OneDrive\\OneDrive.exe" or InitiatingProcessFolderPath endswith "C:\\Program Files\\Microsoft OneDrive\\OneDrive.exe"))))

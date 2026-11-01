@@ -1,0 +1,18 @@
+// Title: Remote Access Tool - ScreenConnect Installation Execution
+// Sigma ID: 75bfe6e6-cd8e-429e-91d3-03921e1d7962
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2021-02-11 | Modified: 2024-02-26
+// ATT&CK: persistence, initial-access, T1133
+// Description: Detects ScreenConnect program starts that establish a remote access to a system.
+// False positives:
+//   - Legitimate use by administrative staff
+// References:
+//   - https://www.anomali.com/blog/probable-iranian-cyber-actors-static-kitten-conducting-cyberespionage-campaign-targeting-uae-and-kuwait-government-agencies
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_remote_access_tools_screenconnect_installation_cli_param.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "e=Access&" and ProcessCommandLine contains "y=Guest&" and ProcessCommandLine contains "&p=" and ProcessCommandLine contains "&c=" and ProcessCommandLine contains "&k="

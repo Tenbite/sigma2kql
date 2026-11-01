@@ -1,0 +1,18 @@
+// Title: Windows Credential Editor Registry
+// Sigma ID: a6b33c02-8305-488f-8585-03cb2a7763f2
+// Status: test | Level: critical
+// Author: Florian Roth (Nextron Systems)
+// Date: 2019-12-31 | Modified: 2021-11-27
+// ATT&CK: credential-access, T1003.001, S0005
+// Description: Detects the use of Windows Credential Editor (WCE)
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.ampliasecurity.com/research/windows-credentials-editor/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_event/registry_event_hack_wce_reg.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey contains "Services\\WCESERVICE\\Start"

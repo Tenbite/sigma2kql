@@ -1,0 +1,18 @@
+// Title: Potential Chrome Frame Helper DLL Sideloading
+// Sigma ID: 72ca7c75-bf85-45cd-aca7-255d360e423c
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems), Wietze Beukema (project and research)
+// Date: 2022-08-17 | Modified: 2023-05-15
+// ATT&CK: persistence, privilege-escalation, execution, stealth, T1574.001
+// Description: Detects potential DLL sideloading of "chrome_frame_helper.dll"
+// False positives:
+//   - Unknown
+// References:
+//   - https://hijacklibs.net/entries/3rd_party/google/chrome_frame_helper.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/image_load/image_load_side_load_chrome_frame_helper.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceImageLoadEvents
+| where FolderPath endswith "\\chrome_frame_helper.dll" and (not((FolderPath startswith "C:\\Program Files\\Google\\Chrome\\Application\\" or FolderPath startswith "C:\\Program Files (x86)\\Google\\Chrome\\Application\\"))) and (not(FolderPath contains "\\AppData\\local\\Google\\Chrome\\Application\\"))

@@ -1,0 +1,20 @@
+// Title: System Information Discovery Using sw_vers
+// Sigma ID: 5de06a6f-673a-4fc0-8d48-bcfe3837b033
+// Status: test | Level: medium
+// Author: Joseliyo Sanchez, @Joseliyo_Jstnk
+// Date: 2023-12-20 | Modified: -
+// ATT&CK: discovery, T1082
+// Description: Detects the use of "sw_vers" for system information discovery
+// False positives:
+//   - Legitimate administrative activities
+// References:
+//   - https://www.virustotal.com/gui/file/d3fa64f63563fe958b75238742d1e473800cb5f49f5cb79d38d4aa3c93709026/behavior
+//   - https://www.virustotal.com/gui/file/03b71eaceadea05bc0eea5cddecaa05f245126d6b16cfcd0f3ba0442ac58dab3/behavior
+//   - https://ss64.com/osx/sw_vers.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_swvers_discovery.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "/sw_vers" and (ProcessCommandLine contains "-buildVersion" or ProcessCommandLine contains "-productName" or ProcessCommandLine contains "-productVersion")

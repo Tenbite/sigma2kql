@@ -1,0 +1,20 @@
+// Title: UEFI Persistence Via Wpbbin - FileCreation
+// Sigma ID: e94b9ddc-eec5-4bb8-8a58-b9dc5f4e185f
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-07-18 | Modified: -
+// ATT&CK: persistence, stealth, T1542.001
+// Description: Detects creation of a file named "wpbbin" in the "%systemroot%\system32\" directory. Which could
+//   be indicative of UEFI based persistence method
+// False positives:
+//   - Legitimate usage of the file by hardware manufacturer such as lenovo (Thanks @0gtweet for the tip)
+// References:
+//   - https://grzegorztworek.medium.com/using-uefi-to-inject-executable-files-into-bitlocker-protected-drives-8ff4ca59c94c
+//   - https://persistence-info.github.io/Data/wpbbin.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_wpbbin_persistence.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath =~ "C:\\Windows\\System32\\wpbbin.exe"

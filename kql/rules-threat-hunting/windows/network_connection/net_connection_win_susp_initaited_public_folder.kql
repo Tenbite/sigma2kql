@@ -1,0 +1,22 @@
+// Title: Network Connection Initiated From Users\Public Folder
+// Sigma ID: bcb03938-9f8b-487d-8d86-e480691e1d71
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2024-05-31 | Modified: -
+// ATT&CK: command-and-control, T1105
+// Tags: detection.threat-hunting
+// Description: Detects a network connection initiated from a process located in the "C:\Users\Public" folder.
+//   Attacker are known to drop their malicious payloads and malware in this directory as its
+//   writable by everyone. Use this rule to hunt for potential suspicious or uncommon activity in
+//   your environement.
+// False positives:
+//   - Likely from legitimate third party application that execute from the "Public" directory.
+// References:
+//   - https://docs.google.com/spreadsheets/d/17pSTDNpa0sf6pHeRhusvWG6rThciE8CsXTSlDUAZDyo
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-threat-hunting/windows/network_connection/net_connection_win_susp_initaited_public_folder.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceNetworkEvents
+| where InitiatingProcessFolderPath contains ":\\Users\\Public\\" and (not(InitiatingProcessFolderPath contains ":\\Users\\Public\\IBM\\ClientSolutions\\Start_Programs\\"))

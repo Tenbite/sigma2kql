@@ -1,0 +1,20 @@
+// Title: Renamed MegaSync Execution
+// Sigma ID: 643bdcac-8b82-49f4-9fd9-25a90b929f3b
+// Status: test | Level: high
+// Author: Sittikorn S
+// Date: 2021-06-22 | Modified: 2023-02-03
+// ATT&CK: stealth, T1218
+// Description: Detects the execution of a renamed MegaSync.exe as seen used by ransomware families like
+//   Nefilim, Sodinokibi, Pysa, and Conti.
+// False positives:
+//   - Software that illegally integrates MegaSync in a renamed form
+//   - Administrators that have renamed MegaSync
+// References:
+//   - https://redcanary.com/blog/rclone-mega-extortion/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_renamed_megasync.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessVersionInfoOriginalFileName =~ "megasync.exe" and (not(FolderPath endswith "\\megasync.exe"))

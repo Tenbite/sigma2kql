@@ -1,0 +1,22 @@
+// Title: Potential Data Stealing Via Chromium Headless Debugging
+// Sigma ID: 3e8207c5-fcd2-4ea6-9418-15d45b4890e4
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-12-23 | Modified: -
+// ATT&CK: credential-access, collection, stealth, T1185, T1564.003
+// Description: Detects chromium based browsers starting in headless and debugging mode and pointing to a user
+//   profile. This could be a sign of data stealing or remote control
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/defaultnamehere/cookie_crimes/
+//   - https://mango.pdf.zone/stealing-chrome-cookies-without-a-password
+//   - https://embracethered.com/blog/posts/2020/cookie-crimes-on-mirosoft-edge/
+//   - https://embracethered.com/blog/posts/2020/chrome-spy-remote-control/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_browsers_chromium_headless_debugging.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "--remote-debugging-" and ProcessCommandLine contains "--user-data-dir" and ProcessCommandLine contains "--headless"

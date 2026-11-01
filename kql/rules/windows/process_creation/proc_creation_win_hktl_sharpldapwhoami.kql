@@ -1,0 +1,20 @@
+// Title: HackTool - SharpLdapWhoami Execution
+// Sigma ID: d9367cbb-c2e0-47ce-bdc0-128cb6da898d
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-08-29 | Modified: 2023-02-04
+// ATT&CK: discovery, T1033
+// Tags: car.2016-03-001
+// Description: Detects SharpLdapWhoami, a whoami alternative that queries the LDAP service on a domain
+//   controller
+// False positives:
+//   - Programs that use the same command line flags
+// References:
+//   - https://github.com/bugch3ck/SharpLdapWhoami
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_sharpldapwhoami.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\SharpLdapWhoami.exe" or (ProcessVersionInfoOriginalFileName contains "SharpLdapWhoami" or ProcessVersionInfoProductName =~ "SharpLdapWhoami") or (ProcessCommandLine endswith " /method:ntlm" or ProcessCommandLine endswith " /method:kerb" or ProcessCommandLine endswith " /method:nego" or ProcessCommandLine endswith " /m:nego" or ProcessCommandLine endswith " /m:ntlm" or ProcessCommandLine endswith " /m:kerb")

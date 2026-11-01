@@ -1,0 +1,22 @@
+// Title: Uncommon File Created In Office Startup Folder
+// Sigma ID: a10a2c40-2c4d-49f8-b557-1a946bc55d9d
+// Status: test | Level: high
+// Author: frack113, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-06-05 | Modified: 2023-12-13
+// ATT&CK: resource-development, T1587.001
+// Description: Detects the creation of a file with an uncommon extension in an Office application startup
+//   folder
+// False positives:
+//   - False positive might stem from rare extensions used by other Office utilities.
+// References:
+//   - https://app.any.run/tasks/d6fe6624-6ef8-485d-aa75-3d1bdda2a08c/
+//   - http://addbalance.com/word/startup.htm
+//   - https://answers.microsoft.com/en-us/msoffice/forum/all/document-in-word-startup-folder-doesnt-open-when/44ab0932-2917-4150-8cdc-2f2cf39e86f3
+//   - https://en.wikipedia.org/wiki/List_of_Microsoft_Office_filename_extensions
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_office_uncommon_file_startup.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where (((FolderPath contains "\\Microsoft\\Word\\STARTUP" or (FolderPath contains "\\Office" and FolderPath contains "\\Program Files" and FolderPath contains "\\STARTUP")) and (not((FolderPath endswith ".docb" or FolderPath endswith ".docm" or FolderPath endswith ".docx" or FolderPath endswith ".dotm" or FolderPath endswith ".mdb" or FolderPath endswith ".mdw" or FolderPath endswith ".pdf" or FolderPath endswith ".wll" or FolderPath endswith ".wwl")))) or ((FolderPath contains "\\Microsoft\\Excel\\XLSTART" or (FolderPath contains "\\Office" and FolderPath contains "\\Program Files" and FolderPath contains "\\XLSTART")) and (not((FolderPath endswith ".xll" or FolderPath endswith ".xls" or FolderPath endswith ".xlsm" or FolderPath endswith ".xlsx" or FolderPath endswith ".xlt" or FolderPath endswith ".xltm" or FolderPath endswith ".xlw"))))) and (not(((InitiatingProcessFolderPath contains ":\\Program Files\\Common Files\\Microsoft Shared\\ClickToRun\\" and InitiatingProcessFolderPath endswith "\\OfficeClickToRun.exe") or ((InitiatingProcessFolderPath contains ":\\Program Files\\Microsoft Office\\" or InitiatingProcessFolderPath contains ":\\Program Files (x86)\\Microsoft Office\\") and (InitiatingProcessFolderPath endswith "\\winword.exe" or InitiatingProcessFolderPath endswith "\\excel.exe")))))

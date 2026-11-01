@@ -1,0 +1,19 @@
+// Title: Network Reconnaissance Activity
+// Sigma ID: e6313acd-208c-44fc-a0ff-db85d572e90e
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-02-07 | Modified: -
+// ATT&CK: discovery, T1087, T1082
+// Tags: car.2016-03-001
+// Description: Detects a set of suspicious network related commands often used in recon stages
+// False positives:
+//   - False positives depend on scripts and administrative tools used in the monitored environment
+// References:
+//   - https://thedfirreport.com/2022/02/07/qbot-likes-to-move-it-move-it/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_nslookup_domain_discovery.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "nslookup" and ProcessCommandLine contains "_ldap._tcp.dc._msdcs."

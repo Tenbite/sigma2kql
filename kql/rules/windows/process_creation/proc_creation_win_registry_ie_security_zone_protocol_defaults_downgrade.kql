@@ -1,0 +1,23 @@
+// Title: IE ZoneMap Setting Downgraded To MyComputer Zone For HTTP Protocols Via CLI
+// Sigma ID: 10344bb3-7f65-46c2-b915-2d00d47be5b0
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-09-05 | Modified: -
+// ATT&CK: execution, stealth
+// Description: Detects changes to Internet Explorer's (IE / Windows Internet properties) ZoneMap configuration
+//   of the "HTTP" and "HTTPS" protocols to point to the "My Computer" zone. This allows downloaded
+//   files from the Internet to be granted the same level of trust as files stored locally.
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/M_haggis/status/1699056847154725107
+//   - https://twitter.com/JAMESWT_MHT/status/1699042827261391247
+//   - https://learn.microsoft.com/en-us/troubleshoot/developer/browsers/security-privacy/ie-security-zones-registry-entries
+//   - https://www.virustotal.com/gui/file/339ff720c74dc44265b917b6d3e3ba0411d61f3cd3c328e9a2bae81592c8a6e5/content
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_registry_ie_security_zone_protocol_defaults_downgrade.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\ZoneMap\\ProtocolDefaults" and ProcessCommandLine contains "http" and ProcessCommandLine contains " 0"

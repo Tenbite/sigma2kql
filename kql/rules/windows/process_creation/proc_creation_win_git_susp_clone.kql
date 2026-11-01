@@ -1,0 +1,19 @@
+// Title: Suspicious Git Clone
+// Sigma ID: aef9d1f1-7396-4e92-a927-4567c7a495c1
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-01-03 | Modified: 2023-01-10
+// ATT&CK: reconnaissance, T1593.003
+// Description: Detects execution of "git" in order to clone a remote repository that contain suspicious
+//   keywords which might be suspicious
+// False positives:
+//   - Unknown
+// References:
+//   - https://gist.githubusercontent.com/MichaelKoczwara/12faba9c061c12b5814b711166de8c2f/raw/e2068486692897b620c25fde1ea258c8218fe3d3/history.txt
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_git_susp_clone.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\git.exe" or FolderPath endswith "\\git-remote-https.exe") or ProcessVersionInfoOriginalFileName =~ "git.exe") and (ProcessCommandLine contains " clone " or ProcessCommandLine contains "git-remote-https ") and (ProcessCommandLine contains "exploit" or ProcessCommandLine contains "Vulns" or ProcessCommandLine contains "vulnerability" or ProcessCommandLine contains "RemoteCodeExecution" or ProcessCommandLine contains "Invoke-" or ProcessCommandLine contains "CVE-" or ProcessCommandLine contains "poc-" or ProcessCommandLine contains "ProofOfConcept" or ProcessCommandLine contains "proxyshell" or ProcessCommandLine contains "log4shell" or ProcessCommandLine contains "eternalblue" or ProcessCommandLine contains "eternal-blue" or ProcessCommandLine contains "MS17-")

@@ -1,0 +1,19 @@
+// Title: Suspicious Execution of InstallUtil Without Log
+// Sigma ID: d042284c-a296-4988-9be5-f424fadcc28c
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-01-23 | Modified: 2022-02-04
+// ATT&CK: stealth
+// Description: Uses the .NET InstallUtil.exe application in order to execute image without log
+// False positives:
+//   - Unknown
+// References:
+//   - https://securelist.com/moonbounce-the-dark-side-of-uefi-firmware/105468/
+//   - https://learn.microsoft.com/en-us/dotnet/framework/tools/installutil-exe-installer-tool
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_instalutil_no_log_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\InstallUtil.exe" and FolderPath contains "Microsoft.NET\\Framework" and (ProcessCommandLine contains "/logfile= " and ProcessCommandLine contains "/LogToConsole=false")

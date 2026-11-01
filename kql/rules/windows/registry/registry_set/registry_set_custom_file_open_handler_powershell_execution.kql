@@ -1,0 +1,18 @@
+// Title: Custom File Open Handler Executes PowerShell
+// Sigma ID: 7530b96f-ad8e-431d-a04d-ac85cc461fdc
+// Status: test | Level: high
+// Author: CD_R0M_
+// Date: 2022-06-11 | Modified: 2023-08-17
+// ATT&CK: stealth, T1202
+// Description: Detects the abuse of custom file open handler, executing powershell
+// False positives:
+//   - Unknown
+// References:
+//   - https://news.sophos.com/en-us/2022/02/01/solarmarker-campaign-used-novel-registry-changes-to-establish-persistence/?cmp=30728
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_custom_file_open_handler_powershell_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey endswith "shell\\open\\command*" and (RegistryValueData contains "powershell" and RegistryValueData contains "-command")

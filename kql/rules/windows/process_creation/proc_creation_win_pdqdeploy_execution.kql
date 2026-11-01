@@ -1,0 +1,19 @@
+// Title: PDQ Deploy Remote Adminstartion Tool Execution
+// Sigma ID: d679950c-abb7-43a6-80fb-2a480c4fc450
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-10-01 | Modified: 2023-01-30
+// ATT&CK: execution, lateral-movement, T1072
+// Description: Detect use of PDQ Deploy remote admin tool
+// False positives:
+//   - Legitimate use
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/9e5b12c4912c07562aec7500447b11fa3e17e254/atomics/T1072/T1072.md
+//   - https://www.pdq.com/pdq-deploy/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_pdqdeploy_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessVersionInfoFileDescription =~ "PDQ Deploy Console" or ProcessVersionInfoProductName =~ "PDQ Deploy" or ProcessVersionInfoCompanyName =~ "PDQ.com" or ProcessVersionInfoOriginalFileName =~ "PDQDeployConsole.exe"

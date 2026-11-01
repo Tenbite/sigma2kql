@@ -1,0 +1,22 @@
+// Title: Potential APT FIN7 Reconnaissance/POWERTRASH Related Activity
+// Sigma ID: 911389c7-5ae3-43ea-bab3-a947ebdeb85e
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-05-04 | Modified: -
+// ATT&CK: execution, G0046
+// Tags: detection.emerging-threats
+// Description: Detects specific command line execution used by FIN7 as reported by WithSecureLabs for
+//   reconnaissance and POWERTRASH execution
+// False positives:
+//   - Unlikely
+// References:
+//   - https://labs.withsecure.com/publications/fin7-target-veeam-servers
+//   - https://labs.withsecure.com/publications/fin7-target-veeam-servers/jcr:content/root/responsivegrid/responsivegrid/responsivegrid/image_253944286.img.png/1682500394900.png
+//   - https://github.com/WithSecureLabs/iocs/blob/344203de742bb7e68bd56618f66d34be95a9f9fc/FIN7VEEAM/iocs.csv
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2023/TA/FIN7/proc_creation_win_apt_fin7_powertrash_lateral_movement.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "-noni -nop -exe bypass -f \\\\" and ProcessCommandLine contains "ADMIN$") or (ProcessCommandLine contains "-ex bypass -noprof -nolog -nonint -f" and ProcessCommandLine contains "C:\\Windows\\Temp\\")

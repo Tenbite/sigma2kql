@@ -1,0 +1,18 @@
+// Title: Psexec Execution
+// Sigma ID: 730fc21b-eaff-474b-ad23-90fd265d4988
+// Status: test | Level: medium
+// Author: omkar72
+// Date: 2020-10-30 | Modified: 2023-02-28
+// ATT&CK: execution, lateral-movement, T1569, T1021
+// Description: Detects user accept agreement execution in psexec commandline
+// False positives:
+//   - Administrative scripts.
+// References:
+//   - https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_sysinternals_psexec_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\psexec.exe" or ProcessVersionInfoOriginalFileName =~ "psexec.c"

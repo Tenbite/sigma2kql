@@ -1,0 +1,21 @@
+// Title: Potential Suspicious Change To Sensitive/Critical Files
+// Sigma ID: 86157017-c2b1-4d4a-8c33-93b8e67e4af4
+// Status: test | Level: medium
+// Author: @d4ns4n_ (Wuerth-Phoenix)
+// Date: 2023-05-30 | Modified: 2026-03-18
+// ATT&CK: impact, T1565.001
+// Description: Detects changes of sensitive and critical files. Monitors files that you don't expect to change
+//   without planning on Linux system. These files include, but are not limited to, system
+//   configuration files, authentication files, and critical application files. Attackers often
+//   target these files to maintain persistence, escalate privileges, or disrupt system operations.
+// False positives:
+//   - Some false positives are to be expected on user or administrator machines. Apply additional filters as needed.
+// References:
+//   - https://learn.microsoft.com/en-us/azure/defender-for-cloud/file-integrity-monitoring-overview#which-files-should-i-monitor
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_susp_sensitive_file_access.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (((FolderPath endswith "/cat" or FolderPath endswith "/echo" or FolderPath endswith "/grep" or FolderPath endswith "/head" or FolderPath endswith "/more" or FolderPath endswith "/tail") and ProcessCommandLine contains ">") or (FolderPath endswith "/emacs" or FolderPath endswith "/nano" or FolderPath endswith "/sed" or FolderPath endswith "/vi" or FolderPath endswith "/vim")) and (ProcessCommandLine contains "/bin/login" or ProcessCommandLine contains "/bin/passwd" or ProcessCommandLine contains "/boot/" or (ProcessCommandLine contains "/etc/" and ProcessCommandLine contains ".conf") or ProcessCommandLine contains "/etc/cron." or ProcessCommandLine contains "/etc/crontab" or ProcessCommandLine contains "/etc/hosts" or ProcessCommandLine contains "/etc/init.d" or ProcessCommandLine contains "/etc/sudoers" or ProcessCommandLine contains "/opt/bin/" or ProcessCommandLine contains "/sbin" or ProcessCommandLine contains "/usr/bin/" or ProcessCommandLine contains "/usr/local/bin/") and (not((FolderPath endswith "/bin/sed" and (ProcessCommandLine startswith "sed -i /^" or ProcessCommandLine startswith "sed -ne s/^") and ProcessCommandLine endswith "/etc/mdadm/mdadm.conf")))

@@ -1,0 +1,20 @@
+// Title: Sysmon Discovery Via Default Driver Altitude Using Findstr.EXE
+// Sigma ID: 37db85d1-b089-490a-a59a-c7b6f984f480
+// Status: test | Level: high
+// Author: frack113
+// Date: 2021-12-16 | Modified: 2023-11-14
+// ATT&CK: discovery, T1518.001
+// Description: Detects usage of "findstr" with the argument "385201". Which could indicate potential discovery
+//   of an installed Sysinternals Sysmon service using the default driver altitude (even if the name
+//   is changed).
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1518.001/T1518.001.md#atomic-test-5---security-software-discovery---sysmon-service
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_findstr_sysmon_discovery_via_default_altitude.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\find.exe" or FolderPath endswith "\\findstr.exe") or (ProcessVersionInfoOriginalFileName in~ ("FIND.EXE", "FINDSTR.EXE"))) and ProcessCommandLine contains " 385201"

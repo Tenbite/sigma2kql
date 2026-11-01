@@ -1,0 +1,21 @@
+// Title: Potential Persistence Via Outlook Form
+// Sigma ID: c3edc6a5-d9d4-48d8-930e-aab518390917
+// Status: test | Level: high
+// Author: Tobias Michalski (Nextron Systems)
+// Date: 2021-06-10 | Modified: 2023-02-22
+// ATT&CK: persistence, T1137.003
+// Description: Detects the creation of a new Outlook form which can contain malicious code
+// False positives:
+//   - Legitimate use of outlook forms
+// References:
+//   - https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=76
+//   - https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=79
+//   - https://learn.microsoft.com/en-us/office/vba/outlook/concepts/outlook-forms/create-an-outlook-form
+//   - https://www.slipstick.com/developer/custom-form/clean-outlooks-forms-cache/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_office_outlook_newform.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where InitiatingProcessFolderPath endswith "\\outlook.exe" and (FolderPath contains "\\AppData\\Local\\Microsoft\\FORMS\\IPM" or FolderPath contains "\\Local Settings\\Application Data\\Microsoft\\Forms")

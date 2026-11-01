@@ -1,0 +1,23 @@
+// Title: Suspicious AgentExecutor PowerShell Execution
+// Sigma ID: c0b40568-b1e9-4b03-8d6c-b096da6da9ab
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems), memory-shards
+// Date: 2022-12-24 | Modified: 2024-08-07
+// ATT&CK: stealth, T1218
+// Description: Detects execution of the AgentExecutor.exe binary. Which can be abused as a LOLBIN to execute
+//   powershell scripts with the ExecutionPolicy "Bypass" or any binary named "powershell.exe"
+//   located in the path provided by 6th positional argument
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/lefterispan/status/1286259016436514816
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Agentexecutor/
+//   - https://learn.microsoft.com/en-us/mem/intune/apps/intune-management-extension
+//   - https://twitter.com/jseerden/status/1247985304667066373/photo/1
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_agentexecutor_susp_usage.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\AgentExecutor.exe" or ProcessVersionInfoOriginalFileName =~ "AgentExecutor.exe") and (ProcessCommandLine contains " -powershell" or ProcessCommandLine contains " -remediationScript")) and (not(((ProcessCommandLine contains "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\" or ProcessCommandLine contains "C:\\Windows\\SysWOW64\\WindowsPowerShell\\v1.0\\") or InitiatingProcessFolderPath endswith "\\Microsoft.Management.Services.IntuneWindowsAgent.exe")))

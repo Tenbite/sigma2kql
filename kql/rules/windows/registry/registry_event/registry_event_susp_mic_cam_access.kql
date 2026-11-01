@@ -1,0 +1,18 @@
+// Title: Suspicious Camera and Microphone Access
+// Sigma ID: 62120148-6b7a-42be-8b91-271c04e281a3
+// Status: test | Level: high
+// Author: Den Iuzvyk
+// Date: 2020-06-07 | Modified: 2022-10-09
+// ATT&CK: collection, T1125, T1123
+// Description: Detects Processes accessing the camera and microphone from suspicious folder
+// False positives:
+//   - Unlikely, there could be conferencing software running from a Temp folder accessing the devices
+// References:
+//   - https://medium.com/@7a616368/can-you-track-processes-accessing-the-camera-and-microphone-7e6885b37072
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_event/registry_event_susp_mic_cam_access.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey endswith "\\Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore*" and RegistryKey contains "\\NonPackaged") and (RegistryKey contains "microphone" or RegistryKey contains "webcam") and (RegistryKey contains ":#Windows#Temp#" or RegistryKey contains ":#$Recycle.bin#" or RegistryKey contains ":#Temp#" or RegistryKey contains ":#Users#Public#" or RegistryKey contains ":#Users#Default#" or RegistryKey contains ":#Users#Desktop#")

@@ -1,0 +1,20 @@
+// Title: Lazarus System Binary Masquerading
+// Sigma ID: 3f7f5b0b-5b16-476c-a85f-ab477f6dd24b
+// Status: test | Level: high
+// Author: Trent Liffick (@tliffick), Bartlomiej Czyz (@bczyz1)
+// Date: 2020-06-03 | Modified: 2023-03-10
+// ATT&CK: stealth, T1036.005
+// Tags: detection.emerging-threats
+// Description: Detects binaries used by the Lazarus group which use system names but are executed and launched
+//   from non-default location
+// False positives:
+//   - Unlikely
+// References:
+//   - https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2018/03/07180244/Lazarus_Under_The_Hood_PDF_final.pdf
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2017/TA/Lazarus/proc_creation_win_apt_lazarus_binary_masquerading.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\msdtc.exe" or FolderPath endswith "\\gpsvc.exe") and (not((FolderPath startswith "C:\\Windows\\System32\\" or FolderPath startswith "C:\\Windows\\SysWOW64\\")))

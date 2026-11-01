@@ -1,0 +1,18 @@
+// Title: Potential Wazuh Security Platform DLL Sideloading
+// Sigma ID: db77ce78-7e28-4188-9337-cf30e2b3ba9f
+// Status: test | Level: medium
+// Author: X__Junior (Nextron Systems)
+// Date: 2023-03-13 | Modified: 2023-05-12
+// ATT&CK: persistence, privilege-escalation, execution, stealth, T1574.001
+// Description: Detects potential DLL side loading of DLLs that are part of the Wazuh security platform
+// False positives:
+//   - Many legitimate applications leverage this DLL. (Visual Studio, JetBrains, Ruby, Anaconda, GithubDesktop, etc.)
+// References:
+//   - https://www.trendmicro.com/en_us/research/23/c/iron-tiger-sysupdate-adds-linux-targeting.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/image_load/image_load_side_load_wazuh.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceImageLoadEvents
+| where (FolderPath endswith "\\libwazuhshared.dll" or FolderPath endswith "\\libwinpthread-1.dll") and (not((FolderPath startswith "C:\\Program Files\\" or FolderPath startswith "C:\\Program Files (x86)\\"))) and (not(((FolderPath contains "\\AppData\\Local\\" or FolderPath contains "\\ProgramData\\") and FolderPath endswith "\\mingw64\\bin\\libwinpthread-1.dll")))

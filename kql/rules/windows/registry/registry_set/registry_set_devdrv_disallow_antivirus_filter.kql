@@ -1,0 +1,19 @@
+// Title: Antivirus Filter Driver Disallowed On Dev Drive - Registry
+// Sigma ID: 31e124fb-5dc4-42a0-83b3-44a69c77b271
+// Status: test | Level: high
+// Author: @kostastsale, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-11-05 | Modified: 2024-08-16
+// ATT&CK: defense-impairment, T1685
+// Description: Detects activity that indicates a user disabling the ability for Antivirus mini filter to
+//   inspect a "Dev Drive".
+// False positives:
+//   - Unlikely
+// References:
+//   - https://twitter.com/0gtweet/status/1720419490519752955
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_devdrv_disallow_antivirus_filter.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey endswith "\\FilterManager\\FltmgrDevDriveAllowAntivirusFilter" and RegistryValueData =~ "DWORD (0x00000000)"

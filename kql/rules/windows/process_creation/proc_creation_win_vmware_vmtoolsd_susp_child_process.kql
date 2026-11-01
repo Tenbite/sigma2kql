@@ -1,0 +1,21 @@
+// Title: VMToolsd Suspicious Child Process
+// Sigma ID: 5687f942-867b-4578-ade7-1e341c46e99a
+// Status: test | Level: high
+// Author: bohops, Bhabesh Raj
+// Date: 2021-10-08 | Modified: 2023-07-25
+// ATT&CK: execution, persistence, T1059
+// Description: Detects suspicious child process creations of VMware Tools process which may indicate
+//   persistence setup
+// False positives:
+//   - Legitimate use by VM administrator
+// References:
+//   - https://bohops.com/2021/10/08/analyzing-and-detecting-a-vmtools-persistence-technique/
+//   - https://user-images.githubusercontent.com/61026070/136518004-b68cce7d-f9b8-4e9a-9b7b-53b1568a9a94.png
+//   - https://github.com/vmware/open-vm-tools/blob/master/open-vm-tools/tools.conf
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_vmware_vmtoolsd_susp_child_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (InitiatingProcessFolderPath endswith "\\vmtoolsd.exe" and ((FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\mshta.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\regsvr32.exe" or FolderPath endswith "\\rundll32.exe" or FolderPath endswith "\\wscript.exe") or (ProcessVersionInfoOriginalFileName in~ ("Cmd.Exe", "cscript.exe", "MSHTA.EXE", "PowerShell.EXE", "pwsh.dll", "REGSVR32.EXE", "RUNDLL32.EXE", "wscript.exe")))) and (not(((FolderPath endswith "\\cmd.exe" and (ProcessCommandLine contains "\\VMware\\VMware Tools\\poweron-vm-default.bat" or ProcessCommandLine contains "\\VMware\\VMware Tools\\poweroff-vm-default.bat" or ProcessCommandLine contains "\\VMware\\VMware Tools\\resume-vm-default.bat" or ProcessCommandLine contains "\\VMware\\VMware Tools\\suspend-vm-default.bat")) or (FolderPath endswith "\\cmd.exe" and ProcessCommandLine =~ "") or (FolderPath endswith "\\cmd.exe" and isnull(ProcessCommandLine)))))

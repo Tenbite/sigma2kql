@@ -1,0 +1,20 @@
+// Title: Write Protect For Storage Disabled
+// Sigma ID: 75f7a0e2-7154-4c4d-9eae-5cdb4e0a5c13
+// Status: test | Level: medium
+// Author: Sreeman
+// Date: 2021-06-11 | Modified: 2024-01-18
+// ATT&CK: defense-impairment, T1685
+// Description: Detects applications trying to modify the registry in order to disable any write-protect
+//   property for storage devices. This could be a precursor to a ransomware attack and has been an
+//   observed technique used by cypherpunk group.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.manageengine.com/products/desktop-central/os-imaging-deployment/media-is-write-protected.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_reg_write_protect_for_storage_disabled.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "\\System\\CurrentControlSet\\Control" and ProcessCommandLine contains "Write Protection" and ProcessCommandLine contains "0" and ProcessCommandLine contains "storage"

@@ -1,0 +1,19 @@
+// Title: Suspicious Process Execution From Fake Recycle.Bin Folder
+// Sigma ID: 5ce0f04e-3efc-42af-839d-5b3a543b76c0
+// Status: test | Level: high
+// Author: X__Junior (Nextron Systems)
+// Date: 2023-07-12 | Modified: 2023-12-11
+// ATT&CK: persistence, stealth
+// Description: Detects process execution from a fake recycle bin folder, often used to avoid security solution.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.mandiant.com/resources/blog/infected-usb-steal-secrets
+//   - https://unit42.paloaltonetworks.com/cloaked-ursa-phishing/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_recycle_bin_fake_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath contains "RECYCLERS.BIN\\" or FolderPath contains "RECYCLER.BIN\\"

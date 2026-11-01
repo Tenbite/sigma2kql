@@ -1,0 +1,18 @@
+// Title: UAC Bypass Using NTFS Reparse Point - File
+// Sigma ID: 7fff6773-2baa-46de-a24a-b6eec1aba2d1
+// Status: test | Level: high
+// Author: Christian Burkard (Nextron Systems)
+// Date: 2021-08-30 | Modified: 2022-10-09
+// ATT&CK: privilege-escalation, T1548.002
+// Description: Detects the pattern of UAC Bypass using NTFS reparse point and wusa.exe DLL hijacking (UACMe 36)
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/hfiref0x/UACME
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_uac_bypass_ntfs_reparse_point.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath startswith "C:\\Users\\" and FolderPath endswith "\\AppData\\Local\\Temp\\api-ms-win-core-kernel32-legacy-l1.DLL"

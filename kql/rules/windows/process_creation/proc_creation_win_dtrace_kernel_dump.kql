@@ -1,0 +1,20 @@
+// Title: Suspicious Kernel Dump Using Dtrace
+// Sigma ID: 7124aebe-4cd7-4ccb-8df0-6d6b93c96795
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2021-12-28 | Modified: -
+// ATT&CK: discovery, T1082
+// Description: Detects suspicious way to dump the kernel on Windows systems using dtrace.exe, which is
+//   available on Windows systems since Windows 10 19H1
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/0gtweet/status/1474899714290208777?s=12
+//   - https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/dtrace
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_dtrace_kernel_dump.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\dtrace.exe" and ProcessCommandLine contains "lkd(0)") or (ProcessCommandLine contains "syscall:::return" and ProcessCommandLine contains "lkd(")

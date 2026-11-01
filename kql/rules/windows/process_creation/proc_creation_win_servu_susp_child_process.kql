@@ -1,0 +1,19 @@
+// Title: Suspicious Serv-U Process Pattern
+// Sigma ID: 58f4ea09-0fc2-4520-ba18-b85c540b0eaf
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2021-07-14 | Modified: 2022-07-14
+// ATT&CK: credential-access, T1555
+// Tags: cve.2021-35211
+// Description: Detects a suspicious process pattern which could be a sign of an exploited Serv-U service
+// False positives:
+//   - Legitimate uses in which users or programs use the SSH service of Serv-U for remote command execution
+// References:
+//   - https://www.microsoft.com/security/blog/2021/07/13/microsoft-discovers-threat-actor-targeting-solarwinds-serv-u-software-with-0-day-exploit/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_servu_susp_child_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\Serv-U.exe" and (FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\wscript.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\sh.exe" or FolderPath endswith "\\bash.exe" or FolderPath endswith "\\schtasks.exe" or FolderPath endswith "\\regsvr32.exe" or FolderPath endswith "\\wmic.exe" or FolderPath endswith "\\mshta.exe" or FolderPath endswith "\\rundll32.exe" or FolderPath endswith "\\msiexec.exe" or FolderPath endswith "\\forfiles.exe" or FolderPath endswith "\\scriptrunner.exe")

@@ -1,0 +1,31 @@
+// Title: Suspicious Eventlog Clearing or Configuration Change Activity
+// Sigma ID: cc36992a-4671-4f21-a91d-6c2b72a2edf5
+// Status: stable | Level: high
+// Author: Ecco, Daniil Yugoslavskiy, oscd.community, D3F7A5105, Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2019-09-26 | Modified: 2026-06-01
+// ATT&CK: defense-impairment, T1685.005, T1685.001
+// Tags: car.2016-04-002
+// Description: Detects the clearing or configuration tampering of EventLog using utilities such as "wevtutil",
+//   "powershell" and "wmic". This technique were seen used by threat actors and ransomware strains
+//   in order to evade defenses.
+// False positives:
+//   - Admin activity
+//   - Scripts and administrative tools used in the monitored environment
+//   - Maintenance activity
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.001/T1070.001.md
+//   - https://eqllib.readthedocs.io/en/latest/analytics/5b223758-07d6-4100-9e11-238cfdd0fe97.html
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wevtutil
+//   - https://gist.github.com/fovtran/ac0624983c7722e80a8f5a4babb170ee
+//   - https://jdhnet.wordpress.com/2017/12/19/changing-the-location-of-the-windows-event-logs/
+//   - https://www.linkedin.com/posts/huntress-labs_when-a-sketchy-incident-hits-your-network-activity-7304940371078238208-Th_l/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAJTlRcB28IaUtg03HUU-IdliwzoAL1flGc
+//   - https://stackoverflow.com/questions/66011412/how-to-clear-a-event-log-in-powershell-7
+//   - https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.eventing.reader.eventlogsession.clearlog?view=windowsdesktop-9.0&viewFallbackFrom=dotnet-plat-ext-5.0#System_Diagnostics_Eventing_Reader_EventLogSession_ClearLog_System_String_
+//   - https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.eventlog.clear
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_eventlog_clear.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (((FolderPath endswith "\\wevtutil.exe" or ProcessVersionInfoOriginalFileName =~ "wevtutil.exe") and (ProcessCommandLine contains "clear-log " or ProcessCommandLine contains " cl " or ProcessCommandLine contains "set-log " or ProcessCommandLine contains " sl " or ProcessCommandLine contains "lfn:")) or ((FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\powershell_ise.exe" or FolderPath endswith "\\pwsh.exe") and ((ProcessCommandLine contains "Clear-EventLog " or ProcessCommandLine contains "Remove-EventLog " or ProcessCommandLine contains "Limit-EventLog " or ProcessCommandLine contains "Clear-WinEvent ") or (ProcessCommandLine contains "Eventing.Reader.EventLogSession" and ProcessCommandLine contains "ClearLog") or (ProcessCommandLine contains "Diagnostics.EventLog" and ProcessCommandLine contains "Clear"))) or ((FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\powershell_ise.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\wmic.exe") and ProcessCommandLine contains "ClearEventLog")) and (not(((InitiatingProcessFolderPath in~ ("C:\\Windows\\SysWOW64\\msiexec.exe", "C:\\Windows\\System32\\msiexec.exe")) and ProcessCommandLine contains " sl ")))

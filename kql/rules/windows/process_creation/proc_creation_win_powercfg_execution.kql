@@ -1,0 +1,19 @@
+// Title: Suspicious Powercfg Execution To Change Lock Screen Timeout
+// Sigma ID: f8d6a15e-4bc8-4c27-8e5d-2b10f0b73e5b
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-11-18 | Modified: -
+// ATT&CK: stealth
+// Description: Detects suspicious execution of 'Powercfg.exe' to change lock screen timeout
+// False positives:
+//   - Unknown
+// References:
+//   - https://blogs.vmware.com/security/2022/11/batloader-the-evasive-downloader-malware.html
+//   - https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/powercfg-command-line-options
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_powercfg_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\powercfg.exe" or ProcessVersionInfoOriginalFileName =~ "PowerCfg.exe") and ((ProcessCommandLine contains "/setacvalueindex " and ProcessCommandLine contains "SCHEME_CURRENT" and ProcessCommandLine contains "SUB_VIDEO" and ProcessCommandLine contains "VIDEOCONLOCK") or (ProcessCommandLine contains "-change " and ProcessCommandLine contains "-standby-timeout-"))

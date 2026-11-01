@@ -1,0 +1,18 @@
+// Title: Disabling Security Tools
+// Sigma ID: e3a8a052-111f-4606-9aee-f28ebeb76776
+// Status: test | Level: medium
+// Author: Ömer Günal, Alejandro Ortuno, oscd.community
+// Date: 2020-06-17 | Modified: 2022-10-09
+// ATT&CK: defense-impairment, T1686
+// Description: Detects disabling security tools
+// False positives:
+//   - Legitimate administration activities
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.004/T1562.004.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_security_tools_disabling.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "/service" and (ProcessCommandLine contains "iptables" and ProcessCommandLine contains "stop")) or (FolderPath endswith "/service" and (ProcessCommandLine contains "ip6tables" and ProcessCommandLine contains "stop")) or (FolderPath endswith "/chkconfig" and (ProcessCommandLine contains "iptables" and ProcessCommandLine contains "stop")) or (FolderPath endswith "/chkconfig" and (ProcessCommandLine contains "ip6tables" and ProcessCommandLine contains "stop")) or (FolderPath endswith "/systemctl" and (ProcessCommandLine contains "firewalld" and ProcessCommandLine contains "stop")) or (FolderPath endswith "/systemctl" and (ProcessCommandLine contains "firewalld" and ProcessCommandLine contains "disable")) or (FolderPath endswith "/service" and (ProcessCommandLine contains "cbdaemon" and ProcessCommandLine contains "stop")) or (FolderPath endswith "/chkconfig" and (ProcessCommandLine contains "cbdaemon" and ProcessCommandLine contains "off")) or (FolderPath endswith "/systemctl" and (ProcessCommandLine contains "cbdaemon" and ProcessCommandLine contains "stop")) or (FolderPath endswith "/systemctl" and (ProcessCommandLine contains "cbdaemon" and ProcessCommandLine contains "disable")) or (FolderPath endswith "/setenforce" and ProcessCommandLine contains "0") or (FolderPath endswith "/systemctl" and (ProcessCommandLine contains "stop" and ProcessCommandLine contains "falcon-sensor")) or (FolderPath endswith "/systemctl" and (ProcessCommandLine contains "disable" and ProcessCommandLine contains "falcon-sensor"))

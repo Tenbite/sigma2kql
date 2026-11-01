@@ -1,0 +1,21 @@
+// Title: Sofacy Trojan Loader Activity
+// Sigma ID: ba778144-5e3d-40cf-8af9-e28fb1df1e20
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community
+// Date: 2018-03-01 | Modified: 2023-05-31
+// ATT&CK: execution, stealth, G0007, T1059.003, T1218.011
+// Tags: car.2013-10-002, detection.emerging-threats
+// Description: Detects Trojan loader activity as used by APT28
+// False positives:
+//   - Unknown
+// References:
+//   - https://researchcenter.paloaltonetworks.com/2018/02/unit42-sofacy-attacks-multiple-government-entities/
+//   - https://www.hybrid-analysis.com/sample/ff808d0a12676bfac88fd26f955154f8884f2bb7c534b9936510fd6296c543e8?environmentId=110
+//   - https://twitter.com/ClearskySec/status/960924755355369472
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2018/TA/APT28/proc_creation_win_apt_sofacy.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\rundll32.exe" and (ProcessCommandLine contains "%LOCALAPPDATA%" or ProcessCommandLine contains "\\AppData\\Local\\")) and (ProcessCommandLine contains ".dat\"," or (ProcessCommandLine endswith ".dll #1" or ProcessCommandLine endswith ".dll\" #1" or ProcessCommandLine endswith ".dll\",#1"))) and (not(ProcessCommandLine contains "\\AppData\\Local\\Temp\\"))

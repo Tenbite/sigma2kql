@@ -1,0 +1,18 @@
+// Title: Process Creation Using Sysnative Folder
+// Sigma ID: 3c1b5fb0-c72f-45ba-abd1-4d4c353144ab
+// Status: test | Level: medium
+// Author: Max Altgelt (Nextron Systems)
+// Date: 2022-08-23 | Modified: 2025-10-08
+// ATT&CK: privilege-escalation, stealth, T1055
+// Description: Detects process creation events that use the Sysnative folder (common for CobaltStrike spawns)
+// False positives:
+//   - Unknown
+// References:
+//   - https://thedfirreport.com/2021/08/29/cobalt-strike-a-defenders-guide/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_sysnative.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains ":\\Windows\\Sysnative\\" or FolderPath contains ":\\Windows\\Sysnative\\") and (not(((FolderPath contains "C:\\Windows\\Microsoft.NET\\Framework64\\v" or FolderPath contains "C:\\Windows\\Microsoft.NET\\Framework\\v" or FolderPath contains "C:\\Windows\\Microsoft.NET\\FrameworkArm\\v" or FolderPath contains "C:\\Windows\\Microsoft.NET\\FrameworkArm64\\v") and FolderPath endswith "\\ngen.exe" and ProcessCommandLine contains "install"))) and (not((ProcessCommandLine contains "\"C:\\Windows\\sysnative\\cmd.exe\"" and ProcessCommandLine contains "\\xampp\\" and ProcessCommandLine contains "\\catalina_start.bat")))

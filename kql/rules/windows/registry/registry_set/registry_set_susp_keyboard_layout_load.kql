@@ -1,0 +1,20 @@
+// Title: Suspicious Keyboard Layout Load
+// Sigma ID: 34aa0252-6039-40ff-951f-939fd6ce47d8
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2019-10-12 | Modified: 2023-08-17
+// ATT&CK: resource-development, T1588.002
+// Description: Detects the keyboard preload installation with a suspicious keyboard layout, e.g. Chinese,
+//   Iranian or Vietnamese layout load in user session on systems maintained by US staff only
+// False positives:
+//   - Administrators or users that actually use the selected keyboard layouts (heavily depends on the organisation's user base)
+// References:
+//   - https://renenyffenegger.ch/notes/Windows/registry/tree/HKEY_CURRENT_USER/Keyboard-Layout/Preload/index
+//   - https://github.com/SwiftOnSecurity/sysmon-config/pull/92/files
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_susp_keyboard_layout_load.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey endswith "\\Keyboard Layout\\Preload*" or RegistryKey endswith "\\Keyboard Layout\\Substitutes*") and (RegistryValueData contains "00000429" or RegistryValueData contains "00050429" or RegistryValueData contains "0000042a")

@@ -1,0 +1,23 @@
+// Title: Self Extraction Directive File Created In Potentially Suspicious Location
+// Sigma ID: 760e75d8-c3b5-409b-a9bf-6130b4c4603f
+// Status: test | Level: medium
+// Author: Joseliyo Sanchez, @Joseliyo_Jstnk
+// Date: 2024-02-05 | Modified: -
+// ATT&CK: stealth, T1218
+// Description: Detects the creation of Self Extraction Directive files (.sed) in a potentially suspicious
+//   location. These files are used by the "iexpress.exe" utility in order to create self extracting
+//   packages. Attackers were seen abusing this utility and creating PE files with embedded ".sed"
+//   entries.
+// False positives:
+//   - Unknown
+// References:
+//   - https://strontic.github.io/xcyclopedia/library/iexpress.exe-D594B2A33EFAFD0EABF09E3FDC05FCEA.html
+//   - https://en.wikipedia.org/wiki/IExpress
+//   - https://www.virustotal.com/gui/file/602f4ae507fa8de57ada079adff25a6c2a899bd25cd092d0af7e62cdb619c93c/behavior
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_sed_file_creation.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where (FolderPath contains ":\\ProgramData\\" or FolderPath contains ":\\Temp\\" or FolderPath contains ":\\Windows\\System32\\Tasks\\" or FolderPath contains ":\\Windows\\Tasks\\" or FolderPath contains ":\\Windows\\Temp\\" or FolderPath contains "\\AppData\\Local\\Temp\\") and FolderPath endswith ".sed"

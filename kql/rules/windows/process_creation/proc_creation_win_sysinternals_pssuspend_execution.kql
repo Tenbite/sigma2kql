@@ -1,0 +1,19 @@
+// Title: Sysinternals PsSuspend Execution
+// Sigma ID: 48bbc537-b652-4b4e-bd1d-281172df448f
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-03-23 | Modified: 2026-06-29
+// ATT&CK: privilege-escalation, discovery, persistence, T1543.003
+// Description: Detects usage of Sysinternals PsSuspend which can be abused to suspend critical processes
+// False positives:
+//   - Unknown
+// References:
+//   - https://learn.microsoft.com/en-us/sysinternals/downloads/pssuspend
+//   - https://twitter.com/0gtweet/status/1638069413717975046
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_sysinternals_pssuspend_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessVersionInfoOriginalFileName =~ "pssuspend.exe" or (FolderPath endswith "\\pssuspend.exe" or FolderPath endswith "\\pssuspend64.exe" or FolderPath endswith "\\pssuspend64a.exe")

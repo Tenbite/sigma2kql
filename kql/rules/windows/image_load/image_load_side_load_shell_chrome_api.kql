@@ -1,0 +1,22 @@
+// Title: DLL Sideloading Of ShellChromeAPI.DLL
+// Sigma ID: ee4c5d06-3abc-48cc-8885-77f1c20f4451
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-12-01 | Modified: -
+// ATT&CK: persistence, privilege-escalation, execution, stealth, T1574.001
+// Description: Detects processes loading the non-existent DLL "ShellChromeAPI". One known example is the
+//   "DeviceEnroller" binary in combination with the "PhoneDeepLink" flag tries to load this DLL.
+//   Adversaries can drop their own renamed DLL and execute it via DeviceEnroller.exe using this
+//   parameter
+// False positives:
+//   - Unknown
+// References:
+//   - https://mobile.twitter.com/0gtweet/status/1564131230941122561
+//   - https://strontic.github.io/xcyclopedia/library/DeviceEnroller.exe-24BEF0D6B0ECED36BB41831759FDE18D.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/image_load/image_load_side_load_shell_chrome_api.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceImageLoadEvents
+| where FolderPath endswith "\\ShellChromeAPI.dll"

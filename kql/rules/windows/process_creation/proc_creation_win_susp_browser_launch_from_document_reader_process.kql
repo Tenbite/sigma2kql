@@ -1,0 +1,21 @@
+// Title: Potential Suspicious Browser Launch From Document Reader Process
+// Sigma ID: 1193d960-2369-499f-a158-7b50a31df682
+// Status: test | Level: medium
+// Author: Joseph Kamau
+// Date: 2024-05-27 | Modified: 2025-10-07
+// ATT&CK: execution, T1204.002
+// Description: Detects when a browser process or browser tab is launched from an application that handles
+//   document files such as Adobe, Microsoft Office, etc. And connects to a web application over
+//   http(s), this could indicate a possible phishing attempt.
+// False positives:
+//   - Unlikely in most cases, further investigation should be done in the commandline of the browser process to determine the context of the URL accessed.
+// References:
+//   - https://app.any.run/tasks/69c5abaa-92ad-45ba-8c53-c11e23e05d04/
+//   - https://app.any.run/tasks/64043a79-165f-4052-bcba-e6e49f847ec1/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_browser_launch_from_document_reader_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((InitiatingProcessFolderPath contains "Acrobat Reader" or InitiatingProcessFolderPath contains "Microsoft Office" or InitiatingProcessFolderPath contains "PDF Reader") and (FolderPath endswith "\\brave.exe" or FolderPath endswith "\\chrome.exe" or FolderPath endswith "\\firefox.exe" or FolderPath endswith "\\msedge.exe" or FolderPath endswith "\\opera.exe" or FolderPath endswith "\\maxthon.exe" or FolderPath endswith "\\seamonkey.exe" or FolderPath endswith "\\vivaldi.exe") and ProcessCommandLine contains "http") and (not(ProcessCommandLine contains "https://go.microsoft.com/fwlink/")) and (not(((ProcessCommandLine contains "http://ad.foxitsoftware.com/adlog.php") or (ProcessCommandLine contains "https://globe-map.foxitservice.com/go.php" and ProcessCommandLine contains "do=redirect"))))

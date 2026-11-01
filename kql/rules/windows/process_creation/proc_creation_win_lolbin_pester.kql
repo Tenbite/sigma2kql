@@ -1,0 +1,19 @@
+// Title: Execute Code with Pester.bat as Parent
+// Sigma ID: 18988e1b-9087-4f8a-82fe-0414dce49878
+// Status: test | Level: medium
+// Author: frack113, Nasreddine Bencherchali
+// Date: 2022-08-20 | Modified: -
+// ATT&CK: execution, stealth, T1059.001, T1216
+// Description: Detects code execution via Pester.bat (Pester - Powershell Modulte for testing)
+// False positives:
+//   - Legitimate use of Pester for writing tests for Powershell scripts and modules
+// References:
+//   - https://twitter.com/Oddvarmoe/status/993383596244258816
+//   - https://twitter.com/_st0pp3r_/status/1560072680887525378
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_lolbin_pester.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((InitiatingProcessFolderPath endswith "\\powershell.exe" or InitiatingProcessFolderPath endswith "\\pwsh.exe") and InitiatingProcessCommandLine contains "\\WindowsPowerShell\\Modules\\Pester\\") and (InitiatingProcessCommandLine contains "{ Invoke-Pester -EnableExit ;" or InitiatingProcessCommandLine contains "{ Get-Help \"")

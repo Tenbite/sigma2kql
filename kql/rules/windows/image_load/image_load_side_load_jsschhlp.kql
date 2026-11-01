@@ -1,0 +1,19 @@
+// Title: Potential DLL Sideloading Via JsSchHlp
+// Sigma ID: 68654bf0-4412-43d5-bfe8-5eaa393cd939
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-12-14 | Modified: -
+// ATT&CK: persistence, privilege-escalation, execution, stealth, T1574.001
+// Description: Detects potential DLL sideloading using JUSTSYSTEMS Japanese word processor
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.welivesecurity.com/2022/12/14/unmasking-mirrorface-operation-liberalface-targeting-japanese-political-entities/
+//   - http://www.windowexe.com/bbs/board.php?q=jsschhlp-exe-c-program-files-common-files-justsystem-jsschhlp-jsschhlp
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/image_load/image_load_side_load_jsschhlp.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceImageLoadEvents
+| where FolderPath endswith "\\JSESPR.dll" and (not(FolderPath startswith "C:\\Program Files\\Common Files\\Justsystem\\JsSchHlp\\"))

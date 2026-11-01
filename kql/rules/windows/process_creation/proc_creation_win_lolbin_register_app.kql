@@ -1,0 +1,19 @@
+// Title: REGISTER_APP.VBS Proxy Execution
+// Sigma ID: 1c8774a0-44d4-4db0-91f8-e792359c70bd
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-08-19 | Modified: -
+// ATT&CK: stealth, T1218
+// Description: Detects the use of a Microsoft signed script 'REGISTER_APP.VBS' to register a VSS/VDS Provider
+//   as a COM+ application.
+// False positives:
+//   - Legitimate usage of the script. Always investigate what's being registered to confirm if it's benign
+// References:
+//   - https://twitter.com/sblmsrsn/status/1456613494783160325?s=20
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_lolbin_register_app.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "\\register_app.vbs" and ProcessCommandLine contains "-register"

@@ -1,0 +1,20 @@
+// Title: Suspicious Screensaver Binary File Creation
+// Sigma ID: 97aa2e88-555c-450d-85a6-229bcd87efb8
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2021-12-29 | Modified: 2022-11-08
+// ATT&CK: privilege-escalation, persistence, T1546.002
+// Description: Adversaries may establish persistence by executing malicious content triggered by user
+//   inactivity. Screensavers are programs that execute after a configurable time of user inactivity
+//   and consist of Portable Executable (PE) files with a .scr file extension
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1546.002/T1546.002.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_creation_scr_binary_file.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath endswith ".scr" and (not(((InitiatingProcessFolderPath endswith "\\Kindle.exe" or InitiatingProcessFolderPath endswith "\\Bin\\ccSvcHst.exe") or (InitiatingProcessFolderPath endswith "\\TiWorker.exe" and FolderPath endswith "\\uwfservicingscr.scr"))))

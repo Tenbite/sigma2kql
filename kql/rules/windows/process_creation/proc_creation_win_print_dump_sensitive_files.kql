@@ -1,0 +1,22 @@
+// Title: Sensitive File Dump Via Print.EXE
+// Sigma ID: 2fcda7e2-8c57-4904-86ac-37fc3157e09d
+// Status: test | Level: high
+// Author: Ayush Anand (Securityinbits)
+// Date: 2026-04-28 | Modified: -
+// ATT&CK: credential-access, stealth, T1003.003, T1003.002, T1218
+// Description: Detects the abuse of the Print.exe utility for credential harvesting which involves using
+//   Print.Exe to copy sensitive files such as ntds.dit, SAM, SECURITY, or SYSTEM from the Windows
+//   directory in order to extract credentials, locally or remotely.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.microsoft.com/en-us/security/blog/2026/02/06/active-exploitation-solarwinds-web-help-desk/
+//   - https://www.huntress.com/blog/credential-theft-expanding-your-reach-pt-2
+//   - https://lolbas-project.github.io/lolbas/Binaries/Print/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_print_dump_sensitive_files.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\print.exe" or ProcessVersionInfoOriginalFileName =~ "Print.EXE") and ((ProcessCommandLine contains "-D" or ProcessCommandLine contains "/D" or ProcessCommandLine contains "–D" or ProcessCommandLine contains "—D" or ProcessCommandLine contains "―D") and (ProcessCommandLine contains "\\config\\SAM" or ProcessCommandLine contains "\\config\\SECURITY" or ProcessCommandLine contains "\\config\\SYSTEM" or ProcessCommandLine contains "\\windows\\ntds\\ntds.dit"))

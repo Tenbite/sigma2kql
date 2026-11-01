@@ -1,0 +1,19 @@
+// Title: New Firewall Rule Added Via Netsh.EXE
+// Sigma ID: cd5cfd80-aa5f-44c0-9c20-108c4ae12e3c
+// Status: test | Level: medium
+// Author: Markus Neis, Sander Wiebing
+// Date: 2019-01-29 | Modified: 2023-02-10
+// ATT&CK: defense-impairment, T1686.003, S0246
+// Description: Detects the addition of a new rule to the Windows firewall via netsh
+// False positives:
+//   - Legitimate administration activity
+//   - Software installations
+// References:
+//   - https://web.archive.org/web/20190508165435/https://www.operationblockbuster.com/wp-content/uploads/2016/02/Operation-Blockbuster-RAT-and-Staging-Report.pdf
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_netsh_fw_add_rule.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\netsh.exe" or ProcessVersionInfoOriginalFileName =~ "netsh.exe") and (ProcessCommandLine contains " firewall " and ProcessCommandLine contains " add ")) and (not(((ProcessCommandLine contains "advfirewall firewall add rule name=Dropbox dir=in action=allow \"program=" and ProcessCommandLine contains ":\\Program Files (x86)\\Dropbox\\Client\\Dropbox.exe\" enable=yes profile=Any") or (ProcessCommandLine contains "advfirewall firewall add rule name=Dropbox dir=in action=allow \"program=" and ProcessCommandLine contains ":\\Program Files\\Dropbox\\Client\\Dropbox.exe\" enable=yes profile=Any"))))

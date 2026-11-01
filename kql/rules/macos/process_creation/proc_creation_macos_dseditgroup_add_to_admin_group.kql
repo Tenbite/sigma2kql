@@ -1,0 +1,20 @@
+// Title: User Added To Admin Group Via DseditGroup
+// Sigma ID: 5d0fdb62-f225-42fb-8402-3dfe64da468a
+// Status: test | Level: medium
+// Author: Sohan G (D4rkCiph3r)
+// Date: 2023-08-22 | Modified: -
+// ATT&CK: persistence, initial-access, privilege-escalation, stealth, T1078.003
+// Description: Detects attempts to create and/or add an account to the admin group, thus granting admin
+//   privileges.
+// False positives:
+//   - Legitimate administration activities
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1078.003/T1078.003.md#atomic-test-5---add-a-newexisting-user-to-the-admin-group-using-dseditgroup-utility---macos
+//   - https://ss64.com/osx/dseditgroup.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_dseditgroup_add_to_admin_group.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "/dseditgroup" and (ProcessCommandLine contains " -o edit " and ProcessCommandLine contains " -a " and ProcessCommandLine contains " -t user" and ProcessCommandLine contains "admin")

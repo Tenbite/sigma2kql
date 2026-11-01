@@ -1,0 +1,21 @@
+// Title: Potential Persistence Via Shim Database In Uncommon Location
+// Sigma ID: 6b6976a3-b0e6-4723-ac24-ae38a737af41
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-08-01 | Modified: 2023-08-17
+// ATT&CK: privilege-escalation, persistence, T1546.011
+// Description: Detects the installation of a new shim database where the file is located in a non-default
+//   location
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+//   - https://andreafortuna.org/2018/11/12/process-injection-and-persistence-using-application-shimming/
+//   - https://www.blackhat.com/docs/asia-14/materials/Erickson/Asia-14-Erickson-Persist-It-Using-And-Abusing-Microsofts-Fix-It-Patches.pdf
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_persistence_shim_database_uncommon_location.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey endswith "\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\InstalledSDB*" and RegistryKey contains "\\DatabasePath") and (not(RegistryValueData contains ":\\Windows\\AppPatch\\Custom"))

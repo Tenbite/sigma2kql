@@ -1,0 +1,18 @@
+// Title: JXA In-memory Execution Via OSAScript
+// Sigma ID: f1408a58-0e94-4165-b80a-da9f96cf6fc3
+// Status: test | Level: high
+// Author: Sohan G (D4rkCiph3r)
+// Date: 2023-01-31 | Modified: -
+// ATT&CK: T1059.002, T1059.007, execution
+// Description: Detects possible malicious execution of JXA in-memory via OSAScript
+// False positives:
+//   - Unknown
+// References:
+//   - https://redcanary.com/blog/applescript/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_jxa_in_memory_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "osascript" and ProcessCommandLine contains " -e " and ProcessCommandLine contains "eval" and ProcessCommandLine contains "NSData.dataWithContentsOfURL") and ((ProcessCommandLine contains " -l " and ProcessCommandLine contains "JavaScript") or ProcessCommandLine contains ".js")

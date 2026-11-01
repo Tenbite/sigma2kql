@@ -1,0 +1,20 @@
+// Title: Lace Tempest File Indicators
+// Sigma ID: e94486ea-2650-4548-bf25-88cbd0bb32d7
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-11-09 | Modified: -
+// ATT&CK: execution
+// Tags: detection.emerging-threats
+// Description: Detects PowerShell script file creation with specific names or suffixes which was seen being
+//   used often in PowerShell scripts by FIN7
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.sysaid.com/blog/service-desk/on-premise-software-security-vulnerability-notification
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2023/TA/Lace-Tempest/file_event_win_apt_lace_tempest_indicators.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where (FolderPath endswith ":\\Program Files\\SysAidServer\\tomcat\\webapps\\usersfiles\\user.exe" or FolderPath endswith ":\\Program Files\\SysAidServer\\tomcat\\webapps\\usersfiles.war" or FolderPath endswith ":\\Program Files\\SysAidServer\\tomcat\\webapps\\leave") or FolderPath contains ":\\Program Files\\SysAidServer\\tomcat\\webapps\\user."

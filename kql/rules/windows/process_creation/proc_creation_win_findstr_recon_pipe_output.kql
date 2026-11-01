@@ -1,0 +1,23 @@
+// Title: Recon Command Output Piped To Findstr.EXE
+// Sigma ID: ccb5742c-c248-4982-8c5c-5571b9275ad3
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems), frack113
+// Date: 2023-07-06 | Modified: 2025-10-08
+// ATT&CK: discovery, T1057
+// Description: Detects the execution of a potential recon command where the results are piped to "findstr".
+//   This is meant to trigger on inline calls of "cmd.exe" via the "/c" or "/k" for example.
+//   Attackers often time use this technique to extract specific information they require in their
+//   reconnaissance phase.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/02cb591f75064ffe1e0df9ac3ed5972a2e491c97/atomics/T1057/T1057.md#atomic-test-6---discover-specific-process---tasklist
+//   - https://www.hhs.gov/sites/default/files/manage-engine-vulnerability-sector-alert-tlpclear.pdf
+//   - https://www.trendmicro.com/en_us/research/22/d/spring4shell-exploited-to-deploy-cryptocurrency-miners.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_findstr_recon_pipe_output.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((ProcessCommandLine contains "ipconfig" and ProcessCommandLine contains "|" and ProcessCommandLine contains "find") or (ProcessCommandLine contains "net" and ProcessCommandLine contains "|" and ProcessCommandLine contains "find") or (ProcessCommandLine contains "netstat" and ProcessCommandLine contains "|" and ProcessCommandLine contains "find") or (ProcessCommandLine contains "ping" and ProcessCommandLine contains "|" and ProcessCommandLine contains "find") or (ProcessCommandLine contains "systeminfo" and ProcessCommandLine contains "|" and ProcessCommandLine contains "find") or (ProcessCommandLine contains "tasklist" and ProcessCommandLine contains "|" and ProcessCommandLine contains "find") or (ProcessCommandLine contains "whoami" and ProcessCommandLine contains "|" and ProcessCommandLine contains "find")) and (not((ProcessCommandLine contains "cmd.exe /c TASKLIST /V |" and ProcessCommandLine contains "FIND /I" and ProcessCommandLine contains "\\xampp\\" and ProcessCommandLine contains "\\catalina_start.bat")))

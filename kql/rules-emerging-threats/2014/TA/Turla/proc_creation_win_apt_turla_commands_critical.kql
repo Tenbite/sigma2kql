@@ -1,0 +1,19 @@
+// Title: Turla Group Lateral Movement
+// Sigma ID: c601f20d-570a-4cde-a7d6-e17f99cb8e7f
+// Status: test | Level: critical
+// Author: Markus Neis
+// Date: 2017-11-07 | Modified: 2022-10-09
+// ATT&CK: G0010, execution, T1059, lateral-movement, T1021.002, discovery, T1083, T1135
+// Tags: detection.emerging-threats
+// Description: Detects automated lateral movement by Turla group
+// False positives:
+//   - Unknown
+// References:
+//   - https://securelist.com/the-epic-turla-operation/65545/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2014/TA/Turla/proc_creation_win_apt_turla_commands_critical.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine startswith "net use \\\\%DomainController%\\C$ \"P@ssw0rd\" " or (ProcessCommandLine contains "dir c:\\" and ProcessCommandLine contains ".doc" and ProcessCommandLine contains " /s") or (ProcessCommandLine contains "dir %TEMP%\\" and ProcessCommandLine contains ".exe")

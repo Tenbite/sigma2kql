@@ -1,0 +1,19 @@
+// Title: Node Process Executions
+// Sigma ID: df1f26d3-bea7-4700-9ea2-ad3e990cf90e
+// Status: test | Level: medium
+// Author: Max Altgelt (Nextron Systems)
+// Date: 2022-04-06 | Modified: -
+// ATT&CK: execution, stealth, T1127, T1059.007
+// Description: Detects the execution of other scripts using the Node executable packaged with Adobe Creative
+//   Cloud
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/mttaggart/status/1511804863293784064
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_node_adobe_creative_cloud_abuse.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\Adobe Creative Cloud Experience\\libs\\node.exe" and (not(ProcessCommandLine contains "Adobe Creative Cloud Experience\\js"))

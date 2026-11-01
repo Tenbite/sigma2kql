@@ -1,0 +1,19 @@
+// Title: File With Uncommon Extension Created By An Office Application
+// Sigma ID: c7a74c80-ba5a-486e-9974-ab9e682bc5e4
+// Status: test | Level: high
+// Author: Vadim Khrykov (ThreatIntel), Cyb3rEng (Rule), Nasreddine Bencherchali (Nextron Systems)
+// Date: 2021-08-23 | Modified: 2025-10-17
+// ATT&CK: T1204.002, execution
+// Description: Detects the creation of files with an executable or script extension by an Office application.
+// False positives:
+//   - Unknown
+// References:
+//   - https://thedfirreport.com/2021/03/29/sodinokibi-aka-revil-ransomware/
+//   - https://github.com/vadim-hunter/Detection-Ideas-Rules/blob/02bcbfc2bfb8b4da601bb30de0344ae453aa1afe/Threat%20Intelligence/The%20DFIR%20Report/20210329_Sodinokibi_(aka_REvil)_Ransomware.yaml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_office_susp_file_extension.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where ((InitiatingProcessFolderPath endswith "\\excel.exe" or InitiatingProcessFolderPath endswith "\\msaccess.exe" or InitiatingProcessFolderPath endswith "\\mspub.exe" or InitiatingProcessFolderPath endswith "\\powerpnt.exe" or InitiatingProcessFolderPath endswith "\\visio.exe" or InitiatingProcessFolderPath endswith "\\winword.exe") and (FolderPath endswith ".bat" or FolderPath endswith ".cmd" or FolderPath endswith ".com" or FolderPath endswith ".dll" or FolderPath endswith ".exe" or FolderPath endswith ".hta" or FolderPath endswith ".ocx" or FolderPath endswith ".proj" or FolderPath endswith ".ps1" or FolderPath endswith ".scf" or FolderPath endswith ".scr" or FolderPath endswith ".sys" or FolderPath endswith ".vbe" or FolderPath endswith ".vbs" or FolderPath endswith ".wsf" or FolderPath endswith ".wsh")) and (not((FolderPath contains "\\AppData\\Local\\assembly\\tmp\\" and FolderPath endswith ".dll"))) and (not((((FolderPath contains "C:\\Users\\" and FolderPath contains "\\AppData\\Local\\Microsoft\\Office\\" and FolderPath contains "\\WebServiceCache\\AllUsers") and FolderPath endswith ".com") or (InitiatingProcessFolderPath endswith "\\winword.exe" and FolderPath contains "\\AppData\\Local\\Temp\\webexdelta\\" and (FolderPath endswith ".dll" or FolderPath endswith ".exe")) or ((FolderPath contains "C:\\Users\\" and FolderPath contains "\\AppData\\Local\\Microsoft\\Office\\" and FolderPath contains "\\BackstageInAppNavCache\\") and FolderPath endswith ".com"))))

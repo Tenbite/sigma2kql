@@ -1,0 +1,20 @@
+// Title: Run Once Task Configuration in Registry
+// Sigma ID: c74d7efc-8826-45d9-b8bb-f04fac9e4eff
+// Status: test | Level: medium
+// Author: Avneet Singh @v3t0_, oscd.community
+// Date: 2020-11-15 | Modified: 2024-03-25
+// ATT&CK: persistence, defense-impairment, T1112
+// Description: Rule to detect the configuration of Run Once registry key. Configured payload can be run by
+//   runonce.exe /AlternateShellStartup
+// False positives:
+//   - Legitimate modification of the registry key by legitimate program
+// References:
+//   - https://twitter.com/pabraeken/status/990717080805789697
+//   - https://lolbas-project.github.io/lolbas/Binaries/Runonce/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_event/registry_event_runonce_persistence.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey contains "\\Microsoft\\Active Setup\\Installed Components" and RegistryKey endswith "\\StubPath") and (not(((RegistryValueData contains "C:\\Program Files\\Google\\Chrome\\Application\\" and RegistryValueData contains "\\Installer\\chrmstp.exe\" --configure-user-settings --verbose-logging --system-level") or ((RegistryValueData contains "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\" or RegistryValueData contains "C:\\Program Files\\Microsoft\\Edge\\Application\\") and RegistryValueData endswith "\\Installer\\setup.exe\" --configure-user-settings --verbose-logging --system-level --msedge --channel=stable"))))

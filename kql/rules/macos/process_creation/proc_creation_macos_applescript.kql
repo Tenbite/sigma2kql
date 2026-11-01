@@ -1,0 +1,19 @@
+// Title: MacOS Scripting Interpreter AppleScript
+// Sigma ID: 1bc2e6c5-0885-472b-bed6-be5ea8eace55
+// Status: test | Level: medium
+// Author: Alejandro Ortuno, oscd.community
+// Date: 2020-10-21 | Modified: 2026-05-21
+// ATT&CK: execution, T1059.002
+// Description: Detects execution of AppleScript of the macOS scripting language AppleScript.
+// False positives:
+//   - Application installers might contain scripts as part of the installation process.
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1059.002/T1059.002.md
+//   - https://redcanary.com/blog/applescript/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_applescript.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "/osascript" and (ProcessCommandLine contains " -e " or ProcessCommandLine contains ".scpt" or ProcessCommandLine contains ".js")) and (not((InitiatingProcessFolderPath endswith "opencode" and (ProcessCommandLine contains "osascript" and ProcessCommandLine contains " -e " and ProcessCommandLine contains "set imageData to the clipboard" and ProcessCommandLine contains "set fileRef"))))

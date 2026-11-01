@@ -1,0 +1,20 @@
+// Title: Potential Credential Dumping Attempt Using New NetworkProvider - REG
+// Sigma ID: 0442defa-b4a2-41c9-ae2c-ea7042fc4701
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-08-23 | Modified: 2023-08-17
+// ATT&CK: credential-access, T1003
+// Description: Detects when an attacker tries to add a new network provider in order to dump clear text
+//   credentials, similar to how the NPPSpy tool does it
+// False positives:
+//   - Other legitimate network providers used and not filtred in this rule
+// References:
+//   - https://learn.microsoft.com/en-us/troubleshoot/windows-client/setup-upgrade-and-drivers/network-provider-settings-removed-in-place-upgrade
+//   - https://github.com/gtworek/PSBits/tree/master/PasswordStealing/NPPSpy
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_new_network_provider.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey endswith "\\System\\CurrentControlSet\\Services*" and RegistryKey contains "\\NetworkProvider") and (not(((RegistryKey contains "\\System\\CurrentControlSet\\Services\\WebClient\\NetworkProvider" or RegistryKey contains "\\System\\CurrentControlSet\\Services\\LanmanWorkstation\\NetworkProvider" or RegistryKey contains "\\System\\CurrentControlSet\\Services\\RDPNP\\NetworkProvider") or InitiatingProcessFolderPath =~ "C:\\Windows\\System32\\poqexec.exe")))

@@ -1,0 +1,27 @@
+// Title: Outbound Network Connection Initiated By Microsoft Dialer
+// Sigma ID: 37e4024a-6c80-4d8f-b95d-2e7e94f3a8d1
+// Status: test | Level: high
+// Author: CertainlyP
+// Date: 2024-04-26 | Modified: -
+// ATT&CK: execution, command-and-control, T1071.001
+// Description: Detects outbound network connection initiated by Microsoft Dialer. The Microsoft Dialer, also
+//   known as Phone Dialer, is a built-in utility application included in various versions of the
+//   Microsoft Windows operating system. Its primary function is to provide users with a graphical
+//   interface for managing phone calls via a modem or a phone line connected to the computer. This
+//   is an outdated process in the current conext of it's usage and is a common target for info
+//   stealers for process injection, and is used to make C2 connections, common example is
+//   "Rhadamanthys"
+// False positives:
+//   - In Modern Windows systems, unable to see legitimate usage of this process, However, if an organization has legitimate purpose for this there can be false positives.
+// References:
+//   - https://tria.ge/240301-rk34sagf5x/behavioral2
+//   - https://app.any.run/tasks/6720b85b-9c53-4a12-b1dc-73052a78477d
+//   - https://research.checkpoint.com/2023/rhadamanthys-v0-5-0-a-deep-dive-into-the-stealers-components/
+//   - https://strontic.github.io/xcyclopedia/library/dialer.exe-0B69655F912619756C704A0BF716B61F.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/network_connection/net_connection_win_dialer_initiated_connection.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceNetworkEvents
+| where InitiatingProcessFolderPath endswith ":\\Windows\\System32\\dialer.exe" and (not((ipv4_is_in_range(RemoteIP, "127.0.0.0/8") or ipv4_is_in_range(RemoteIP, "10.0.0.0/8") or ipv4_is_in_range(RemoteIP, "172.16.0.0/12") or ipv4_is_in_range(RemoteIP, "192.168.0.0/16") or ipv4_is_in_range(RemoteIP, "169.254.0.0/16") or ipv4_is_in_range(RemoteIP, "::1/128") or ipv4_is_in_range(RemoteIP, "fe80::/10") or ipv4_is_in_range(RemoteIP, "fc00::/7"))))

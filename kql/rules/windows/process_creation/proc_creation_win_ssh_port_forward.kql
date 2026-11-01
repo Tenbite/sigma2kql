@@ -1,0 +1,18 @@
+// Title: Port Forwarding Activity Via SSH.EXE
+// Sigma ID: 327f48c1-a6db-4eb8-875a-f6981f1b0183
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-10-12 | Modified: 2024-03-05
+// ATT&CK: command-and-control, lateral-movement, T1572, T1021.001, T1021.004
+// Description: Detects port forwarding activity via SSH.exe
+// False positives:
+//   - Administrative activity using a remote port forwarding to a local port
+// References:
+//   - https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_ssh_port_forward.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\ssh.exe" and (ProcessCommandLine contains " -R " or ProcessCommandLine contains " /R " or ProcessCommandLine contains " –R " or ProcessCommandLine contains " —R " or ProcessCommandLine contains " ―R ")

@@ -1,0 +1,27 @@
+// Title: PUA - Ngrok Execution
+// Sigma ID: ee37eb7c-a4e7-4cd5-8fa4-efa27f1c3f31
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2021-05-14 | Modified: 2023-02-21
+// ATT&CK: command-and-control, T1572
+// Description: Detects the use of Ngrok, a utility used for port forwarding and tunneling, often used by threat
+//   actors to make local protected services publicly available. Involved domains are bin.equinox.io
+//   for download and *.ngrok.io for connections.
+// False positives:
+//   - Another tool that uses the command line switches of Ngrok
+//   - Ngrok http 3978 (https://learn.microsoft.com/en-us/azure/bot-service/bot-service-debug-channel-ngrok?view=azure-bot-service-4.0)
+// References:
+//   - https://ngrok.com/docs
+//   - https://www.fireeye.com/blog/threat-research/2021/05/shining-a-light-on-darkside-ransomware-operations.html
+//   - https://stackoverflow.com/questions/42442320/ssh-tunnel-to-ngrok-and-initiate-rdp
+//   - https://www.virustotal.com/gui/file/58d21840d915aaf4040ceb89522396124c82f325282f805d1085527e1e2ccfa1/detection
+//   - https://cybleinc.com/2021/02/15/ngrok-platform-abused-by-hackers-to-deliver-a-new-wave-of-phishing-attacks/
+//   - https://twitter.com/xorJosh/status/1598646907802451969
+//   - https://www.softwaretestinghelp.com/how-to-use-ngrok/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_pua_ngrok.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains " tcp 139" or ProcessCommandLine contains " tcp 445" or ProcessCommandLine contains " tcp 3389" or ProcessCommandLine contains " tcp 5985" or ProcessCommandLine contains " tcp 5986") or (ProcessCommandLine contains " start " and ProcessCommandLine contains "--all" and ProcessCommandLine contains "--config" and ProcessCommandLine contains ".yml") or (FolderPath endswith "ngrok.exe" and (ProcessCommandLine contains " tcp " or ProcessCommandLine contains " http " or ProcessCommandLine contains " authtoken ")) or (ProcessCommandLine contains ".exe authtoken " or ProcessCommandLine contains ".exe start --all")

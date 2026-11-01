@@ -1,0 +1,21 @@
+// Title: Syslog Clearing or Removal Via System Utilities
+// Sigma ID: 3fcc9b35-39e4-44c0-a2ad-9e82b6902b31
+// Status: test | Level: high
+// Author: Max Altgelt (Nextron Systems), Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research), MSTIC
+// Date: 2021-10-15 | Modified: 2025-10-15
+// ATT&CK: defense-impairment, T1685.006
+// Description: Detects specific commands commonly used to remove or empty the syslog. Which is a technique
+//   often used by attacker as a method to hide their tracks
+// False positives:
+//   - Log rotation.
+//   - Maintenance.
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.002/T1070.002.md
+//   - https://www.virustotal.com/gui/file/54d60fd58d7fa3475fa123985bfc1594df26da25c1f5fbc7dfdba15876dd8ac5/behavior
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_clear_syslog.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "/var/log/syslog" and ((FolderPath endswith "/rm" and (ProcessCommandLine contains " -r " or ProcessCommandLine contains " -f " or ProcessCommandLine contains " -rf " or ProcessCommandLine contains "/var/log/syslog")) or FolderPath endswith "/unlink" or FolderPath endswith "/mv" or (FolderPath endswith "/truncate" and (ProcessCommandLine contains "0 " and ProcessCommandLine contains "/var/log/syslog") and (ProcessCommandLine contains "-s " or ProcessCommandLine contains "-c " or ProcessCommandLine contains "--size")) or (FolderPath endswith "/ln" and (ProcessCommandLine contains "/dev/null " and ProcessCommandLine contains "/var/log/syslog") and (ProcessCommandLine contains "-sf " or ProcessCommandLine contains "-sfn " or ProcessCommandLine contains "-sfT ")) or (FolderPath endswith "/cp" and ProcessCommandLine contains "/dev/null") or (FolderPath endswith "/shred" and ProcessCommandLine contains "-u "))) or ((ProcessCommandLine contains " > /var/log/syslog" or ProcessCommandLine contains " >/var/log/syslog" or ProcessCommandLine contains " >| /var/log/syslog" or ProcessCommandLine contains ": > /var/log/syslog" or ProcessCommandLine contains ":> /var/log/syslog" or ProcessCommandLine contains ":>/var/log/syslog" or ProcessCommandLine contains ">|/var/log/syslog") or (ProcessCommandLine contains "journalctl --vacuum" or ProcessCommandLine contains "journalctl --rotate"))

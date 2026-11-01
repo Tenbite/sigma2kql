@@ -1,0 +1,21 @@
+// Title: ISO File Created Within Temp Folders
+// Sigma ID: 2f9356ae-bf43-41b8-b858-4496d83b2acb
+// Status: test | Level: high
+// Author: @sam0x90
+// Date: 2022-07-30 | Modified: -
+// ATT&CK: initial-access, T1566.001
+// Description: Detects the creation of a ISO file in the Outlook temp folder or in the Appdata temp folder.
+//   Typical of Qakbot TTP from end-July 2022.
+// False positives:
+//   - Potential FP by sysadmin opening a zip file containing a legitimate ISO file
+// References:
+//   - https://twitter.com/Sam0x90/status/1552011547974696960
+//   - https://securityaffairs.co/wordpress/133680/malware/dll-sideloading-spread-qakbot.html
+//   - https://github.com/redcanaryco/atomic-red-team/blob/0f229c0e42bfe7ca736a14023836d65baa941ed2/atomics/T1553.005/T1553.005.md#atomic-test-1---mount-iso-image
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_iso_file_mount.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where ((FolderPath contains "\\AppData\\Local\\Temp\\" and FolderPath contains ".zip\\") and FolderPath endswith ".iso") or (FolderPath contains "\\AppData\\Local\\Microsoft\\Windows\\INetCache\\Content.Outlook\\" and FolderPath endswith ".iso")

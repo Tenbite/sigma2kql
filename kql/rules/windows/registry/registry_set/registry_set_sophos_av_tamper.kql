@@ -1,0 +1,18 @@
+// Title: Tamper With Sophos AV Registry Keys
+// Sigma ID: 9f4662ac-17ca-43aa-8f12-5d7b989d0101
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-09-02 | Modified: 2023-08-17
+// ATT&CK: defense-impairment, T1685
+// Description: Detects tamper attempts to sophos av functionality via registry key modification
+// False positives:
+//   - Some FP may occur when the feature is disabled by the AV itself, you should always investigate if the action was legitimate
+// References:
+//   - https://redacted.com/blog/bianlian-ransomware-gang-gives-it-a-go/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_sophos_av_tamper.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey contains "\\Sophos Endpoint Defense\\TamperProtection\\Config\\SAVEnabled" or RegistryKey contains "\\Sophos Endpoint Defense\\TamperProtection\\Config\\SEDEnabled" or RegistryKey contains "\\Sophos\\SAVService\\TamperProtection\\Enabled") and RegistryValueData =~ "DWORD (0x00000000)"

@@ -1,0 +1,20 @@
+// Title: Command Line Execution with Suspicious URL and AppData Strings
+// Sigma ID: 1ac8666b-046f-4201-8aba-1951aaec03a3
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community
+// Date: 2019-01-16 | Modified: 2021-11-27
+// ATT&CK: execution, command-and-control, T1059.003, T1059.001, T1105
+// Description: Detects a suspicious command line execution that includes an URL and AppData string in the
+//   command line parameters as used by several droppers (js/vbs > powershell)
+// False positives:
+//   - High
+// References:
+//   - https://www.hybrid-analysis.com/sample/3a1f01206684410dbe8f1900bbeaaa543adfcd07368ba646b499fa5274b9edf6?environmentId=100
+//   - https://www.hybrid-analysis.com/sample/f16c729aad5c74f19784a24257236a8bbe27f7cdc4a89806031ec7f1bebbd475?environmentId=100
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_cmd_http_appdata.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\cmd.exe" and (ProcessCommandLine contains "http" and ProcessCommandLine contains "://" and ProcessCommandLine contains "%AppData%")

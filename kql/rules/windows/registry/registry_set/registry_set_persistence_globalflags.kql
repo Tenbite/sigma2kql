@@ -1,0 +1,20 @@
+// Title: Potential Persistence Via GlobalFlags
+// Sigma ID: 36803969-5421-41ec-b92f-8500f79c23b0
+// Status: test | Level: high
+// Author: Karneades, Jonhnathan Ribeiro, Florian Roth
+// Date: 2018-04-11 | Modified: 2023-06-05
+// ATT&CK: privilege-escalation, persistence, T1546.012
+// Tags: car.2013-01-002
+// Description: Detects registry persistence technique using the GlobalFlags and SilentProcessExit keys
+// False positives:
+//   - Unknown
+// References:
+//   - https://oddvar.moe/2018/04/10/persistence-using-globalflags-in-image-file-execution-options-hidden-from-autoruns-exe/
+//   - https://www.deepinstinct.com/2021/02/16/lsass-memory-dumps-are-stealthier-than-ever-before-part-2/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_persistence_globalflags.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey endswith "\\Microsoft\\Windows NT\\CurrentVersion*" and RegistryKey endswith "\\Image File Execution Options*" and RegistryKey contains "\\GlobalFlag") or ((RegistryKey endswith "\\Microsoft\\Windows NT\\CurrentVersion*" and RegistryKey endswith "\\SilentProcessExit*") and (RegistryKey contains "\\ReportingMode" or RegistryKey contains "\\MonitorProcess"))

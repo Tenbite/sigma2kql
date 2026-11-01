@@ -1,0 +1,20 @@
+// Title: Rundll32 UNC Path Execution
+// Sigma ID: 5cdb711b-5740-4fb2-ba88-f7945027afac
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-08-10 | Modified: 2026-07-20
+// ATT&CK: execution, lateral-movement, stealth, T1021.002, T1218.011
+// Description: Detects rundll32 execution where the DLL is located on a remote location (share). Threat actors
+//   can abuse the rundll32.exe binary to execute remote DLLs from a UNC pathh.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.cybereason.com/blog/rundll32-the-infamous-proxy-for-executing-malicious-code
+//   - https://www.microsoft.com/en-us/security/blog/2026/07/16/acr-stealer-two-observed-intrusion-chains-amid-increased-threat-activity/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_rundll32_unc_path.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\rundll32.exe" or ProcessVersionInfoOriginalFileName =~ "RUNDLL32.EXE" or ProcessCommandLine contains "rundll32") and (ProcessCommandLine contains " \\\\" or ProcessCommandLine contains " '\\\\" or ProcessCommandLine contains " \"\\\\")) and (not(ProcessCommandLine contains "\\\\.\\pipe"))

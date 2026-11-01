@@ -1,0 +1,19 @@
+// Title: Bypass UAC Using Event Viewer
+// Sigma ID: 674202d0-b22a-4af4-ae5f-2eda1f3da1af
+// Status: test | Level: high
+// Author: frack113
+// Date: 2022-01-05 | Modified: 2023-08-17
+// ATT&CK: privilege-escalation, persistence, T1547.010
+// Description: Bypasses User Account Control using Event Viewer and a relevant Windows Registry modification
+// False positives:
+//   - Unknown
+// References:
+//   - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1548.002/T1548.002.md#atomic-test-1---bypass-uac-using-event-viewer-cmd
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_bypass_uac_using_eventviewer.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey endswith "_Classes\\mscfile\\shell\\open\\command\\(Default)" and (not(RegistryValueData startswith "%SystemRoot%\\system32\\mmc.exe \"%1\" %"))

@@ -1,0 +1,19 @@
+// Title: Potential SysInternals ProcDump Evasion
+// Sigma ID: 79b06761-465f-4f88-9ef2-150e24d3d737
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-01-11 | Modified: 2023-05-09
+// ATT&CK: stealth, T1036, T1003.001, credential-access
+// Description: Detects uses of the SysInternals ProcDump utility in which ProcDump or its output get renamed,
+//   or a dump file is moved or copied to a different name
+// False positives:
+//   - False positives are expected in cases in which ProcDump just gets copied to a different directory without any renaming
+// References:
+//   - https://twitter.com/mrd0x/status/1480785527901204481
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_sysinternals_procdump_evasion.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "copy procdump" or ProcessCommandLine contains "move procdump") or ((ProcessCommandLine contains "copy " and ProcessCommandLine contains ".dmp ") and (ProcessCommandLine contains "2.dmp" or ProcessCommandLine contains "lsass" or ProcessCommandLine contains "out.dmp")) or (ProcessCommandLine contains "copy lsass.exe_" or ProcessCommandLine contains "move lsass.exe_")

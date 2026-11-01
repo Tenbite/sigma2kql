@@ -1,0 +1,21 @@
+// Title: Suspicious CustomShellHost Execution
+// Sigma ID: 84b14121-9d14-416e-800b-f3b829c5a14d
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-08-19 | Modified: 2025-10-29
+// ATT&CK: stealth, T1216
+// Description: Detects the execution of CustomShellHost.exe where the child isn't located in
+//   'C:\Windows\explorer.exe'. CustomShellHost is a known LOLBin that can be abused by attackers for
+//   defense evasion techniques.
+// False positives:
+//   - False positives are unlikely, investigate matches carefully.
+// References:
+//   - https://github.com/LOLBAS-Project/LOLBAS/pull/180
+//   - https://lolbas-project.github.io/lolbas/Binaries/CustomShellHost/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_customshellhost_susp_exec.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\CustomShellHost.exe" and (not(FolderPath =~ "C:\\Windows\\explorer.exe"))

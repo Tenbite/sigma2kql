@@ -1,0 +1,20 @@
+// Title: HackTool - Certipy Execution
+// Sigma ID: 6938366d-8954-4ddc-baff-c830b3ba8fcd
+// Status: test | Level: high
+// Author: pH-T (Nextron Systems), Sittikorn Sangrattanapitak
+// Date: 2023-04-17 | Modified: 2024-10-08
+// ATT&CK: discovery, credential-access, T1649
+// Description: Detects Certipy execution, a tool for Active Directory Certificate Services enumeration and
+//   abuse based on PE metadata characteristics and common command line arguments.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://github.com/ly4k/Certipy
+//   - https://research.ifcr.dk/certipy-4-0-esc9-esc10-bloodhound-gui-new-authentication-and-request-methods-and-more-7237d88061f7
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_certipy.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\Certipy.exe" or ProcessVersionInfoOriginalFileName =~ "Certipy.exe" or ProcessVersionInfoFileDescription contains "Certipy") or ((ProcessCommandLine contains " account " or ProcessCommandLine contains " auth " or ProcessCommandLine contains " cert " or ProcessCommandLine contains " find " or ProcessCommandLine contains " forge " or ProcessCommandLine contains " ptt " or ProcessCommandLine contains " relay " or ProcessCommandLine contains " req " or ProcessCommandLine contains " shadow " or ProcessCommandLine contains " template ") and (ProcessCommandLine contains " -bloodhound" or ProcessCommandLine contains " -ca-pfx " or ProcessCommandLine contains " -dc-ip " or ProcessCommandLine contains " -kirbi" or ProcessCommandLine contains " -old-bloodhound" or ProcessCommandLine contains " -pfx " or ProcessCommandLine contains " -target" or ProcessCommandLine contains " -template" or ProcessCommandLine contains " -username " or ProcessCommandLine contains " -vulnerable" or ProcessCommandLine contains "auth -pfx" or ProcessCommandLine contains "shadow auto" or ProcessCommandLine contains "shadow list"))

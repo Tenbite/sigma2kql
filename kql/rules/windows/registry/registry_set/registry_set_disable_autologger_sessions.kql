@@ -1,0 +1,27 @@
+// Title: Potential AutoLogger Sessions Tampering
+// Sigma ID: f37b4bce-49d0-4087-9f5b-58bffda77316
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-08-01 | Modified: 2025-12-26
+// ATT&CK: defense-impairment, T1685.001
+// Description: Detects tampering with autologger trace sessions which is a technique used by attackers to
+//   disable logging. The AutoLogger event tracing session records events up that occur early in the
+//   operating system boot process. Applications and device drivers can use the AutoLogger session to
+//   capture traces before the user logs in, and also used by security solutions as telemetry source.
+//   Adversaries may disable these sessions to evade detection and prevent security monitoring of
+//   early boot activities and system events.
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/MichalKoczwara/status/1553634816016498688
+//   - https://thedfirreport.com/2021/10/18/icedid-to-xinglocker-ransomware-in-24-hours/
+//   - https://i.blackhat.com/EU-21/Wednesday/EU-21-Teodorescu-Veni-No-Vidi-No-Vici-Attacks-On-ETW-Blind-EDRs.pdf
+//   - https://learn.microsoft.com/en-us/windows/win32/etw/configuring-and-starting-an-autologger-session
+//   - https://blog.palantir.com/tampering-with-windows-event-tracing-background-offense-and-defense-4be7ac62ac63
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_disable_autologger_sessions.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey endswith "\\Control\\WMI\\Autologger*" and ((RegistryKey contains "\\EventLog-" or RegistryKey contains "\\Defender") and (RegistryKey endswith "\\Enabled" or RegistryKey endswith "\\Start") and RegistryValueData =~ "DWORD (0x00000000)")) and (not((InitiatingProcessFolderPath =~ "C:\\Windows\\system32\\wevtutil.exe" or ((InitiatingProcessFolderPath startswith "C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\" or InitiatingProcessFolderPath startswith "C:\\Program Files\\Windows Defender\\" or InitiatingProcessFolderPath startswith "C:\\Program Files (x86)\\Windows Defender\\") and InitiatingProcessFolderPath endswith "\\MsMpEng.exe" and (RegistryKey endswith "\\DefenderApiLogger*" or RegistryKey endswith "\\DefenderAuditLogger*")))))

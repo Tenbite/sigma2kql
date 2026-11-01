@@ -1,0 +1,20 @@
+// Title: Process Memory Dump Via Dotnet-Dump
+// Sigma ID: 53d8d3e1-ca33-4012-adf3-e05a4d652e34
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-03-14 | Modified: -
+// ATT&CK: stealth, T1218
+// Description: Detects the execution of "dotnet-dump" with the "collect" flag. The execution could indicate
+//   potential process dumping of critical processes such as LSASS.
+// False positives:
+//   - Process dumping is the expected behavior of the tool. So false positives are expected in legitimate usage. The PID/Process Name of the process being dumped needs to be investigated
+// References:
+//   - https://learn.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-dump#dotnet-dump-collect
+//   - https://twitter.com/bohops/status/1635288066909966338
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_dotnetdump_memory_dump.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\dotnet-dump.exe" or ProcessVersionInfoOriginalFileName =~ "dotnet-dump.dll") and ProcessCommandLine contains "collect"

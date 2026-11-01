@@ -1,0 +1,21 @@
+// Title: Potentially Suspicious Execution Of Regasm/Regsvcs From Uncommon Location
+// Sigma ID: cc368ed0-2411-45dc-a222-510ace303cb2
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-08-25 | Modified: 2023-02-13
+// ATT&CK: stealth, T1218.009
+// Description: Detects potentially suspicious execution of the Regasm/Regsvcs utilities from a potentially
+//   suspicious location
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.fortiguard.com/threat-signal-report/4718?s=09
+//   - https://lolbas-project.github.io/lolbas/Binaries/Regasm/
+//   - https://lolbas-project.github.io/lolbas/Binaries/Regsvcs/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_regasm_regsvcs_uncommon_location_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\Regsvcs.exe" or FolderPath endswith "\\Regasm.exe") or (ProcessVersionInfoOriginalFileName in~ ("RegSvcs.exe", "RegAsm.exe"))) and (ProcessCommandLine contains "\\AppData\\Local\\Temp\\" or ProcessCommandLine contains "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\" or ProcessCommandLine contains "\\PerfLogs\\" or ProcessCommandLine contains "\\Users\\Public\\" or ProcessCommandLine contains "\\Windows\\Temp\\")

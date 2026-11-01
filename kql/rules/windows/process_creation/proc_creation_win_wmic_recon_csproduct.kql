@@ -1,0 +1,21 @@
+// Title: Hardware Model Reconnaissance Via Wmic.EXE
+// Sigma ID: 3e3ceccd-6c06-48b8-b5ff-ab1d25db8c1d
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2023-02-14 | Modified: -
+// ATT&CK: execution, T1047
+// Tags: car.2016-03-002
+// Description: Detects the execution of WMIC with the "csproduct" which is used to obtain information such as
+//   hardware models and vendor information
+// False positives:
+//   - Unknown
+// References:
+//   - https://jonconwayuk.wordpress.com/2014/01/31/wmic-csproduct-using-wmi-to-identify-make-and-model-of-hardware/
+//   - https://www.uptycs.com/blog/kuraystealer-a-bandit-using-discord-webhooks
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_wmic_recon_csproduct.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\wmic.exe" or ProcessVersionInfoOriginalFileName =~ "wmic.exe") and ProcessCommandLine contains "csproduct"

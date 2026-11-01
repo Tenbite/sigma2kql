@@ -1,0 +1,21 @@
+// Title: Potential Initial Access via DLL Search Order Hijacking
+// Sigma ID: dbbd9f66-2ed3-4ca2-98a4-6ea985dd1a1c
+// Status: test | Level: medium
+// Author: Tim Rauch (rule), Elastic (idea)
+// Date: 2022-10-21 | Modified: -
+// ATT&CK: privilege-escalation, persistence, execution, stealth, T1566, T1566.001, initial-access, T1574, T1574.001
+// Description: Detects attempts to create a DLL file to a known desktop application dependencies folder such as
+//   Slack, Teams or OneDrive and by an unusual process. This may indicate an attempt to load a
+//   malicious module via DLL search order hijacking.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/elastic/protections-artifacts/commit/746086721fd385d9f5c6647cada1788db4aea95f#diff-5d46dd4ac6866b4337ec126be8cee0e115467b3e8703794ba6f6df6432c806bc
+//   - https://posts.specterops.io/automating-dll-hijack-discovery-81c4295904b0
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_initial_access_dll_search_order_hijacking.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where ((InitiatingProcessFolderPath endswith "\\winword.exe" or InitiatingProcessFolderPath endswith "\\excel.exe" or InitiatingProcessFolderPath endswith "\\powerpnt.exe" or InitiatingProcessFolderPath endswith "\\MSACCESS.EXE" or InitiatingProcessFolderPath endswith "\\MSPUB.EXE" or InitiatingProcessFolderPath endswith "\\fltldr.exe" or InitiatingProcessFolderPath endswith "\\cmd.exe" or InitiatingProcessFolderPath endswith "\\certutil.exe" or InitiatingProcessFolderPath endswith "\\mshta.exe" or InitiatingProcessFolderPath endswith "\\cscript.exe" or InitiatingProcessFolderPath endswith "\\wscript.exe" or InitiatingProcessFolderPath endswith "\\curl.exe" or InitiatingProcessFolderPath endswith "\\powershell.exe" or InitiatingProcessFolderPath endswith "\\pwsh.exe") and FolderPath endswith ".dll" and (FolderPath contains "\\Users\\" and FolderPath contains "\\AppData\\") and (FolderPath contains "\\Microsoft\\OneDrive\\" or FolderPath contains "\\Microsoft OneDrive\\" or FolderPath contains "\\Microsoft\\Teams\\" or FolderPath contains "\\Local\\slack\\app-" or FolderPath contains "\\Local\\Programs\\Microsoft VS Code\\")) and (not((InitiatingProcessFolderPath endswith "\\cmd.exe" and (FolderPath contains "\\Users\\" and FolderPath contains "\\AppData\\" and FolderPath contains "\\Microsoft\\OneDrive\\" and FolderPath contains "\\api-ms-win-core-"))))

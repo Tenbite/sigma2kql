@@ -1,0 +1,18 @@
+// Title: Sysmon Driver Unloaded Via Fltmc.EXE
+// Sigma ID: 4d7cda18-1b12-4e52-b45c-d28653210df8
+// Status: test | Level: high
+// Author: Kirill Kiryanov, oscd.community
+// Date: 2019-10-23 | Modified: 2023-02-13
+// ATT&CK: stealth, defense-impairment, T1070, T1685, T1685.001
+// Description: Detects possible Sysmon filter driver unloaded via fltmc.exe
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.darkoperator.com/blog/2018/10/5/operating-offensively-against-sysmon
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_fltmc_unload_driver_sysmon.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\fltMC.exe" or ProcessVersionInfoOriginalFileName =~ "fltMC.exe") and (ProcessCommandLine contains "unload" and ProcessCommandLine contains "sysmon")

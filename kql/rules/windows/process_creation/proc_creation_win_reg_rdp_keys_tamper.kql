@@ -1,0 +1,33 @@
+// Title: Potential Tampering With RDP Related Registry Keys Via Reg.EXE
+// Sigma ID: 0d5675be-bc88-4172-86d3-1e96a4476536
+// Status: test | Level: high
+// Author: pH-T (Nextron Systems), @Kostastsale, TheDFIRReport
+// Date: 2022-02-12 | Modified: 2025-11-22
+// ATT&CK: persistence, lateral-movement, defense-impairment, T1021.001, T1112
+// Description: Detects the execution of "reg.exe" for enabling/disabling the RDP service on the host by
+//   tampering with the 'CurrentControlSet\Control\Terminal Server' values
+// False positives:
+//   - Unknown
+// References:
+//   - https://thedfirreport.com/2022/02/21/qbot-and-zerologon-lead-to-full-domain-compromise/
+//   - http://etutorials.org/Microsoft+Products/microsoft+windows+server+2003+terminal+services/Chapter+6+Registry/Registry+Keys+for+Terminal+Services/
+//   - http://woshub.com/rds-shadow-how-to-connect-to-a-user-session-in-windows-server-2012-r2/
+//   - https://admx.help/HKLM/SOFTWARE/Policies/Microsoft/Windows%20NT/Terminal%20Services
+//   - https://bazaar.abuse.ch/sample/6f3aa9362d72e806490a8abce245331030d1ab5ac77e400dd475748236a6cc81/
+//   - https://blog.sekoia.io/darkgate-internals/
+//   - https://blog.talosintelligence.com/understanding-the-phobos-affiliate-structure/
+//   - https://github.com/redcanaryco/atomic-red-team/blob/02c7d02fe1f1feb0fc7944550408ea8224273994/atomics/T1112/T1112.md#atomic-test-63---disable-remote-desktop-anti-alias-setting-through-registry
+//   - https://github.com/redcanaryco/atomic-red-team/blob/02c7d02fe1f1feb0fc7944550408ea8224273994/atomics/T1112/T1112.md#atomic-test-64---disable-remote-desktop-security-settings-through-registry
+//   - https://github.com/redcanaryco/atomic-red-team/blob/dd526047b8c399c312fee47d1e6fb531164da54d/atomics/T1112/T1112.yaml#L790
+//   - https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-terminalservices-rdp-winstationextensions-securitylayer
+//   - https://threathunterplaybook.com/hunts/windows/190407-RegModEnableRDPConnections/notebook.html
+//   - https://twitter.com/SagieSec/status/1469001618863624194?t=HRf0eA0W1YYzkTSHb-Ky1A&s=03
+//   - https://web.archive.org/web/20200929062532/https://blog.menasec.net/2019/02/threat-hunting-rdp-hijacking-via.html
+//   - https://www.trendmicro.com/en_us/research/25/i/unmasking-the-gentlemen-ransomware.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_reg_rdp_keys_tamper.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\reg.exe" or ProcessVersionInfoOriginalFileName =~ "reg.exe") and (ProcessCommandLine contains " add " and ProcessCommandLine contains "\\CurrentControlSet\\Control\\Terminal Server" and ProcessCommandLine contains "REG_DWORD" and ProcessCommandLine contains " /f")) and ((ProcessCommandLine contains "Licensing Core" and ProcessCommandLine contains "EnableConcurrentSessions") or (ProcessCommandLine contains "AllowTSConnections" or ProcessCommandLine contains "fDenyTSConnections" or ProcessCommandLine contains "fEnableWinStation" or ProcessCommandLine contains "fSingleSessionPerUser" or ProcessCommandLine contains "IdleWinStationPoolCount" or ProcessCommandLine contains "MaxInstanceCount" or ProcessCommandLine contains "SecurityLayer" or ProcessCommandLine contains "TSAdvertise" or ProcessCommandLine contains "TSAppCompat" or ProcessCommandLine contains "TSEnabled" or ProcessCommandLine contains "TSUserEnabled" or ProcessCommandLine contains "WinStations\\RDP-Tcp")) and (not((ProcessCommandLine contains "SecurityLayer" and ProcessCommandLine contains "02")))

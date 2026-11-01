@@ -1,0 +1,19 @@
+// Title: Winnti Pipemon Characteristics
+// Sigma ID: 73d70463-75c9-4258-92c6-17500fe972f2
+// Status: stable | Level: critical
+// Author: Florian Roth (Nextron Systems), oscd.community
+// Date: 2020-07-30 | Modified: 2021-11-27
+// ATT&CK: privilege-escalation, persistence, execution, stealth, T1574.001, G0044
+// Tags: detection.emerging-threats
+// Description: Detects specific process characteristics of Winnti Pipemon malware reported by ESET
+// False positives:
+//   - Legitimate setups that use similar flags
+// References:
+//   - https://www.welivesecurity.com/2020/05/21/no-game-over-winnti-group/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2020/TA/Winnti/proc_creation_win_apt_winnti_pipemon.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "setup0.exe -p" or (ProcessCommandLine contains "setup.exe" and (ProcessCommandLine endswith "-x:0" or ProcessCommandLine endswith "-x:1" or ProcessCommandLine endswith "-x:2"))

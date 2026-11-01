@@ -1,0 +1,20 @@
+// Title: UNC2452 Process Creation Patterns
+// Sigma ID: 9be34ad0-b6a7-4fbd-91cf-fc7ec1047f5f
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2021-01-22 | Modified: 2024-09-12
+// ATT&CK: execution, T1059.001
+// Tags: detection.emerging-threats
+// Description: Detects a specific process creation patterns as seen used by UNC2452 and provided by Microsoft
+//   as Microsoft Defender ATP queries
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2020/TA/SolarWinds-Supply-Chain/proc_creation_win_apt_unc2452_cmds.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((ProcessCommandLine contains "7z.exe a -v500m -mx9 -r0 -p" or ProcessCommandLine contains "7z.exe a -mx9 -r0 -p") and (ProcessCommandLine contains ".zip" and ProcessCommandLine contains ".txt")) or ((ProcessCommandLine contains "7z.exe a -v500m -mx9 -r0 -p" or ProcessCommandLine contains "7z.exe a -mx9 -r0 -p") and (ProcessCommandLine contains ".zip" and ProcessCommandLine contains ".log")) or ((InitiatingProcessCommandLine contains "wscript.exe" and InitiatingProcessCommandLine contains ".vbs") and (ProcessCommandLine contains "rundll32.exe" and ProcessCommandLine contains "C:\\Windows" and ProcessCommandLine contains ".dll,Tk_")) or (InitiatingProcessFolderPath endswith "\\rundll32.exe" and (InitiatingProcessCommandLine contains "C:\\Windows" and InitiatingProcessCommandLine contains ".dll") and ProcessCommandLine contains "cmd.exe /C ") or (InitiatingProcessFolderPath endswith "\\rundll32.exe" and FolderPath endswith "\\dllhost.exe" and ProcessCommandLine =~ "")

@@ -1,0 +1,21 @@
+// Title: System Disk And Volume Reconnaissance Via Wmic.EXE
+// Sigma ID: c79da740-5030-45ec-a2e0-479e824a562c
+// Status: test | Level: medium
+// Author: Stephen Lincoln '@slincoln-aiq' (AttackIQ)
+// Date: 2024-02-02 | Modified: 2025-10-20
+// ATT&CK: execution, discovery, T1047, T1082
+// Description: An adversary might use WMI to discover information about the system, such as the volume name,
+//   size, free space, and other disk information. This can be done using the 'wmic' command-line
+//   utility and has been observed being used by threat actors such as Volt Typhoon.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-144a
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wmic
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_wmic_recon_volume.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\WMIC.exe" or ProcessVersionInfoOriginalFileName =~ "wmic.exe") and ((ProcessCommandLine contains " volumename" or ProcessCommandLine contains " logicaldisk") or (ProcessCommandLine contains "path" and ProcessCommandLine contains "win32_logicaldisk") or (ProcessCommandLine contains " volume" and ProcessCommandLine contains " list "))

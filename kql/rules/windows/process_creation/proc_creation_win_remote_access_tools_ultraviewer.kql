@@ -1,0 +1,23 @@
+// Title: Remote Access Tool - UltraViewer Execution
+// Sigma ID: 88656cec-6c3b-487c-82c0-f73ebb805503
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-09-25 | Modified: 2024-03-14
+// ATT&CK: command-and-control, T1219.002
+// Description: An adversary may use legitimate desktop support and remote access software, such as Team Viewer,
+//   Go2Assist, LogMein, AmmyyAdmin, etc, to establish an interactive command and control channel to
+//   target systems within networks. These services are commonly used as legitimate technical support
+//   software, and may be allowed by application control within a target environment. Remote access
+//   tools like VNC, Ammyy, and Teamviewer are used frequently when compared with other legitimate
+//   software commonly used by adversaries. (Citation: Symantec Living off the Land)
+// False positives:
+//   - Legitimate use
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1219/T1219.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_remote_access_tools_ultraviewer.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessVersionInfoProductName =~ "UltraViewer" or ProcessVersionInfoCompanyName =~ "DucFabulous Co,ltd" or ProcessVersionInfoOriginalFileName =~ "UltraViewer_Desktop.exe"

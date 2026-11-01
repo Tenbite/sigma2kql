@@ -1,0 +1,18 @@
+// Title: Suspicious Workstation Locking via Rundll32
+// Sigma ID: 3b5b0213-0460-4e3f-8937-3abf98ff7dcc
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-06-04 | Modified: 2023-02-09
+// ATT&CK: stealth
+// Description: Detects a suspicious call to the user32.dll function that locks the user workstation
+// False positives:
+//   - Scripts or links on the user desktop used to lock the workstation instead of Windows+L or the menu option
+// References:
+//   - https://app.any.run/tasks/2aef9c63-f944-4763-b3ef-81eee209d128/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_rundll32_user32_dll.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\rundll32.exe" or ProcessVersionInfoOriginalFileName =~ "RUNDLL32.EXE") and InitiatingProcessFolderPath endswith "\\cmd.exe" and ProcessCommandLine contains "user32.dll," and ProcessCommandLine contains "LockWorkStation"

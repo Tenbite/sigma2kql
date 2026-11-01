@@ -1,0 +1,18 @@
+// Title: Service Started/Stopped Via Wmic.EXE
+// Sigma ID: 0b7163dc-7eee-4960-af17-c0cd517f92da
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-06-20 | Modified: 2023-02-14
+// ATT&CK: execution, T1047
+// Description: Detects usage of wmic to start or stop a service
+// False positives:
+//   - Unknown
+// References:
+//   - https://sushant747.gitbooks.io/total-oscp-guide/content/privilege_escalation_windows.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_wmic_service_manipulation.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessVersionInfoOriginalFileName =~ "wmic.exe" or FolderPath endswith "\\WMIC.exe") and ((ProcessCommandLine contains " service " and ProcessCommandLine contains " call ") and (ProcessCommandLine contains "stopservice" or ProcessCommandLine contains "startservice"))

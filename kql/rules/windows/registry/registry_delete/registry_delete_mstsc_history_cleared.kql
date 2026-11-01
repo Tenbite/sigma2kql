@@ -1,0 +1,20 @@
+// Title: Terminal Server Client Connection History Cleared - Registry
+// Sigma ID: 07bdd2f5-9c58-4f38-aec8-e101bb79ef8d
+// Status: test | Level: high
+// Author: Christian Burkard (Nextron Systems)
+// Date: 2021-10-19 | Modified: 2023-02-08
+// ATT&CK: persistence, stealth, defense-impairment, T1070, T1112
+// Description: Detects the deletion of registry keys containing the MSTSC connection history
+// False positives:
+//   - Unknown
+// References:
+//   - https://learn.microsoft.com/en-us/troubleshoot/windows-server/remote/remove-entries-from-remote-desktop-connection-computer
+//   - http://woshub.com/how-to-clear-rdp-connections-history/
+//   - https://www.trendmicro.com/en_us/research/23/a/vice-society-ransomware-group-targets-manufacturing-companies.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_delete/registry_delete_mstsc_history_cleared.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (ActionType =~ "DeleteValue" and RegistryKey contains "\\Microsoft\\Terminal Server Client\\Default\\MRU") or ((ActionType in~ ("RegistryKeyDeleted", "RegistryValueDeleted")) and RegistryKey endswith "\\Microsoft\\Terminal Server Client\\Servers*")

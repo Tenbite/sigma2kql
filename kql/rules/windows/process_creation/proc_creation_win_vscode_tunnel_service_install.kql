@@ -1,0 +1,20 @@
+// Title: Visual Studio Code Tunnel Service Installation
+// Sigma ID: 30bf1789-379d-4fdc-900f-55cd0a90a801
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-10-25 | Modified: -
+// ATT&CK: command-and-control, T1071.001
+// Description: Detects the installation of VsCode tunnel (code-tunnel) as a service.
+// False positives:
+//   - Legitimate installation of code-tunnel as a service
+// References:
+//   - https://ipfyx.fr/post/visual-studio-code-tunnel/
+//   - https://badoption.eu/blog/2023/01/31/code_c2.html
+//   - https://code.visualstudio.com/docs/remote/tunnels
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_vscode_tunnel_service_install.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "tunnel " and ProcessCommandLine contains "service" and ProcessCommandLine contains "internal-run" and ProcessCommandLine contains "tunnel-service.log"

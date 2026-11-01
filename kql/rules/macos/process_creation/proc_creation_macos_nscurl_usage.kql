@@ -1,0 +1,20 @@
+// Title: File Download Via Nscurl - MacOS
+// Sigma ID: 6d8a7cf1-8085-423b-b87d-7e880faabbdf
+// Status: test | Level: medium
+// Author: Daniel Cortez
+// Date: 2024-06-04 | Modified: -
+// ATT&CK: command-and-control, T1105
+// Description: Detects the execution of the nscurl utility in order to download files.
+// False positives:
+//   - Legitimate usage of nscurl by administrators and users.
+// References:
+//   - https://www.loobins.io/binaries/nscurl/
+//   - https://www.agnosticdev.com/content/how-diagnose-app-transport-security-issues-using-nscurl-and-openssl
+//   - https://gist.github.com/nasbench/ca6ef95db04ae04ffd1e0b1ce709cadd
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_nscurl_usage.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "/nscurl" and (ProcessCommandLine contains "--download " or ProcessCommandLine contains "--download-directory " or ProcessCommandLine contains "--output " or ProcessCommandLine contains "-dir " or ProcessCommandLine contains "-dl " or ProcessCommandLine contains "-ld" or ProcessCommandLine contains "-o ")

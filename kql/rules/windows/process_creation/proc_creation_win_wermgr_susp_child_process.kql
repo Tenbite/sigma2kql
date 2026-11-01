@@ -1,0 +1,20 @@
+// Title: Suspicious Child Process Of Wermgr.EXE
+// Sigma ID: 396f6630-f3ac-44e3-bfc8-1b161bc00c4e
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-10-14 | Modified: 2024-08-29
+// ATT&CK: privilege-escalation, stealth, T1055, T1036
+// Description: Detects suspicious Windows Error Reporting manager (wermgr.exe) child process
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.trendmicro.com/en_us/research/22/j/black-basta-infiltrates-networks-via-qakbot-brute-ratel-and-coba.html
+//   - https://www.echotrail.io/insights/search/wermgr.exe
+//   - https://github.com/binderlabs/DirCreate2System
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_wermgr_susp_child_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (InitiatingProcessFolderPath endswith "\\wermgr.exe" and (FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\ipconfig.exe" or FolderPath endswith "\\mshta.exe" or FolderPath endswith "\\net.exe" or FolderPath endswith "\\net1.exe" or FolderPath endswith "\\netstat.exe" or FolderPath endswith "\\nslookup.exe" or FolderPath endswith "\\powershell_ise.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\regsvr32.exe" or FolderPath endswith "\\rundll32.exe" or FolderPath endswith "\\systeminfo.exe" or FolderPath endswith "\\whoami.exe" or FolderPath endswith "\\wscript.exe")) and (not((FolderPath endswith "\\rundll32.exe" and (ProcessCommandLine contains "C:\\Windows\\system32\\WerConCpl.dll" and ProcessCommandLine contains "LaunchErcApp ") and (ProcessCommandLine contains "-queuereporting" or ProcessCommandLine contains "-responsepester"))))

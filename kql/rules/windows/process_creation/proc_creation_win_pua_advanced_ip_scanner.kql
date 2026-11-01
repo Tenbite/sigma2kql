@@ -1,0 +1,23 @@
+// Title: PUA - Advanced IP Scanner Execution
+// Sigma ID: bef37fa2-f205-4a7b-b484-0759bfd5f86f
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems), @ROxPinTeddy
+// Date: 2020-05-12 | Modified: 2023-02-07
+// ATT&CK: discovery, T1046, T1135
+// Description: Detects the use of Advanced IP Scanner. Seems to be a popular tool for ransomware groups.
+// False positives:
+//   - Legitimate administrative use
+// References:
+//   - https://news.sophos.com/en-us/2019/12/09/snatch-ransomware-reboots-pcs-into-safe-mode-to-bypass-protection/
+//   - https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html
+//   - https://labs.f-secure.com/blog/prelude-to-ransomware-systembc
+//   - https://assets.documentcloud.org/documents/20444693/fbi-pin-egregor-ransomware-bc-01062021.pdf
+//   - https://thedfirreport.com/2021/01/18/all-that-for-a-coinminer
+//   - https://github.com/3CORESec/MAL-CL/tree/master/Descriptors/Other/Advanced%20IP%20Scanner
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_pua_advanced_ip_scanner.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath contains "\\advanced_ip_scanner" or ProcessVersionInfoOriginalFileName contains "advanced_ip_scanner" or ProcessVersionInfoFileDescription contains "Advanced IP Scanner") or (ProcessCommandLine contains "/portable" and ProcessCommandLine contains "/lng")

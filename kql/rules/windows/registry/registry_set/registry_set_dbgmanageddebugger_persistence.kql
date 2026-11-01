@@ -1,0 +1,20 @@
+// Title: Potential Registry Persistence Attempt Via DbgManagedDebugger
+// Sigma ID: 9827ae57-3802-418f-994b-d5ecf5cd974b
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-08-07 | Modified: 2023-08-17
+// ATT&CK: privilege-escalation, persistence, execution, stealth, T1574
+// Description: Detects the addition of the "Debugger" value to the "DbgManagedDebugger" key in order to achieve
+//   persistence. Which will get invoked when an application crashes
+// False positives:
+//   - Legitimate use of the key to setup a debugger. Which is often the case on developers machines
+// References:
+//   - https://www.hexacorn.com/blog/2013/09/19/beyond-good-ol-run-key-part-4/
+//   - https://github.com/last-byte/PersistenceSniper
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_dbgmanageddebugger_persistence.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey endswith "\\Microsoft\\.NETFramework\\DbgManagedDebugger" and (not(RegistryValueData =~ "\"C:\\Windows\\system32\\vsjitdebugger.exe\" PID %d APPDOM %d EXTEXT \"%s\" EVTHDL %d"))

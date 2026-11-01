@@ -1,0 +1,21 @@
+// Title: Binary Padding - MacOS
+// Sigma ID: 95361ce5-c891-4b0a-87ca-e24607884a96
+// Status: test | Level: high
+// Author: Igor Fits, Mikhail Larin, oscd.community
+// Date: 2020-10-19 | Modified: 2023-02-17
+// ATT&CK: stealth, T1027.001
+// Description: Adversaries may use binary padding to add junk data and change the on-disk representation of
+//   malware. This rule detect using dd and truncate to add a junk data to file.
+// False positives:
+//   - Legitimate script work
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1027.001/T1027.001.md
+//   - https://linux.die.net/man/1/truncate
+//   - https://linux.die.net/man/1/dd
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_binary_padding.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "/truncate" and ProcessCommandLine contains "-s +") or (FolderPath endswith "/dd" and (ProcessCommandLine contains "if=/dev/zero" or ProcessCommandLine contains "if=/dev/random" or ProcessCommandLine contains "if=/dev/urandom"))

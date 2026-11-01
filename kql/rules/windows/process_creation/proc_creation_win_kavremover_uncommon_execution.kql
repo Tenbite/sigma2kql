@@ -1,0 +1,19 @@
+// Title: Kavremover Dropped Binary LOLBIN Usage
+// Sigma ID: d047726b-c71c-4048-a99b-2e2f50dc107d
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-11-01 | Modified: -
+// ATT&CK: execution, stealth, T1127
+// Description: Detects the execution of a signed binary dropped by Kaspersky Lab Products Remover (kavremover)
+//   which can be abused as a LOLBIN to execute arbitrary commands and binaries.
+// False positives:
+//   - Unknown
+// References:
+//   - https://nasbench.medium.com/lolbined-using-kaspersky-endpoint-security-kes-installer-to-execute-arbitrary-commands-1c999f1b7fea
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_kavremover_uncommon_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains " run run-cmd " and (not((InitiatingProcessFolderPath endswith "\\cleanapi.exe" or InitiatingProcessFolderPath endswith "\\kavremover.exe")))

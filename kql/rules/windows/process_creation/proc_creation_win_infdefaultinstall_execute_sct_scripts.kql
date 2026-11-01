@@ -1,0 +1,20 @@
+// Title: InfDefaultInstall.exe .inf Execution
+// Sigma ID: ce7cf472-6fcc-490a-9481-3786840b5d9b
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2021-07-13 | Modified: 2022-10-09
+// ATT&CK: stealth, T1218
+// Description: Executes SCT script using scrobj.dll from a command in entered into a specially prepared INF
+//   file.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218/T1218.md#atomic-test-4---infdefaultinstallexe-inf-execution
+//   - https://lolbas-project.github.io/lolbas/Binaries/Infdefaultinstall/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_infdefaultinstall_execute_sct_scripts.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "InfDefaultInstall.exe " and ProcessCommandLine contains ".inf"

@@ -1,0 +1,18 @@
+// Title: Use Of The SFTP.EXE Binary As A LOLBIN
+// Sigma ID: a85ffc3a-e8fd-4040-93bf-78aff284d801
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-11-10 | Modified: -
+// ATT&CK: execution, stealth, T1218
+// Description: Detects the usage of the "sftp.exe" binary as a LOLBIN by abusing the "-D" flag
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/LOLBAS-Project/LOLBAS/pull/264
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_lolbin_sftp.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\sftp.exe" and (ProcessCommandLine contains " -D .." or ProcessCommandLine contains " -D C:\\")

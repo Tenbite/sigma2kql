@@ -1,0 +1,20 @@
+// Title: MMC20 Lateral Movement
+// Sigma ID: f1f3bf22-deb2-418d-8cce-e1a45e46a5bd
+// Status: test | Level: high
+// Author: @2xxeformyshirt (Security Risk Advisors) - rule; Teymur Kheirkhabarov (idea)
+// Date: 2020-03-04 | Modified: 2021-11-27
+// ATT&CK: execution, lateral-movement, T1021.003
+// Description: Detects MMC20.Application Lateral Movement; specifically looks for the spawning of the parent
+//   MMC.exe with a command line of "-Embedding" as a child of svchost.exe
+// False positives:
+//   - Unlikely
+// References:
+//   - https://enigma0x3.net/2017/01/05/lateral-movement-using-the-mmc20-application-com-object/
+//   - https://drive.google.com/file/d/1lKya3_mLnR3UQuCoiYruO3qgu052_iS_/view?usp=sharing
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_mmc_mmc20_lateral_movement.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\svchost.exe" and FolderPath endswith "\\mmc.exe" and ProcessCommandLine contains "-Embedding"

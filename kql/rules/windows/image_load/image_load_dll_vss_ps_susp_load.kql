@@ -1,0 +1,23 @@
+// Title: Suspicious Volume Shadow Copy VSS_PS.dll Load
+// Sigma ID: 333cdbe8-27bb-4246-bf82-b41a0dca4b70
+// Status: test | Level: high
+// Author: Markus Neis, @markus_neis
+// Date: 2021-07-07 | Modified: 2025-07-11
+// ATT&CK: impact, T1490
+// Description: Detects the image load of vss_ps.dll by uncommon executables. This DLL is used by the Volume
+//   Shadow Copy Service (VSS) to manage shadow copies of files and volumes. It is often abused by
+//   attackers to delete or manipulate shadow copies, which can hinder forensic investigations and
+//   data recovery efforts. The fact that it is loaded by processes that are not typically associated
+//   with VSS operations can indicate suspicious activity.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.virustotal.com/gui/file/ba88ca45589fae0139a40ca27738a8fc2dfbe1be5a64a9558f4e0f52b35c5add
+//   - https://twitter.com/am0nsec/status/1412232114980982787
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/image_load/image_load_dll_vss_ps_susp_load.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceImageLoadEvents
+| where FolderPath endswith "\\vss_ps.dll" and (not(((InitiatingProcessFolderPath startswith "C:\\Windows\\" and (InitiatingProcessFolderPath endswith "\\clussvc.exe" or InitiatingProcessFolderPath endswith "\\dismhost.exe" or InitiatingProcessFolderPath endswith "\\dllhost.exe" or InitiatingProcessFolderPath endswith "\\inetsrv\\appcmd.exe" or InitiatingProcessFolderPath endswith "\\inetsrv\\iissetup.exe" or InitiatingProcessFolderPath endswith "\\msiexec.exe" or InitiatingProcessFolderPath endswith "\\rundll32.exe" or InitiatingProcessFolderPath endswith "\\searchindexer.exe" or InitiatingProcessFolderPath endswith "\\srtasks.exe" or InitiatingProcessFolderPath endswith "\\svchost.exe" or InitiatingProcessFolderPath endswith "\\System32\\SystemPropertiesAdvanced.exe" or InitiatingProcessFolderPath endswith "\\taskhostw.exe" or InitiatingProcessFolderPath endswith "\\thor.exe" or InitiatingProcessFolderPath endswith "\\thor64.exe" or InitiatingProcessFolderPath endswith "\\tiworker.exe" or InitiatingProcessFolderPath endswith "\\vssvc.exe" or InitiatingProcessFolderPath endswith "\\vssadmin.exe" or InitiatingProcessFolderPath endswith "\\WmiPrvSE.exe" or InitiatingProcessFolderPath endswith "\\wsmprovhost.exe")) or (InitiatingProcessCommandLine startswith "C:\\$WinREAgent\\Scratch\\" and InitiatingProcessCommandLine contains "\\dismhost.exe {") or isnull(InitiatingProcessFolderPath)))) and (not((InitiatingProcessFolderPath startswith "C:\\Program Files\\" or InitiatingProcessFolderPath startswith "C:\\Program Files (x86)\\")))

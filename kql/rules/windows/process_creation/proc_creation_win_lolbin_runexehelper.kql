@@ -1,0 +1,19 @@
+// Title: Lolbin Runexehelper Use As Proxy
+// Sigma ID: cd71385d-fd9b-4691-9b98-2b1f7e508714
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-12-29 | Modified: -
+// ATT&CK: stealth, T1218
+// Description: Detect usage of the "runexehelper.exe" binary as a proxy to launch other programs
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/0gtweet/status/1206692239839289344
+//   - https://lolbas-project.github.io/lolbas/Binaries/Runexehelper/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_lolbin_runexehelper.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\runexehelper.exe"

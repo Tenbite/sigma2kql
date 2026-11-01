@@ -1,0 +1,18 @@
+// Title: Suspicious Package Installed - Linux
+// Sigma ID: 700fb7e8-2981-401c-8430-be58e189e741
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-01-03 | Modified: 2026-01-01
+// ATT&CK: defense-impairment, T1553.004
+// Description: Detects installation of suspicious packages using system installation utilities
+// False positives:
+//   - Legitimate administration activities
+// References:
+//   - https://gist.githubusercontent.com/MichaelKoczwara/12faba9c061c12b5814b711166de8c2f/raw/e2068486692897b620c25fde1ea258c8218fe3d3/history.txt
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_install_suspicious_packages.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (((FolderPath endswith "/apt" or FolderPath endswith "/apt-get") and ProcessCommandLine contains "install") or (FolderPath endswith "/yum" and (ProcessCommandLine contains "localinstall" or ProcessCommandLine contains "install")) or (FolderPath endswith "/rpm" and ProcessCommandLine contains "-i") or (FolderPath endswith "/dpkg" and (ProcessCommandLine contains "--install" or ProcessCommandLine contains "-i"))) and (ProcessCommandLine contains "nmap" or ProcessCommandLine contains " nc" or ProcessCommandLine contains "netcat" or ProcessCommandLine contains "wireshark" or ProcessCommandLine contains "tshark" or ProcessCommandLine contains "openconnect" or ProcessCommandLine contains "proxychains" or ProcessCommandLine contains "socat")

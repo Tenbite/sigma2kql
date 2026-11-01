@@ -1,0 +1,23 @@
+// Title: Script Interpreter Execution From Suspicious Folder
+// Sigma ID: 1228c958-e64e-4e71-92ad-7d429f4138ba
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-02-08 | Modified: 2026-02-17
+// ATT&CK: execution, T1059
+// Description: Detects suspicious script execution from suspicious directories or folders accessible by
+//   environment variables that may indicate malware activity. Script interpreters (cscript, wscript,
+//   mshta, powershell) executing from folders like Temp, Public, or user profile directories may
+//   suggest attempts to evade detection or execute malicious scripts.
+// False positives:
+//   - Various legitimate software have been observed to use similar techniques for installation or update purposes;thus, it is recommended to review and tune filters for your environment to reduce false positives before deploying to production.
+// References:
+//   - https://www.virustotal.com/gui/file/91ba814a86ddedc7a9d546e26f912c541205b47a853d227756ab1334ade92c3f
+//   - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/shuckworm-russia-ukraine-military
+//   - https://learn.microsoft.com/en-us/windows/win32/shell/csidl
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_script_exec_from_env_folder.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\mshta.exe" or FolderPath endswith "\\wscript.exe") or (ProcessCommandLine contains " -ep bypass " or ProcessCommandLine contains " -ExecutionPolicy bypass " or ProcessCommandLine contains " -w hidden " or ProcessCommandLine contains "/e:javascript " or ProcessCommandLine contains "/e:Jscript " or ProcessCommandLine contains "/e:vbscript ") or (ProcessVersionInfoOriginalFileName in~ ("cscript.exe", "mshta.exe", "wscript.exe"))) and ((ProcessCommandLine contains ":\\Perflogs\\" or ProcessCommandLine contains ":\\Users\\Public\\" or ProcessCommandLine contains "\\%Public%" or ProcessCommandLine contains "\\AppData\\Local\\Temp" or ProcessCommandLine contains "\\AppData\\Roaming\\Temp" or ProcessCommandLine contains "\\Temporary Internet" or ProcessCommandLine contains "\\Windows\\Temp" or ProcessCommandLine contains "\\Start Menu\\Programs\\Startup\\" or ProcessCommandLine contains "%TEMP%" or ProcessCommandLine contains "%TMP%" or ProcessCommandLine contains "%LocalAppData%\\Temp") or ((ProcessCommandLine contains ":\\Users\\" and ProcessCommandLine contains "\\Favorites\\") or (ProcessCommandLine contains ":\\Users\\" and ProcessCommandLine contains "\\Favourites\\") or (ProcessCommandLine contains ":\\Users\\" and ProcessCommandLine contains "\\Contacts\\") or (ProcessCommandLine contains ":\\Users\\" and ProcessCommandLine contains "\\Documents\\") or (ProcessCommandLine contains ":\\Users\\" and ProcessCommandLine contains "\\Music\\") or (ProcessCommandLine contains ":\\Users\\" and ProcessCommandLine contains "\\Pictures\\") or (ProcessCommandLine contains ":\\Users\\" and ProcessCommandLine contains "\\Videos\\"))) and (not(((InitiatingProcessFolderPath in~ ("C:\\Windows\\System32\\Msiexec.exe", "C:\\Windows\\SysWOW64\\Msiexec.exe")) and FolderPath endswith "\\powershell.exe" and (ProcessCommandLine contains "-NoProfile -ExecutionPolicy Bypass -Command" and ProcessCommandLine contains "AppData\\Local\\Temp\\" and ProcessCommandLine contains "Install-Chocolatey.ps1"))))

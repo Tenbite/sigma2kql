@@ -1,0 +1,23 @@
+// Title: CMSTP UAC Bypass via COM Object Access
+// Sigma ID: 4b60e6f2-bf39-47b4-b4ea-398e33cfe253
+// Status: stable | Level: high
+// Author: Nik Seetharaman, Christian Burkard (Nextron Systems)
+// Date: 2019-07-31 | Modified: 2024-12-01
+// ATT&CK: execution, privilege-escalation, stealth, T1548.002, T1218.003, G0069
+// Tags: car.2019-04-001
+// Description: Detects UAC Bypass Attempt Using Microsoft Connection Manager Profile Installer Autoelevate-
+//   capable COM Objects (e.g. UACMe ID of 41, 43, 58 or 65)
+// False positives:
+//   - Legitimate CMSTP use (unlikely in modern enterprise environments)
+// References:
+//   - https://web.archive.org/web/20190720093911/http://www.endurant.io/cmstp/detecting-cmstp-enabled-code-execution-and-uac-bypass-with-sysmon/
+//   - https://twitter.com/hFireF0X/status/897640081053364225
+//   - https://medium.com/falconforce/falconfriday-detecting-uac-bypasses-0xff16-86c2a9107abf
+//   - https://github.com/hfiref0x/UACME
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_uac_bypass_cmstp_com_object_access.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\DllHost.exe" and (InitiatingProcessCommandLine contains " /Processid:{3E5FC7F9-9A51-4367-9063-A120244FBEC7}" or InitiatingProcessCommandLine contains " /Processid:{3E000D72-A845-4CD9-BD83-80C07C3B881F}" or InitiatingProcessCommandLine contains " /Processid:{BD54C901-076B-434E-B6C7-17C531F4AB41}" or InitiatingProcessCommandLine contains " /Processid:{D2E7041B-2927-42FB-8E9F-7CE93B6DC937}" or InitiatingProcessCommandLine contains " /Processid:{E9495B87-D950-4AB5-87A5-FF6D70BF3E90}") and (ProcessIntegrityLevel in~ ("High", "System", "S-1-16-16384", "S-1-16-12288"))

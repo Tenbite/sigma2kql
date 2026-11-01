@@ -1,0 +1,20 @@
+// Title: MacOS Emond Launch Daemon
+// Sigma ID: 23c43900-e732-45a4-8354-63e4a6c187ce
+// Status: test | Level: medium
+// Author: Alejandro Ortuno, oscd.community
+// Date: 2020-10-23 | Modified: 2021-11-27
+// ATT&CK: persistence, privilege-escalation, T1546.014
+// Description: Detects additions to the Emond Launch Daemon that adversaries may use to gain persistence and
+//   elevate privileges.
+// False positives:
+//   - Legitimate administration activities
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1546.014/T1546.014.md
+//   - https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/file_event/file_event_macos_emond_launch_daemon.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where (FolderPath contains "/etc/emond.d/rules/" and FolderPath endswith ".plist") or FolderPath contains "/private/var/db/emondClients/"

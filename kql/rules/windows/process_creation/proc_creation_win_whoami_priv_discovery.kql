@@ -1,0 +1,19 @@
+// Title: Security Privileges Enumeration Via Whoami.EXE
+// Sigma ID: 97a80ec7-0e2f-4d05-9ef4-65760e634f6b
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2021-05-05 | Modified: 2023-02-28
+// ATT&CK: privilege-escalation, discovery, T1033
+// Description: Detects a whoami.exe executed with the /priv command line flag instructing the tool to show all
+//   current user privileges. This is often used after a privilege escalation attempt.
+// False positives:
+//   - Unknown
+// References:
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/whoami
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_whoami_priv_discovery.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\whoami.exe" or ProcessVersionInfoOriginalFileName =~ "whoami.exe") and (ProcessCommandLine contains " /priv" or ProcessCommandLine contains " -priv")

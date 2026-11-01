@@ -1,0 +1,19 @@
+// Title: IIS Native-Code Module Command Line Installation
+// Sigma ID: 9465ddf4-f9e4-4ebd-8d98-702df3a93239
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2019-12-11 | Modified: 2024-03-13
+// ATT&CK: persistence, T1505.003
+// Description: Detects suspicious IIS native-code module installations via command line
+// False positives:
+//   - Unknown as it may vary from organisation to organisation how admins use to install IIS modules
+// References:
+//   - https://researchcenter.paloaltonetworks.com/2018/01/unit42-oilrig-uses-rgdoor-iis-backdoor-targets-middle-east/
+//   - https://www.microsoft.com/security/blog/2022/07/26/malicious-iis-extensions-quietly-open-persistent-backdoors-into-servers/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_iis_appcmd_susp_module_install.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\appcmd.exe" or ProcessVersionInfoOriginalFileName =~ "appcmd.exe") and ((ProcessCommandLine contains "install" and ProcessCommandLine contains "module") and (ProcessCommandLine contains "-name:" or ProcessCommandLine contains "/name:" or ProcessCommandLine contains "–name:" or ProcessCommandLine contains "—name:" or ProcessCommandLine contains "―name:"))) and (not(InitiatingProcessFolderPath =~ "C:\\Windows\\System32\\inetsrv\\iissetup.exe"))

@@ -1,0 +1,26 @@
+// Title: Data Export From MSSQL Table Via BCP.EXE
+// Sigma ID: c615d676-f655-46b9-b913-78729021e5d7
+// Status: test | Level: medium
+// Author: Omar Khaled (@beacon_exe), MahirAli Khan (in/mahiralikhan), Nasreddine Bencherchali (Nextron Systems)
+// Date: 2024-08-20 | Modified: -
+// ATT&CK: execution, exfiltration, T1048
+// Description: Detects the execution of the BCP utility in order to export data from the database. Attackers
+//   were seen saving their malware to a database column or table and then later extracting it via
+//   "bcp.exe" into a file.
+// False positives:
+//   - Legitimate data export operations.
+// References:
+//   - https://docs.microsoft.com/en-us/sql/tools/bcp-utility
+//   - https://asec.ahnlab.com/en/61000/
+//   - https://asec.ahnlab.com/en/78944/
+//   - https://www.huntress.com/blog/attacking-mssql-servers
+//   - https://www.huntress.com/blog/attacking-mssql-servers-pt-ii
+//   - https://news.sophos.com/en-us/2024/08/07/sophos-mdr-hunt-tracks-mimic-ransomware-campaign-against-organizations-in-india/
+//   - https://research.nccgroup.com/2018/03/10/apt15-is-alive-and-strong-an-analysis-of-royalcli-and-royaldns/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_bcp_export_data.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\bcp.exe" or ProcessVersionInfoOriginalFileName =~ "BCP.exe") and (ProcessCommandLine contains " out " or ProcessCommandLine contains " queryout ")

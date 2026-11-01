@@ -1,0 +1,20 @@
+// Title: Disable Administrative Share Creation at Startup
+// Sigma ID: c7dcacd0-cc59-4004-b0a4-1d6cdebe6f3e
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-01-16 | Modified: 2024-03-25
+// ATT&CK: stealth, T1070.005
+// Description: Administrative shares are hidden network shares created by Microsoft Windows NT operating
+//   systems that grant system administrators remote access to every disk volume on a network-
+//   connected system
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.005/T1070.005.md#atomic-test-4---disable-administrative-share-creation-at-startup
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_disable_administrative_share.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey endswith "\\Services\\LanmanServer\\Parameters*" and (RegistryKey endswith "\\AutoShareWks" or RegistryKey endswith "\\AutoShareServer") and RegistryValueData =~ "DWORD (0x00000000)"

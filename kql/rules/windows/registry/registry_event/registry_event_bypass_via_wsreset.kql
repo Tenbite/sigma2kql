@@ -1,0 +1,20 @@
+// Title: UAC Bypass Via Wsreset
+// Sigma ID: 6ea3bf32-9680-422d-9f50-e90716b12a66
+// Status: test | Level: high
+// Author: oscd.community, Dmitry Uchakin
+// Date: 2020-10-07 | Modified: 2021-11-27
+// ATT&CK: privilege-escalation, T1548.002
+// Description: Unfixed method for UAC bypass from Windows 10. WSReset.exe file associated with the Windows
+//   Store. It will run a binary file contained in a low-privilege registry.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.bleepingcomputer.com/news/security/trickbot-uses-a-new-windows-10-uac-bypass-to-launch-quietly
+//   - https://lolbas-project.github.io/lolbas/Binaries/Wsreset
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_event/registry_event_bypass_via_wsreset.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey endswith "\\AppX82a6gwre4fdg3bt635tn5ctqjf8msdd2\\Shell\\open\\command"

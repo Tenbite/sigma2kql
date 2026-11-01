@@ -1,0 +1,18 @@
+// Title: Remove Immutable File Attribute
+// Sigma ID: 34979410-e4b5-4e5d-8cfb-389fdff05c12
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-09-15 | Modified: -
+// ATT&CK: defense-impairment, T1222.002
+// Description: Detects usage of the 'chattr' utility to remove immutable file attribute.
+// False positives:
+//   - Administrator interacting with immutable files (e.g. for instance backups).
+// References:
+//   - https://www.trendmicro.com/en_us/research/22/i/how-malicious-actors-abuse-native-linux-tools-in-their-attacks.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_chattr_immutable_removal.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "/chattr" and ProcessCommandLine contains " -i "

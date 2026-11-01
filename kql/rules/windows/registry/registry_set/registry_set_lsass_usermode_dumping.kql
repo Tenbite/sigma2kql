@@ -1,0 +1,21 @@
+// Title: Lsass Full Dump Request Via DumpType Registry Settings
+// Sigma ID: 33efc23c-6ea2-4503-8cfe-bdf82ce8f719
+// Status: test | Level: high
+// Author: @pbssubhash
+// Date: 2022-12-08 | Modified: 2023-08-17
+// ATT&CK: credential-access, T1003.001
+// Description: Detects the setting of the "DumpType" registry value to "2" which stands for a "Full Dump".
+//   Technique such as LSASS Shtinkering requires this value to be "2" in order to dump LSASS.
+// False positives:
+//   - Legitimate application that needs to do a full dump of their process
+// References:
+//   - https://github.com/deepinstinct/Lsass-Shtinkering
+//   - https://learn.microsoft.com/en-us/windows/win32/wer/collecting-user-mode-dumps
+//   - https://media.defcon.org/DEF%20CON%2030/DEF%20CON%2030%20presentations/Asaf%20Gilboa%20-%20LSASS%20Shtinkering%20Abusing%20Windows%20Error%20Reporting%20to%20Dump%20LSASS.pdf
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_lsass_usermode_dumping.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey contains "\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting\\LocalDumps\\DumpType" or RegistryKey contains "\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting\\LocalDumps\\lsass.exe\\DumpType") and RegistryValueData =~ "DWORD (0x00000002)"

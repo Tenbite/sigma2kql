@@ -1,0 +1,21 @@
+// Title: Potential DLL Sideloading Via DeviceEnroller.EXE
+// Sigma ID: e173ad47-4388-4012-ae62-bd13f71c18a8
+// Status: test | Level: medium
+// Author: @gott_cyber
+// Date: 2022-08-29 | Modified: 2023-02-04
+// ATT&CK: privilege-escalation, persistence, execution, stealth, T1574.001
+// Description: Detects the use of the PhoneDeepLink parameter to potentially sideload a DLL file that does not
+//   exist. This non-existent DLL file is named "ShellChromeAPI.dll". Adversaries can drop their own
+//   renamed DLL and execute it via DeviceEnroller.exe using this parameter
+// False positives:
+//   - Unknown
+// References:
+//   - https://mobile.twitter.com/0gtweet/status/1564131230941122561
+//   - https://strontic.github.io/xcyclopedia/library/DeviceEnroller.exe-24BEF0D6B0ECED36BB41831759FDE18D.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_deviceenroller_dll_sideloading.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\deviceenroller.exe" or ProcessVersionInfoOriginalFileName =~ "deviceenroller.exe") and ProcessCommandLine contains "/PhoneDeepLink"

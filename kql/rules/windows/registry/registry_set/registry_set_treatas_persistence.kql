@@ -1,0 +1,19 @@
+// Title: COM Hijacking via TreatAs
+// Sigma ID: dc5c24af-6995-49b2-86eb-a9ff62199e82
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-08-28 | Modified: 2025-07-11
+// ATT&CK: privilege-escalation, persistence, T1546.015
+// Description: Detect modification of TreatAs key to enable "rundll32.exe -sta" command
+// False positives:
+//   - Legitimate use
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1546.015/T1546.015.md
+//   - https://www.youtube.com/watch?v=3gz1QmiMhss&t=1251s
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_treatas_persistence.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey endswith "TreatAs\\(Default)" and (not(((InitiatingProcessFolderPath startswith "C:\\Program Files\\Common Files\\Microsoft Shared\\ClickToRun\\" and InitiatingProcessFolderPath endswith "\\OfficeClickToRun.exe") or (InitiatingProcessFolderPath in~ ("C:\\Program Files\\Microsoft Office\\root\\integration\\integrator.exe", "C:\\Program Files (x86)\\Microsoft Office\\root\\integration\\integrator.exe")) or InitiatingProcessFolderPath =~ "C:\\Windows\\system32\\svchost.exe" or (InitiatingProcessFolderPath in~ ("C:\\Windows\\system32\\msiexec.exe", "C:\\Windows\\SysWOW64\\msiexec.exe")))))

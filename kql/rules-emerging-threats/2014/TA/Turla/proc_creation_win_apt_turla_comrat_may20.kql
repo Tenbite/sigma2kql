@@ -1,0 +1,19 @@
+// Title: Turla Group Commands May 2020
+// Sigma ID: 9e2e51c5-c699-4794-ba5a-29f5da40ac0c
+// Status: test | Level: critical
+// Author: Florian Roth (Nextron Systems)
+// Date: 2020-05-26 | Modified: 2025-10-19
+// ATT&CK: privilege-escalation, persistence, stealth, G0010, execution, T1059.001, T1053.005, T1027
+// Tags: detection.emerging-threats
+// Description: Detects commands used by Turla group as reported by ESET in May 2020
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.welivesecurity.com/wp-content/uploads/2020/05/ESET_Turla_ComRAT.pdf
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2014/TA/Turla/proc_creation_win_apt_turla_comrat_may20.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "tracert -h 10 yahoo.com" or ProcessCommandLine contains ".WSqmCons))|iex;" or ProcessCommandLine contains "Fr`omBa`se6`4Str`ing") or (ProcessCommandLine matches regex "net\\s+use\\s+https://docs.live.net" and ProcessCommandLine contains "@aol.co.uk")

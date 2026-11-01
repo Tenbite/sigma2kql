@@ -1,0 +1,19 @@
+// Title: User Added To Admin Group Via Dscl
+// Sigma ID: b743623c-2776-40e0-87b1-682b975d0ca5
+// Status: test | Level: medium
+// Author: Sohan G (D4rkCiph3r)
+// Date: 2023-03-19 | Modified: -
+// ATT&CK: persistence, initial-access, privilege-escalation, stealth, T1078.003
+// Description: Detects attempts to create and add an account to the admin group via "dscl"
+// False positives:
+//   - Legitimate administration activities
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1078.003/T1078.003.md#atomic-test-2---create-local-account-with-admin-privileges---macos
+//   - https://ss64.com/osx/dscl.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_dscl_add_user_to_admin_group.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "/dscl" and (ProcessCommandLine contains " -append " and ProcessCommandLine contains " /Groups/admin " and ProcessCommandLine contains " GroupMembership ")

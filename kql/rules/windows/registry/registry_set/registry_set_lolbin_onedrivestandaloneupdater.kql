@@ -1,0 +1,21 @@
+// Title: Lolbas OneDriveStandaloneUpdater.exe Proxy Download
+// Sigma ID: 3aff0be0-7802-4a7e-a4fa-c60c74bc5e1d
+// Status: test | Level: high
+// Author: frack113
+// Date: 2022-05-28 | Modified: 2023-08-17
+// ATT&CK: command-and-control, T1105
+// Description: Detects setting a custom URL for OneDriveStandaloneUpdater.exe to download a file from the
+//   Internet without executing any anomalous executables with suspicious arguments. The downloaded
+//   file will be in
+//   C:\Users\redacted\AppData\Local\Microsoft\OneDrive\StandaloneUpdaterreSignInSettingsConfig.json
+// False positives:
+//   - Unknown
+// References:
+//   - https://lolbas-project.github.io/lolbas/Binaries/OneDriveStandaloneUpdater/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_lolbin_onedrivestandaloneupdater.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey contains "\\SOFTWARE\\Microsoft\\OneDrive\\UpdateOfficeConfig\\UpdateRingSettingURLFromOC"

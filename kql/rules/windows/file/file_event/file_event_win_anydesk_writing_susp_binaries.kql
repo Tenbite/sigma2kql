@@ -1,0 +1,22 @@
+// Title: Suspicious Binary Writes Via AnyDesk
+// Sigma ID: 2d367498-5112-4ae5-a06a-96e7bc33a211
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-09-28 | Modified: 2025-02-24
+// ATT&CK: command-and-control, T1219.002
+// Description: Detects AnyDesk writing binary files to disk other than "gcapi.dll". According to RedCanary
+//   research it is highly abnormal for AnyDesk to write executable files to disk besides gcapi.dll,
+//   which is a legitimate DLL that is part of the Google Chrome web browser used to interact with
+//   the Google Cloud API. (See reference section for more details)
+// False positives:
+//   - Unknown
+// References:
+//   - https://redcanary.com/blog/misbehaving-rats/
+//   - https://thedfirreport.com/2025/02/24/confluence-exploit-leads-to-lockbit-ransomware/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_anydesk_writing_susp_binaries.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where ((InitiatingProcessFolderPath endswith "\\AnyDesk.exe" or InitiatingProcessFolderPath endswith "\\AnyDeskMSI.exe") and (FolderPath endswith ".dll" or FolderPath endswith ".exe")) and (not(FolderPath endswith "\\gcapi.dll"))

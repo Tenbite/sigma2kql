@@ -1,0 +1,18 @@
+// Title: Tor Client/Browser Execution
+// Sigma ID: 62f7c9bf-9135-49b2-8aeb-1e54a6ecc13c
+// Status: test | Level: high
+// Author: frack113
+// Date: 2022-02-20 | Modified: 2025-10-27
+// ATT&CK: command-and-control, T1090.003
+// Description: Detects the use of Tor or Tor-Browser to connect to onion routing networks
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.logpoint.com/en/blog/detecting-tor-use-with-logpoint/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_browsers_tor_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessVersionInfoFileDescription =~ "Tor Browser" or ProcessVersionInfoProductName =~ "Tor Browser" or (FolderPath endswith "\\tor.exe" or FolderPath endswith "\\Tor Browser\\Browser\\firefox.exe")

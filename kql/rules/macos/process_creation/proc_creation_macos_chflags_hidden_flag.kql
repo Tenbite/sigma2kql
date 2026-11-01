@@ -1,0 +1,23 @@
+// Title: Hidden Flag Set On File/Directory Via Chflags - MacOS
+// Sigma ID: 3b2c1059-ae5f-40b6-b5d4-6106d3ac20fe
+// Status: test | Level: medium
+// Author: Omar Khaled (@beacon_exe)
+// Date: 2024-08-21 | Modified: -
+// ATT&CK: credential-access, command-and-control, stealth, T1218, T1564.004, T1552.001, T1105
+// Description: Detects the execution of the "chflags" utility with the "hidden" flag, in order to hide files on
+//   MacOS. When a file or directory has this hidden flag set, it becomes invisible to the default
+//   file listing commands and in graphical file browsers.
+// False positives:
+//   - Legitimate usage of chflags by administrators and users.
+// References:
+//   - https://www.sentinelone.com/labs/apt32-multi-stage-macos-trojan-innovates-on-crimeware-scripting-technique/
+//   - https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/
+//   - https://www.paloaltonetworks.com/content/dam/pan/en_US/assets/pdf/reports/Unit_42/unit42-wirelurker.pdf
+//   - https://ss64.com/mac/chflags.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_chflags_hidden_flag.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "/chflags" and ProcessCommandLine contains "hidden "

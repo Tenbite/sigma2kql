@@ -1,0 +1,19 @@
+// Title: Scheduled Task Executing Payload from Registry
+// Sigma ID: 86588b36-c6d3-465f-9cee-8f9093e07798
+// Status: test | Level: medium
+// Author: X__Junior (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-07-18 | Modified: -
+// ATT&CK: privilege-escalation, execution, persistence, T1053.005, T1059.001
+// Description: Detects the creation of a schtasks that potentially executes a payload stored in the Windows
+//   Registry using PowerShell.
+// False positives:
+//   - Unknown
+// References:
+//   - https://thedfirreport.com/2022/02/21/qbot-and-zerologon-lead-to-full-domain-compromise/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_schtasks_reg_loader.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\schtasks.exe" or ProcessVersionInfoOriginalFileName =~ "schtasks.exe") and ProcessCommandLine contains "/Create" and (ProcessCommandLine contains "Get-ItemProperty" or ProcessCommandLine contains " gp ") and (ProcessCommandLine contains "HKCU:" or ProcessCommandLine contains "HKLM:" or ProcessCommandLine contains "registry::" or ProcessCommandLine contains "HKEY_")) and (not((ProcessCommandLine contains "FromBase64String" or ProcessCommandLine contains "encodedcommand")))

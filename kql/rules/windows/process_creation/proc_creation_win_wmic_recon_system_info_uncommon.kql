@@ -1,0 +1,26 @@
+// Title: Uncommon System Information Discovery Via Wmic.EXE
+// Sigma ID: 9d5a1274-922a-49d0-87f3-8c653483b909
+// Status: test | Level: medium
+// Author: TropChaud
+// Date: 2023-01-26 | Modified: 2023-12-19
+// ATT&CK: discovery, T1082
+// Description: Detects the use of the WMI command-line (WMIC) utility to identify and display various system
+//   information, including OS, CPU, GPU, and disk drive names; memory capacity; display resolution;
+//   and baseboard, BIOS, and GPU driver products/versions. Some of these commands were used by
+//   Aurora Stealer in late 2022/early 2023.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/a2ccd19c37d0278b4ffa8583add3cf52060a5418/atomics/T1082/T1082.md#atomic-test-25---system-information-discovery-with-wmic
+//   - https://nwgat.ninja/getting-system-information-with-wmic-on-windows/
+//   - https://blog.sekoia.io/aurora-a-rising-stealer-flying-under-the-radar
+//   - https://blog.cyble.com/2023/01/18/aurora-a-stealer-using-shapeshifting-tactics/
+//   - https://app.any.run/tasks/a6aa0057-82ec-451f-8f99-55650ca537da/
+//   - https://www.virustotal.com/gui/file/d6f6bc10ae0e634ed4301d584f61418cee18e5d58ad9af72f8aa552dc4aaeca3/behavior
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_wmic_recon_system_info_uncommon.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessVersionInfoFileDescription =~ "WMI Commandline Utility" or ProcessVersionInfoOriginalFileName =~ "wmic.exe" or FolderPath endswith "\\WMIC.exe") and (ProcessCommandLine contains "LOGICALDISK get Name,Size,FreeSpace" or ProcessCommandLine contains "os get Caption,OSArchitecture,Version")

@@ -1,0 +1,20 @@
+// Title: Permission Misconfiguration Reconnaissance Via Findstr.EXE
+// Sigma ID: 47e4bab7-c626-47dc-967b-255608c9a920
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-08-12 | Modified: 2023-11-11
+// ATT&CK: credential-access, T1552.006
+// Description: Detects usage of findstr with the "EVERYONE" or "BUILTIN" keywords. This was seen being used in
+//   combination with "icacls" and other utilities to spot misconfigured files or folders
+//   permissions.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_findstr_recon_everyone.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (((FolderPath endswith "\\find.exe" or FolderPath endswith "\\findstr.exe") or (ProcessVersionInfoOriginalFileName in~ ("FIND.EXE", "FINDSTR.EXE"))) and (ProcessCommandLine contains "\"Everyone\"" or ProcessCommandLine contains "'Everyone'" or ProcessCommandLine contains "\"BUILTIN\\\"" or ProcessCommandLine contains "'BUILTIN\\'")) or (ProcessCommandLine contains "icacls " and ProcessCommandLine contains "findstr " and ProcessCommandLine contains "Everyone")

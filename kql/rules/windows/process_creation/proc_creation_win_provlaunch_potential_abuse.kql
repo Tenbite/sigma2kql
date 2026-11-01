@@ -1,0 +1,20 @@
+// Title: Potential Provlaunch.EXE Binary Proxy Execution Abuse
+// Sigma ID: 7f5d1c9a-3e83-48df-95a7-2b98aae6c13c
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems), Swachchhanda Shrawan Poudel
+// Date: 2023-08-08 | Modified: -
+// ATT&CK: stealth, T1218
+// Description: Detects child processes of "provlaunch.exe" which might indicate potential abuse to proxy
+//   execution.
+// False positives:
+//   - Unknown
+// References:
+//   - https://lolbas-project.github.io/lolbas/Binaries/Provlaunch/
+//   - https://twitter.com/0gtweet/status/1674399582162153472
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_provlaunch_potential_abuse.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\provlaunch.exe" and (not(((FolderPath endswith "\\calc.exe" or FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\mshta.exe" or FolderPath endswith "\\notepad.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\regsvr32.exe" or FolderPath endswith "\\rundll32.exe" or FolderPath endswith "\\wscript.exe") or (FolderPath contains ":\\PerfLogs\\" or FolderPath contains ":\\Temp\\" or FolderPath contains ":\\Users\\Public\\" or FolderPath contains "\\AppData\\Temp\\" or FolderPath contains "\\Windows\\System32\\Tasks\\" or FolderPath contains "\\Windows\\Tasks\\" or FolderPath contains "\\Windows\\Temp\\"))))

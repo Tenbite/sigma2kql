@@ -1,0 +1,19 @@
+// Title: WerFault LSASS Process Memory Dump
+// Sigma ID: c3e76af5-4ce0-4a14-9c9a-25ceb8fda182
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-06-27 | Modified: -
+// ATT&CK: credential-access, T1003.001
+// Description: Detects WerFault creating a dump file with a name that indicates that the dump file could be an
+//   LSASS process memory, which contains user credentials
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/helpsystems/nanodump
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_lsass_werfault_dump.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where InitiatingProcessFolderPath =~ "C:\\WINDOWS\\system32\\WerFault.exe" and (FolderPath contains "\\lsass" or FolderPath contains "lsass.exe")

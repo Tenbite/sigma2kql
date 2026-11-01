@@ -1,0 +1,18 @@
+// Title: Potential DLL Sideloading Of MsCorSvc.DLL
+// Sigma ID: cdb15e19-c2d0-432a-928e-e49c8c60dcf2
+// Status: test | Level: medium
+// Author: Wietze Beukema
+// Date: 2024-07-11 | Modified: 2025-02-26
+// ATT&CK: privilege-escalation, persistence, execution, stealth, T1574.001
+// Description: Detects potential DLL sideloading of "mscorsvc.dll".
+// False positives:
+//   - Legitimate applications loading their own versions of the DLL mentioned in this rule.
+// References:
+//   - https://hijacklibs.net/entries/microsoft/built-in/mscorsvc.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/image_load/image_load_side_load_mscorsvc.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceImageLoadEvents
+| where FolderPath endswith "\\mscorsvc.dll" and (not((FolderPath startswith "C:\\Windows\\Microsoft.NET\\Framework\\" or FolderPath startswith "C:\\Windows\\Microsoft.NET\\Framework64\\" or FolderPath startswith "C:\\Windows\\Microsoft.NET\\FrameworkArm\\" or FolderPath startswith "C:\\Windows\\Microsoft.NET\\FrameworkArm64\\" or FolderPath startswith "C:\\Windows\\WinSxS\\")))

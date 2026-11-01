@@ -1,0 +1,19 @@
+// Title: Potential APT-C-12 BlueMushroom DLL Load Activity Via Regsvr32
+// Sigma ID: bd70d3f8-e60e-4d25-89f0-0b5a9cff20e0
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems), Tim Shelton, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2019-10-02 | Modified: 2023-03-29
+// ATT&CK: stealth, T1218.010
+// Tags: detection.emerging-threats
+// Description: Detects potential BlueMushroom DLL loading activity via regsvr32 from AppData Local
+// False positives:
+//   - Unknown
+// References:
+//   - https://pbs.twimg.com/media/EF3yLGoWkAEGeLa?format=jpg
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2019/TA/APC-C-12/proc_creation_win_apt_aptc12_bluemushroom.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "regsvr32" and ProcessCommandLine contains "\\AppData\\Local\\" and ProcessCommandLine contains ".dll" and ProcessCommandLine contains ",DllEntry"

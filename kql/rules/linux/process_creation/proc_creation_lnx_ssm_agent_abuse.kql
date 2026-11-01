@@ -1,0 +1,20 @@
+// Title: Potential Linux Amazon SSM Agent Hijacking
+// Sigma ID: f9b3edc5-3322-4fc7-8aa3-245d646cc4b7
+// Status: test | Level: medium
+// Author: Muhammad Faisal
+// Date: 2023-08-03 | Modified: -
+// ATT&CK: command-and-control, persistence, T1219.002
+// Description: Detects potential Amazon SSM agent hijack attempts as outlined in the Mitiga research report.
+// False positives:
+//   - Legitimate activity of system administrators
+// References:
+//   - https://www.mitiga.io/blog/mitiga-security-advisory-abusing-the-ssm-agent-as-a-remote-access-trojan
+//   - https://www.bleepingcomputer.com/news/security/amazons-aws-ssm-agent-can-be-used-as-post-exploitation-rat-malware/
+//   - https://www.helpnetsecurity.com/2023/08/02/aws-instances-attackers-access/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_ssm_agent_abuse.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "/amazon-ssm-agent" and (ProcessCommandLine contains "-register " and ProcessCommandLine contains "-code " and ProcessCommandLine contains "-id " and ProcessCommandLine contains "-region ")

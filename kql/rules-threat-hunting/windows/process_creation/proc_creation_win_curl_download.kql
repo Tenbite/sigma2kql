@@ -1,0 +1,21 @@
+// Title: File Download Via Curl.EXE
+// Sigma ID: 9a517fca-4ba3-4629-9278-a68694697b81
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-07-05 | Modified: 2023-02-21
+// ATT&CK: command-and-control, T1105
+// Tags: detection.threat-hunting
+// Description: Detects file download using curl.exe
+// False positives:
+//   - Scripts created by developers and admins
+//   - Administrative activity
+//   - The "\Git\usr\bin\sh.exe" process uses the "--output" flag to download a specific file in the temp directory with the pattern "gfw-httpget-xxxxxxxx.txt "
+// References:
+//   - https://web.archive.org/web/20200128160046/https://twitter.com/reegun21/status/1222093798009790464
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-threat-hunting/windows/process_creation/proc_creation_win_curl_download.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\curl.exe" or ProcessVersionInfoProductName =~ "The curl executable") and (ProcessCommandLine contains " -O" or ProcessCommandLine contains "--remote-name" or ProcessCommandLine contains "--output")

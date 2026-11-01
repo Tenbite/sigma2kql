@@ -1,0 +1,24 @@
+// Title: New Custom Shim Database Created
+// Sigma ID: ee63c85c-6d51-4d12-ad09-04e25877a947
+// Status: test | Level: medium
+// Author: frack113, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2021-12-29 | Modified: 2023-12-06
+// ATT&CK: privilege-escalation, persistence, T1547.009
+// Description: Adversaries may establish persistence and/or elevate privileges by executing malicious content
+//   triggered by application shims. The Microsoft Windows Application Compatibility
+//   Infrastructure/Framework (Application Shim) was created to allow for backward compatibility of
+//   software as the operating system codebase changes over time.
+// False positives:
+//   - Legitimate custom SHIM installations will also trigger this rule
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1546.011/T1546.011.md#atomic-test-2---new-shim-database-files-created-in-the-default-shim-database-directory
+//   - https://www.mandiant.com/resources/blog/fin7-shim-databases-persistence
+//   - https://liberty-shell.com/sec/2020/02/25/shim-persistence/
+//   - https://andreafortuna.org/2018/11/12/process-injection-and-persistence-using-application-shimming/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_creation_new_shim_database.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath contains ":\\Windows\\apppatch\\Custom\\" or FolderPath contains ":\\Windows\\apppatch\\CustomSDB\\"

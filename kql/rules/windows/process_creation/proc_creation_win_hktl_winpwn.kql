@@ -1,0 +1,23 @@
+// Title: HackTool - WinPwn Execution
+// Sigma ID: d557dc06-62e8-4468-a8e8-7984124908ce
+// Status: test | Level: high
+// Author: Swachchhanda Shrawan Poudel
+// Date: 2023-12-04 | Modified: -
+// ATT&CK: credential-access, discovery, execution, privilege-escalation, T1046, T1082, T1106, T1518, T1548.002, T1552.001, T1555, T1555.003
+// Description: Detects commandline keywords indicative of potential usge of the tool WinPwn. A tool for Windows
+//   and Active Directory reconnaissance and exploitation.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/S3cur3Th1sSh1t/WinPwn
+//   - https://www.publicnow.com/view/EB87DB49C654D9B63995FAD4C9DE3D3CC4F6C3ED?1671634841
+//   - https://reconshell.com/winpwn-tool-for-internal-windows-pentesting-and-ad-security/
+//   - https://github.com/redcanaryco/atomic-red-team/blob/4d6c4e8e23d465af7a2388620cfe3f8c76e16cf0/atomics/T1082/T1082.md
+//   - https://grep.app/search?q=winpwn&filter[repo][0]=redcanaryco/atomic-red-team
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_winpwn.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "Offline_Winpwn" or ProcessCommandLine contains "WinPwn " or ProcessCommandLine contains "WinPwn.exe" or ProcessCommandLine contains "WinPwn.ps1"

@@ -1,0 +1,19 @@
+// Title: Potential Persistence Via Scrobj.dll COM Hijacking
+// Sigma ID: fe20dda1-6f37-4379-bbe0-a98d400cae90
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-08-20 | Modified: 2023-08-17
+// ATT&CK: privilege-escalation, persistence, T1546.015
+// Description: Detect use of scrobj.dll as this DLL looks for the ScriptletURL key to get the location of the
+//   script to execute
+// False positives:
+//   - Legitimate use of the dll.
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1546.015/T1546.015.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_persistence_scrobj_dll.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey endswith "InprocServer32\\(Default)" and RegistryValueData =~ "C:\\WINDOWS\\system32\\scrobj.dll"

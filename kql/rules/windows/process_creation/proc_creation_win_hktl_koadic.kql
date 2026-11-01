@@ -1,0 +1,20 @@
+// Title: HackTool - Koadic Execution
+// Sigma ID: 5cddf373-ef00-4112-ad72-960ac29bac34
+// Status: test | Level: high
+// Author: wagga, Jonhnathan Ribeiro, oscd.community
+// Date: 2020-01-12 | Modified: 2023-02-11
+// ATT&CK: execution, T1059.003, T1059.005, T1059.007
+// Description: Detects command line parameters used by Koadic hack tool
+// False positives:
+//   - Unknown
+// References:
+//   - https://unit42.paloaltonetworks.com/unit42-sofacy-groups-parallel-attacks/
+//   - https://github.com/offsecginger/koadic/blob/457f9a3ff394c989cdb4c599ab90eb34fb2c762c/data/stager/js/stdlib.js
+//   - https://blog.f-secure.com/hunting-for-koadic-a-com-based-rootkit/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_koadic.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\cmd.exe" or ProcessVersionInfoOriginalFileName =~ "Cmd.Exe") and (ProcessCommandLine contains "/q" and ProcessCommandLine contains "/c" and ProcessCommandLine contains "chcp")

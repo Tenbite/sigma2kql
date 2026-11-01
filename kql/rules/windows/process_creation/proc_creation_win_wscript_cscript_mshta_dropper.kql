@@ -1,0 +1,20 @@
+// Title: Potential Dropper Script Execution Via WScript/CScript/MSHTA
+// Sigma ID: cea72823-df4d-4567-950c-0b579eaf0846
+// Status: test | Level: medium
+// Author: Margaritis Dimitrios (idea), Florian Roth (Nextron Systems), oscd.community, Nasreddine Bencherchali (Nextron Systems), Dave Johnson
+// Date: 2019-01-16 | Modified: 2026-02-17
+// ATT&CK: execution, T1059.005, T1059.007
+// Description: Detects wscript/cscript/mshta executions of scripts located in user directories
+// False positives:
+//   - Some installers might generate a similar behavior. An initial baseline is required
+// References:
+//   - https://thedfirreport.com/2023/10/30/netsupport-intrusion-results-in-domain-compromise/
+//   - https://redcanary.com/blog/gootloader/
+//   - https://www.microsoft.com/en-us/security/blog/2025/03/06/malvertising-campaign-leads-to-info-stealers-hosted-on-github/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_wscript_cscript_mshta_dropper.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\wscript.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\mshta.exe") and (ProcessCommandLine contains ":\\Perflogs\\" or ProcessCommandLine contains ":\\Temp\\" or ProcessCommandLine contains ":\\Tmp\\" or ProcessCommandLine contains ":\\Users\\Public\\" or ProcessCommandLine contains ":\\Windows\\Temp\\" or ProcessCommandLine contains "\\AppData\\Local\\Temp\\" or ProcessCommandLine contains "\\AppData\\Roaming\\Temp\\" or ProcessCommandLine contains "\\Start Menu\\Programs\\Startup\\" or ProcessCommandLine contains "\\Temporary Internet" or ProcessCommandLine contains "\\Windows\\Temp" or ProcessCommandLine contains "%LocalAppData%\\Temp\\" or ProcessCommandLine contains "%TEMP%" or ProcessCommandLine contains "%TMP%") and (ProcessCommandLine contains ".hta" or ProcessCommandLine contains ".js" or ProcessCommandLine contains ".jse" or ProcessCommandLine contains ".vba" or ProcessCommandLine contains ".vbe" or ProcessCommandLine contains ".vbs" or ProcessCommandLine contains ".wsf" or ProcessCommandLine contains ".wsh")

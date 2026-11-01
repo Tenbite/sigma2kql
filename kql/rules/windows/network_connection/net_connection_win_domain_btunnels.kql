@@ -1,0 +1,19 @@
+// Title: Network Connection Initiated To BTunnels Domains
+// Sigma ID: 9e02c8ec-02b9-43e8-81eb-34a475ba7965
+// Status: test | Level: medium
+// Author: Kamran Saifullah
+// Date: 2024-09-13 | Modified: -
+// ATT&CK: exfiltration, command-and-control, T1567, T1572
+// Description: Detects network connections to BTunnels domains initiated by a process on the system. Attackers
+//   can abuse that feature to establish a reverse shell or persistence on a machine.
+// False positives:
+//   - Legitimate use of BTunnels will also trigger this.
+// References:
+//   - https://defr0ggy.github.io/research/Utilizing-BTunnel-For-Data-Exfiltration/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/network_connection/net_connection_win_domain_btunnels.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceNetworkEvents
+| where RemoteUrl endswith ".btunnel.co.in"

@@ -1,0 +1,19 @@
+// Title: SyncAppvPublishingServer VBS Execute Arbitrary PowerShell Code
+// Sigma ID: 36475a7d-0f6d-4dce-9b01-6aeb473bbaf1
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2021-07-16 | Modified: 2022-06-22
+// ATT&CK: stealth, T1218, T1216
+// Description: Executes arbitrary PowerShell code using SyncAppvPublishingServer.vbs
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1216/T1216.md
+//   - https://lolbas-project.github.io/lolbas/Binaries/Syncappvpublishingserver/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_lolbin_syncappvpublishingserver_vbs_execute_psh.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "\\SyncAppvPublishingServer.vbs" and ProcessCommandLine contains ";"

@@ -1,0 +1,21 @@
+// Title: APT27 - Emissary Panda Activity
+// Sigma ID: 9aa01d62-7667-4d3b-acb8-8cb5103e2014
+// Status: test | Level: critical
+// Author: Florian Roth (Nextron Systems)
+// Date: 2018-09-03 | Modified: 2023-03-09
+// ATT&CK: privilege-escalation, persistence, execution, stealth, T1574.001, G0027
+// Tags: detection.emerging-threats
+// Description: Detects the execution of DLL side-loading malware used by threat group Emissary Panda aka APT27
+// False positives:
+//   - Unlikely
+// References:
+//   - https://app.any.run/tasks/579e7587-f09d-4aae-8b07-472833262965
+//   - https://twitter.com/cyb3rops/status/1168863899531132929
+//   - https://research.nccgroup.com/2018/05/18/emissary-panda-a-potential-new-malicious-tool/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2018/TA/APT27/proc_creation_win_apt_apt27_emissary_panda.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (InitiatingProcessFolderPath endswith "\\sllauncher.exe" and FolderPath endswith "\\svchost.exe") or (InitiatingProcessFolderPath contains "\\AppData\\Roaming\\" and FolderPath endswith "\\svchost.exe" and ProcessCommandLine contains "-k")

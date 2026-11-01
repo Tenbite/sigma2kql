@@ -1,0 +1,21 @@
+// Title: Process Proxy Execution Via Squirrel.EXE
+// Sigma ID: 45239e6a-b035-4aaf-b339-8ad379fcb67e
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems), Karneades / Markus Neis, Jonhnathan Ribeiro, oscd.community
+// Date: 2022-06-09 | Modified: 2025-10-07
+// ATT&CK: execution, stealth, T1218
+// Description: Detects the usage of the "Squirrel.exe" binary to execute arbitrary processes. This binary is
+//   part of multiple Electron based software installations (Slack, Teams, Discord, etc.)
+// False positives:
+//   - Expected FP with some Electron based applications such as (1Clipboard, Beaker Browser, Caret, Discord, GitHub Desktop, etc.)
+// References:
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Squirrel/
+//   - http://www.hexacorn.com/blog/2019/03/30/sqirrel-packages-manager-as-a-lolbin-a-k-a-many-electron-apps-are-lolbins-by-default/
+//   - http://www.hexacorn.com/blog/2018/08/16/squirrel-as-a-lolbin/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_squirrel_proxy_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\squirrel.exe" or FolderPath endswith "\\update.exe") and (ProcessCommandLine contains "--processStart" or ProcessCommandLine contains "--processStartAndWait" or ProcessCommandLine contains "--createShortcut")) and (not((((ProcessCommandLine contains ":\\Users\\" and ProcessCommandLine contains "\\AppData\\Local\\Discord\\Update.exe" and ProcessCommandLine contains "Discord.exe") and (ProcessCommandLine contains "--createShortcut" or ProcessCommandLine contains "--processStart")) or ((ProcessCommandLine contains ":\\Users\\" and ProcessCommandLine contains "\\AppData\\Local\\GitHubDesktop\\Update.exe" and ProcessCommandLine contains "GitHubDesktop.exe") and (ProcessCommandLine contains "--createShortcut" or ProcessCommandLine contains "--processStartAndWait")) or ((ProcessCommandLine contains ":\\Users\\" and ProcessCommandLine contains "\\AppData\\Local\\Microsoft\\Teams\\Update.exe" and ProcessCommandLine contains "Teams.exe") and (ProcessCommandLine contains "--processStart" or ProcessCommandLine contains "--createShortcut")) or ((ProcessCommandLine contains ":\\Users\\" and ProcessCommandLine contains "\\AppData\\Local\\yammerdesktop\\Update.exe" and ProcessCommandLine contains "Yammer.exe") and (ProcessCommandLine contains "--processStart" or ProcessCommandLine contains "--createShortcut")))))

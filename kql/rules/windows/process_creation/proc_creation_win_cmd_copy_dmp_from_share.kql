@@ -1,0 +1,19 @@
+// Title: Copy .DMP/.DUMP Files From Remote Share Via Cmd.EXE
+// Sigma ID: 044ba588-dff4-4918-9808-3f95e8160606
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-09-27 | Modified: 2023-09-12
+// ATT&CK: credential-access
+// Description: Detects usage of the copy builtin cmd command to copy files with the ".dmp"/".dump" extension
+//   from a remote share
+// False positives:
+//   - Unknown
+// References:
+//   - https://thedfirreport.com/2022/09/26/bumblebee-round-two/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_cmd_copy_dmp_from_share.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\cmd.exe" or ProcessVersionInfoOriginalFileName =~ "Cmd.Exe") and ((ProcessCommandLine contains "copy " and ProcessCommandLine contains " \\\\") and (ProcessCommandLine contains ".dmp" or ProcessCommandLine contains ".dump" or ProcessCommandLine contains ".hdmp"))

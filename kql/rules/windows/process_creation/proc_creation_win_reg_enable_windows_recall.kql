@@ -1,0 +1,23 @@
+// Title: Windows Recall Feature Enabled Via Reg.EXE
+// Sigma ID: 817f252c-5143-4dae-b418-48c3e9f63728
+// Status: test | Level: medium
+// Author: Sajid Nawaz Khan
+// Date: 2024-06-02 | Modified: -
+// ATT&CK: collection, T1113
+// Description: Detects the enabling of the Windows Recall feature via registry manipulation. Windows Recall can
+//   be enabled by deleting the existing "DisableAIDataAnalysis" value, or setting it to 0.
+//   Adversaries may enable Windows Recall as part of post-exploitation discovery and collection
+//   activities. This rule assumes that Recall is already explicitly disabled on the host, and
+//   subsequently enabled by the adversary.
+// False positives:
+//   - Legitimate use/activation of Windows Recall
+// References:
+//   - https://learn.microsoft.com/en-us/windows/client-management/manage-recall
+//   - https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowsai#disableaidataanalysis
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_reg_enable_windows_recall.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\reg.exe" or ProcessVersionInfoOriginalFileName =~ "reg.exe") and (ProcessCommandLine contains "Microsoft\\Windows\\WindowsAI" and ProcessCommandLine contains "DisableAIDataAnalysis") and ((ProcessCommandLine contains "add" or ProcessCommandLine contains "0") or ProcessCommandLine contains "delete")

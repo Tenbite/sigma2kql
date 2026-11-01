@@ -1,0 +1,20 @@
+// Title: Firewall Rule Update Via Netsh.EXE
+// Sigma ID: a70dcb37-3bee-453a-99df-d0c683151be6
+// Status: test | Level: medium
+// Author: X__Junior (Nextron Systems)
+// Date: 2023-07-18 | Modified: -
+// ATT&CK: defense-impairment
+// Description: Detects execution of netsh with the "advfirewall" and the "set" option in order to set new
+//   values for properties of a existing rule
+// False positives:
+//   - Legitimate administration activity
+//   - Software installations and removal
+// References:
+//   - https://ss64.com/nt/netsh.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_netsh_fw_set_rule.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\netsh.exe" or ProcessVersionInfoOriginalFileName =~ "netsh.exe") and (ProcessCommandLine contains " firewall " and ProcessCommandLine contains " set ")

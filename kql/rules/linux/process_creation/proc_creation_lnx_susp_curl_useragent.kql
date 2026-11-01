@@ -1,0 +1,19 @@
+// Title: Suspicious Curl Change User Agents - Linux
+// Sigma ID: b86d356d-6093-443d-971c-9b07db583c68
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-09-15 | Modified: -
+// ATT&CK: command-and-control, T1071.001
+// Description: Detects a suspicious curl process start on linux with set useragent options
+// False positives:
+//   - Scripts created by developers and admins
+//   - Administrative activity
+// References:
+//   - https://curl.se/docs/manpage.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_susp_curl_useragent.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "/curl" and (ProcessCommandLine contains " -A " or ProcessCommandLine contains " --user-agent ")

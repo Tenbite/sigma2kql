@@ -1,0 +1,21 @@
+// Title: Nohup Execution
+// Sigma ID: e4ffe466-6ff8-48d4-94bd-e32d1a6061e2
+// Status: test | Level: medium
+// Author: Christopher Peacock @SecurePeacock, SCYTHE @scythe_io
+// Date: 2022-06-06 | Modified: -
+// ATT&CK: execution, T1059.004
+// Description: Detects usage of nohup which could be leveraged by an attacker to keep a process running or
+//   break out from restricted environments
+// False positives:
+//   - Administrators or installed processes that leverage nohup
+// References:
+//   - https://gtfobins.github.io/gtfobins/nohup/
+//   - https://en.wikipedia.org/wiki/Nohup
+//   - https://www.computerhope.com/unix/unohup.htm
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_nohup.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "/nohup"

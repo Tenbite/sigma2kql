@@ -1,0 +1,19 @@
+// Title: User Added to Remote Desktop Users Group
+// Sigma ID: ffa28e60-bdb1-46e0-9f82-05f7a61cc06e
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2021-12-06 | Modified: 2022-09-09
+// ATT&CK: initial-access, persistence, lateral-movement, T1133, T1136.001, T1021.001
+// Description: Detects addition of users to the local Remote Desktop Users group via "Net" or "Add-
+//   LocalGroupMember".
+// False positives:
+//   - Administrative activity
+// References:
+//   - https://www.microsoft.com/security/blog/2021/11/16/evolving-trends-in-iranian-threat-actor-activity-mstic-presentation-at-cyberwarcon-2021/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_add_user_remote_desktop_group.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((ProcessCommandLine contains "localgroup " and ProcessCommandLine contains " /add") or (ProcessCommandLine contains "Add-LocalGroupMember " and ProcessCommandLine contains " -Group ")) and (ProcessCommandLine contains "Remote Desktop Users" or ProcessCommandLine contains "Utilisateurs du Bureau à distance" or ProcessCommandLine contains "Usuarios de escritorio remoto")

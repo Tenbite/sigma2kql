@@ -1,0 +1,19 @@
+// Title: Suspicious GUP Usage
+// Sigma ID: 0a4f6091-223b-41f6-8743-f322ec84930b
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2019-02-06 | Modified: 2022-08-13
+// ATT&CK: privilege-escalation, persistence, execution, stealth, T1574.001
+// Description: Detects execution of the Notepad++ updater in a suspicious directory, which is often used in DLL
+//   side-loading attacks
+// False positives:
+//   - Execution of tools named GUP.exe and located in folders different than Notepad++\updater
+// References:
+//   - https://www.fireeye.com/blog/threat-research/2018/09/apt10-targeting-japanese-corporations-using-updated-ttps.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_gup_suspicious_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\GUP.exe" and (not(((FolderPath endswith "\\Program Files\\Notepad++\\updater\\GUP.exe" or FolderPath endswith "\\Program Files (x86)\\Notepad++\\updater\\GUP.exe") or (FolderPath contains "\\Users\\" and (FolderPath endswith "\\AppData\\Local\\Notepad++\\updater\\GUP.exe" or FolderPath endswith "\\AppData\\Roaming\\Notepad++\\updater\\GUP.exe")))))

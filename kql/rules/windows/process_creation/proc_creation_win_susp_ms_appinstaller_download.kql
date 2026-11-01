@@ -1,0 +1,21 @@
+// Title: Potential File Download Via MS-AppInstaller Protocol Handler
+// Sigma ID: 180c7c5c-d64b-4a63-86e9-68910451bc8b
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems), Swachchhanda Shrawan Poudel
+// Date: 2023-11-09 | Modified: -
+// ATT&CK: execution, stealth, T1218
+// Description: Detects usage of the "ms-appinstaller" protocol handler via command line to potentially download
+//   arbitrary files via AppInstaller.EXE The downloaded files are temporarly stored in ":\Users\%use
+//   rname%\AppData\Local\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\AC\INetCache\<RANDOM-
+//   8-CHAR-DIRECTORY>"
+// False positives:
+//   - Unknown
+// References:
+//   - https://lolbas-project.github.io/lolbas/Binaries/AppInstaller/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_ms_appinstaller_download.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "ms-appinstaller://" and ProcessCommandLine contains "source=") and ProcessCommandLine contains "http"

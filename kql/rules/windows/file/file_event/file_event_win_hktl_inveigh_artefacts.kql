@@ -1,0 +1,20 @@
+// Title: HackTool - Inveigh Execution Artefacts
+// Sigma ID: bb09dd3e-2b78-4819-8e35-a7c1b874e449
+// Status: test | Level: critical
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-10-24 | Modified: 2024-06-27
+// ATT&CK: command-and-control, T1219.002
+// Description: Detects the presence and execution of Inveigh via dropped artefacts
+// False positives:
+//   - Unlikely
+// References:
+//   - https://github.com/Kevin-Robertson/Inveigh/blob/29d9e3c3a625b3033cdaf4683efaafadcecb9007/Inveigh/Support/Output.cs
+//   - https://github.com/Kevin-Robertson/Inveigh/blob/29d9e3c3a625b3033cdaf4683efaafadcecb9007/Inveigh/Support/Control.cs
+//   - https://thedfirreport.com/2020/11/23/pysa-mespinoza-ransomware/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_hktl_inveigh_artefacts.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath endswith "\\Inveigh-Log.txt" or FolderPath endswith "\\Inveigh-Cleartext.txt" or FolderPath endswith "\\Inveigh-NTLMv1Users.txt" or FolderPath endswith "\\Inveigh-NTLMv2Users.txt" or FolderPath endswith "\\Inveigh-NTLMv1.txt" or FolderPath endswith "\\Inveigh-NTLMv2.txt" or FolderPath endswith "\\Inveigh-FormInput.txt" or FolderPath endswith "\\Inveigh.dll" or FolderPath endswith "\\Inveigh.exe" or FolderPath endswith "\\Inveigh.ps1" or FolderPath endswith "\\Inveigh-Relay.ps1"

@@ -1,0 +1,18 @@
+// Title: Potential Discovery Activity Using Find - MacOS
+// Sigma ID: 85de3a19-b675-4a51-bfc6-b11a5186c971
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-12-28 | Modified: -
+// ATT&CK: discovery, T1083
+// Description: Detects usage of "find" binary in a suspicious manner to perform discovery
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/SaiSathvik1/Linux-Privilege-Escalation-Notes
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_susp_find_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "/find" and (ProcessCommandLine contains "-perm -4000" or ProcessCommandLine contains "-perm -2000" or ProcessCommandLine contains "-perm 0777" or ProcessCommandLine contains "-perm -222" or ProcessCommandLine contains "-perm -o w" or ProcessCommandLine contains "-perm -o x" or ProcessCommandLine contains "-perm -u=s" or ProcessCommandLine contains "-perm -g=s")

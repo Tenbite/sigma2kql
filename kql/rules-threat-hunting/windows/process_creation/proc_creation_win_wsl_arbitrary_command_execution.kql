@@ -1,0 +1,22 @@
+// Title: Arbitrary Command Execution Using WSL
+// Sigma ID: dec44ca7-61ad-493c-bfd7-8819c5faa09b
+// Status: test | Level: medium
+// Author: oscd.community, Zach Stanford @svch0st, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2020-10-05 | Modified: 2023-04-12
+// ATT&CK: execution, stealth, T1218, T1202
+// Tags: detection.threat-hunting
+// Description: Detects potential abuse of Windows Subsystem for Linux (WSL) binary as a Living of the Land
+//   binary in order to execute arbitrary Linux or Windows commands.
+// False positives:
+//   - Automation and orchestration scripts may use this method to execute scripts etc.
+//   - Legitimate use by Windows to kill processes opened via WSL (example VsCode WSL server)
+// References:
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Wsl/
+//   - https://twitter.com/nas_bench/status/1535431474429808642
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-threat-hunting/windows/process_creation/proc_creation_win_wsl_arbitrary_command_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\wsl.exe" or ProcessVersionInfoOriginalFileName =~ "wsl.exe") and (ProcessCommandLine contains " -e " or ProcessCommandLine contains " --exec" or ProcessCommandLine contains " --system" or ProcessCommandLine contains " --shell-type " or ProcessCommandLine contains " /mnt/c" or ProcessCommandLine contains " --user root" or ProcessCommandLine contains " -u root" or ProcessCommandLine contains "--debug-shell")) and (not((InitiatingProcessFolderPath endswith "\\cmd.exe" and (ProcessCommandLine contains " -d " and ProcessCommandLine contains " -e kill "))))

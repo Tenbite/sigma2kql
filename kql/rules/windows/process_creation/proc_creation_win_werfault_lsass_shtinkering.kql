@@ -1,0 +1,20 @@
+// Title: Potential Credential Dumping Via WER
+// Sigma ID: 9a4ccd1a-3526-4d99-b980-9f9c5d3a6ff3
+// Status: test | Level: high
+// Author: @pbssubhash , Nasreddine Bencherchali
+// Date: 2022-12-08 | Modified: 2022-12-09
+// ATT&CK: credential-access, T1003.001
+// Description: Detects potential credential dumping via Windows Error Reporting LSASS Shtinkering technique
+//   which uses the Windows Error Reporting to dump lsass
+// False positives:
+//   - Windows Error Reporting might produce similar behavior. In that case, check the PID associated with the "-p" parameter in the CommandLine.
+// References:
+//   - https://github.com/deepinstinct/Lsass-Shtinkering
+//   - https://media.defcon.org/DEF%20CON%2030/DEF%20CON%2030%20presentations/Asaf%20Gilboa%20-%20LSASS%20Shtinkering%20Abusing%20Windows%20Error%20Reporting%20to%20Dump%20LSASS.pdf
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_werfault_lsass_shtinkering.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\Werfault.exe" or ProcessVersionInfoOriginalFileName =~ "WerFault.exe") and ((InitiatingProcessAccountName contains "AUTHORI" or InitiatingProcessAccountName contains "AUTORI") and (AccountName contains "AUTHORI" or AccountName contains "AUTORI") and (ProcessCommandLine contains " -u -p " and ProcessCommandLine contains " -ip " and ProcessCommandLine contains " -s "))) and (not(InitiatingProcessFolderPath =~ "C:\\Windows\\System32\\lsass.exe"))

@@ -1,0 +1,25 @@
+// Title: PUA - PingCastle Execution From Potentially Suspicious Parent
+// Sigma ID: b37998de-a70b-4f33-b219-ec36bf433dc0
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems), X__Junior (Nextron Systems)
+// Date: 2024-01-11 | Modified: -
+// ATT&CK: reconnaissance, T1595
+// Description: Detects the execution of PingCastle, a tool designed to quickly assess the Active Directory
+//   security level via a script located in a potentially suspicious or uncommon location.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/vletoux/pingcastle
+//   - https://thedfirreport.com/2023/10/30/netsupport-intrusion-results-in-domain-compromise/
+//   - https://github.com/fengjixuchui/Start-ADEnum/blob/e237a739db98b6104427d833004836507da36a58/Functions/Start-ADEnum.ps1#L450
+//   - https://github.com/lkys37en/Start-ADEnum/blob/5b42c54215fe5f57fc59abc52c20487d15764005/Functions/Start-ADEnum.ps1#L680
+//   - https://github.com/projectHULK/AD_Recon/blob/dde2daba9b3393a9388cbebda87068972cc0bd3b/SecurityAssessment.ps1#L2699
+//   - https://github.com/802-1x/Compliance/blob/2e53df8b6e89686a0b91116b3f42c8f717dca820/Ping%20Castle/Get-PingCastle-HTMLComplianceReport.ps1#L8
+//   - https://github.com/EvotecIT/TheDashboard/blob/481a9ce8f82f2fd55fe65220ee6486bae6df0c9d/Examples/RunReports/PingCastle.ps1
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_pua_pingcastle_script_parent.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((InitiatingProcessCommandLine contains ".bat" or InitiatingProcessCommandLine contains ".chm" or InitiatingProcessCommandLine contains ".cmd" or InitiatingProcessCommandLine contains ".hta" or InitiatingProcessCommandLine contains ".htm" or InitiatingProcessCommandLine contains ".html" or InitiatingProcessCommandLine contains ".js" or InitiatingProcessCommandLine contains ".lnk" or InitiatingProcessCommandLine contains ".ps1" or InitiatingProcessCommandLine contains ".vbe" or InitiatingProcessCommandLine contains ".vbs" or InitiatingProcessCommandLine contains ".wsf") or (InitiatingProcessCommandLine contains ":\\Perflogs\\" or InitiatingProcessCommandLine contains ":\\Temp\\" or InitiatingProcessCommandLine contains ":\\Users\\Public\\" or InitiatingProcessCommandLine contains ":\\Windows\\Temp\\" or InitiatingProcessCommandLine contains "\\AppData\\Local\\Temp" or InitiatingProcessCommandLine contains "\\AppData\\Roaming\\" or InitiatingProcessCommandLine contains "\\Temporary Internet") or ((InitiatingProcessCommandLine contains ":\\Users\\" and InitiatingProcessCommandLine contains "\\Favorites\\") or (InitiatingProcessCommandLine contains ":\\Users\\" and InitiatingProcessCommandLine contains "\\Favourites\\") or (InitiatingProcessCommandLine contains ":\\Users\\" and InitiatingProcessCommandLine contains "\\Contacts\\"))) and (InitiatingProcessCommandLine contains ".bat" or InitiatingProcessCommandLine contains ".chm" or InitiatingProcessCommandLine contains ".cmd" or InitiatingProcessCommandLine contains ".hta" or InitiatingProcessCommandLine contains ".htm" or InitiatingProcessCommandLine contains ".html" or InitiatingProcessCommandLine contains ".js" or InitiatingProcessCommandLine contains ".lnk" or InitiatingProcessCommandLine contains ".ps1" or InitiatingProcessCommandLine contains ".vbe" or InitiatingProcessCommandLine contains ".vbs" or InitiatingProcessCommandLine contains ".wsf") and (FolderPath endswith "\\PingCastle.exe" or ProcessVersionInfoOriginalFileName =~ "PingCastle.exe" or ProcessVersionInfoProductName =~ "Ping Castle" or (ProcessCommandLine contains "--scanner aclcheck" or ProcessCommandLine contains "--scanner antivirus" or ProcessCommandLine contains "--scanner computerversion" or ProcessCommandLine contains "--scanner foreignusers" or ProcessCommandLine contains "--scanner laps_bitlocker" or ProcessCommandLine contains "--scanner localadmin" or ProcessCommandLine contains "--scanner nullsession" or ProcessCommandLine contains "--scanner nullsession-trust" or ProcessCommandLine contains "--scanner oxidbindings" or ProcessCommandLine contains "--scanner remote" or ProcessCommandLine contains "--scanner share" or ProcessCommandLine contains "--scanner smb" or ProcessCommandLine contains "--scanner smb3querynetwork" or ProcessCommandLine contains "--scanner spooler" or ProcessCommandLine contains "--scanner startup" or ProcessCommandLine contains "--scanner zerologon") or ProcessCommandLine contains "--no-enum-limit" or (ProcessCommandLine contains "--healthcheck" and ProcessCommandLine contains "--level Full") or (ProcessCommandLine contains "--healthcheck" and ProcessCommandLine contains "--server "))

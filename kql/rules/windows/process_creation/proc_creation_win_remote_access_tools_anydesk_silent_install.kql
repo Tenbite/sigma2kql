@@ -1,0 +1,20 @@
+// Title: Remote Access Tool - AnyDesk Silent Installation
+// Sigma ID: 114e7f1c-f137-48c8-8f54-3088c24ce4b9
+// Status: test | Level: high
+// Author: Ján Trenčanský
+// Date: 2021-08-06 | Modified: 2023-03-05
+// ATT&CK: command-and-control, T1219.002
+// Description: Detects AnyDesk Remote Desktop silent installation. Which can be used by attackers to gain
+//   remote access.
+// False positives:
+//   - Legitimate deployment of AnyDesk
+// References:
+//   - https://twitter.com/TheDFIRReport/status/1423361119926816776?s=20
+//   - https://support.anydesk.com/Automatic_Deployment
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk_silent_install.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "--install" and ProcessCommandLine contains "--start-with-win" and ProcessCommandLine contains "--silent"

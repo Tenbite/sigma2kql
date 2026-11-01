@@ -1,0 +1,19 @@
+// Title: Base64 Encoded PowerShell Command Detected
+// Sigma ID: e32d4572-9826-4738-b651-95fa63747e8a
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2020-01-29 | Modified: 2023-01-26
+// ATT&CK: stealth, T1027, execution, T1140, T1059.001
+// Description: Detects usage of the "FromBase64String" function in the commandline which is used to decode a
+//   base64 encoded string
+// False positives:
+//   - Administrative script libraries
+// References:
+//   - https://gist.github.com/Neo23x0/6af876ee72b51676c82a2db8d2cd3639
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_powershell_frombase64string.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "::FromBase64String("

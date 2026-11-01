@@ -1,0 +1,19 @@
+// Title: Execution via stordiag.exe
+// Sigma ID: 961e0abb-1b1e-4c84-a453-aafe56ad0d34
+// Status: test | Level: high
+// Author: Austin Songer (@austinsonger)
+// Date: 2021-10-21 | Modified: 2022-12-25
+// ATT&CK: stealth, T1218
+// Description: Detects the use of stordiag.exe to execute schtasks.exe systeminfo.exe and fltmc.exe
+// False positives:
+//   - Legitimate usage of stordiag.exe.
+// References:
+//   - https://strontic.github.io/xcyclopedia/library/stordiag.exe-1F08FC87C373673944F6A7E8B18CD845.html
+//   - https://twitter.com/eral4m/status/1451112385041911809
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_stordiag_susp_child_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (InitiatingProcessFolderPath endswith "\\stordiag.exe" and (FolderPath endswith "\\schtasks.exe" or FolderPath endswith "\\systeminfo.exe" or FolderPath endswith "\\fltmc.exe")) and (not((InitiatingProcessFolderPath startswith "c:\\windows\\system32\\" or InitiatingProcessFolderPath startswith "c:\\windows\\syswow64\\")))

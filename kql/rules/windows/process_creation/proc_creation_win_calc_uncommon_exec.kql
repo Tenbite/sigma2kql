@@ -1,0 +1,19 @@
+// Title: Suspicious Calculator Usage
+// Sigma ID: 737e618a-a410-49b5-bec3-9e55ff7fbc15
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2019-02-09 | Modified: 2023-11-09
+// ATT&CK: stealth, T1036
+// Description: Detects suspicious use of 'calc.exe' with command line parameters or in a suspicious directory,
+//   which is likely caused by some PoC or detection evasion.
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/ItsReallyNick/status/1094080242686312448
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_calc_uncommon_exec.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "\\calc.exe " or (FolderPath endswith "\\calc.exe" and (not((FolderPath contains ":\\Windows\\System32\\" or FolderPath contains ":\\Windows\\SysWOW64\\" or FolderPath contains ":\\Windows\\WinSxS\\"))))

@@ -1,0 +1,24 @@
+// Title: Taskkill Symantec Endpoint Protection
+// Sigma ID: 4a6713f6-3331-11ed-a261-0242ac120002
+// Status: test | Level: high
+// Author: Ilya Krestinichev, Florian Roth (Nextron Systems)
+// Date: 2022-09-13 | Modified: -
+// ATT&CK: defense-impairment, T1685
+// Description: Detects one of the possible scenarios for disabling Symantec Endpoint Protection. Symantec
+//   Endpoint Protection antivirus software services incorrectly implement the protected service
+//   mechanism. As a result, the NT AUTHORITY/SYSTEM user can execute the taskkill /im command
+//   several times ccSvcHst.exe /f, thereby killing the process belonging to the service, and thus
+//   shutting down the service.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.exploit-db.com/exploits/37525
+//   - https://community.spiceworks.com/topic/2195015-batch-script-to-uninstall-symantec-endpoint-protection
+//   - https://community.broadcom.com/symantecenterprise/communities/community-home/digestviewer/viewthread?MessageKey=6ce94b67-74e1-4333-b16f-000b7fd874f0&CommunityKey=1ecf5f55-9545-44d6-b0f4-4e4a7f5f5e68&tab=digestviewer
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_taskkill_sep.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "taskkill" and ProcessCommandLine contains " /F " and ProcessCommandLine contains " /IM " and ProcessCommandLine contains "ccSvcHst.exe"

@@ -1,0 +1,29 @@
+// Title: Manual Execution of Script Inside of a Compressed File
+// Sigma ID: 95724fc1-a258-4674-97db-a30351981c5a
+// Status: test | Level: medium
+// Author: @kostastsale
+// Date: 2023-02-15 | Modified: 2024-08-13
+// ATT&CK: execution, T1059
+// Tags: detection.threat-hunting
+// Description: This is a threat-hunting query to collect information related to the interactive execution of a
+//   script from inside a compressed file (zip/rar). Windows will automatically run the script using
+//   scripting interpreters such as wscript and cscript binaries. From the query below, the child
+//   process is the script interpreter that will execute the script. The script extension is also a
+//   set of standard extensions that Windows OS recognizes. Selections 1-3 contain three different
+//   execution scenarios. 1. Compressed file opened using 7zip. 2. Compressed file opened using
+//   WinRar. 3. Compressed file opened using native windows File Explorer capabilities. When the
+//   malicious script is double-clicked, it will be extracted to the respected directories as
+//   signified by the CommandLine on each of the three Selections. It will then be executed using the
+//   relevant script interpreter."
+// False positives:
+//   - Batch files may produce a lot of noise, as many applications appear to bundle them as part of their installation process. You should baseline your environment and generate a new query excluding the noisy and expected activity. Some false positives may come up depending on your environment. All results should be investigated thoroughly before filtering out results.
+// References:
+//   - https://app.any.run/tasks/25970bb5-f864-4e9e-9e1b-cc8ff9e6386a
+//   - https://app.any.run/tasks/fa99cedc-9d2f-4115-a08e-291429ce3692
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-threat-hunting/windows/process_creation/proc_creation_win_susp_script_exec_from_compressed_parent.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((InitiatingProcessFolderPath matches regex ".*\\\\7z.*\\.exe" and ProcessCommandLine matches regex ".*\\\\AppData\\\\local\\\\temp\\\\7z.*\\\\.*") or (InitiatingProcessFolderPath endswith "\\winrar.exe" and ProcessCommandLine matches regex ".*\\\\AppData\\\\local\\\\temp\\\\rar.*\\\\.*") or (InitiatingProcessFolderPath endswith "\\explorer.exe" and (ProcessCommandLine contains "\\AppData\\local\\temp*.rar\\" or ProcessCommandLine contains "\\AppData\\local\\temp*.zip\\"))) and ((FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\mshta.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\wscript.exe") and (ProcessCommandLine endswith ".hta" or ProcessCommandLine endswith ".js" or ProcessCommandLine endswith ".jse" or ProcessCommandLine endswith ".ps1" or ProcessCommandLine endswith ".vbe" or ProcessCommandLine endswith ".vbs" or ProcessCommandLine endswith ".wsf" or ProcessCommandLine endswith ".wsh"))

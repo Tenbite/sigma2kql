@@ -1,0 +1,21 @@
+// Title: Suspicious Manipulation Of Default Accounts Via Net.EXE
+// Sigma ID: 5b768e71-86f2-4879-b448-81061cbae951
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-09-01 | Modified: 2023-02-21
+// ATT&CK: collection, T1560.001
+// Description: Detects suspicious manipulations of default accounts such as 'administrator' and 'guest'. For
+//   example 'enable' or 'disable' accounts or change the password...etc
+// False positives:
+//   - Some false positives could occur with the admin or guest account. It depends on the scripts being used by the admins in your env. If you experience a lot of FP you could reduce the level to medium
+// References:
+//   - https://www.trellix.com/en-sg/about/newsroom/stories/threat-labs/lockergoga-ransomware-family-used-in-targeted-attacks.html
+//   - https://redacted.com/blog/bianlian-ransomware-gang-gives-it-a-go/
+//   - https://www.microsoft.com/security/blog/2022/09/07/profiling-dev-0270-phosphorus-ransomware-operations/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_net_user_default_accounts_manipulation.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (((FolderPath endswith "\\net.exe" or FolderPath endswith "\\net1.exe") or (ProcessVersionInfoOriginalFileName in~ ("net.exe", "net1.exe"))) and ProcessCommandLine contains " user " and (ProcessCommandLine contains " Järjestelmänvalvoja " or ProcessCommandLine contains " Rendszergazda " or ProcessCommandLine contains " Администратор " or ProcessCommandLine contains " Administrateur " or ProcessCommandLine contains " Administrador " or ProcessCommandLine contains " Administratör " or ProcessCommandLine contains " Administrator " or ProcessCommandLine contains " guest " or ProcessCommandLine contains " DefaultAccount " or ProcessCommandLine contains " \"Järjestelmänvalvoja\" " or ProcessCommandLine contains " \"Rendszergazda\" " or ProcessCommandLine contains " \"Администратор\" " or ProcessCommandLine contains " \"Administrateur\" " or ProcessCommandLine contains " \"Administrador\" " or ProcessCommandLine contains " \"Administratör\" " or ProcessCommandLine contains " \"Administrator\" " or ProcessCommandLine contains " \"guest\" " or ProcessCommandLine contains " \"DefaultAccount\" " or ProcessCommandLine contains " 'Järjestelmänvalvoja' " or ProcessCommandLine contains " 'Rendszergazda' " or ProcessCommandLine contains " 'Администратор' " or ProcessCommandLine contains " 'Administrateur' " or ProcessCommandLine contains " 'Administrador' " or ProcessCommandLine contains " 'Administratör' " or ProcessCommandLine contains " 'Administrator' " or ProcessCommandLine contains " 'guest' " or ProcessCommandLine contains " 'DefaultAccount' ")) and (not((ProcessCommandLine contains "guest" and ProcessCommandLine contains "/active no")))

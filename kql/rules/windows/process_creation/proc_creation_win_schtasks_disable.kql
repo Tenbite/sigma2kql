@@ -1,0 +1,21 @@
+// Title: Disable Important Scheduled Task
+// Sigma ID: 9ac94dc8-9042-493c-ba45-3b5e7c86b980
+// Status: test | Level: high
+// Author: frack113, Nasreddine Bencherchali (Nextron Systems), X__Junior
+// Date: 2021-12-26 | Modified: 2026-03-11
+// ATT&CK: impact, T1489
+// Description: Detects when adversaries stop services or processes by disabling their respective scheduled
+//   tasks in order to conduct data destructive activities
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1490/T1490.md#atomic-test-8---windows---disable-the-sr-scheduled-task
+//   - https://twitter.com/MichalKoczwara/status/1553634816016498688
+//   - https://thedfirreport.com/2021/10/18/icedid-to-xinglocker-ransomware-in-24-hours/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_schtasks_disable.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\schtasks.exe" or ProcessVersionInfoOriginalFileName =~ "schtasks.exe") and (ProcessCommandLine contains "-disable" or ProcessCommandLine contains "/disable" or ProcessCommandLine contains "–disable" or ProcessCommandLine contains "—disable" or ProcessCommandLine contains "―disable") and (ProcessCommandLine contains "\\Windows\\BitLocker" or ProcessCommandLine contains "\\Windows\\ExploitGuard" or ProcessCommandLine contains "\\Windows\\ExploitGuard\\ExploitGuard MDM policy Refresh" or ProcessCommandLine contains "\\Windows\\SystemRestore\\SR" or ProcessCommandLine contains "\\Windows\\UpdateOrchestrator\\" or ProcessCommandLine contains "\\Windows\\Windows Defender\\" or ProcessCommandLine contains "\\Windows\\WindowsBackup\\" or ProcessCommandLine contains "\\Windows\\WindowsUpdate\\")

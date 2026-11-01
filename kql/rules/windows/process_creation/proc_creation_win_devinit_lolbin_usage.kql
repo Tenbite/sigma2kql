@@ -1,0 +1,20 @@
+// Title: Arbitrary MSI Download Via Devinit.EXE
+// Sigma ID: 90d50722-0483-4065-8e35-57efaadd354d
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-01-11 | Modified: 2023-04-06
+// ATT&CK: execution, stealth, T1218
+// Description: Detects a certain command line flag combination used by "devinit.exe", which can be abused as a
+//   LOLBIN to download arbitrary MSI packages on a Windows system
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/mrd0x/status/1460815932402679809
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Devinit/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_devinit_lolbin_usage.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains " -t msi-install " and ProcessCommandLine contains " -i http"

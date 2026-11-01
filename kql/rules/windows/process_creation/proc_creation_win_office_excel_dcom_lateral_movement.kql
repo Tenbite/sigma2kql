@@ -1,0 +1,21 @@
+// Title: Potential Excel.EXE DCOM Lateral Movement Via ActivateMicrosoftApp
+// Sigma ID: 551d9c1f-816c-445b-a7a6-7a3864720d60
+// Status: test | Level: high
+// Author: Aaron Stratton
+// Date: 2023-11-13 | Modified: -
+// ATT&CK: T1021.003, lateral-movement
+// Description: Detects suspicious child processes of Excel which could be an indicator of lateral movement
+//   leveraging the "ActivateMicrosoftApp" Excel DCOM object.
+// False positives:
+//   - Unknown
+// References:
+//   - https://posts.specterops.io/lateral-movement-abuse-the-power-of-dcom-excel-application-3c016d0d9922
+//   - https://github.com/grayhatkiller/SharpExShell
+//   - https://learn.microsoft.com/en-us/office/vba/api/excel.xlmsapplication
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_office_excel_dcom_lateral_movement.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\excel.exe" and ((ProcessVersionInfoOriginalFileName in~ ("foxprow.exe", "schdplus.exe", "winproj.exe")) or (FolderPath endswith "\\foxprow.exe" or FolderPath endswith "\\schdplus.exe" or FolderPath endswith "\\winproj.exe"))

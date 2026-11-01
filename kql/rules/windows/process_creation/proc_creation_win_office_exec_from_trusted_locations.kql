@@ -1,0 +1,23 @@
+// Title: Potentially Suspicious Office Document Executed From Trusted Location
+// Sigma ID: f99abdf0-6283-4e71-bd2b-b5c048a94743
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-06-21 | Modified: 2023-10-18
+// ATT&CK: stealth, T1202
+// Description: Detects the execution of an Office application that points to a document that is located in a
+//   trusted location. Attackers often used this to avoid macro security and execute their malicious
+//   code.
+// False positives:
+//   - Unknown
+// References:
+//   - Internal Research
+//   - https://twitter.com/Max_Mal_/status/1633863678909874176
+//   - https://techcommunity.microsoft.com/t5/microsoft-365-blog/new-security-hardening-policies-for-trusted-documents/ba-p/3023465
+//   - https://twitter.com/_JohnHammond/status/1588155401752788994
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_office_exec_from_trusted_locations.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((InitiatingProcessFolderPath endswith "\\explorer.exe" or InitiatingProcessFolderPath endswith "\\dopus.exe") and ((FolderPath endswith "\\EXCEL.EXE" or FolderPath endswith "\\POWERPNT.EXE" or FolderPath endswith "\\WINWORD.exe") or (ProcessVersionInfoOriginalFileName in~ ("Excel.exe", "POWERPNT.EXE", "WinWord.exe"))) and (ProcessCommandLine contains "\\AppData\\Roaming\\Microsoft\\Templates" or ProcessCommandLine contains "\\AppData\\Roaming\\Microsoft\\Word\\Startup\\" or ProcessCommandLine contains "\\Microsoft Office\\root\\Templates\\" or ProcessCommandLine contains "\\Microsoft Office\\Templates\\")) and (not((ProcessCommandLine endswith ".dotx" or ProcessCommandLine endswith ".xltx" or ProcessCommandLine endswith ".potx")))

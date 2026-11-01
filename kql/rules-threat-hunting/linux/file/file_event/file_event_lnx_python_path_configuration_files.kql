@@ -1,0 +1,25 @@
+// Title: Python Path Configuration File Creation - Linux
+// Sigma ID: fb96c26c-9f85-4ae7-af0d-ed1ed1f1f5ce
+// Status: test | Level: medium
+// Author: Andreas Braathen (mnemonic.io)
+// Date: 2024-04-25 | Modified: -
+// ATT&CK: execution, T1059.006
+// Tags: detection.threat-hunting
+// Description: Detects creation of a Python path configuration file (.pth) in Python library folders, which can
+//   be maliciously abused for code execution and persistence. Modules referenced by these files are
+//   run at every Python startup (v3.5+), regardless of whether the module is imported by the calling
+//   script. Default paths are '\lib\site-packages\*.pth' (Windows) and '/lib/pythonX.Y/site-
+//   packages/*.pth' (Unix and macOS).
+// False positives:
+//   - Although .pth files are discouraged due to potential security implications, these are legitimate files by specification.
+// References:
+//   - https://www.volexity.com/blog/2024/04/12/zero-day-exploitation-of-unauthenticated-remote-code-execution-vulnerability-in-globalprotect-cve-2024-3400/
+//   - https://www.virustotal.com/gui/file/3de2a4392b8715bad070b2ae12243f166ead37830f7c6d24e778985927f9caac
+//   - https://docs.python.org/3/library/site.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-threat-hunting/linux/file/file_event/file_event_lnx_python_path_configuration_files.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath matches regex "(?i)/lib/python3\\.([5-9]|[0-9]{2})/site-packages/" and FolderPath endswith ".pth"

@@ -1,0 +1,21 @@
+// Title: Potential Process Reconnaissance via Wmic.EXE
+// Sigma ID: 221b251a-357a-49a9-920a-271802777cc0
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-01-01 | Modified: 2025-12-15
+// ATT&CK: execution, T1047, discovery, T1057
+// Description: Detects the execution of "wmic" with the "process" flag, which might indicate an attempt to
+//   perform reconnaissance on running processes. Adversaries may use wmic to query for running
+//   processes and their details as part of their reconnaissance efforts.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1047/T1047.md
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wmic
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_wmic_recon_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\WMIC.exe" or ProcessVersionInfoOriginalFileName =~ "wmic.exe") and ProcessCommandLine contains "process") and (not(((ProcessCommandLine contains "call" and ProcessCommandLine contains "create") or (ProcessCommandLine contains "call" and ProcessCommandLine contains "terminate"))))

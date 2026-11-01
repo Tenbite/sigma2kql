@@ -1,0 +1,19 @@
+// Title: UAC Bypass Using Event Viewer RecentViews
+// Sigma ID: 30fc8de7-d833-40c4-96b6-28319fbc4f6c
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-11-22 | Modified: -
+// ATT&CK: privilege-escalation, stealth
+// Description: Detects the pattern of UAC Bypass using Event Viewer RecentViews
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/orange_8361/status/1518970259868626944
+//   - https://lolbas-project.github.io/lolbas/Binaries/Eventvwr/#execute
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_uac_bypass_eventvwr_recentviews.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "\\Event Viewer\\RecentViews" or ProcessCommandLine contains "\\EventV~1\\RecentViews") and ProcessCommandLine contains ">"

@@ -1,0 +1,20 @@
+// Title: PowerShell Download Pattern
+// Sigma ID: 3b6ab547-8ec2-4991-b9d2-2b06702a48d7
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems), oscd.community, Jonhnathan Ribeiro
+// Date: 2019-01-16 | Modified: 2025-10-20
+// ATT&CK: execution, T1059.001
+// Description: Detects a Powershell process that contains download commands in its command line string
+// False positives:
+//   - Unknown
+// References:
+//   - https://blog.redteam.pl/2020/06/black-kingdom-ransomware.html
+//   - https://lab52.io/blog/winter-vivern-all-summer/
+//   - https://hatching.io/blog/powershell-analysis/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_powershell_download_patterns.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\powershell_ise.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe") or (ProcessVersionInfoOriginalFileName in~ ("PowerShell_ISE.EXE", "PowerShell.EXE", "pwsh.dll"))) and ((ProcessCommandLine contains "new-object" and ProcessCommandLine contains "net.webclient)." and ProcessCommandLine contains "download") and (ProcessCommandLine contains "string(" or ProcessCommandLine contains "file("))

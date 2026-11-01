@@ -1,0 +1,19 @@
+// Title: Diamond Sleet APT DLL Sideloading Indicators
+// Sigma ID: d1b65d98-37d7-4ff6-b139-2d87c1af3042
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-10-24 | Modified: -
+// ATT&CK: persistence, privilege-escalation, execution, stealth, T1574.001
+// Tags: detection.emerging-threats
+// Description: Detects DLL sideloading activity seen used by Diamond Sleet APT
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.microsoft.com/en-us/security/blog/2023/10/18/multiple-north-korean-threat-actors-exploiting-the-teamcity-cve-2023-42793-vulnerability/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2023/TA/Diamond-Sleet/image_load_apt_diamond_sleet_side_load.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceImageLoadEvents
+| where (InitiatingProcessFolderPath endswith ":\\ProgramData\\clip.exe" and FolderPath endswith ":\\ProgramData\\Version.dll") or (InitiatingProcessFolderPath endswith ":\\ProgramData\\wsmprovhost.exe" and FolderPath endswith ":\\ProgramData\\DSROLE.dll")

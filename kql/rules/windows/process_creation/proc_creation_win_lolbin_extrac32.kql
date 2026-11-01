@@ -1,0 +1,18 @@
+// Title: Suspicious Extrac32 Execution
+// Sigma ID: aa8e035d-7be4-48d3-a944-102aec04400d
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2021-11-26 | Modified: 2022-08-13
+// ATT&CK: command-and-control, T1105
+// Description: Download or Copy file with Extrac32
+// False positives:
+//   - Unknown
+// References:
+//   - https://lolbas-project.github.io/lolbas/Binaries/Extrac32/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_lolbin_extrac32.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "extrac32.exe" or FolderPath endswith "\\extrac32.exe" or ProcessVersionInfoOriginalFileName =~ "extrac32.exe") and ProcessCommandLine contains ".cab" and (ProcessCommandLine contains "/C" or ProcessCommandLine contains "/Y" or ProcessCommandLine contains " \\\\")

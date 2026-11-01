@@ -1,0 +1,20 @@
+// Title: Uncommon Sigverif.EXE Child Process
+// Sigma ID: 7d4aaec2-08ed-4430-8b96-28420e030e04
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-08-19 | Modified: 2024-08-27
+// ATT&CK: stealth, T1216
+// Description: Detects uncommon child processes spawning from "sigverif.exe", which could indicate potential
+//   abuse of the latter as a living of the land binary in order to proxy execution.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.hexacorn.com/blog/2018/04/27/i-shot-the-sigverif-exe-the-gui-based-lolbin/
+//   - https://twitter.com/0gtweet/status/1457676633809330184
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_sigverif_uncommon_child_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\sigverif.exe" and (not((FolderPath in~ ("C:\\Windows\\System32\\WerFault.exe", "C:\\Windows\\SysWOW64\\WerFault.exe"))))

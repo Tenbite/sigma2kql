@@ -1,0 +1,22 @@
+// Title: Suspicious WSMAN Provider Image Loads
+// Sigma ID: ad1f4bb9-8dfb-4765-adb6-2a7cfb6c0f94
+// Status: test | Level: medium
+// Author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+// Date: 2020-06-24 | Modified: 2026-07-28
+// ATT&CK: execution, T1059.001, lateral-movement, T1021.003
+// Description: Detects signs of potential use of the WSMAN provider from uncommon processes locally and remote
+//   execution.
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/chadtilbury/status/1275851297770610688
+//   - https://bohops.com/2020/05/12/ws-management-com-another-approach-for-winrm-lateral-movement/
+//   - https://learn.microsoft.com/en-us/windows/win32/winrm/windows-remote-management-architecture
+//   - https://github.com/bohops/WSMan-WinRM
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/image_load/image_load_wsman_provider_image_load.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceImageLoadEvents
+| where (((FolderPath endswith "\\WsmSvc.dll" or FolderPath endswith "\\WsmAuto.dll" or FolderPath endswith "\\Microsoft.WSMan.Management.ni.dll") or (InitiatingProcessVersionInfoOriginalFileName in~ ("WsmSvc.dll", "WSMANAUTOMATION.DLL", "Microsoft.WSMan.Management.dll"))) or (InitiatingProcessFolderPath endswith "\\svchost.exe" and InitiatingProcessVersionInfoOriginalFileName =~ "WsmWmiPl.dll")) and (not(((InitiatingProcessFolderPath in~ ("C:\\Program Files (x86)\\PowerShell\\6\\pwsh.exe", "C:\\Program Files (x86)\\PowerShell\\7\\pwsh.exe", "C:\\Program Files\\PowerShell\\6\\pwsh.exe", "C:\\Program Files\\PowerShell\\7\\pwsh.exe", "C:\\Windows\\System32\\sdiagnhost.exe", "C:\\Windows\\System32\\services.exe", "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell_ise.exe", "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe")) or (InitiatingProcessCommandLine contains "svchost.exe -k netsvcs -p -s BITS" or InitiatingProcessCommandLine contains "svchost.exe -k GraphicsPerfSvcGroup -s GraphicsPerfSvc" or InitiatingProcessCommandLine contains "svchost.exe -k NetworkService -p -s Wecsvc" or InitiatingProcessCommandLine contains "svchost.exe -k netsvcs") or ((InitiatingProcessFolderPath startswith "C:\\Windows\\Microsoft.NET\\Framework64\\v" or InitiatingProcessFolderPath startswith "C:\\Windows\\Microsoft.NET\\Framework\\v" or InitiatingProcessFolderPath startswith "C:\\Windows\\Microsoft.NET\\FrameworkArm\\v" or InitiatingProcessFolderPath startswith "C:\\Windows\\Microsoft.NET\\FrameworkArm64\\v") and InitiatingProcessFolderPath endswith "\\mscorsvw.exe") or (InitiatingProcessFolderPath startswith "C:\\Program Files\\WindowsApps\\Microsoft.GetHelp_" and InitiatingProcessFolderPath endswith "\\GetHelp.exe") or (InitiatingProcessFolderPath in~ ("C:\\Windows\\System32\\Configure-SMRemoting.exe", "C:\\Windows\\System32\\ServerManager.exe")) or InitiatingProcessFolderPath startswith "C:\\Windows\\Temp\\asgard2-agent\\" or InitiatingProcessFolderPath startswith "C:\\Program Files\\Citrix\\" or InitiatingProcessFolderPath startswith "C:\\$WINDOWS.~BT\\Sources\\" or InitiatingProcessFolderPath endswith "\\mmc.exe"))) and (not((InitiatingProcessFolderPath endswith "\\svchost.exe" and isnull(InitiatingProcessCommandLine))))

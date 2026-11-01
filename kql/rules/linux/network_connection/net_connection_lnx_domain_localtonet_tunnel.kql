@@ -1,0 +1,22 @@
+// Title: Communication To LocaltoNet Tunneling Service Initiated - Linux
+// Sigma ID: c4568f5d-131f-4e78-83d4-45b2da0ec4f1
+// Status: test | Level: high
+// Author: Andreas Braathen (mnemonic.io)
+// Date: 2024-06-17 | Modified: -
+// ATT&CK: command-and-control, T1572, T1090, T1102
+// Description: Detects an executable initiating a network connection to "LocaltoNet" tunneling sub-domains.
+//   LocaltoNet is a reverse proxy that enables localhost services to be exposed to the Internet.
+//   Attackers have been seen to use this service for command-and-control activities to bypass MFA
+//   and perimeter controls.
+// False positives:
+//   - Legitimate use of the LocaltoNet service.
+// References:
+//   - https://localtonet.com/documents/supported-tunnels
+//   - https://cloud.google.com/blog/topics/threat-intelligence/unc3944-targets-saas-applications
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/network_connection/net_connection_lnx_domain_localtonet_tunnel.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceNetworkEvents
+| where RemoteUrl endswith ".localto.net" or RemoteUrl endswith ".localtonet.com"

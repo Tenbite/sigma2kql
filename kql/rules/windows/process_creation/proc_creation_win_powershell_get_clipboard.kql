@@ -1,0 +1,19 @@
+// Title: PowerShell Get-Clipboard Cmdlet Via CLI
+// Sigma ID: b9aeac14-2ffd-4ad3-b967-1354a4e628c3
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2020-05-02 | Modified: 2022-12-25
+// ATT&CK: collection, T1115
+// Description: Detects usage of the 'Get-Clipboard' cmdlet via CLI
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/OTRF/detection-hackathon-apt29/issues/16
+//   - https://github.com/OTRF/ThreatHunter-Playbook/blob/2d4257f630f4c9770f78d0c1df059f891ffc3fec/docs/evals/apt29/detections/3.B.2_C36B49B5-DF58-4A34-9FE9-56189B9DEFEA.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_powershell_get_clipboard.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "Get-Clipboard"

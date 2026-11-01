@@ -1,0 +1,21 @@
+// Title: Flush Iptables Ufw Chain
+// Sigma ID: 3be619f4-d9ec-4ea8-a173-18fdd01996ab
+// Status: test | Level: medium
+// Author: Joseliyo Sanchez, @Joseliyo_Jstnk
+// Date: 2023-01-18 | Modified: -
+// ATT&CK: defense-impairment, T1686
+// Description: Detect use of iptables to flush all firewall rules, tables and chains and allow all network
+//   traffic
+// False positives:
+//   - Network administrators
+// References:
+//   - https://blogs.blackberry.com/
+//   - https://www.cyberciti.biz/tips/linux-iptables-how-to-flush-all-rules.html
+//   - https://twitter.com/Joseliyo_Jstnk/status/1620131033474822144
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_iptables_flush_ufw.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "/iptables" or FolderPath endswith "/xtables-legacy-multi" or FolderPath endswith "/iptables-legacy-multi" or FolderPath endswith "/ip6tables" or FolderPath endswith "/ip6tables-legacy-multi") and (ProcessCommandLine contains "-F" or ProcessCommandLine contains "-Z" or ProcessCommandLine contains "-X") and (ProcessCommandLine contains "ufw-logging-deny" or ProcessCommandLine contains "ufw-logging-allow" or ProcessCommandLine contains "ufw6-logging-deny" or ProcessCommandLine contains "ufw6-logging-allow")

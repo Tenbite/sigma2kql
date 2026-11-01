@@ -1,0 +1,20 @@
+// Title: Suspicious Desktopimgdownldr Target File
+// Sigma ID: fc4f4817-0c53-4683-a4ee-b17a64bc1039
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2020-07-03 | Modified: 2022-06-02
+// ATT&CK: command-and-control, T1105
+// Description: Detects a suspicious Microsoft desktopimgdownldr file creation that stores a file to a
+//   suspicious location or contains a file with a suspicious extension
+// False positives:
+//   - False positives depend on scripts and administrative tools used in the monitored environment
+// References:
+//   - https://labs.sentinelone.com/living-off-windows-land-a-new-native-file-downldr/
+//   - https://twitter.com/SBousseaden/status/1278977301745741825
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_susp_desktopimgdownldr_file.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where (InitiatingProcessFolderPath endswith "\\svchost.exe" and FolderPath contains "\\Personalization\\LockScreenImage\\") and (not(FolderPath contains "C:\\Windows\\")) and (not((FolderPath contains ".jpg" or FolderPath contains ".jpeg" or FolderPath contains ".png")))

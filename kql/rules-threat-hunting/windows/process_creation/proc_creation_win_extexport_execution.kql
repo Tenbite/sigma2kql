@@ -1,0 +1,30 @@
+// Title: Potential DLL Sideloading Activity Via ExtExport.EXE
+// Sigma ID: fb0b815b-f5f6-4f50-970f-ffe21f253f7a
+// Status: test | Level: medium
+// Author: frack113, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2021-11-26 | Modified: 2024-08-26
+// ATT&CK: stealth, T1218
+// Tags: detection.threat-hunting
+// Description: Detects the execution of "Extexport.exe".A utility that is part of the Internet Explorer browser
+//   and is used to export and import various settings and data, particularly when switching between
+//   Internet Explorer and other web browsers like Firefox. It allows users to transfer bookmarks,
+//   browsing history, and other preferences from Internet Explorer to Firefox or vice versa. It can
+//   be abused as a tool to side load any DLL. If a folder is provided in the command line it'll load
+//   any DLL with one of the following names "mozcrt19.dll", "mozsqlite3.dll", or "sqlite.dll".
+//   Arbitrary DLLs can also be loaded if a specific number of flags was provided.
+// False positives:
+//   - Unknown
+// References:
+//   - https://lolbas-project.github.io/lolbas/Binaries/Extexport/
+//   - https://www.hexacorn.com/blog/2018/04/24/extexport-yet-another-lolbin/
+//   - https://www.microsoft.com/en-us/security/blog/2020/03/23/latest-astaroth-living-off-the-land-attacks-are-even-more-invisible-but-not-less-observable/
+//   - https://res.armor.com/resources/threat-intelligence/astaroth-banking-trojan/
+//   - https://securelist.com/the-tetrade-brazilian-banking-malware/97779/
+//   - https://www.welivesecurity.com/2020/03/05/guildma-devil-drives-electric/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-threat-hunting/windows/process_creation/proc_creation_win_extexport_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\Extexport.exe" or ProcessVersionInfoOriginalFileName =~ "extexport.exe"

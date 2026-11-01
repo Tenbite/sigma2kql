@@ -1,0 +1,20 @@
+// Title: Security Support Provider (SSP) Added to LSA Configuration
+// Sigma ID: eeb30123-9fbd-4ee8-aaa0-2e545bbed6dc
+// Status: test | Level: high
+// Author: iwillkeepwatch
+// Date: 2019-01-18 | Modified: 2026-03-30
+// ATT&CK: privilege-escalation, persistence, T1547.005
+// Description: Detects the addition of a SSP to the registry. Upon a reboot or API call, SSP DLLs gain access
+//   to encrypted and plaintext passwords stored in Windows.
+// False positives:
+//   - Unknown
+// References:
+//   - https://powersploit.readthedocs.io/en/latest/Persistence/Install-SSP/
+//   - https://github.com/EmpireProject/Empire/blob/08cbd274bef78243d7a8ed6443b8364acd1fc48b/data/module_source/persistence/Install-SSP.ps1#L157
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_event/registry_event_ssp_added_lsa_config.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey endswith "\\Control\\Lsa\\Security Packages" or RegistryKey endswith "\\Control\\Lsa\\OSConfig\\Security Packages") and (not(((InitiatingProcessFolderPath in~ ("C:\\Windows\\system32\\msiexec.exe", "C:\\Windows\\syswow64\\MsiExec.exe")) or isnull(InitiatingProcessFolderPath))))

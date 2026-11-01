@@ -1,0 +1,24 @@
+// Title: Diskshadow Child Process Spawned
+// Sigma ID: 56b1dde8-b274-435f-a73a-fb75eb81262a
+// Status: test | Level: medium
+// Author: Harjot Singh @cyb3rjy0t
+// Date: 2023-09-15 | Modified: -
+// ATT&CK: stealth, T1218, execution
+// Tags: detection.threat-hunting
+// Description: Detects any child process spawning from "Diskshadow.exe". This could be due to executing
+//   Diskshadow in interpreter mode or script mode and using the "exec" flag to launch other
+//   applications.
+// False positives:
+//   - Likely from legitimate usage of Diskshadow in Interpreter mode.
+// References:
+//   - https://bohops.com/2018/03/26/diskshadow-the-return-of-vss-evasion-persistence-and-active-directory-database-extraction/
+//   - https://www.ired.team/offensive-security/credential-access-and-credential-dumping/ntds.dit-enumeration
+//   - https://medium.com/@cyberjyot/lolbin-execution-via-diskshadow-f6ff681a27a4
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/diskshadow
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-threat-hunting/windows/process_creation/proc_creation_win_diskshadow_child_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\diskshadow.exe" and (not(FolderPath endswith ":\\Windows\\System32\\WerFault.exe"))

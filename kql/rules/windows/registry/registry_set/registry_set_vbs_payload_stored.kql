@@ -1,0 +1,18 @@
+// Title: VBScript Payload Stored in Registry
+// Sigma ID: 46490193-1b22-4c29-bdd6-5bf63907216f
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2021-03-05 | Modified: 2023-08-17
+// ATT&CK: privilege-escalation, persistence, T1547.001
+// Description: Detects VBScript content stored into registry keys as seen being used by UNC2452 group
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.microsoft.com/security/blog/2021/03/04/goldmax-goldfinder-sibot-analyzing-nobelium-malware/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_vbs_payload_stored.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey contains "Software\\Microsoft\\Windows\\CurrentVersion" and (RegistryValueData contains "vbscript:" or RegistryValueData contains "jscript:" or RegistryValueData contains "mshtml," or RegistryValueData contains "RunHTMLApplication" or RegistryValueData contains "Execute(" or RegistryValueData contains "CreateObject" or RegistryValueData contains "window.close")) and (not((RegistryKey contains "Software\\Microsoft\\Windows\\CurrentVersion\\Run" or (InitiatingProcessFolderPath endswith "\\msiexec.exe" and RegistryKey endswith "\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer\\UserData*" and (RegistryValueData contains "\\Microsoft.NET\\Primary Interop Assemblies\\Microsoft.mshtml.dll" or RegistryValueData contains "<\\Microsoft.mshtml,fileVersion=" or RegistryValueData contains "_mshtml_dll_" or RegistryValueData contains "<\\Microsoft.mshtml,culture=")))))

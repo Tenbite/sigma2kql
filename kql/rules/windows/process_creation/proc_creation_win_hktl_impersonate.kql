@@ -1,0 +1,20 @@
+// Title: HackTool - Impersonate Execution
+// Sigma ID: cf0c254b-22f1-4b2b-8221-e137b3c0af94
+// Status: test | Level: medium
+// Author: Sai Prashanth Pulisetti @pulisettis
+// Date: 2022-12-21 | Modified: 2024-11-23
+// ATT&CK: privilege-escalation, stealth, T1134.001, T1134.003
+// Description: Detects execution of the Impersonate tool. Which can be used to manipulate tokens on a Windows
+//   computers remotely (PsExec/WmiExec) or interactively
+// False positives:
+//   - Unknown
+// References:
+//   - https://sensepost.com/blog/2022/abusing-windows-tokens-to-compromise-active-directory-without-touching-lsass/
+//   - https://github.com/sensepost/impersonate
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_impersonate.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "impersonate.exe" and (ProcessCommandLine contains " list " or ProcessCommandLine contains " exec " or ProcessCommandLine contains " adduser ")) or (MD5 startswith "9520714AB576B0ED01D1513691377D01" or SHA256 startswith "E81CC96E2118DC4FBFE5BAD1604E0AC7681960143E2101E1A024D52264BB0A8A")

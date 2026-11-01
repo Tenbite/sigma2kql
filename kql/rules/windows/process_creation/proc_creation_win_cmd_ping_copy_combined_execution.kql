@@ -1,0 +1,19 @@
+// Title: Potentially Suspicious Ping/Copy Command Combination
+// Sigma ID: ded2b07a-d12f-4284-9b76-653e37b6c8b0
+// Status: test | Level: medium
+// Author: X__Junior (Nextron Systems)
+// Date: 2023-07-18 | Modified: 2024-03-06
+// ATT&CK: stealth, T1070.004
+// Description: Detects uncommon and potentially suspicious one-liner command containing both "ping" and "copy"
+//   at the same time, which is usually used by malware.
+// False positives:
+//   - Unknown
+// References:
+//   - Internal Research
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_cmd_ping_copy_combined_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\cmd.exe" or ProcessVersionInfoOriginalFileName =~ "Cmd.Exe") and (ProcessCommandLine contains "ping" and ProcessCommandLine contains "copy ") and (ProcessCommandLine contains " -n " or ProcessCommandLine contains " /n " or ProcessCommandLine contains " –n " or ProcessCommandLine contains " —n " or ProcessCommandLine contains " ―n ") and (ProcessCommandLine contains " -y " or ProcessCommandLine contains " /y " or ProcessCommandLine contains " –y " or ProcessCommandLine contains " —y " or ProcessCommandLine contains " ―y ")

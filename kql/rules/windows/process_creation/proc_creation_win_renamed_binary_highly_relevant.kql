@@ -1,0 +1,26 @@
+// Title: Potential Defense Evasion Via Rename Of Highly Relevant Binaries
+// Sigma ID: 0ba1da6d-b6ce-4366-828c-18826c9de23e
+// Status: test | Level: high
+// Author: Matthew Green - @mgreen27, Florian Roth (Nextron Systems), frack113
+// Date: 2019-06-15 | Modified: 2026-06-29
+// ATT&CK: stealth, T1036.003
+// Tags: car.2013-05-009
+// Description: Detects the execution of a renamed binary often used by attackers or malware leveraging new
+//   Sysmon OriginalFileName datapoint.
+// False positives:
+//   - Custom applications use renamed binaries adding slight change to binary name. Typically this is easy to spot and add to whitelist
+//   - PsExec installed via Windows Store doesn't contain original filename field (False negative)
+// References:
+//   - https://mgreen27.github.io/posts/2019/05/12/BinaryRename.html
+//   - https://mgreen27.github.io/posts/2019/05/29/BinaryRename2.html
+//   - https://www.trendmicro.com/vinfo/hk-en/security/news/cybercrime-and-digital-threats/megacortex-ransomware-spotted-attacking-enterprise-networks
+//   - https://twitter.com/christophetd/status/1164506034720952320
+//   - https://threatresearch.ext.hp.com/svcready-a-new-loader-reveals-itself/
+//   - https://www.huntress.com/blog/malicious-browser-extention-crashfix-kongtuke
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_renamed_binary_highly_relevant.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessVersionInfoFileDescription =~ "Execute processes remotely" or ProcessVersionInfoProductName =~ "Sysinternals PsExec" or (ProcessVersionInfoFileDescription startswith "Windows PowerShell" or ProcessVersionInfoFileDescription startswith "pwsh") or (ProcessVersionInfoOriginalFileName in~ ("certutil.exe", "cmstp.exe", "cscript.exe", "IE4UINIT.EXE", "finger.exe", "mshta.exe", "msiexec.exe", "msxsl.exe", "powershell_ise.exe", "powershell.exe", "psexec.c", "psexec.exe", "psexesvc.exe", "pwsh.dll", "reg.exe", "regsvr32.exe", "rundll32.exe", "WerMgr", "wmic.exe", "wscript.exe"))) and (not((FolderPath endswith "\\certutil.exe" or FolderPath endswith "\\cmstp.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\ie4uinit.exe" or FolderPath endswith "\\finger.exe" or FolderPath endswith "\\mshta.exe" or FolderPath endswith "\\msiexec.exe" or FolderPath endswith "\\msxsl.exe" or FolderPath endswith "\\powershell_ise.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\psexec.exe" or FolderPath endswith "\\psexec64.exe" or FolderPath endswith "\\psexec64a.exe" or FolderPath endswith "\\PSEXESVC.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\reg.exe" or FolderPath endswith "\\regsvr32.exe" or FolderPath endswith "\\rundll32.exe" or FolderPath endswith "\\wermgr.exe" or FolderPath endswith "\\wmic.exe" or FolderPath endswith "\\wscript.exe")))

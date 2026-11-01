@@ -1,0 +1,19 @@
+// Title: Raccine Uninstall
+// Sigma ID: a31eeaed-3fd5-478e-a8ba-e62c6b3f9ecc
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2021-01-21 | Modified: 2022-10-09
+// ATT&CK: defense-impairment, T1685
+// Description: Detects commands that indicate a Raccine removal from an end system. Raccine is a free
+//   ransomware protection tool.
+// False positives:
+//   - Legitimate deinstallation by administrative staff
+// References:
+//   - https://github.com/Neo23x0/Raccine
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_disable_raccine.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "taskkill " and ProcessCommandLine contains "RaccineSettings.exe") or (ProcessCommandLine contains "reg.exe" and ProcessCommandLine contains "delete" and ProcessCommandLine contains "Raccine Tray") or (ProcessCommandLine contains "schtasks" and ProcessCommandLine contains "/DELETE" and ProcessCommandLine contains "Raccine Rules Updater")

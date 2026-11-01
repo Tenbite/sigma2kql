@@ -1,0 +1,17 @@
+// Title: Potential Ransomware or Unauthorized MBR Tampering Via Bcdedit.EXE
+// Sigma ID: c9fbe8e9-119d-40a6-9b59-dd58a5d84429
+// Status: test | Level: medium
+// Author: @neu5ron
+// Date: 2019-02-07 | Modified: 2023-02-15
+// ATT&CK: stealth, T1070, persistence, T1542.003
+// Description: Detects potential malicious and unauthorized usage of bcdedit.exe
+// References:
+//   - https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/bcdedit--set
+//   - https://twitter.com/malwrhunterteam/status/1372536434125512712/photo/2
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_bcdedit_susp_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\bcdedit.exe" or ProcessVersionInfoOriginalFileName =~ "bcdedit.exe") and (ProcessCommandLine contains "delete" or ProcessCommandLine contains "deletevalue" or ProcessCommandLine contains "import" or ProcessCommandLine contains "safeboot" or ProcessCommandLine contains "network")

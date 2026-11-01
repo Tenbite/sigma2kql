@@ -1,0 +1,19 @@
+// Title: PUA - Crassus Execution
+// Sigma ID: 2c32b543-1058-4808-91c6-5b31b8bed6c5
+// Status: test | Level: high
+// Author: pH-T (Nextron Systems)
+// Date: 2023-04-17 | Modified: -
+// ATT&CK: discovery, reconnaissance, T1590.001
+// Description: Detects Crassus, a Windows privilege escalation discovery tool, based on PE metadata
+//   characteristics.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://github.com/vu-ls/Crassus
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_pua_crassus.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\Crassus.exe" or ProcessVersionInfoOriginalFileName =~ "Crassus.exe" or ProcessVersionInfoFileDescription contains "Crassus"

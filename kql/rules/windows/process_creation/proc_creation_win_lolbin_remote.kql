@@ -1,0 +1,20 @@
+// Title: Use of Remote.exe
+// Sigma ID: 4eddc365-79b4-43ff-a9d7-99422dc34b93
+// Status: test | Level: medium
+// Author: Christopher Peacock @SecurePeacock, SCYTHE @scythe_io
+// Date: 2022-06-02 | Modified: -
+// ATT&CK: execution, stealth, T1127
+// Description: Remote.exe is part of WinDbg in the Windows SDK and can be used for AWL bypass and running
+//   remote files.
+// False positives:
+//   - Approved installs of Windows SDK with Debugging Tools for Windows (WinDbg).
+// References:
+//   - https://blog.thecybersecuritytutor.com/Exeuction-AWL-Bypass-Remote-exe-LOLBin/
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Remote/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_lolbin_remote.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\remote.exe" or ProcessVersionInfoOriginalFileName =~ "remote.exe"

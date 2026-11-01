@@ -1,0 +1,20 @@
+// Title: RDP Over Reverse SSH Tunnel
+// Sigma ID: 5f699bc5-5446-4a4a-a0b7-5ef2885a3eb4
+// Status: test | Level: high
+// Author: Samir Bousseaden
+// Date: 2019-02-16 | Modified: 2024-03-12
+// ATT&CK: command-and-control, T1572, lateral-movement, T1021.001
+// Tags: car.2013-07-002
+// Description: Detects svchost hosting RDP termsvcs communicating with the loopback address and on TCP port
+//   3389
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/cyb3rops/status/1096842275437625346
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/network_connection/net_connection_win_rdp_reverse_tunnel.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceNetworkEvents
+| where (InitiatingProcessFolderPath endswith "\\svchost.exe" and LocalPort == 3389) and (ipv4_is_in_range(RemoteIP, "127.0.0.0/8") or ipv4_is_in_range(RemoteIP, "::1/128"))

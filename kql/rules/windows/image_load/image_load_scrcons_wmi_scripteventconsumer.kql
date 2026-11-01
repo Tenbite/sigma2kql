@@ -1,0 +1,22 @@
+// Title: WMI ActiveScriptEventConsumers Activity Via Scrcons.EXE DLL Load
+// Sigma ID: b439f47d-ef52-4b29-9a2f-57d8a96cb6b8
+// Status: test | Level: medium
+// Author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+// Date: 2020-09-02 | Modified: 2023-02-22
+// ATT&CK: lateral-movement, privilege-escalation, persistence, T1546.003
+// Description: Detects signs of the WMI script host process "scrcons.exe" loading scripting DLLs which could
+//   indicates WMI ActiveScriptEventConsumers EventConsumers activity.
+// False positives:
+//   - Legitimate event consumers
+//   - Dell computers on some versions register an event consumer that is known to cause false positives when brightness is changed by the corresponding keyboard button
+// References:
+//   - https://twitter.com/HunterPlaybook/status/1301207718355759107
+//   - https://www.mdsec.co.uk/2020/09/i-like-to-move-it-windows-lateral-movement-part-1-wmi-event-subscription/
+//   - https://threathunterplaybook.com/hunts/windows/200902-RemoteWMIActiveScriptEventConsumers/notebook.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/image_load/image_load_scrcons_wmi_scripteventconsumer.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceImageLoadEvents
+| where InitiatingProcessFolderPath endswith "\\scrcons.exe" and (FolderPath endswith "\\vbscript.dll" or FolderPath endswith "\\wbemdisp.dll" or FolderPath endswith "\\wshom.ocx" or FolderPath endswith "\\scrrun.dll")

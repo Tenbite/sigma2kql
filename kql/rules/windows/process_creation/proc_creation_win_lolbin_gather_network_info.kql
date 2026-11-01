@@ -1,0 +1,20 @@
+// Title: Potential Reconnaissance Activity Via GatherNetworkInfo.VBS
+// Sigma ID: 575dce0c-8139-4e30-9295-1ee75969f7fe
+// Status: test | Level: medium
+// Author: blueteamer8699
+// Date: 2022-01-03 | Modified: 2023-02-08
+// ATT&CK: discovery, execution, T1615, T1059.005
+// Description: Detects execution of the built-in script located in "C:\Windows\System32\gatherNetworkInfo.vbs".
+//   Which can be used to gather information about the target machine
+// False positives:
+//   - Administrative activity
+// References:
+//   - https://posts.slayerlabs.com/living-off-the-land/#gathernetworkinfovbs
+//   - https://www.mandiant.com/resources/blog/trojanized-windows-installers-ukrainian-government
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_lolbin_gather_network_info.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\wscript.exe") or (ProcessVersionInfoOriginalFileName in~ ("cscript.exe", "wscript.exe"))) and ProcessCommandLine contains "gatherNetworkInfo.vbs"

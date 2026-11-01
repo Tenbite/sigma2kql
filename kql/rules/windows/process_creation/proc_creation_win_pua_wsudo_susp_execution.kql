@@ -1,0 +1,19 @@
+// Title: PUA - Wsudo Suspicious Execution
+// Sigma ID: bdeeabc9-ff2a-4a51-be59-bb253aac7891
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-12-02 | Modified: 2023-02-14
+// ATT&CK: execution, privilege-escalation, T1059
+// Description: Detects usage of wsudo (Windows Sudo Utility). Which is a tool that let the user execute
+//   programs with different permissions (System, Trusted Installer, Administrator...etc)
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/M2Team/Privexec/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_pua_wsudo_susp_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\wsudo.exe" or ProcessVersionInfoOriginalFileName =~ "wsudo.exe" or ProcessVersionInfoFileDescription =~ "Windows sudo utility" or InitiatingProcessFolderPath endswith "\\wsudo-bridge.exe") or (ProcessCommandLine contains "-u System" or ProcessCommandLine contains "-uSystem" or ProcessCommandLine contains "-u TrustedInstaller" or ProcessCommandLine contains "-uTrustedInstaller" or ProcessCommandLine contains " --ti ")

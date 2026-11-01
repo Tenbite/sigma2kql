@@ -1,0 +1,20 @@
+// Title: Potential Credential Dumping Via LSASS SilentProcessExit Technique
+// Sigma ID: 55e29995-75e7-451a-bef0-6225e2f13597
+// Status: test | Level: critical
+// Author: Florian Roth (Nextron Systems)
+// Date: 2021-02-26 | Modified: 2022-12-19
+// ATT&CK: credential-access, T1003.001
+// Description: Detects changes to the Registry in which a monitor program gets registered to dump the memory of
+//   the lsass.exe process
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.deepinstinct.com/2021/02/16/lsass-memory-dumps-are-stealthier-than-ever-before-part-2/
+//   - https://oddvar.moe/2018/04/10/persistence-using-globalflags-in-image-file-execution-options-hidden-from-autoruns-exe/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_event/registry_event_silentprocessexit_lsass.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey contains "Microsoft\\Windows NT\\CurrentVersion\\SilentProcessExit\\lsass.exe"

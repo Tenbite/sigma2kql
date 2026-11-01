@@ -1,0 +1,18 @@
+// Title: WinSxS Executable File Creation By Non-System Process
+// Sigma ID: 34746e8c-5fb8-415a-b135-0abc167e912a
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-05-11 | Modified: -
+// ATT&CK: execution
+// Description: Detects the creation of binaries in the WinSxS folder by non-system processes
+// False positives:
+//   - Unknown
+// References:
+//   - https://media.defense.gov/2023/May/09/2003218554/-1/-1/0/JOINT_CSA_HUNTING_RU_INTEL_SNAKE_MALWARE_20230509.PDF
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_susp_winsxs_binary_creation.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where (FolderPath startswith "C:\\Windows\\WinSxS\\" and FolderPath endswith ".exe") and (not((InitiatingProcessFolderPath startswith "C:\\Windows\\Systems32\\" or InitiatingProcessFolderPath startswith "C:\\Windows\\SysWOW64\\" or InitiatingProcessFolderPath startswith "C:\\Windows\\WinSxS\\")))

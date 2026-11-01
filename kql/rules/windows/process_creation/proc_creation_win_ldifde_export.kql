@@ -1,0 +1,21 @@
+// Title: Active Directory Structure Export Via Ldifde.EXE
+// Sigma ID: 4f7a6757-ff79-46db-9687-66501a02d9ec
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-03-14 | Modified: -
+// ATT&CK: exfiltration
+// Description: Detects the execution of "ldifde.exe" in order to export organizational Active Directory
+//   structure.
+// False positives:
+//   - Unknown
+// References:
+//   - https://businessinsights.bitdefender.com/deep-dive-into-a-backdoordiplomacy-attack-a-study-of-an-attackers-toolkit
+//   - https://www.documentcloud.org/documents/5743766-Global-Threat-Report-2019.html
+//   - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc731033(v=ws.11)
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_ldifde_export.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\ldifde.exe" or ProcessVersionInfoOriginalFileName =~ "ldifde.exe") and ProcessCommandLine contains "-f") and (not(ProcessCommandLine contains " -i"))

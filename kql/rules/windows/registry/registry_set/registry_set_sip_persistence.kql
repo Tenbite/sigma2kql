@@ -1,0 +1,20 @@
+// Title: Persistence Via New SIP Provider
+// Sigma ID: 5a2b21ee-6aaa-4234-ac9d-59a59edf90a1
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-07-21 | Modified: 2023-08-17
+// ATT&CK: persistence, defense-impairment, T1553.003
+// Description: Detects when an attacker register a new SIP provider for persistence and defense evasion
+// False positives:
+//   - Legitimate SIP being registered by the OS or different software.
+// References:
+//   - https://persistence-info.github.io/Data/codesigning.html
+//   - https://github.com/gtworek/PSBits/tree/master/SIP
+//   - https://specterops.io/assets/resources/SpecterOps_Subverting_Trust_in_Windows.pdf
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_sip_persistence.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where ((RegistryKey endswith "\\SOFTWARE\\Microsoft\\Cryptography\\Providers*" or RegistryKey contains "\\SOFTWARE\\Microsoft\\Cryptography\\OID\\EncodingType" or RegistryKey endswith "\\SOFTWARE\\WOW6432Node\\Microsoft\\Cryptography\\Providers*" or RegistryKey contains "\\SOFTWARE\\WOW6432Node\\Microsoft\\Cryptography\\OID\\EncodingType") and (RegistryKey contains "\\Dll" or RegistryKey contains "\\$DLL")) and (not(((RegistryValueData in~ ("WINTRUST.DLL", "mso.dll")) or (InitiatingProcessFolderPath =~ "C:\\Windows\\System32\\poqexec.exe" and RegistryKey contains "\\CryptSIPDll" and RegistryValueData =~ "C:\\Windows\\System32\\PsfSip.dll"))))

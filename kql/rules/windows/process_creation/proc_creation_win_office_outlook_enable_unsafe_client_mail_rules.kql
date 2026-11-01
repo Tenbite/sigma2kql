@@ -1,0 +1,21 @@
+// Title: Outlook EnableUnsafeClientMailRules Setting Enabled
+// Sigma ID: 55f0a3a1-846e-40eb-8273-677371b8d912
+// Status: test | Level: high
+// Author: Markus Neis, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2018-12-27 | Modified: 2023-02-09
+// ATT&CK: execution, stealth, T1059, T1202
+// Description: Detects an attacker trying to enable the outlook security setting "EnableUnsafeClientMailRules"
+//   which allows outlook to run applications or execute macros
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.fireeye.com/blog/threat-research/2018/12/overruled-containing-a-potentially-destructive-adversary.html
+//   - https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=44
+//   - https://support.microsoft.com/en-us/topic/how-to-control-the-rule-actions-to-start-an-application-or-run-a-macro-in-outlook-2016-and-outlook-2013-e4964b72-173c-959d-5d7b-ead562979048
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_office_outlook_enable_unsafe_client_mail_rules.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "\\Outlook\\Security\\EnableUnsafeClientMailRules"

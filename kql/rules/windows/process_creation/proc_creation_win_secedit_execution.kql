@@ -1,0 +1,20 @@
+// Title: Potential Suspicious Activity Using SeCEdit
+// Sigma ID: c2c76b77-32be-4d1f-82c9-7e544bdfe0eb
+// Status: test | Level: medium
+// Author: Janantha Marasinghe
+// Date: 2022-11-18 | Modified: 2022-12-30
+// ATT&CK: collection, discovery, persistence, credential-access, privilege-escalation, execution, stealth, defense-impairment, T1685.001, T1547.001, T1505.005, T1556.002, T1685, T1574.007, T1564.002, T1546.008, T1546.007, T1547.014, T1547.010, T1547.002, T1557, T1082
+// Description: Detects potential suspicious behaviour using secedit.exe. Such as exporting or modifying the
+//   security policy
+// False positives:
+//   - Legitimate administrative use
+// References:
+//   - https://blueteamops.medium.com/secedit-and-i-know-it-595056dee53d
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/secedit
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_secedit_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\secedit.exe" or ProcessVersionInfoOriginalFileName =~ "SeCEdit") and ((ProcessCommandLine contains "/export" and ProcessCommandLine contains "/cfg") or (ProcessCommandLine contains "/configure" and ProcessCommandLine contains "/db"))

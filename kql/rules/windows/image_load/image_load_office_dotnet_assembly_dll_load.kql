@@ -1,0 +1,18 @@
+// Title: DotNET Assembly DLL Loaded Via Office Application
+// Sigma ID: ff0f2b05-09db-4095-b96d-1b75ca24894a
+// Status: test | Level: medium
+// Author: Antonlovesdnb
+// Date: 2020-02-19 | Modified: 2023-03-29
+// ATT&CK: execution, T1204.002
+// Description: Detects any assembly DLL being loaded by an Office Product
+// False positives:
+//   - Unknown
+// References:
+//   - https://medium.com/threatpunter/detecting-adversary-tradecraft-with-image-load-event-logging-and-eql-8de93338c16
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/image_load/image_load_office_dotnet_assembly_dll_load.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceImageLoadEvents
+| where (InitiatingProcessFolderPath endswith "\\excel.exe" or InitiatingProcessFolderPath endswith "\\mspub.exe" or InitiatingProcessFolderPath endswith "\\onenote.exe" or InitiatingProcessFolderPath endswith "\\onenoteim.exe" or InitiatingProcessFolderPath endswith "\\outlook.exe" or InitiatingProcessFolderPath endswith "\\powerpnt.exe" or InitiatingProcessFolderPath endswith "\\winword.exe") and FolderPath startswith "C:\\Windows\\assembly\\"

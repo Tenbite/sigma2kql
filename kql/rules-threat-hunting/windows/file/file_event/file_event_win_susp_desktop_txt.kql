@@ -1,0 +1,23 @@
+// Title: Suspicious Creation TXT File in User Desktop
+// Sigma ID: caf02a0a-1e1c-4552-9b48-5e070bd88d11
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2021-12-26 | Modified: 2026-01-09
+// ATT&CK: impact, T1486
+// Tags: detection.threat-hunting
+// Description: Detects creation of .txt files in user desktop folders via cmd.exe. This behavior may indicate
+//   ransomware deploying ransom notes, but can also occur during legitimate administrative tasks.
+//   Analysts should investigate for suspicious filenames (e.g., "RANSOM", "DECRYPT", "READ_ME"),
+//   bulk file creation patterns, or concurrent encryption activity to determine if this is part of a
+//   ransomware attack.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1486/T1486.md#atomic-test-5---purelocker-ransom-note
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-threat-hunting/windows/file/file_event/file_event_win_susp_desktop_txt.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where InitiatingProcessFolderPath endswith "\\cmd.exe" and (FolderPath contains "\\Users\\" and FolderPath contains "\\Desktop\\") and FolderPath endswith ".txt"

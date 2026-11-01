@@ -1,0 +1,24 @@
+// Title: Potential Hidden Directory Creation Via NTFS INDEX_ALLOCATION Stream
+// Sigma ID: a8f866e1-bdd4-425e-a27a-37619238d9c7
+// Status: test | Level: medium
+// Author: Scoubi (@ScoubiMtl)
+// Date: 2023-10-09 | Modified: -
+// ATT&CK: stealth, T1564.004
+// Description: Detects the creation of hidden file/folder with the "::$index_allocation" stream. Which can be
+//   used as a technique to prevent access to folder and files from tooling such as "explorer.exe"
+//   and "powershell.exe"
+// False positives:
+//   - Unlikely
+// References:
+//   - https://twitter.com/pfiatde/status/1681977680688738305
+//   - https://soroush.me/blog/2010/12/a-dotty-salty-directory-a-secret-place-in-ntfs-for-secret-files/
+//   - https://sec-consult.com/blog/detail/pentesters-windows-ntfs-tricks-collection/
+//   - https://github.com/redcanaryco/atomic-red-team/blob/5c3b23002d2bbede3c07e7307165fc2a235a427d/atomics/T1564.004/T1564.004.md#atomic-test-5---create-hidden-directory-via-index_allocation
+//   - https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-fscc/c54dec26-1551-4d3a-a0ea-4fa40f848eb3
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_susp_hidden_dir_index_allocation.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath contains "::$index_allocation"

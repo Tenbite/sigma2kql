@@ -1,0 +1,21 @@
+// Title: Disable Or Stop Services
+// Sigma ID: de25eeb8-3655-4643-ac3a-b662d3f26b6b
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-09-15 | Modified: 2025-03-18
+// ATT&CK: defense-impairment, T1685, impact, T1489
+// Description: Detects the usage of utilities such as 'systemctl', 'service'...etc to stop or disable tools and
+//   services on Linux systems. Attackers may stop or disable security tools and services to evade
+//   detection, maintain persistence, or disrupt system operations.
+// False positives:
+//   - Legitimate administration activities
+//   - Some false positives are to be expected. Apply additional filters as needed before pushing to production.
+// References:
+//   - https://www.trendmicro.com/pl_pl/research/20/i/the-evolution-of-malicious-shell-scripts.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_services_stop_and_disable.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "/service" or FolderPath endswith "/systemctl" or FolderPath endswith "/chkconfig") and (ProcessCommandLine contains " stop " or ProcessCommandLine contains " disable ")) and (not(((FolderPath endswith "/systemctl" and (ProcessCommandLine contains "--no-reload disable snap-snapd-" or ProcessCommandLine contains " stop snap-snapd-")) or (FolderPath endswith "/systemctl" and InitiatingProcessCommandLine contains "tmp.ci/preinst upgrade" and (ProcessCommandLine contains " stop " and ProcessCommandLine contains "ssh.")) or (InitiatingProcessCommandLine contains "/dpkg/info/ubuntu-pro-client.prerm upgrade" and FolderPath endswith "/systemctl")))) and (not((FolderPath endswith "/systemctl" and ProcessCommandLine endswith "snap.amazon-ssm-agent.amazon-ssm-agent.service")))

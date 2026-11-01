@@ -1,0 +1,21 @@
+// Title: Chmod Targeting Sensitive Directories
+// Sigma ID: 6419afd1-3742-47a5-a7e6-b50386cd15f8
+// Status: test | Level: medium
+// Author: Christopher Peacock @SecurePeacock, SCYTHE @scythe_io
+// Date: 2022-06-03 | Modified: 2026-03-18
+// ATT&CK: defense-impairment, T1222.002
+// Description: Detects chmod targeting files in sensitive directory paths on Linux systems. Attackers may use
+//   chmod to change permissions of files in these directories to maintain persistence, escalate
+//   privileges, or disrupt system operations.
+// False positives:
+//   - Some false positives are to be expected. Apply additional filters as needed before pushing to production.
+// References:
+//   - https://www.intezer.com/blog/malware-analysis/new-backdoor-sysjoker/
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1222.002/T1222.002.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_chmod_targeting_sensitive_directories.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "/chmod" and (ProcessCommandLine contains "/tmp/" or ProcessCommandLine contains "/.Library/" or ProcessCommandLine contains "/etc/" or ProcessCommandLine contains "/opt/")) and (not(((ProcessCommandLine contains "chmod --reference=/etc/shells" and InitiatingProcessCommandLine endswith "/update-shells") or (ProcessCommandLine contains "/etc/" and (InitiatingProcessCommandLine contains "/var/lib/dpkg/info/" and InitiatingProcessCommandLine contains ".postinst configure")) or ProcessCommandLine startswith "chmod 700 /tmp/apt-key-gpghome." or ProcessCommandLine startswith "chmod 755 /var/tmp/mkinitramfs" or ProcessCommandLine =~ "chmod 0775 /etc/landscape/" or ProcessCommandLine =~ "chmod 644 /etc/apparmor.d/tunables/home.d/ubuntu")))

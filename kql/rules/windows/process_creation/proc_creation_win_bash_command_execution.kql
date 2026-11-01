@@ -1,0 +1,19 @@
+// Title: Indirect Inline Command Execution Via Bash.EXE
+// Sigma ID: 5edc2273-c26f-406c-83f3-f4d948e740dd
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2021-11-24 | Modified: 2023-08-15
+// ATT&CK: stealth, T1202
+// Description: Detects execution of Microsoft bash launcher with the "-c" flag. This can be used to potentially
+//   bypass defenses and execute Linux or Windows-based binaries directly via bash.
+// False positives:
+//   - Unknown
+// References:
+//   - https://lolbas-project.github.io/lolbas/Binaries/Bash/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_bash_command_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((FolderPath endswith ":\\Windows\\System32\\bash.exe" or FolderPath endswith ":\\Windows\\SysWOW64\\bash.exe") or ProcessVersionInfoOriginalFileName =~ "Bash.exe") and ProcessCommandLine contains " -c "

@@ -1,0 +1,19 @@
+// Title: Registry Persistence via Service in Safe Mode
+// Sigma ID: 1547e27c-3974-43e2-a7d7-7f484fb928ec
+// Status: test | Level: high
+// Author: frack113
+// Date: 2022-04-04 | Modified: 2025-10-22
+// ATT&CK: stealth, T1564.001
+// Description: Detects the modification of the registry to allow a driver or service to persist in Safe Mode.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1112/T1112.md#atomic-test-33---windows-add-registry-value-to-load-service-in-safe-mode-without-network
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1112/T1112.md#atomic-test-34---windows-add-registry-value-to-load-service-in-safe-mode-with-network
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_add_load_service_in_safe_mode.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where ((RegistryKey endswith "\\Control\\SafeBoot\\Minimal*" or RegistryKey endswith "\\Control\\SafeBoot\\Network*") and RegistryKey endswith "\\(Default)" and RegistryValueData =~ "Service") and (not(((InitiatingProcessFolderPath =~ "C:\\WINDOWS\\system32\\msiexec.exe" and (RegistryKey endswith "\\Control\\SafeBoot\\Minimal\\SAVService\\(Default)" or RegistryKey endswith "\\Control\\SafeBoot\\Network\\SAVService\\(Default)")) or (InitiatingProcessFolderPath endswith "\\MBAMInstallerService.exe" and RegistryKey endswith "\\MBAMService\\(Default)" and RegistryValueData =~ "Service") or (InitiatingProcessFolderPath =~ "C:\\Hexnode\\Hexnode Agent\\Current\\HexnodeAgent.exe" and (RegistryKey endswith "\\Control\\SafeBoot\\Minimal\\Hexnode Updater\\(Default)" or RegistryKey endswith "\\Control\\SafeBoot\\Network\\Hexnode Updater\\(Default)" or RegistryKey endswith "\\Control\\SafeBoot\\Minimal\\Hexnode Agent\\(Default)" or RegistryKey endswith "\\Control\\SafeBoot\\Network\\Hexnode Agent\\(Default)") and RegistryValueData =~ "Service"))))

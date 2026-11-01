@@ -1,0 +1,21 @@
+// Title: PowerShell Web Access Feature Enabled Via DISM
+// Sigma ID: 7e8f2d3b-9c1a-4f67-b9e8-8d9006e0e51f
+// Status: test | Level: high
+// Author: Michael Haag
+// Date: 2024-09-03 | Modified: -
+// ATT&CK: privilege-escalation, persistence, T1548.002
+// Description: Detects the use of DISM to enable the PowerShell Web Access feature, which could be used for
+//   remote access and potential abuse
+// False positives:
+//   - Legitimate PowerShell Web Access installations by administrators
+// References:
+//   - https://docs.microsoft.com/en-us/powershell/module/dism/enable-windowsoptionalfeature
+//   - https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-241a
+//   - https://gist.github.com/MHaggis/7e67b659af9148fa593cf2402edebb41
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_dism_enable_powershell_web_access_feature.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\dism.exe" or ProcessVersionInfoOriginalFileName =~ "DISM.EXE") and (ProcessCommandLine contains "WindowsPowerShellWebAccess" and ProcessCommandLine contains "/online" and ProcessCommandLine contains "/enable-feature")

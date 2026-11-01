@@ -1,0 +1,19 @@
+// Title: DLL Sideloading by VMware Xfer Utility
+// Sigma ID: ebea773c-a8f1-42ad-a856-00cb221966e8
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-08-02 | Modified: -
+// ATT&CK: privilege-escalation, persistence, execution, stealth, T1574.001
+// Description: Detects execution of VMware Xfer utility (VMwareXferlogs.exe) from the non-default directory
+//   which may be an attempt to sideload arbitrary DLL
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.sentinelone.com/labs/lockbit-ransomware-side-loads-cobalt-strike-beacon-with-legitimate-vmware-utility/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_dll_sideload_vmware_xfer.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\VMwareXferlogs.exe" and (not(FolderPath startswith "C:\\Program Files\\VMware\\"))

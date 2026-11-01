@@ -1,0 +1,19 @@
+// Title: OpenWith.exe Executes Specified Binary
+// Sigma ID: cec8e918-30f7-4e2d-9bfa-a59cc97ae60f
+// Status: test | Level: high
+// Author: Beyu Denis, oscd.community (rule), @harr0ey (idea)
+// Date: 2019-10-12 | Modified: 2021-11-27
+// ATT&CK: stealth, T1218
+// Description: The OpenWith.exe executes other binary
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/LOLBAS-Project/LOLBAS/blob/4db780e0f0b2e2bb8cb1fa13e09196da9b9f1834/yml/LOLUtilz/OSBinaries/Openwith.yml
+//   - https://twitter.com/harr0ey/status/991670870384021504
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_lolbin_openwith.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\OpenWith.exe" and ProcessCommandLine contains "/c"

@@ -1,0 +1,18 @@
+// Title: HackTool - SILENTTRINITY Stager Execution
+// Sigma ID: 03552375-cc2c-4883-bbe4-7958d5a980be
+// Status: test | Level: high
+// Author: Aleksey Potapov, oscd.community
+// Date: 2019-10-22 | Modified: 2023-02-13
+// ATT&CK: command-and-control, T1071
+// Description: Detects SILENTTRINITY stager use via PE metadata
+// False positives:
+//   - Unlikely
+// References:
+//   - https://github.com/byt3bl33d3r/SILENTTRINITY
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_silenttrinity_stager.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessVersionInfoFileDescription contains "st2stager"

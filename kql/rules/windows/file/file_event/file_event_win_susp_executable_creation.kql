@@ -1,0 +1,20 @@
+// Title: Suspicious Executable File Creation
+// Sigma ID: 74babdd6-a758-4549-9632-26535279e654
+// Status: test | Level: high
+// Author: frack113
+// Date: 2022-09-05 | Modified: 2023-12-11
+// ATT&CK: stealth, T1564
+// Description: Detect creation of suspicious executable file names. Some strings look for suspicious file
+//   extensions, others look for filenames that exploit unquoted service paths.
+// False positives:
+//   - Unknown
+// References:
+//   - https://medium.com/@SumitVerma101/windows-privilege-escalation-part-1-unquoted-service-path-c7a011a8d8ae
+//   - https://app.any.run/tasks/76c69e2d-01e8-49d9-9aea-fb7cc0c4d3ad/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_susp_executable_creation.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath endswith ":\\$Recycle.Bin.exe" or FolderPath endswith ":\\Documents and Settings.exe" or FolderPath endswith ":\\MSOCache.exe" or FolderPath endswith ":\\PerfLogs.exe" or FolderPath endswith ":\\Recovery.exe" or FolderPath endswith ".bat.exe" or FolderPath endswith ".sys.exe"

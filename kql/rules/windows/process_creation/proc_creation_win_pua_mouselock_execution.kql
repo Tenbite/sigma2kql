@@ -1,0 +1,20 @@
+// Title: PUA - Mouse Lock Execution
+// Sigma ID: c9192ad9-75e5-43eb-8647-82a0a5b493e3
+// Status: test | Level: medium
+// Author: Cian Heasley
+// Date: 2020-08-13 | Modified: 2023-02-21
+// ATT&CK: credential-access, collection, T1056.002
+// Description: In Kaspersky's 2020 Incident Response Analyst Report they listed legitimate tool "Mouse Lock" as
+//   being used for both credential access and collection in security incidents.
+// False positives:
+//   - Legitimate uses of Mouse Lock software
+// References:
+//   - https://github.com/klsecservices/Publications/blob/657deb6a6eb6e00669afd40173f425fb49682eaa/Incident-Response-Analyst-Report-2020.pdf
+//   - https://sourceforge.net/projects/mouselock/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_pua_mouselock_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessVersionInfoProductName contains "Mouse Lock" or ProcessVersionInfoCompanyName contains "Misc314" or ProcessCommandLine contains "Mouse Lock_"

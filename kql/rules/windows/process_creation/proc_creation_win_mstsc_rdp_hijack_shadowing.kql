@@ -1,0 +1,19 @@
+// Title: Potential MSTSC Shadowing Activity
+// Sigma ID: 6ba5a05f-b095-4f0a-8654-b825f4f16334
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2020-01-24 | Modified: 2023-02-05
+// ATT&CK: lateral-movement, T1563.002
+// Description: Detects RDP session hijacking by using MSTSC shadowing
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/kmkz_security/status/1220694202301976576
+//   - https://github.com/kmkz/Pentesting/blob/47592e5e160d3b86c2024f09ef04ceb87d204995/Post-Exploitation-Cheat-Sheet
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_mstsc_rdp_hijack_shadowing.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "noconsentprompt" and ProcessCommandLine contains "shadow:"

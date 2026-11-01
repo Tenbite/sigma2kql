@@ -1,0 +1,18 @@
+// Title: Renamed Remote Utilities RAT (RURAT) Execution
+// Sigma ID: 9ef27c24-4903-4192-881a-3adde7ff92a5
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-09-19 | Modified: 2023-02-03
+// ATT&CK: collection, command-and-control, discovery, stealth, S0592
+// Description: Detects execution of renamed Remote Utilities (RURAT) via Product PE header field
+// False positives:
+//   - Unknown
+// References:
+//   - https://redcanary.com/blog/misbehaving-rats/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_renamed_rurat.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessVersionInfoProductName =~ "Remote Utilities" and (not((FolderPath endswith "\\rutserv.exe" or FolderPath endswith "\\rfusclient.exe")))

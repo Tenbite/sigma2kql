@@ -1,0 +1,21 @@
+// Title: Suspicious HH.EXE Execution
+// Sigma ID: e8a95b5e-c891-46e2-b33a-93937d3abc31
+// Status: test | Level: high
+// Author: Maxim Pavlunin
+// Date: 2020-04-01 | Modified: 2023-04-12
+// ATT&CK: execution, initial-access, stealth, T1047, T1059.001, T1059.003, T1059.005, T1059.007, T1218, T1218.001, T1218.010, T1218.011, T1566, T1566.001
+// Description: Detects a suspicious execution of a Microsoft HTML Help (HH.exe)
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/chm-badness-delivers-a-banking-trojan/
+//   - https://github.com/elastic/protections-artifacts/commit/746086721fd385d9f5c6647cada1788db4aea95f#diff-27939090904026cc396b0b629c8e4314acd6f5dac40a676edbc87f4567b47eb7
+//   - https://www.ptsecurity.com/ww-en/analytics/pt-esc-threat-intelligence/higaisa-or-winnti-apt-41-backdoors-old-and-new/
+//   - https://www.zscaler.com/blogs/security-research/unintentional-leak-glimpse-attack-vectors-apt37
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hh_susp_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessVersionInfoOriginalFileName =~ "HH.exe" or FolderPath endswith "\\hh.exe") and (ProcessCommandLine contains ".application" or ProcessCommandLine contains "\\AppData\\Local\\Temp\\" or ProcessCommandLine contains "\\Content.Outlook\\" or ProcessCommandLine contains "\\Downloads\\" or ProcessCommandLine contains "\\Users\\Public\\" or ProcessCommandLine contains "\\Windows\\Temp\\")

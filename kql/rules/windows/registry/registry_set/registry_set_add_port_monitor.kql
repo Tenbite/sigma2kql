@@ -1,0 +1,20 @@
+// Title: Add Port Monitor Persistence in Registry
+// Sigma ID: 944e8941-f6f6-4ee8-ac05-1c224e923c0e
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2021-12-30 | Modified: 2024-03-25
+// ATT&CK: privilege-escalation, persistence, T1547.010
+// Description: Adversaries may use port monitors to run an attacker supplied DLL during system boot for
+//   persistence or privilege escalation. A port monitor can be set through the AddMonitor API call
+//   to set a DLL to be loaded at startup.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1547.010/T1547.010.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_add_port_monitor.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey endswith "\\Control\\Print\\Monitors*" and RegistryValueData endswith ".dll") and (not(((InitiatingProcessFolderPath =~ "C:\\Windows\\System32\\spoolsv.exe" and RegistryKey contains "\\Control\\Print\\Monitors\\CutePDF Writer Monitor v4.0\\Driver" and RegistryValueData =~ "cpwmon64_v40.dll" and (InitiatingProcessAccountName contains "AUTHORI" or InitiatingProcessAccountName contains "AUTORI")) or RegistryKey contains "\\Control\\Print\\Monitors\\MONVNC\\Driver" or (RegistryKey endswith "Control\\Print\\Environments*" and RegistryKey endswith "\\Drivers*" and RegistryKey contains "\\VNC Printer"))))

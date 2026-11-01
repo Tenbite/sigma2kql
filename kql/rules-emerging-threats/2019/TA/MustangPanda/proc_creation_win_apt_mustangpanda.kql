@@ -1,0 +1,21 @@
+// Title: Mustang Panda Dropper
+// Sigma ID: 2d87d610-d760-45ee-a7e6-7a6f2a65de00
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems), oscd.community
+// Date: 2019-10-30 | Modified: 2021-11-27
+// ATT&CK: T1587.001, resource-development
+// Tags: detection.emerging-threats
+// Description: Detects specific process parameters as used by Mustang Panda droppers
+// False positives:
+//   - Unlikely
+// References:
+//   - https://app.any.run/tasks/7ca5661d-a67b-43ec-98c1-dd7a8103c256/
+//   - https://app.any.run/tasks/b12cccf3-1c22-4e28-9d3e-c7a6062f3914/
+//   - https://www.anomali.com/blog/china-based-apt-mustang-panda-targets-minority-groups-public-and-private-sector-organizations
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2019/TA/MustangPanda/proc_creation_win_apt_mustangpanda.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((ProcessCommandLine contains "Temp\\wtask.exe /create" or ProcessCommandLine contains "%windir:~-3,1%%PUBLIC:~-9,1%" or ProcessCommandLine contains "/tn \"Security Script " or ProcessCommandLine contains "%windir:~-1,1%") or (ProcessCommandLine contains "/E:vbscript" and ProcessCommandLine contains "C:\\Users\\" and ProcessCommandLine contains ".txt" and ProcessCommandLine contains "/F")) or FolderPath endswith "Temp\\winwsh.exe"

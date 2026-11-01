@@ -1,0 +1,20 @@
+// Title: RegAsm.EXE Initiating Network Connection To Public IP
+// Sigma ID: 0531e43a-d77d-47c2-b89f-5fe50321c805
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2024-04-25 | Modified: -
+// ATT&CK: stealth, T1218.009
+// Description: Detects "RegAsm.exe" initiating a network connection to public IP adresses
+// False positives:
+//   - Unknown
+// References:
+//   - https://app.any.run/tasks/ec207948-4916-47eb-a0f4-4c6abb2e7668/
+//   - https://research.splunk.com/endpoint/07921114-6db4-4e2e-ae58-3ea8a52ae93f/
+//   - https://lolbas-project.github.io/lolbas/Binaries/Regasm/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/network_connection/net_connection_win_regasm_network_activity.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceNetworkEvents
+| where InitiatingProcessFolderPath endswith "\\regasm.exe" and (not((ipv4_is_in_range(RemoteIP, "127.0.0.0/8") or ipv4_is_in_range(RemoteIP, "10.0.0.0/8") or ipv4_is_in_range(RemoteIP, "172.16.0.0/12") or ipv4_is_in_range(RemoteIP, "192.168.0.0/16") or ipv4_is_in_range(RemoteIP, "169.254.0.0/16") or ipv4_is_in_range(RemoteIP, "::1/128") or ipv4_is_in_range(RemoteIP, "fe80::/10") or ipv4_is_in_range(RemoteIP, "fc00::/7"))))

@@ -1,0 +1,20 @@
+// Title: Suspicious Schtasks Schedule Type With High Privileges
+// Sigma ID: 7a02e22e-b885-4404-b38b-1ddc7e65258a
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-08-31 | Modified: -
+// ATT&CK: privilege-escalation, persistence, execution, T1053.005
+// Description: Detects scheduled task creations or modification to be run with high privileges on a suspicious
+//   schedule type
+// False positives:
+//   - Some installers were seen using this method of creation unfortunately. Filter them in your environment
+// References:
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks-change
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks-create
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_schtasks_schedule_type_system.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\schtasks.exe" or ProcessVersionInfoOriginalFileName =~ "schtasks.exe") and (ProcessCommandLine contains " ONLOGON " or ProcessCommandLine contains " ONSTART " or ProcessCommandLine contains " ONCE " or ProcessCommandLine contains " ONIDLE ") and (ProcessCommandLine contains "NT AUT" or ProcessCommandLine contains " SYSTEM" or ProcessCommandLine contains "HIGHEST")

@@ -1,0 +1,22 @@
+// Title: Suspicious Process Masquerading As SvcHost.EXE
+// Sigma ID: be58d2e2-06c8-4f58-b666-b99f6dc3b6cd
+// Status: test | Level: high
+// Author: Swachchhanda Shrawan Poudel
+// Date: 2024-08-07 | Modified: -
+// ATT&CK: stealth, T1036.005
+// Description: Detects a suspicious process that is masquerading as the legitimate "svchost.exe" by naming its
+//   binary "svchost.exe" and executing from an uncommon location. Adversaries often disguise their
+//   malicious binaries by naming them after legitimate system processes like "svchost.exe" to evade
+//   detection.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://tria.ge/240731-jh4crsycnb/behavioral2
+//   - https://redcanary.com/blog/threat-detection/process-masquerading/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_svchost_masqueraded_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\svchost.exe" and (not(((FolderPath in~ ("C:\\Windows\\System32\\svchost.exe", "C:\\Windows\\SysWOW64\\svchost.exe")) or ProcessVersionInfoOriginalFileName =~ "svchost.exe")))

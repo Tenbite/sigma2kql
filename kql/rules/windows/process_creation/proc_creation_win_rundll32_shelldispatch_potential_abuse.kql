@@ -1,0 +1,19 @@
+// Title: Potential ShellDispatch.DLL Functionality Abuse
+// Sigma ID: 82343930-652f-43f5-ab70-2ee9fdd6d5e9
+// Status: test | Level: medium
+// Author: X__Junior (Nextron Systems)
+// Date: 2023-06-20 | Modified: -
+// ATT&CK: execution, stealth
+// Description: Detects potential "ShellDispatch.dll" functionality abuse to execute arbitrary binaries via
+//   "ShellExecute"
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.hexacorn.com/blog/2023/06/07/this-lolbin-doesnt-exist/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_rundll32_shelldispatch_potential_abuse.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\rundll32.exe" or ProcessVersionInfoOriginalFileName =~ "RUNDLL32.EXE") and ProcessCommandLine contains "RunDll_ShellExecuteW"

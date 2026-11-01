@@ -1,0 +1,19 @@
+// Title: Renamed AutoHotkey.EXE Execution
+// Sigma ID: 0f16d9cf-0616-45c8-8fad-becc11b5a41c
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali
+// Date: 2023-02-07 | Modified: -
+// ATT&CK: stealth
+// Description: Detects execution of a renamed autohotkey.exe binary based on PE metadata fields
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.autohotkey.com/download/
+//   - https://thedfirreport.com/2023/02/06/collect-exfiltrate-sleep-repeat/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_renamed_autohotkey.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessVersionInfoProductName contains "AutoHotkey" or ProcessVersionInfoFileDescription contains "AutoHotkey" or (ProcessVersionInfoOriginalFileName in~ ("AutoHotkey.exe", "AutoHotkey.rc"))) and (not(((FolderPath endswith "\\AutoHotkey.exe" or FolderPath endswith "\\AutoHotkey32.exe" or FolderPath endswith "\\AutoHotkey32_UIA.exe" or FolderPath endswith "\\AutoHotkey64.exe" or FolderPath endswith "\\AutoHotkey64_UIA.exe" or FolderPath endswith "\\AutoHotkeyA32.exe" or FolderPath endswith "\\AutoHotkeyA32_UIA.exe" or FolderPath endswith "\\AutoHotkeyU32.exe" or FolderPath endswith "\\AutoHotkeyU32_UIA.exe" or FolderPath endswith "\\AutoHotkeyU64.exe" or FolderPath endswith "\\AutoHotkeyU64_UIA.exe") or FolderPath contains "\\AutoHotkey")))

@@ -1,0 +1,26 @@
+// Title: Potential DLL Injection Via AccCheckConsole
+// Sigma ID: 0f6da907-5854-4be6-859a-e9958747b0aa
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-01-06 | Modified: 2024-08-29
+// ATT&CK: execution
+// Tags: detection.threat-hunting
+// Description: Detects the execution "AccCheckConsole" a command-line tool for verifying the accessibility
+//   implementation of an application's UI. One of the tests that this checker can run are called
+//   "verification routine", which tests for things like Consistency, Navigation, etc. The tool
+//   allows a user to provide a DLL that can contain a custom "verification routine". An attacker can
+//   build such DLLs and pass it via the CLI, which would then be loaded in the context of the
+//   "AccCheckConsole" utility.
+// False positives:
+//   - Legitimate use of the UI Accessibility Checker
+// References:
+//   - https://gist.github.com/bohops/2444129419c8acf837aedda5f0e7f340
+//   - https://twitter.com/bohops/status/1477717351017680899?s=12
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/AccCheckConsole/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_acccheckconsole_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\AccCheckConsole.exe" or ProcessVersionInfoOriginalFileName =~ "AccCheckConsole.exe") and (ProcessCommandLine contains " -hwnd" or ProcessCommandLine contains " -process " or ProcessCommandLine contains " -window ")

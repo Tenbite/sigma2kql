@@ -1,0 +1,18 @@
+// Title: RDP Port Forwarding Rule Added Via Netsh.EXE
+// Sigma ID: 782d6f3e-4c5d-4b8c-92a3-1d05fed72e63
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems), oscd.community
+// Date: 2019-01-29 | Modified: 2023-02-13
+// ATT&CK: lateral-movement, command-and-control, T1090
+// Description: Detects the execution of netsh to configure a port forwarding of port 3389 (RDP) rule
+// False positives:
+//   - Legitimate administration activity
+// References:
+//   - https://www.fireeye.com/blog/threat-research/2019/01/bypassing-network-restrictions-through-rdp-tunneling.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_netsh_port_forwarding_3389.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\netsh.exe" or ProcessVersionInfoOriginalFileName =~ "netsh.exe") and (ProcessCommandLine contains " i" and ProcessCommandLine contains " p" and ProcessCommandLine contains "=3389" and ProcessCommandLine contains " c")

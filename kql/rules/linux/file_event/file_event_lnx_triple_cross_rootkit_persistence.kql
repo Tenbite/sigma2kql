@@ -1,0 +1,19 @@
+// Title: Triple Cross eBPF Rootkit Default Persistence
+// Sigma ID: 1a2ea919-d11d-4d1e-8535-06cda13be20f
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-07-05 | Modified: 2022-12-31
+// ATT&CK: privilege-escalation, execution, persistence, T1053.003
+// Description: Detects the creation of "ebpfbackdoor" files in both "cron.d" and "sudoers.d" directories. Which
+//   both are related to the TripleCross persistence method
+// False positives:
+//   - Unlikely
+// References:
+//   - https://github.com/h3xduck/TripleCross/blob/12629558b8b0a27a5488a0b98f1ea7042e76f8ab/apps/deployer.sh
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/file_event/file_event_lnx_triple_cross_rootkit_persistence.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where FolderPath endswith "ebpfbackdoor"

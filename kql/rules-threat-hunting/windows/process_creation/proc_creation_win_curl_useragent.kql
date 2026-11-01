@@ -1,0 +1,21 @@
+// Title: Curl.EXE Execution With Custom UserAgent
+// Sigma ID: 3286d37a-00fd-41c2-a624-a672dcd34e60
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2022-01-23 | Modified: 2023-02-21
+// ATT&CK: command-and-control, T1071.001
+// Tags: detection.threat-hunting
+// Description: Detects execution of curl.exe with custom useragent options
+// False positives:
+//   - Scripts created by developers and admins
+//   - Administrative activity
+// References:
+//   - https://curl.se/docs/manpage.html
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1071.001/T1071.001.md#atomic-test-2---malicious-user-agents---cmd
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-threat-hunting/windows/process_creation/proc_creation_win_curl_useragent.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\curl.exe" or ProcessVersionInfoProductName =~ "The curl executable") and (ProcessCommandLine contains " -A " or ProcessCommandLine contains " --user-agent ")

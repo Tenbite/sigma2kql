@@ -1,0 +1,18 @@
+// Title: Invoke-Obfuscation Via Stdin
+// Sigma ID: 9c14c9fa-1a63-4a64-8e57-d19280559490
+// Status: test | Level: high
+// Author: Nikita Nazarov, oscd.community
+// Date: 2020-10-12 | Modified: 2026-03-16
+// ATT&CK: stealth, T1027, execution, T1059.001
+// Description: Detects Obfuscated Powershell via Stdin in Scripts
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/SigmaHQ/sigma/issues/1009
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_invoke_obfuscation_via_stdin.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ProcessCommandLine matches regex "(?i)(?:set).*&&\\s?set.*(?:environment|invoke|\\$\\{?input).*&&.*\""

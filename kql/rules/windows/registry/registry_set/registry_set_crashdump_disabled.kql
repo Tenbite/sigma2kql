@@ -1,0 +1,18 @@
+// Title: CrashControl CrashDump Disabled
+// Sigma ID: 2ff692c2-4594-41ec-8fcb-46587de769e0
+// Status: test | Level: medium
+// Author: Tobias Michalski (Nextron Systems)
+// Date: 2022-02-24 | Modified: 2023-08-17
+// ATT&CK: persistence, stealth, defense-impairment, T1564, T1112
+// Description: Detects disabling the CrashDump per registry (as used by HermeticWiper)
+// False positives:
+//   - Legitimate disabling of crashdumps
+// References:
+//   - https://www.sentinelone.com/labs/hermetic-wiper-ukraine-under-attack/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_crashdump_disabled.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey contains "SYSTEM\\CurrentControlSet\\Control\\CrashControl" and RegistryValueData =~ "DWORD (0x00000000)"

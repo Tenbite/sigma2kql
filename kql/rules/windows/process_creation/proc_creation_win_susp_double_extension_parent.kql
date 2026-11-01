@@ -1,0 +1,19 @@
+// Title: Suspicious Parent Double Extension File Execution
+// Sigma ID: 5e6a80c8-2d45-4633-9ef4-fa2671a39c5c
+// Status: test | Level: high
+// Author: frack113, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-01-06 | Modified: 2023-02-28
+// ATT&CK: stealth, T1036.007
+// Description: Detect execution of suspicious double extension files in ParentCommandLine
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.virustotal.com/gui/file/7872d8845a332dce517adae9c3389fde5313ff2fed38c2577f3b498da786db68/behavior
+//   - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/bluebottle-banks-targeted-africa
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_susp_double_extension_parent.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (InitiatingProcessFolderPath endswith ".doc.lnk" or InitiatingProcessFolderPath endswith ".docx.lnk" or InitiatingProcessFolderPath endswith ".xls.lnk" or InitiatingProcessFolderPath endswith ".xlsx.lnk" or InitiatingProcessFolderPath endswith ".ppt.lnk" or InitiatingProcessFolderPath endswith ".pptx.lnk" or InitiatingProcessFolderPath endswith ".rtf.lnk" or InitiatingProcessFolderPath endswith ".pdf.lnk" or InitiatingProcessFolderPath endswith ".txt.lnk" or InitiatingProcessFolderPath endswith ".doc.js" or InitiatingProcessFolderPath endswith ".docx.js" or InitiatingProcessFolderPath endswith ".xls.js" or InitiatingProcessFolderPath endswith ".xlsx.js" or InitiatingProcessFolderPath endswith ".ppt.js" or InitiatingProcessFolderPath endswith ".pptx.js" or InitiatingProcessFolderPath endswith ".rtf.js" or InitiatingProcessFolderPath endswith ".pdf.js" or InitiatingProcessFolderPath endswith ".txt.js") or (InitiatingProcessCommandLine contains ".doc.lnk" or InitiatingProcessCommandLine contains ".docx.lnk" or InitiatingProcessCommandLine contains ".xls.lnk" or InitiatingProcessCommandLine contains ".xlsx.lnk" or InitiatingProcessCommandLine contains ".ppt.lnk" or InitiatingProcessCommandLine contains ".pptx.lnk" or InitiatingProcessCommandLine contains ".rtf.lnk" or InitiatingProcessCommandLine contains ".pdf.lnk" or InitiatingProcessCommandLine contains ".txt.lnk" or InitiatingProcessCommandLine contains ".doc.js" or InitiatingProcessCommandLine contains ".docx.js" or InitiatingProcessCommandLine contains ".xls.js" or InitiatingProcessCommandLine contains ".xlsx.js" or InitiatingProcessCommandLine contains ".ppt.js" or InitiatingProcessCommandLine contains ".pptx.js" or InitiatingProcessCommandLine contains ".rtf.js" or InitiatingProcessCommandLine contains ".pdf.js" or InitiatingProcessCommandLine contains ".txt.js")

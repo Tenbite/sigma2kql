@@ -1,0 +1,21 @@
+// Title: Potential Process Injection Via Msra.EXE
+// Sigma ID: 744a188b-0415-4792-896f-11ddb0588dbc
+// Status: test | Level: high
+// Author: Alexander McDonald
+// Date: 2022-06-24 | Modified: 2023-02-03
+// ATT&CK: privilege-escalation, stealth, T1055
+// Description: Detects potential process injection via Microsoft Remote Asssistance (Msra.exe) by looking at
+//   suspicious child processes spawned from the aforementioned process. It has been a target used by
+//   many threat actors and used for discovery and persistence tactics
+// False positives:
+//   - Legitimate use of Msra.exe
+// References:
+//   - https://www.microsoft.com/security/blog/2021/12/09/a-closer-look-at-qakbots-latest-building-blocks-and-how-to-knock-them-down/
+//   - https://www.fortinet.com/content/dam/fortinet/assets/analyst-reports/ar-qakbot.pdf
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_msra_process_injection.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\msra.exe" and InitiatingProcessCommandLine endswith "msra.exe" and (FolderPath endswith "\\arp.exe" or FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\net.exe" or FolderPath endswith "\\netstat.exe" or FolderPath endswith "\\nslookup.exe" or FolderPath endswith "\\route.exe" or FolderPath endswith "\\schtasks.exe" or FolderPath endswith "\\whoami.exe")

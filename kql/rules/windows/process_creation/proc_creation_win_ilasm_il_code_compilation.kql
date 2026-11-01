@@ -1,0 +1,19 @@
+// Title: C# IL Code Compilation Via Ilasm.EXE
+// Sigma ID: 850d55f9-6eeb-4492-ad69-a72338f65ba4
+// Status: test | Level: medium
+// Author: frack113, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-05-07 | Modified: 2022-05-16
+// ATT&CK: execution, stealth, T1127
+// Description: Detects the use of "Ilasm.EXE" in order to compile C# intermediate (IL) code to EXE or DLL.
+// False positives:
+//   - Unknown
+// References:
+//   - https://lolbas-project.github.io/lolbas/Binaries/Ilasm/
+//   - https://www.echotrail.io/insights/search/ilasm.exe
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_ilasm_il_code_compilation.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\ilasm.exe" or ProcessVersionInfoOriginalFileName =~ "ilasm.exe") and (ProcessCommandLine contains " /dll" or ProcessCommandLine contains " /exe")

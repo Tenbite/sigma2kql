@@ -1,0 +1,21 @@
+// Title: New TimeProviders Registered With Uncommon DLL Name
+// Sigma ID: e88a6ddc-74f7-463b-9b26-f69fc0d2ce85
+// Status: test | Level: high
+// Author: frack113
+// Date: 2022-06-19 | Modified: 2024-03-26
+// ATT&CK: persistence, privilege-escalation, T1547.003
+// Description: Detects processes setting a new DLL in DllName in under
+//   HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProvider. Adversaries may abuse
+//   time providers to execute DLLs when the system boots. The Windows Time service (W32Time) enables
+//   time synchronization across and within domains.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1547.003/T1547.003.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_timeproviders_dllname.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey contains "\\Services\\W32Time\\TimeProviders" and RegistryKey endswith "\\DllName") and (not((RegistryValueData in~ ("%SystemRoot%\\System32\\vmictimeprovider.dll", "%systemroot%\\system32\\w32time.dll", "C:\\Windows\\SYSTEM32\\w32time.DLL"))))

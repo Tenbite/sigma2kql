@@ -1,0 +1,22 @@
+// Title: Remote File Download Via Findstr.EXE
+// Sigma ID: 587254ee-a24b-4335-b3cd-065c0f1f4baa
+// Status: test | Level: medium
+// Author: Furkan CALISKAN, @caliskanfurkan_, @oscd_initiative, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2020-10-05 | Modified: 2024-03-05
+// ATT&CK: credential-access, command-and-control, stealth, T1218, T1564.004, T1552.001, T1105
+// Description: Detects execution of "findstr" with specific flags and a remote share path. This specific set of
+//   CLI flags would allow "findstr" to download the content of the file located on the remote share
+//   as described in the LOLBAS entry.
+// False positives:
+//   - Unknown
+// References:
+//   - https://lolbas-project.github.io/lolbas/Binaries/Findstr/
+//   - https://oddvar.moe/2018/04/11/putting-data-in-alternate-data-streams-and-how-to-execute-it-part-2/
+//   - https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_findstr_download.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "findstr" or FolderPath endswith "findstr.exe" or ProcessVersionInfoOriginalFileName =~ "FINDSTR.EXE") and ((ProcessCommandLine contains " -v " or ProcessCommandLine contains " /v " or ProcessCommandLine contains " –v " or ProcessCommandLine contains " —v " or ProcessCommandLine contains " ―v ") and (ProcessCommandLine contains " -l " or ProcessCommandLine contains " /l " or ProcessCommandLine contains " –l " or ProcessCommandLine contains " —l " or ProcessCommandLine contains " ―l ") and ProcessCommandLine contains "\\\\")

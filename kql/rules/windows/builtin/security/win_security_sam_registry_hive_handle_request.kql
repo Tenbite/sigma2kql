@@ -1,0 +1,18 @@
+// Title: SAM Registry Hive Handle Request
+// Sigma ID: f8748f2c-89dc-4d95-afb0-5a2dfdbad332
+// Status: test | Level: high
+// Author: Roberto Rodriguez @Cyb3rWard0g
+// Date: 2019-08-12 | Modified: 2021-11-27
+// ATT&CK: discovery, T1012, credential-access, T1552.002
+// Description: Detects handles requested to SAM registry hive
+// False positives:
+//   - Unknown
+// References:
+//   - https://threathunterplaybook.com/hunts/windows/190725-SAMRegistryHiveHandleRequest/notebook.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/builtin/security/win_security_sam_registry_hive_handle_request.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where RegistryKey endswith "\\SAM"

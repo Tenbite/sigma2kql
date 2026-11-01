@@ -1,0 +1,20 @@
+// Title: PUA - Chisel Tunneling Tool Execution
+// Sigma ID: 8b0e12da-d3c3-49db-bb4f-256703f380e5
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-09-13 | Modified: 2023-02-13
+// ATT&CK: command-and-control, T1090.001
+// Description: Detects usage of the Chisel tunneling tool via the commandline arguments
+// False positives:
+//   - Some false positives may occur with other tools with similar commandlines
+// References:
+//   - https://github.com/jpillora/chisel/
+//   - https://arcticwolf.com/resources/blog/lorenz-ransomware-chiseling-in/
+//   - https://blog.sekoia.io/lucky-mouse-incident-response-to-detection-engineering/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_pua_chisel.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\chisel.exe" or ((ProcessCommandLine contains "exe client " or ProcessCommandLine contains "exe server ") and (ProcessCommandLine contains "-socks5" or ProcessCommandLine contains "-reverse" or ProcessCommandLine contains " r:" or ProcessCommandLine contains ":127.0.0.1:" or ProcessCommandLine contains "-tls-skip-verify " or ProcessCommandLine contains ":socks"))

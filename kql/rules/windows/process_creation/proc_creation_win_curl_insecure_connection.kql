@@ -1,0 +1,18 @@
+// Title: Insecure Transfer Via Curl.EXE
+// Sigma ID: cb9cc1d1-e84e-4bdc-b7ad-c31b1b7908ec
+// Status: test | Level: medium
+// Author: X__Junior (Nextron Systems)
+// Date: 2023-06-30 | Modified: -
+// ATT&CK: execution
+// Description: Detects execution of "curl.exe" with the "--insecure" flag.
+// False positives:
+//   - Access to badly maintained internal or development systems
+// References:
+//   - https://curl.se/docs/manpage.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_curl_insecure_connection.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\curl.exe" or ProcessVersionInfoOriginalFileName =~ "curl.exe") and (ProcessCommandLine matches regex "\\s-k\\s" or ProcessCommandLine contains "--insecure")

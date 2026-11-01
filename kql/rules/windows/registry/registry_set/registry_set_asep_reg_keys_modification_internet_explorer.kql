@@ -1,0 +1,21 @@
+// Title: Internet Explorer Autorun Keys Modification
+// Sigma ID: a80f662f-022f-4429-9b8c-b1a41aaa6688
+// Status: test | Level: medium
+// Author: Victor Sergeev, Daniil Yugoslavskiy, Gleb Sukhodolskiy, Timur Zinniatullin, oscd.community, Tim Shelton, frack113 (split)
+// Date: 2019-10-25 | Modified: 2023-08-17
+// ATT&CK: privilege-escalation, persistence, T1547.001
+// Description: Detects modification of autostart extensibility point (ASEP) in registry.
+// False positives:
+//   - Legitimate software automatically (mostly, during installation) sets up autorun keys for legitimate reason
+//   - Legitimate administrator sets up autorun keys for legitimate reason
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1547.001/T1547.001.md
+//   - https://learn.microsoft.com/en-us/sysinternals/downloads/autoruns
+//   - https://gist.github.com/GlebSukhodolskiy/0fc5fa5f482903064b448890db1eaf9d
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_asep_reg_keys_modification_internet_explorer.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey contains "\\Software\\Wow6432Node\\Microsoft\\Internet Explorer" or RegistryKey contains "\\Software\\Microsoft\\Internet Explorer") and (RegistryKey contains "\\Toolbar" or RegistryKey contains "\\Extensions" or RegistryKey contains "\\Explorer Bars") and (not((RegistryValueData =~ "(Empty)" or (RegistryKey contains "\\Extensions\\{2670000A-7350-4f3c-8081-5663EE0C6C49}" or RegistryKey contains "\\Extensions\\{31D09BA0-12F5-4CCE-BE8A-2923E76605DA}" or RegistryKey contains "\\Extensions\\{789FE86F-6FC4-46A1-9849-EDE0DB0C95CA}" or RegistryKey contains "\\Extensions\\{A95fe080-8f5d-11d2-a20b-00aa003c157a}") or (RegistryKey endswith "\\Toolbar\\ShellBrowser\\ITBar7Layout" or RegistryKey endswith "\\Toolbar\\ShowDiscussionButton" or RegistryKey endswith "\\Toolbar\\Locked"))))

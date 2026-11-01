@@ -1,0 +1,20 @@
+// Title: Greenbug Espionage Group Indicators
+// Sigma ID: 3711eee4-a808-4849-8a14-faf733da3612
+// Status: test | Level: critical
+// Author: Florian Roth (Nextron Systems)
+// Date: 2020-05-20 | Modified: 2023-03-09
+// ATT&CK: stealth, G0049, execution, T1059.001, command-and-control, T1105, T1036.005
+// Tags: detection.emerging-threats
+// Description: Detects tools and process executions used by Greenbug in their May 2020 campaign as reported by
+//   Symantec
+// False positives:
+//   - Unlikely
+// References:
+//   - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/greenbug-espionage-telco-south-asia
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2020/TA/Greenbug/proc_creation_win_apt_greenbug_may20.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where (FolderPath endswith ":\\ProgramData\\adobe\\Adobe.exe" or FolderPath endswith ":\\ProgramData\\oracle\\local.exe" or FolderPath endswith "\\revshell.exe" or FolderPath endswith "\\infopagesbackup\\ncat.exe" or FolderPath endswith ":\\ProgramData\\comms\\comms.exe") or (ProcessCommandLine contains "-ExecutionPolicy Bypass -File" and ProcessCommandLine contains "\\msf.ps1") or (ProcessCommandLine contains "infopagesbackup" and ProcessCommandLine contains "\\ncat" and ProcessCommandLine contains "-e cmd.exe") or (ProcessCommandLine contains "system.Data.SqlClient.SqlDataAdapter($cmd); [void]$da.fill" or ProcessCommandLine contains "-nop -w hidden -c $k=new-object" or ProcessCommandLine contains "[Net.CredentialCache]::DefaultCredentials;IEX " or ProcessCommandLine contains " -nop -w hidden -c $m=new-object net.webclient;$m" or ProcessCommandLine contains "-noninteractive -executionpolicy bypass whoami" or ProcessCommandLine contains "-noninteractive -executionpolicy bypass netstat -a") or ProcessCommandLine contains "L3NlcnZlcj1"

@@ -1,0 +1,19 @@
+// Title: Esentutl Volume Shadow Copy Service Keys
+// Sigma ID: 5aad0995-46ab-41bd-a9ff-724f41114971
+// Status: test | Level: high
+// Author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+// Date: 2020-10-20 | Modified: 2022-12-25
+// ATT&CK: credential-access, T1003.002
+// Description: Detects the volume shadow copy service initialization and processing via esentutl. Registry keys
+//   such as HKLM\\System\\CurrentControlSet\\Services\\VSS\\Diag\\VolSnap\\Volume are captured.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003.002/T1003.002.md#atomic-test-3---esentutlexe-sam-copy
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_event/registry_event_esentutl_volume_shadow_copy_service_keys.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey contains "System\\CurrentControlSet\\Services\\VSS" and InitiatingProcessFolderPath endswith "esentutl.exe") and (not(RegistryKey contains "System\\CurrentControlSet\\Services\\VSS\\Start"))

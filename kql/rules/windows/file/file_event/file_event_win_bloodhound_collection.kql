@@ -1,0 +1,18 @@
+// Title: BloodHound Collection Files
+// Sigma ID: 02773bed-83bf-469f-b7ff-e676e7d78bab
+// Status: test | Level: high
+// Author: C.J. May
+// Date: 2022-08-09 | Modified: 2026-02-19
+// ATT&CK: discovery, T1087.001, T1087.002, T1482, T1069.001, T1069.002, execution, T1059.001
+// Description: Detects default file names outputted by the BloodHound collection tool SharpHound
+// False positives:
+//   - Some false positives may arise in some environment and this may require some tuning. Add additional filters or reduce level depending on the level of noise
+// References:
+//   - https://academy.hackthebox.com/course/preview/active-directory-bloodhound/bloodhound--data-collection
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_bloodhound_collection.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceFileEvents
+| where (FolderPath endswith "BloodHound.zip" or FolderPath endswith "_computers.json" or FolderPath endswith "_containers.json" or FolderPath endswith "_gpos.json" or FolderPath endswith "_groups.json" or FolderPath endswith "_ous.json" or FolderPath endswith "_users.json") and (not((InitiatingProcessFolderPath endswith "\\svchost.exe" and FolderPath startswith "C:\\Program Files\\WindowsApps\\Microsoft." and FolderPath endswith "\\pocket_containers.json")))

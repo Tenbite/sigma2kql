@@ -1,0 +1,27 @@
+// Title: Disable Windows Defender Functionalities Via Registry Keys
+// Sigma ID: 0eb46774-f1ab-4a74-8238-1155855f2263
+// Status: test | Level: high
+// Author: AlertIQ, Ján Trenčanský, frack113, Nasreddine Bencherchali, Swachchhanda Shrawan Poudel
+// Date: 2022-08-01 | Modified: 2024-10-07
+// ATT&CK: defense-impairment, T1685
+// Description: Detects when attackers or tools disable Windows Defender functionalities via the Windows
+//   registry
+// False positives:
+//   - Administrator actions via the Windows Defender interface
+//   - Third party Antivirus
+// References:
+//   - https://thedfirreport.com/2021/10/18/icedid-to-xinglocker-ransomware-in-24-hours/
+//   - https://gist.github.com/anadr/7465a9fde63d41341136949f14c21105
+//   - https://admx.help/?Category=Windows_7_2008R2&Policy=Microsoft.Policies.WindowsDefender::SpyNetReporting
+//   - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/ransomware-hive-conti-avoslocker
+//   - https://www.tenforums.com/tutorials/32236-enable-disable-microsoft-defender-pua-protection-windows-10-a.html
+//   - https://www.tenforums.com/tutorials/105533-enable-disable-windows-defender-exploit-protection-settings.html
+//   - https://www.tenforums.com/tutorials/123792-turn-off-tamper-protection-microsoft-defender-antivirus.html
+//   - https://securelist.com/key-group-ransomware-samples-and-telegram-schemes/114025/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_windows_defender_tamper.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceRegistryEvents
+| where (RegistryKey endswith "\\SOFTWARE\\Microsoft\\Windows Defender*" or RegistryKey endswith "\\SOFTWARE\\Policies\\Microsoft\\Windows Defender Security Center*" or RegistryKey endswith "\\SOFTWARE\\Policies\\Microsoft\\Windows Defender*") and (((RegistryKey endswith "\\DisableAntiSpyware" or RegistryKey endswith "\\DisableAntiVirus" or RegistryKey endswith "\\DisableBehaviorMonitoring" or RegistryKey endswith "\\DisableBlockAtFirstSeen" or RegistryKey endswith "\\DisableEnhancedNotifications" or RegistryKey endswith "\\DisableIntrusionPreventionSystem" or RegistryKey endswith "\\DisableIOAVProtection" or RegistryKey endswith "\\DisableOnAccessProtection" or RegistryKey endswith "\\DisableRealtimeMonitoring" or RegistryKey endswith "\\DisableScanOnRealtimeEnable" or RegistryKey endswith "\\DisableScriptScanning") and RegistryValueData =~ "DWORD (0x00000001)") or ((RegistryKey endswith "\\DisallowExploitProtectionOverride" or RegistryKey endswith "\\Features\\TamperProtection" or RegistryKey endswith "\\MpEngine\\MpEnablePus" or RegistryKey endswith "\\PUAProtection" or RegistryKey endswith "\\Signature Update\\ForceUpdateFromMU" or RegistryKey endswith "\\SpyNet\\SpynetReporting" or RegistryKey endswith "\\SpyNet\\SubmitSamplesConsent" or RegistryKey endswith "\\Windows Defender Exploit Guard\\Controlled Folder Access\\EnableControlledFolderAccess") and RegistryValueData =~ "DWORD (0x00000000)")) and (not((InitiatingProcessFolderPath startswith "C:\\Program Files\\Symantec\\Symantec Endpoint Protection\\" and InitiatingProcessFolderPath endswith "\\sepWscSvc64.exe")))

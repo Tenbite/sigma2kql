@@ -1,0 +1,19 @@
+// Title: Devtoolslauncher.exe Executes Specified Binary
+// Sigma ID: cc268ac1-42d9-40fd-9ed3-8c4e1a5b87e6
+// Status: test | Level: high
+// Author: Beyu Denis, oscd.community (rule), @_felamos (idea)
+// Date: 2019-10-12 | Modified: 2021-11-27
+// ATT&CK: stealth, T1218
+// Description: The Devtoolslauncher.exe executes other binary
+// False positives:
+//   - Legitimate use of devtoolslauncher.exe by legitimate user
+// References:
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Devtoolslauncher/
+//   - https://twitter.com/_felamos/status/1179811992841797632
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_lolbin_devtoolslauncher.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where FolderPath endswith "\\devtoolslauncher.exe" and ProcessCommandLine contains "LaunchForDeploy"

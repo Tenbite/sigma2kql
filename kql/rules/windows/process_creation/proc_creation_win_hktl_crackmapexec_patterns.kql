@@ -1,0 +1,18 @@
+// Title: HackTool - CrackMapExec Process Patterns
+// Sigma ID: f26307d8-14cd-47e3-a26b-4b4769f24af6
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-03-12 | Modified: 2023-02-13
+// ATT&CK: credential-access, T1003.001
+// Description: Detects suspicious process patterns found in logs when CrackMapExec is used
+// False positives:
+//   - Unknown
+// References:
+//   - https://mpgn.gitbook.io/crackmapexec/smb-protocol/obtaining-credentials/dump-lsass
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_crackmapexec_patterns.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+
+DeviceProcessEvents
+| where ((ProcessCommandLine contains "tasklist /fi " and ProcessCommandLine contains "Imagename eq lsass.exe") and (ProcessCommandLine contains "cmd.exe /c " or ProcessCommandLine contains "cmd.exe /r " or ProcessCommandLine contains "cmd.exe /k " or ProcessCommandLine contains "cmd /c " or ProcessCommandLine contains "cmd /r " or ProcessCommandLine contains "cmd /k ") and (AccountName contains "AUTHORI" or AccountName contains "AUTORI")) or (ProcessCommandLine contains "do rundll32.exe C:\\windows\\System32\\comsvcs.dll, MiniDump" and ProcessCommandLine contains "\\Windows\\Temp\\" and ProcessCommandLine contains " full" and ProcessCommandLine contains "%%B") or (ProcessCommandLine contains "tasklist /v /fo csv" and ProcessCommandLine contains "findstr /i \"lsass\"")
