@@ -1,0 +1,68 @@
+name: Convert Sigma to KQL
+
+on:
+  schedule:
+    - cron: "17 6 * * *"   # daily, 06:17 UTC
+  workflow_dispatch:
+    inputs:
+      full:
+        description: "Rebuild every rule instead of only changed ones"
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths:
+      - config.yml
+      - pipelines/**
+      - scripts/**
+      - validator/**
+      - requirements.txt
+      - package.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sigma2kql
+  cancel-in-progress: false
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install tools
+        run: |
+          pip install -r requirements.txt
+          npm ci
+
+      - name: Clone SigmaHQ (full history, no file contents until needed)
+        run: git clone --filter=blob:none --quiet https://github.com/SigmaHQ/sigma.git sigma
+
+      - name: Convert and validate
+        run: python scripts/convert.py ${{ inputs.full && '--full' || '' }}
+
+      - name: Commit results
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A kql reports state
+          if git diff --cached --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+          sha=$(git -C sigma rev-parse --short HEAD)
+          git commit -m "Update KQL from SigmaHQ ${sha}"
+          git push

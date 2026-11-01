@@ -1,0 +1,34 @@
+# sigma2kql configuration
+# Changing anything here (or in a custom pipeline file) triggers a full rebuild on the next run.
+
+# Which KQL flavor to generate:
+#   microsoft_xdr  - Defender XDR / MDE Advanced Hunting tables (DeviceProcessEvents, ...).
+#                    Also works in Sentinel when the Defender XDR connector streams those tables.
+#   sentinel_asim  - Sentinel ASIM parsers (imProcessCreate, imNetworkSession, ...)
+#   azure_monitor  - Log Analytics / Azure Monitor tables (SecurityEvent, ...)
+target: microsoft_xdr
+
+# Where the workflow clones SigmaHQ/sigma, and which of its rule folders to convert.
+sigma_dir: sigma
+rule_dirs:
+  - rules
+  - rules-emerging-threats
+  - rules-threat-hunting
+
+# Only convert rules with these values. Remove a key to accept everything.
+statuses: [stable, test]
+levels: [medium, high, critical]
+
+# Your own pySigma processing pipelines (field mappings for rules that fail to convert).
+# They run before the backend's pipeline. See pipelines/custom.yml.
+custom_pipelines:
+  - pipelines/custom.yml
+
+# Output
+output_dir: kql
+reports_dir: reports
+state_file: state/state.json
+
+# Validate every query with Microsoft's Kusto parser before writing it.
+# Queries that fail validation are not written to output_dir; they go to reports/validation_failed.md.
+validate: true

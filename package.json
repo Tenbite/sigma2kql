@@ -1,0 +1,8 @@
+{
+  "name": "sigma2kql-validator",
+  "private": true,
+  "description": "KQL validation for sigma2kql using Microsoft's Kusto.Language parser",
+  "dependencies": {
+    "@kusto/language-service-next": "12.4.1"
+  }
+}

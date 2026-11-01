@@ -1,0 +1,37 @@
+# Your own pySigma processing pipeline.
+#
+# Runs before the backend's pipeline (priority 5 < 10), so you can rename a Sigma field
+# to the real column name before the backend rejects it as unmapped.
+#
+# Workflow: open reports/failed.md, pick a common "Unmapped field" reason, check the target
+# table's columns in the Microsoft docs, add a mapping here, push. Any change to this file
+# triggers a full rebuild on the next run.
+#
+# Keep mappings scoped with rule_conditions so a rename only applies to the log source it is
+# correct for. Validation proves a query parses and uses real columns and types; it does not
+# prove the logic still matches the original rule, so read the converted query once.
+#
+# Transformation reference: https://sigmahq-pysigma.readthedocs.io/en/latest/Processing_Pipelines.html
+
+name: sigma2kql custom mappings
+priority: 5
+transformations:
+  # Sysmon's SourceFilename (old path in a rename) -> MDE DeviceFileEvents.PreviousFileName
+  - id: file_rename_sourcefilename
+    type: field_name_mapping
+    mapping:
+      SourceFilename: PreviousFileName
+    rule_conditions:
+      - type: logsource
+        product: windows
+        category: file_rename
+
+  # Template - copy, uncomment and edit:
+  # - id: my_mapping
+  #   type: field_name_mapping
+  #   mapping:
+  #     SigmaFieldName: TableColumnName
+  #   rule_conditions:
+  #     - type: logsource
+  #       product: windows
+  #       category: process_creation
