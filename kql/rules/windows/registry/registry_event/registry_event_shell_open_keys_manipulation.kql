@@ -17,7 +17,8 @@
 // Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_event/registry_event_shell_open_keys_manipulation.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
-// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+// Validation: passed (Kusto.Language 12.4.1, live Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceRegistryEvents
 | where ((ActionType =~ "RegistryValueSet" and RegistryKey endswith "Classes\\ms-settings\\shell\\open\\command\\SymbolicLinkValue" and RegistryValueData contains "\\Software\\Classes\\{") or RegistryKey endswith "Classes\\ms-settings\\shell\\open\\command\\DelegateExecute" or (ActionType =~ "RegistryValueSet" and (RegistryKey endswith "Classes\\ms-settings\\shell\\open\\command\\(Default)" or RegistryKey endswith "Classes\\exefile\\shell\\open\\command\\(Default)"))) and (not((RegistryValueData =~ "(Empty)" or (RegistryValueData in~ ("{4813071a-41ad-44a2-9835-886d2f63ca30}", "{A56A841F-E974-45C1-8001-7E3F8A085917}", "{4ED3A719-CEA8-4BD9-910D-E252F997AFC2}", "{BFEC0C93-0B7D-4F2C-B09C-AFFFC4BDAE78}")))))

@@ -15,7 +15,9 @@
 // Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_cmd_del_greedy_deletion.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
-// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+// Validation: passed (Kusto.Language 12.4.1, live Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+// Note: 4 wildcard comparison(s) rewritten to 'matches regex' (KQL treats * in contains/endswith/== as a literal character)
 
 DeviceProcessEvents
-| where (FolderPath endswith "\\cmd.exe" or ProcessVersionInfoOriginalFileName =~ "Cmd.Exe") and (ProcessCommandLine contains "del " or ProcessCommandLine contains "erase ") and (ProcessCommandLine contains "\\*.au3" or ProcessCommandLine contains "\\*.dll" or ProcessCommandLine contains "\\*.exe" or ProcessCommandLine contains "\\*.js")
+| where (FolderPath endswith "\\cmd.exe" or ProcessVersionInfoOriginalFileName =~ "Cmd.Exe") and (ProcessCommandLine contains "del " or ProcessCommandLine contains "erase ") and (ProcessCommandLine matches regex @"(?i)\\.*\.au3" or ProcessCommandLine matches regex @"(?i)\\.*\.dll" or ProcessCommandLine matches regex @"(?i)\\.*\.exe" or ProcessCommandLine matches regex @"(?i)\\.*\.js")

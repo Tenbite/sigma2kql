@@ -19,7 +19,8 @@
 // Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_office_onenote_susp_dropped_files.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
-// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+// Validation: passed (Kusto.Language 12.4.1, live Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceFileEvents
 | where (InitiatingProcessFolderPath endswith "\\onenote.exe" or InitiatingProcessFolderPath endswith "\\onenotem.exe" or InitiatingProcessFolderPath endswith "\\onenoteim.exe") and FolderPath contains "\\AppData\\Local\\Temp\\OneNote\\" and (FolderPath endswith ".bat" or FolderPath endswith ".chm" or FolderPath endswith ".cmd" or FolderPath endswith ".dll" or FolderPath endswith ".exe" or FolderPath endswith ".hta" or FolderPath endswith ".htm" or FolderPath endswith ".html" or FolderPath endswith ".js" or FolderPath endswith ".lnk" or FolderPath endswith ".ps1" or FolderPath endswith ".vbe" or FolderPath endswith ".vbs" or FolderPath endswith ".wsf")

@@ -13,7 +13,8 @@
 // Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_webshell_detection.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
-// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+// Validation: passed (Kusto.Language 12.4.1, live Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceProcessEvents
 | where ((InitiatingProcessFolderPath endswith "/httpd" or InitiatingProcessFolderPath endswith "/lighttpd" or InitiatingProcessFolderPath endswith "/nginx" or InitiatingProcessFolderPath endswith "/apache2" or InitiatingProcessFolderPath endswith "/node" or InitiatingProcessFolderPath endswith "/caddy") or (InitiatingProcessCommandLine contains "/bin/java" and InitiatingProcessCommandLine contains "tomcat") or (InitiatingProcessCommandLine contains "/bin/java" and InitiatingProcessCommandLine contains "websphere")) and (FolderPath endswith "/whoami" or FolderPath endswith "/ifconfig" or FolderPath endswith "/ip" or FolderPath endswith "/bin/uname" or FolderPath endswith "/bin/cat" or FolderPath endswith "/bin/crontab" or FolderPath endswith "/hostname" or FolderPath endswith "/iptables" or FolderPath endswith "/netstat" or FolderPath endswith "/pwd" or FolderPath endswith "/route") and (not((InitiatingProcessFolderPath endswith "/node" and ProcessCommandLine contains "ip neigh show")))

@@ -1,7 +1,8 @@
 {
- "fingerprint": "962685277d8cdceedc6cd10ddf1e7f5ac1d6571a5e37bcd90e4ce454e2aae61f",
+ "fingerprint": "c7083933bde1294250b6283f42d883f3533ccbf5712532846d1905b3ae4a342e",
  "last_mode": "full",
- "last_run": "2026-11-01 23:27 UTC",
+ "last_run": "2026-11-02 00:03 UTC",
+ "schema_source": "downloaded from https://xdrinternals.com/FullSchema-latest.json (207 tables)",
  "sigma_sha": "05d1031f537e830b76da53bae2400c5814c89165",
  "target": "microsoft_xdr",
  "versions": {

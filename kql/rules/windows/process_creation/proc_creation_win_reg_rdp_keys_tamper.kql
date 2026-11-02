@@ -27,7 +27,8 @@
 // Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_reg_rdp_keys_tamper.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
-// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+// Validation: passed (Kusto.Language 12.4.1, live Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceProcessEvents
 | where ((FolderPath endswith "\\reg.exe" or ProcessVersionInfoOriginalFileName =~ "reg.exe") and (ProcessCommandLine contains " add " and ProcessCommandLine contains "\\CurrentControlSet\\Control\\Terminal Server" and ProcessCommandLine contains "REG_DWORD" and ProcessCommandLine contains " /f")) and ((ProcessCommandLine contains "Licensing Core" and ProcessCommandLine contains "EnableConcurrentSessions") or (ProcessCommandLine contains "AllowTSConnections" or ProcessCommandLine contains "fDenyTSConnections" or ProcessCommandLine contains "fEnableWinStation" or ProcessCommandLine contains "fSingleSessionPerUser" or ProcessCommandLine contains "IdleWinStationPoolCount" or ProcessCommandLine contains "MaxInstanceCount" or ProcessCommandLine contains "SecurityLayer" or ProcessCommandLine contains "TSAdvertise" or ProcessCommandLine contains "TSAppCompat" or ProcessCommandLine contains "TSEnabled" or ProcessCommandLine contains "TSUserEnabled" or ProcessCommandLine contains "WinStations\\RDP-Tcp")) and (not((ProcessCommandLine contains "SecurityLayer" and ProcessCommandLine contains "02")))

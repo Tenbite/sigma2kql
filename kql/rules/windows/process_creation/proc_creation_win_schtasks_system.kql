@@ -13,7 +13,8 @@
 // Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_schtasks_system.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
-// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+// Validation: passed (Kusto.Language 12.4.1, live Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceProcessEvents
 | where ((FolderPath endswith "\\schtasks.exe" and (ProcessCommandLine contains " /change " or ProcessCommandLine contains " /create ")) and ProcessCommandLine contains "/ru " and (ProcessCommandLine contains "NT AUT" or ProcessCommandLine contains " SYSTEM ")) and (not(((FolderPath endswith "\\schtasks.exe" and (ProcessCommandLine contains "/TN TVInstallRestore" and ProcessCommandLine contains "\\TeamViewer_.exe")) or (ProcessCommandLine contains "Subscription Heartbeat" and ProcessCommandLine contains "\\HeartbeatConfig.xml" and ProcessCommandLine contains "\\Microsoft Shared\\OFFICE") or (ProcessCommandLine contains "/Create /F /RU System /SC WEEKLY /TN AviraSystemSpeedupVerify /TR " or ProcessCommandLine contains ":\\Program Files (x86)\\Avira\\System Speedup\\setup\\avira_speedup_setup.exe" or ProcessCommandLine contains "/VERIFY /VERYSILENT /NOSTART /NODOTNET /NORESTART\" /RL HIGHEST"))))

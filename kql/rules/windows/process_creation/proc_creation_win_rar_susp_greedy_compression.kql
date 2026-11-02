@@ -1,0 +1,21 @@
+// Title: Suspicious Greedy Compression Using Rar.EXE
+// Sigma ID: afe52666-401e-4a02-b4ff-5d128990b8cb
+// Status: test | Level: high
+// Author: X__Junior (Nextron Systems), Florian Roth (Nextron Systems)
+// Date: 2022-12-15 | Modified: 2024-01-02
+// ATT&CK: execution, T1059
+// Description: Detects RAR usage that creates an archive from a suspicious folder, either a system folder or
+//   one of the folders often used by attackers for staging purposes
+// False positives:
+//   - Unknown
+// References:
+//   - https://decoded.avast.io/martinchlumecky/png-steganography
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_rar_susp_greedy_compression.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language 12.4.1, live Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+// Note: 2 wildcard comparison(s) rewritten to 'matches regex' (KQL treats * in contains/endswith/== as a literal character)
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\rar.exe" or ProcessVersionInfoFileDescription =~ "Command line RAR") or (ProcessCommandLine contains ".exe a " or ProcessCommandLine contains " a -m")) and ((ProcessCommandLine contains " -hp" and ProcessCommandLine contains " -r ") and ((ProcessCommandLine contains " " and ProcessCommandLine matches regex @"(?i):.*\.") or (ProcessCommandLine contains " " and ProcessCommandLine matches regex @"(?i):.*\.") or (ProcessCommandLine contains " " and ProcessCommandLine contains ":\\$Recycle.bin\\") or (ProcessCommandLine contains " " and ProcessCommandLine contains ":\\PerfLogs\\") or (ProcessCommandLine contains " " and ProcessCommandLine contains ":\\Temp") or (ProcessCommandLine contains " " and ProcessCommandLine contains ":\\Users\\Public\\") or (ProcessCommandLine contains " " and ProcessCommandLine contains ":\\Windows\\") or ProcessCommandLine contains " %public%"))

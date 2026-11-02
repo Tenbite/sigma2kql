@@ -1,10 +1,13 @@
 # Sigma rules in KQL (microsoft_xdr)
 
-1916 rules converted from SigmaHQ commit [`05d1031f53`](https://github.com/SigmaHQ/sigma/commit/05d1031f537e830b76da53bae2400c5814c89165). Last run: 2026-11-01 23:27 UTC.
+1910 rules converted from SigmaHQ commit [`05d1031f53`](https://github.com/SigmaHQ/sigma/commit/05d1031f537e830b76da53bae2400c5814c89165). Last run: 2026-11-02 00:03 UTC.
 
 Rules are licensed under the Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License. Each file keeps the original author and Sigma ID.
 
-## rules (1634)
+> [!WARNING]
+> These queries are machine-generated and have not been tested against real telemetry. Validation confirms they are valid KQL, not that they detect what the Sigma rule describes. Run them as hunts and tune them before using any as a detection.
+
+## rules (1629)
 
 | Rule | Level | ATT&CK | Table |
 |---|---|---|---|
@@ -150,12 +153,6 @@ Rules are licensed under the Detection Rule License (DRL) 1.1 - https://github.c
 | [Suspicious Teams Application Related ObjectAcess Event](rules/windows/builtin/security/win_security_teams_suspicious_objectaccess.kql) | high | credential-access, T1528 | DeviceRegistryEvents |
 | [Windows Defender Exclusion List Modified](rules/windows/builtin/security/win_security_windows_defender_exclusions_registry_modified.kql) | medium | defense-impairment, T1685 | DeviceRegistryEvents |
 | [WMI Persistence - Security](rules/windows/builtin/security/win_security_wmi_persistence.kql) | medium | persistence, privilege-escalation, T1546.003 | DeviceRegistryEvents |
-| [Credential Manager Access By Uncommon Applications](rules/windows/file/file_access/file_access_win_susp_credential_manager_access.kql) | medium | T1003, credential-access | DeviceFileEvents |
-| [Access To Windows Credential History File By Uncommon Applications](rules/windows/file/file_access/file_access_win_susp_credhist.kql) | medium | credential-access, T1555.004 | DeviceFileEvents |
-| [Access To Crypto Currency Wallets By Uncommon Applications](rules/windows/file/file_access/file_access_win_susp_crypto_currency_wallets.kql) | medium | T1003, credential-access | DeviceFileEvents |
-| [Access To Windows DPAPI Master Keys By Uncommon Applications](rules/windows/file/file_access/file_access_win_susp_dpapi_master_key_access.kql) | medium | credential-access, T1555.004 | DeviceFileEvents |
-| [Access To Potentially Sensitive Sysvol Files By Uncommon Applications](rules/windows/file/file_access/file_access_win_susp_gpo_files.kql) | medium | credential-access, T1552.006 | DeviceFileEvents |
-| [Microsoft Teams Sensitive File Access By Uncommon Applications](rules/windows/file/file_access/file_access_win_teams_sensitive_files.kql) | medium | credential-access, T1528 | DeviceFileEvents |
 | [Unusual File Modification by dns.exe](rules/windows/file/file_change/file_change_win_unusual_modification_by_dns_exe.kql) | high | persistence, initial-access, T1133 | DeviceFileEvents |
 | [Backup Files Deleted](rules/windows/file/file_delete/file_delete_win_delete_backup_file.kql) | medium | impact, T1490 | DeviceFileEvents |
 | [EventLog EVTX File Deleted](rules/windows/file/file_delete/file_delete_win_delete_event_log_files.kql) | medium | stealth, T1070 | DeviceFileEvents |
@@ -992,6 +989,7 @@ Rules are licensed under the Detection Rule License (DRL) 1.1 - https://github.c
 | [Potentially Suspicious Usage Of Qemu](rules/windows/process_creation/proc_creation_win_qemu_suspicious_execution.kql) | medium | command-and-control, T1090, T1572 | DeviceProcessEvents |
 | [Query Usage To Exfil Data](rules/windows/process_creation/proc_creation_win_query_session_exfil.kql) | medium | execution | DeviceProcessEvents |
 | [Rar Usage with Password and Compression Level](rules/windows/process_creation/proc_creation_win_rar_compression_with_password.kql) | high | collection, T1560.001 | DeviceProcessEvents |
+| [Suspicious Greedy Compression Using Rar.EXE](rules/windows/process_creation/proc_creation_win_rar_susp_greedy_compression.kql) | high | execution, T1059 | DeviceProcessEvents |
 | [Suspicious RASdial Activity](rules/windows/process_creation/proc_creation_win_rasdial_execution.kql) | medium | execution, T1059 | DeviceProcessEvents |
 | [Process Memory Dump via RdrLeakDiag.EXE](rules/windows/process_creation/proc_creation_win_rdrleakdiag_process_dumping.kql) | high | credential-access, T1003.001 | DeviceProcessEvents |
 | [Potential Persistence Attempt Via Run Keys Using Reg.EXE](rules/windows/process_creation/proc_creation_win_reg_add_run_key.kql) | medium | privilege-escalation, persistence, T1547.001 | DeviceProcessEvents |
@@ -1878,7 +1876,7 @@ Rules are licensed under the Detection Rule License (DRL) 1.1 - https://github.c
 | [ScreenConnect - SlashAndGrab Exploitation Indicators](rules-emerging-threats/2024/TA/SlashAndGrab-Exploitation-In-Wild/file_event_win_apt_unknown_exploitation_indicators.kql) | high | stealth | DeviceFileEvents |
 | [Potential CVE-2026-33829 Exploitation - Windows Snipping Tool Remote File Path URI](rules-emerging-threats/2026/Exploits/CVE-2026-33829/proc_creation_win_exploit_cve_2026_33829.kql) | high | credential-access, T1187 | DeviceProcessEvents |
 
-## rules-threat-hunting (52)
+## rules-threat-hunting (51)
 
 | Rule | Level | ATT&CK | Table |
 |---|---|---|---|
@@ -1886,7 +1884,6 @@ Rules are licensed under the Detection Rule License (DRL) 1.1 - https://github.c
 | [Terminate Linux Process Via Kill](rules-threat-hunting/linux/process_creation/proc_creation_lnx_susp_process_termination_via_kill.kql) | medium | defense-impairment, T1685 | DeviceProcessEvents |
 | [Python Path Configuration File Creation - MacOS](rules-threat-hunting/macos/file/file_event/file_event_macos_python_path_configuration_files.kql) | medium | execution, T1059.006 | DeviceFileEvents |
 | [Clipboard Data Collection Via Pbpaste](rules-threat-hunting/macos/process_creation/proc_creation_macos_pbpaste_execution.kql) | medium | collection, credential-access, T1115 | DeviceProcessEvents |
-| [Access To Sysvol Policies Share By Uncommon Process](rules-threat-hunting/windows/file/file_access/file_access_win_susp_gpo_access_uncommon_process.kql) | medium | credential-access, T1552.006 | DeviceFileEvents |
 | [Python Path Configuration File Creation - Windows](rules-threat-hunting/windows/file/file_event/file_event_win_python_path_configuration_files.kql) | medium | execution, T1059.006 | DeviceFileEvents |
 | [Suspicious Creation TXT File in User Desktop](rules-threat-hunting/windows/file/file_event/file_event_win_susp_desktop_txt.kql) | medium | impact, T1486 | DeviceFileEvents |
 | [VsCode Code Tunnel Execution File Indicator](rules-threat-hunting/windows/file/file_event/file_event_win_vscode_tunnel_indicators.kql) | medium | command-and-control | DeviceFileEvents |

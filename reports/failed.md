@@ -42,6 +42,7 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 | No table for log source `windows/msexchange-management` | 8 |
 | No table for log source `dns` | 8 |
 | No table for log source `antivirus` | 7 |
+| SigmaTransformationError: MDE does not record file reads; file_access rules would match writes instead | 7 |
 | No table for log source `azure/pim` | 7 |
 | No table for log source `gcp/google_workspace.admin` | 7 |
 | No table for log source `zeek/smb_files` | 7 |
@@ -310,6 +311,7 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 - `rules-threat-hunting/windows/create_remote_thread/create_remote_thread_win_loadlibrary.yml` — SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - `rules-threat-hunting/windows/create_remote_thread/create_remote_thread_win_powershell_generic.yml` — SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - `rules-threat-hunting/windows/create_remote_thread/create_remote_thread_win_susp_target_shell_application.yml` — SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- `rules-threat-hunting/windows/file/file_access/file_access_win_susp_gpo_access_uncommon_process.yml` — SigmaTransformationError: MDE does not record file reads; file_access rules would match writes instead
 - `rules-threat-hunting/windows/network_connection/net_connection_win_dfsvc_uncommon_ports.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: DestinationIsIpv6. Invalid SigmaDetectionItem field name encountered: ShareName. Invalid SigmaDetectionItem field name encountered: ShareName
 - `rules-threat-hunting/windows/powershell/powershell_classic/posh_pc_alternate_powershell_hosts.yml` — SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - `rules-threat-hunting/windows/powershell/powershell_script/posh_ps_mailbox_access.yml` — SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
@@ -1039,6 +1041,12 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 - `rules/windows/driver_load/driver_load_win_vuln_hevd_driver.yml` — SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - `rules/windows/driver_load/driver_load_win_vuln_winring0_driver.yml` — SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - `rules/windows/driver_load/driver_load_win_windivert.yml` — SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- `rules/windows/file/file_access/file_access_win_susp_credential_manager_access.yml` — SigmaTransformationError: MDE does not record file reads; file_access rules would match writes instead
+- `rules/windows/file/file_access/file_access_win_susp_credhist.yml` — SigmaTransformationError: MDE does not record file reads; file_access rules would match writes instead
+- `rules/windows/file/file_access/file_access_win_susp_crypto_currency_wallets.yml` — SigmaTransformationError: MDE does not record file reads; file_access rules would match writes instead
+- `rules/windows/file/file_access/file_access_win_susp_dpapi_master_key_access.yml` — SigmaTransformationError: MDE does not record file reads; file_access rules would match writes instead
+- `rules/windows/file/file_access/file_access_win_susp_gpo_files.yml` — SigmaTransformationError: MDE does not record file reads; file_access rules would match writes instead
+- `rules/windows/file/file_access/file_access_win_teams_sensitive_files.yml` — SigmaTransformationError: MDE does not record file reads; file_access rules would match writes instead
 - `rules/windows/file/file_delete/file_delete_win_delete_own_image.yml` — NotImplementedError: Field reference expression is not supported by backend. (while converting rule None)
 - `rules/windows/file/file_event/file_event_win_net_cli_artefact.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: InitiatingProcessParentCommandLine. Invalid SigmaDetectionItem field name encountered: Provider_Name. Invalid SigmaDetectionItem field name encountered: ImageName. Invalid SigmaDetectionItem field name encountered: ProcessP
 - `rules/windows/file/file_executable_detected/file_executable_detected_win_susp_embeded_sed_file.yml` — SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:

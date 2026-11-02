@@ -15,7 +15,8 @@
 // Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2021/TA/SOURGUM/proc_creation_win_apt_sourgrum.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
-// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+// Validation: passed (Kusto.Language 12.4.1, live Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceProcessEvents
 | where (FolderPath contains "windows\\system32\\Physmem.sys" or FolderPath contains "Windows\\system32\\ime\\SHARED\\WimBootConfigurations.ini" or FolderPath contains "Windows\\system32\\ime\\IMEJP\\WimBootConfigurations.ini" or FolderPath contains "Windows\\system32\\ime\\IMETC\\WimBootConfigurations.ini") or (((FolderPath contains "windows\\system32\\filepath2" or FolderPath contains "windows\\system32\\ime") and ProcessCommandLine contains "reg add") and (ProcessCommandLine contains "HKEY_LOCAL_MACHINE\\software\\classes\\clsid\\{7c857801-7381-11cf-884d-00aa004b2e24}\\inprocserver32" or ProcessCommandLine contains "HKEY_LOCAL_MACHINE\\software\\classes\\clsid\\{cf4cc405-e2c5-4ddd-b3ce-5e7582d8c9fa}\\inprocserver32"))

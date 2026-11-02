@@ -12,7 +12,8 @@
 // Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/macos/process_creation/proc_creation_macos_create_hidden_account.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
-// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+// Validation: passed (Kusto.Language 12.4.1, live Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceProcessEvents
 | where ((FolderPath endswith "/dscl" and ProcessCommandLine contains "create") and (ProcessCommandLine contains "UniqueID" and ProcessCommandLine matches regex "([0-9]|[1-9][0-9]|[1-4][0-9]{2})")) or ((FolderPath endswith "/dscl" and ProcessCommandLine contains "create") and (ProcessCommandLine contains "IsHidden" and (ProcessCommandLine contains "true" or ProcessCommandLine contains "yes" or ProcessCommandLine contains "1")))

@@ -13,7 +13,9 @@
 // Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/registry/registry_set/registry_set_susp_printer_driver.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
-// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+// Validation: passed (Kusto.Language 12.4.1, live Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+// Note: 4 wildcard comparison(s) rewritten to 'matches regex' (KQL treats * in contains/endswith/== as a literal character)
 
 DeviceRegistryEvents
-| where ((RegistryKey contains "\\Control\\Print\\Environments\\Windows x64\\Drivers" and RegistryKey contains "\\Manufacturer") and RegistryValueData =~ "(Empty)") and (not((RegistryKey endswith "\\CutePDF Writer v4.0*" or (RegistryKey endswith "\\VNC Printer (PS)*" or RegistryKey endswith "\\VNC Printer (UD)*") or RegistryKey endswith "\\Version-3\\PDF24*")))
+| where ((RegistryKey contains "\\Control\\Print\\Environments\\Windows x64\\Drivers" and RegistryKey contains "\\Manufacturer") and RegistryValueData =~ "(Empty)") and (not((RegistryKey matches regex @"(?i)\\CutePDF Writer v4\.0.*$" or (RegistryKey matches regex @"(?i)\\VNC Printer \(PS\).*$" or RegistryKey matches regex @"(?i)\\VNC Printer \(UD\).*$") or RegistryKey matches regex @"(?i)\\Version-3\\PDF24.*$")))

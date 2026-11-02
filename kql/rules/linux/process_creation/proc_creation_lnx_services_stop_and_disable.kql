@@ -15,7 +15,8 @@
 // Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_services_stop_and_disable.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
-// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+// Validation: passed (Kusto.Language 12.4.1, live Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceProcessEvents
 | where ((FolderPath endswith "/service" or FolderPath endswith "/systemctl" or FolderPath endswith "/chkconfig") and (ProcessCommandLine contains " stop " or ProcessCommandLine contains " disable ")) and (not(((FolderPath endswith "/systemctl" and (ProcessCommandLine contains "--no-reload disable snap-snapd-" or ProcessCommandLine contains " stop snap-snapd-")) or (FolderPath endswith "/systemctl" and InitiatingProcessCommandLine contains "tmp.ci/preinst upgrade" and (ProcessCommandLine contains " stop " and ProcessCommandLine contains "ssh.")) or (InitiatingProcessCommandLine contains "/dpkg/info/ubuntu-pro-client.prerm upgrade" and FolderPath endswith "/systemctl")))) and (not((FolderPath endswith "/systemctl" and ProcessCommandLine endswith "snap.amazon-ssm-agent.amazon-ssm-agent.service")))

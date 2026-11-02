@@ -13,7 +13,8 @@
 // Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2023/TA/Diamond-Sleet/file_event_win_apt_diamond_sleet_indicators.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
-// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+// Validation: passed (Kusto.Language 12.4.1, live Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceFileEvents
 | where FolderPath endswith ":\\ProgramData\\4800-84DC-063A6A41C5C" or FolderPath endswith ":\\ProgramData\\clip.exe" or FolderPath endswith ":\\ProgramData\\DSROLE.dll" or FolderPath endswith ":\\ProgramData\\Forest64.exe" or FolderPath endswith ":\\ProgramData\\readme.md" or FolderPath endswith ":\\ProgramData\\Version.dll" or FolderPath endswith ":\\ProgramData\\wsmprovhost.exe"

@@ -14,7 +14,8 @@
 // Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_powershell_cmdline_reversed_strings.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
-// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+// Validation: passed (Kusto.Language 12.4.1, live Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceProcessEvents
 | where (((FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe") or (ProcessVersionInfoOriginalFileName in~ ("PowerShell.EXE", "pwsh.dll"))) and (ProcessCommandLine contains "hctac" or ProcessCommandLine contains "kaerb" or ProcessCommandLine contains "dnammoc" or ProcessCommandLine contains "ekovn" or ProcessCommandLine contains "eliFd" or ProcessCommandLine contains "rahc" or ProcessCommandLine contains "etirw" or ProcessCommandLine contains "golon" or ProcessCommandLine contains "tninon" or ProcessCommandLine contains "eddih" or ProcessCommandLine contains "tpircS" or ProcessCommandLine contains "ssecorp" or ProcessCommandLine contains "llehsrewop" or ProcessCommandLine contains "esnopser" or ProcessCommandLine contains "daolnwod" or ProcessCommandLine contains "tneilCbeW" or ProcessCommandLine contains "tneilc" or ProcessCommandLine contains "ptth" or ProcessCommandLine contains "elifotevas" or ProcessCommandLine contains "46esab" or ProcessCommandLine contains "htaPpmeTteG" or ProcessCommandLine contains "tcejbO" or ProcessCommandLine contains "maerts" or ProcessCommandLine contains "hcaerof" or ProcessCommandLine contains "retupmoc")) and (not((ProcessCommandLine contains " -EncodedCommand " or ProcessCommandLine contains " -enc ")))

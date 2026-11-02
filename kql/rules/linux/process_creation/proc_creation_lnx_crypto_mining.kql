@@ -12,7 +12,8 @@
 // Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/linux/process_creation/proc_creation_lnx_crypto_mining.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
-// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+// Validation: passed (Kusto.Language 12.4.1, live Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceProcessEvents
 | where ProcessCommandLine contains " --cpu-priority=" or ProcessCommandLine contains "--donate-level=0" or ProcessCommandLine contains " -o pool." or ProcessCommandLine contains " --nicehash" or ProcessCommandLine contains " --algo=rx/0 " or ProcessCommandLine contains "stratum+tcp://" or ProcessCommandLine contains "stratum+udp://" or ProcessCommandLine contains "sh -c /sbin/modprobe msr allow_writes=on" or ProcessCommandLine contains "LS1kb25hdGUtbGV2ZWw9" or ProcessCommandLine contains "0tZG9uYXRlLWxldmVsP" or ProcessCommandLine contains "tLWRvbmF0ZS1sZXZlbD" or ProcessCommandLine contains "c3RyYXR1bSt0Y3A6Ly" or ProcessCommandLine contains "N0cmF0dW0rdGNwOi8v" or ProcessCommandLine contains "zdHJhdHVtK3RjcDovL" or ProcessCommandLine contains "c3RyYXR1bSt1ZHA6Ly" or ProcessCommandLine contains "N0cmF0dW0rdWRwOi8v" or ProcessCommandLine contains "zdHJhdHVtK3VkcDovL"

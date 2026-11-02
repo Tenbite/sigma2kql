@@ -17,7 +17,8 @@
 // Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_hktl_relay_attacks_tools.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
-// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+// Validation: passed (Kusto.Language 12.4.1, live Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceProcessEvents
 | where ((FolderPath contains "PetitPotam" or FolderPath contains "RottenPotato" or FolderPath contains "HotPotato" or FolderPath contains "JuicyPotato" or FolderPath contains "\\just_dce_" or FolderPath contains "Juicy Potato" or FolderPath contains "\\temp\\rot.exe" or FolderPath contains "\\Potato.exe" or FolderPath contains "\\SpoolSample.exe" or FolderPath contains "\\Responder.exe" or FolderPath contains "\\smbrelayx" or FolderPath contains "\\ntlmrelayx" or FolderPath contains "\\LocalPotato") or (ProcessCommandLine contains "Invoke-Tater" or ProcessCommandLine contains " smbrelay" or ProcessCommandLine contains " ntlmrelay" or ProcessCommandLine contains "cme smb " or ProcessCommandLine contains " /ntlm:NTLMhash " or ProcessCommandLine contains "Invoke-PetitPotam" or (ProcessCommandLine contains ".exe -t " and ProcessCommandLine contains " -p ")) or (ProcessCommandLine contains ".exe -c \"{" and ProcessCommandLine endswith "}\" -z")) and (not((FolderPath contains "HotPotatoes6" or FolderPath contains "HotPotatoes7" or FolderPath contains "HotPotatoes ")))

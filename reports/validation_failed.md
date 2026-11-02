@@ -150,41 +150,6 @@ DeviceNetworkEvents
 | where InitiatingProcessFolderPath endswith "\\wordpad.exe" and (not((RemotePort in~ ("80", "139", "443", "445", "465", "587", "993", "995"))))
 ```
 
-## Suspicious Greedy Compression Using Rar.EXE
-
-`rules/windows/process_creation/proc_creation_win_rar_susp_greedy_compression.yml`
-
-- Missing: " (at 433)
-- Expected: ) (at 433)
-- Unexpected: \ (at 433)
-- The incomplete fragment is unexpected. (at 433)
-- Unexpected: \ (at 509)
-- Unexpected: \ (at 510)
-- Unexpected: \ (at 523)
-- Unexpected: \ (at 524)
-- Unexpected: \ (at 598)
-- Unexpected: \ (at 599)
-- Unexpected: \ (at 608)
-- Unexpected: \ (at 609)
-- Unexpected: \ (at 683)
-- Unexpected: \ (at 684)
-- Unexpected: \ (at 762)
-- Unexpected: \ (at 763)
-- Unexpected: \ (at 769)
-- Unexpected: \ (at 770)
-- Unexpected: \ (at 777)
-- Unexpected: \ (at 778)
-- Unexpected: \ (at 852)
-- Unexpected: \ (at 853)
-- Unexpected: \ (at 861)
-- Unexpected: \ (at 862)
-- Missing: " (at 910)
-
-```kql
-DeviceProcessEvents
-| where ((FolderPath endswith "\\rar.exe" or ProcessVersionInfoFileDescription =~ "Command line RAR") or (ProcessCommandLine contains ".exe a " or ProcessCommandLine contains " a -m")) and ((ProcessCommandLine contains " -hp" and ProcessCommandLine contains " -r ") and ((ProcessCommandLine contains " " and ProcessCommandLine contains ":*.") or (ProcessCommandLine contains " " and ProcessCommandLine contains ":\*.") or (ProcessCommandLine contains " " and ProcessCommandLine contains ":\\$Recycle.bin\\") or (ProcessCommandLine contains " " and ProcessCommandLine contains ":\\PerfLogs\\") or (ProcessCommandLine contains " " and ProcessCommandLine contains ":\\Temp") or (ProcessCommandLine contains " " and ProcessCommandLine contains ":\\Users\\Public\\") or (ProcessCommandLine contains " " and ProcessCommandLine contains ":\\Windows\\") or ProcessCommandLine contains " %public%"))
-```
-
 ## WmiPrvSE Spawned A Process
 
 `rules/windows/process_creation/proc_creation_win_wmiprvse_spawning_process.yml`

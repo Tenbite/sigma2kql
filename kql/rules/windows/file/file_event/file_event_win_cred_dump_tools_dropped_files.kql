@@ -13,7 +13,8 @@
 // Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/file/file_event/file_event_win_cred_dump_tools_dropped_files.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
-// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+// Validation: passed (Kusto.Language 12.4.1, live Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceFileEvents
 | where (FolderPath contains "\\fgdump-log" or FolderPath contains "\\kirbi" or FolderPath contains "\\pwdump" or FolderPath contains "\\pwhashes" or FolderPath contains "\\wce_ccache" or FolderPath contains "\\wce_krbtkts") or (FolderPath endswith "\\cachedump.exe" or FolderPath endswith "\\cachedump64.exe" or FolderPath endswith "\\DumpExt.dll" or FolderPath endswith "\\DumpSvc.exe" or FolderPath endswith "\\Dumpy.exe" or FolderPath endswith "\\fgexec.exe" or FolderPath endswith "\\lsremora.dll" or FolderPath endswith "\\lsremora64.dll" or FolderPath endswith "\\NTDS.out" or FolderPath endswith "\\procdump.exe" or FolderPath endswith "\\procdump64.exe" or FolderPath endswith "\\procdump64a.exe" or FolderPath endswith "\\pstgdump.exe" or FolderPath endswith "\\pwdump.exe" or FolderPath endswith "\\SAM.out" or FolderPath endswith "\\SECURITY.out" or FolderPath endswith "\\servpw.exe" or FolderPath endswith "\\servpw64.exe" or FolderPath endswith "\\SYSTEM.out" or FolderPath endswith "\\test.pwd" or FolderPath endswith "\\wceaux.dll")

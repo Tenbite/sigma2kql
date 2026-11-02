@@ -12,7 +12,8 @@
 // Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_renamed_office_processes.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
-// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+// Validation: passed (Kusto.Language 12.4.1, live Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceProcessEvents
 | where ((ProcessVersionInfoOriginalFileName in~ ("Excel.exe", "MSACCESS.EXE", "MSPUB.EXE", "OneNote.exe", "OneNoteM.exe", "OUTLOOK.EXE", "POWERPNT.EXE", "WinWord.exe", "Olk.exe")) or (ProcessVersionInfoFileDescription in~ ("Microsoft Access", "Microsoft Excel", "Microsoft OneNote", "Microsoft Outlook", "Microsoft PowerPoint", "Microsoft Publisher", "Microsoft Word", "Sent to OneNote Tool"))) and (not((FolderPath endswith "\\EXCEL.exe" or FolderPath endswith "\\excelcnv.exe" or FolderPath endswith "\\MSACCESS.exe" or FolderPath endswith "\\MSPUB.EXE" or FolderPath endswith "\\ONENOTE.EXE" or FolderPath endswith "\\ONENOTEM.EXE" or FolderPath endswith "\\OUTLOOK.EXE" or FolderPath endswith "\\POWERPNT.EXE" or FolderPath endswith "\\WINWORD.exe" or FolderPath endswith "\\OLK.EXE")))

@@ -13,7 +13,8 @@
 // Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules/windows/process_creation/proc_creation_win_pua_system_informer.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
-// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+// Validation: passed (Kusto.Language 12.4.1, live Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceProcessEvents
 | where FolderPath endswith "\\SystemInformer.exe" or ProcessVersionInfoOriginalFileName =~ "SystemInformer.exe" or ProcessVersionInfoFileDescription =~ "System Informer" or ProcessVersionInfoProductName =~ "System Informer" or (MD5 startswith "19426363A37C03C3ED6FEDF57B6696EC" or SHA1 startswith "8B12C6DA8FAC0D5E8AB999C31E5EA04AF32D53DC" or SHA256 startswith "8EE9D84DE50803545937A63C686822388A3338497CDDB660D5D69CF68B68F287")

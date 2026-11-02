@@ -13,7 +13,8 @@
 // Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-emerging-threats/2018/TA/MuddyWater/proc_creation_win_apt_muddywater_activity.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
-// Validation: passed (Kusto.Language 12.4.1, microsoft_xdr schema)
+// Validation: passed (Kusto.Language 12.4.1, live Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceProcessEvents
 | where (ProcessCommandLine contains "vbscript:Close(Execute(\"CreateObject(" and ProcessCommandLine contains "powershell" and ProcessCommandLine contains "-w 1 -exec Bypass" and ProcessCommandLine contains "\\ProgramData\\") or (ProcessCommandLine contains "Win32_OperatingSystem" and ProcessCommandLine contains "Win32_NetworkAdapterConfiguration" and ProcessCommandLine contains "root\\SecurityCenter2" and ProcessCommandLine contains "[System.Net.DNS]") or (ProcessCommandLine contains "[Convert]::ToBase64String" and ProcessCommandLine contains "[System.Text.Encoding]::UTF8.GetString]" and ProcessCommandLine contains "GetResponse().GetResponseStream()" and ProcessCommandLine contains "[System.Net.HttpWebRequest]::Create(" and ProcessCommandLine contains "-bxor ")
