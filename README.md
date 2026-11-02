@@ -1,6 +1,13 @@
 # sigma2kql
 
-Converts the [SigmaHQ](https://github.com/SigmaHQ/sigma) rule repository into **one `.kql` file per rule** for Microsoft Defender XDR and Microsoft Sentinel, and keeps it up to date automatically with GitHub Actions. Everything here is free.
+Converts the [SigmaHQ](https://github.com/SigmaHQ/sigma) rule repository into **one `.kql` file per rule** for Microsoft Defender XDR Advanced Hunting, and keeps it up to date automatically with GitHub Actions. Everything here is free.
+
+**Browse and search all rules:** https://tenbite.github.io/simga2kql/
+
+This repo is two things:
+
+- **A ready-to-use KQL library.** About 1,900 SigmaHQ rules as Defender queries, refreshed nightly. Start at [`kql/INDEX.md`](kql/INDEX.md), find a rule, copy the query into Advanced Hunting.
+- **A reusable tool.** Fork the repo and the same pipeline runs in your own GitHub account for free. Change the filters in `config.yml`, or point it at your own Sigma rules. See [Setup](#setup).
 
 > [!WARNING]
 > **These queries are machine-generated and have not been tested against real telemetry.** Every query was checked by Microsoft's Kusto parser, which confirms it is valid KQL that uses real tables and columns. It does **not** confirm the query detects the behavior the original Sigma rule describes, or that it is free of false positives. Some queries may never match, and some may be noisy. Treat them as a starting point for hunting: run them, check the results, and tune them before using any of them as a detection or alert.
@@ -25,6 +32,9 @@ kql/
     proc_creation_win_....kql      mirrors the SigmaHQ folder layout
   rules-emerging-threats/...
   rules-threat-hunting/...
+docs/
+  index.html                       searchable rule browser (GitHub Pages)
+  rules.json                       data behind the browser
 reports/
   summary.md                       counts, tool versions, schema used, top failure reasons
   failed.md                        rules that didn't convert, grouped by reason
@@ -44,23 +54,33 @@ Each `.kql` file starts with a comment header: title, Sigma ID, status, level, a
 Copy everything from the table name down (comment lines are fine to include; KQL ignores them).
 
 - **Defender XDR:** security.microsoft.com → Hunting → Advanced hunting.
-- **Microsoft Sentinel:** Logs. The Defender tables are available when the Defender XDR connector streams them.
 
 Run it as a hunt first and check the results before turning it into a detection.
 
 ## Setup
 
-1. Create a new GitHub repository and push this folder to it.
-2. In the repo: **Settings → Actions → General → Workflow permissions → Read and write permissions**.
-3. **Actions → Convert Sigma to KQL → Run workflow.** The first run is a full build (about a minute).
+To run your own copy:
+
+1. **Fork** this repo.
+2. In your fork: **Settings → Actions → General → Workflow permissions → Read and write permissions**.
+3. Open the **Actions** tab. Forks have workflows turned off by default, so click the button to enable them.
+4. **Actions → Convert Sigma to KQL → Run workflow.**
 
 After that it runs daily at 06:17 UTC and commits only what changed. A public repo gets unlimited Actions minutes; a private repo uses a few minutes a day from the free 2,000/month.
+
+**Your own Sigma rules:** change the clone URL in `.github/workflows/convert.yml` to your rules repo, and set `rule_dirs` in `config.yml` to its folders.
+
+## Getting notified when something breaks
+
+1. **Failed runs:** GitHub emails you when a workflow run fails. Check it's on under your GitHub **Settings → Notifications → Actions**: enable email, and tick "Only notify for failed workflows" if you only want failures.
+2. **Degraded runs:** each run compares itself with the previous one and fails on purpose (so you get the email above) if converted rules drop by more than 10%, if 25+ more queries start failing validation, or if the live schema download fails 3 runs in a row. Results are still committed first, so the reports explaining the problem are in the repo. Thresholds are under `health:` in `config.yml`.
+3. **Runs that stop happening:** a failure email can't tell you the workflow stopped running altogether (for example, GitHub pausing it). For that, create a free check at [healthchecks.io](https://healthchecks.io) with a period of 1 day and a grace time of 1 day, and save its ping URL as a repository secret named `HEALTHCHECK_URL` (**Settings → Secrets and variables → Actions → New repository secret**). Every healthy run pings it; if the pings stop, it emails you.
 
 ## Configuration (`config.yml`)
 
 | Key | What it does |
 |---|---|
-| `target` | `microsoft_xdr` (Defender XDR / MDE tables, also in Sentinel via the XDR connector), `sentinel_asim`, or `azure_monitor` |
+| `target` | Keep as `microsoft_xdr`. It's the only target this repo is built and checked for. |
 | `rule_dirs` | SigmaHQ folders to convert |
 | `statuses`, `levels` | Filters. Remove a key to accept everything. |
 | `custom_pipelines` | Your own field mappings and fixes (see below) |
@@ -69,8 +89,6 @@ After that it runs daily at 06:17 UTC and commits only what changed. A public re
 | `live_schema` | Where to download the current Defender schema from |
 
 Changing `config.yml`, a custom pipeline, the script, a tool version, or the live schema triggers a full rebuild automatically.
-
-**More than one target:** copy `config.yml` to e.g. `config.azure_monitor.yml`, change `target`, `output_dir`, `reports_dir` and `state_file`, and run `python scripts/convert.py --config config.azure_monitor.yml` as an extra step in the workflow. `microsoft_xdr` has no `SecurityEvent` table, so many `windows/security` rules only convert with `azure_monitor`.
 
 ## Live schema
 
@@ -86,7 +104,7 @@ The XDRInternals file is a community-maintained export, not an official Microsof
 
 `reports/failed.md` lists why rules didn't convert, most common first. Two kinds:
 
-- **No table for a log source** (e.g. `windows/ps_script`, `webserver`, `aws/cloudtrail`): the target has no table for that data. Try another target, or accept the gap.
+- **No table for a log source** (e.g. `windows/ps_script`, `webserver`, `aws/cloudtrail`): Defender XDR doesn't collect that data, so there's nothing to convert to.
 - **Unmapped field**: the table exists but a Sigma field has no equivalent column. If there is a real equivalent, add a mapping to `pipelines/custom.yml` (it has working examples and a template). Some fields have no equivalent at all, e.g. MDE doesn't record a process's `CurrentDirectory`.
 
 ## Known issues corrected
@@ -125,9 +143,10 @@ python scripts/convert.py          # add --full to rebuild, --no-validate to ski
 | [Kusto.Language](https://github.com/microsoft/Kusto-Query-Language) (Microsoft) | Parsing and validating every query |
 | [XDRInternals](https://xdrinternals.com) | The live Defender XDR table schema used for validation |
 | [GitHub Actions](https://docs.github.com/actions) | Running the conversion on a schedule |
+| [Claude](https://claude.ai) | Helped build and debug the pipeline |
 
 ## License
 
 The generated `.kql` files are derived from SigmaHQ rules and are licensed under the [Detection Rule License (DRL) 1.1](https://github.com/SigmaHQ/Detection-Rule-License). Each file keeps the original author and Sigma ID; keep them if you redistribute or build on these queries.
 
-This repository is not affiliated with SigmaHQ, Microsoft, AttackIQ, or XDRInternals.
+This repository is not affiliated with SigmaHQ, Microsoft, AttackIQ, XDRInternals, or Anthropic. Everything here is provided as is, with no warranty.

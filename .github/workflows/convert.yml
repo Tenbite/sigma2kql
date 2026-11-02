@@ -54,11 +54,14 @@ jobs:
       - name: Convert and validate
         run: python scripts/convert.py ${{ inputs.full && '--full' || '' }}
 
+      - name: Build search page
+        run: python scripts/build_site.py
+
       - name: Commit results
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A kql reports state
+          git add -A kql reports state docs
           if git diff --cached --quiet; then
             echo "No changes."
             exit 0
@@ -66,3 +69,27 @@ jobs:
           sha=$(git -C sigma rev-parse --short HEAD)
           git commit -m "Update KQL from SigmaHQ ${sha}"
           git push
+
+      # Fails the run (so GitHub emails you) when the health check in convert.py found a
+      # problem. Runs after the commit so the reports explaining it are already in the repo.
+      - name: Health check
+        run: |
+          if [ -s health_problems.txt ]; then
+            echo "::error title=sigma2kql health check failed::$(tr '\n' ' ' < health_problems.txt)"
+            cat health_problems.txt
+            exit 1
+          fi
+          echo "Healthy."
+
+      # Optional dead man's switch: pings a monitor such as healthchecks.io after every healthy
+      # run. If the pings stop (workflow disabled, GitHub outage, repeated failures), the
+      # monitor emails you. Set the ping URL as the HEALTHCHECK_URL repository secret.
+      - name: Heartbeat
+        env:
+          HEALTHCHECK_URL: ${{ secrets.HEALTHCHECK_URL }}
+        run: |
+          if [ -n "$HEALTHCHECK_URL" ]; then
+            curl -fsS -m 10 --retry 3 "$HEALTHCHECK_URL" > /dev/null && echo "Heartbeat sent."
+          else
+            echo "No HEALTHCHECK_URL secret set; skipping heartbeat."
+          fi

@@ -469,6 +469,50 @@ def write_reports(db: dict, cfg: dict, state: dict, versions: dict) -> dict:
     return counts
 
 
+# --------------------------------------------------------------------------- health check
+#
+# A run can succeed and still be degraded. These checks write any problems to
+# HEALTH_FILE (not committed); the workflow's last step fails the run if it exists,
+# which triggers GitHub's failure email. Thresholds live under `health:` in config.yml.
+
+HEALTH_FILE = ROOT / "health_problems.txt"
+
+
+def check_health(cfg: dict, prev: dict, counts: dict, schema_source: str) -> int:
+    """Compare this run with the previous one. Returns the updated schema-failure streak."""
+    opts = {"max_converted_drop_pct": 10, "max_new_invalid": 25, "schema_fail_runs": 3,
+            **(cfg.get("health") or {})}
+    problems = []
+    prev_counts = prev.get("counts") or {}
+
+    live_configured = cfg["target"] == "microsoft_xdr" and (cfg.get("live_schema") or {}).get("url")
+    schema_ok = not live_configured or schema_source.startswith("downloaded")
+    streak = 0 if schema_ok else prev.get("schema_fail_streak", 0) + 1
+    if streak >= opts["schema_fail_runs"]:
+        problems.append(f"Live schema download has failed {streak} runs in a row: {schema_source}")
+
+    before, now = prev_counts.get("converted", 0), counts.get("converted", 0)
+    if before and now < before * (1 - opts["max_converted_drop_pct"] / 100):
+        problems.append(f"Converted rules dropped from {before} to {now} "
+                        f"(more than {opts['max_converted_drop_pct']}%). See reports/summary.md.")
+
+    inv_before, inv_now = prev_counts.get("invalid", 0), counts.get("invalid", 0)
+    if prev_counts and inv_now - inv_before > opts["max_new_invalid"]:
+        problems.append(f"Queries failing validation jumped from {inv_before} to {inv_now}. "
+                        "See reports/validation_failed.md and reports/schema_drift.md.")
+
+    HEALTH_FILE.unlink(missing_ok=True)
+    if problems:
+        HEALTH_FILE.write_text("\n".join(f"- {p}" for p in problems) + "\n")
+        log("HEALTH CHECK PROBLEMS:\n" + HEALTH_FILE.read_text())
+        if os.environ.get("GITHUB_STEP_SUMMARY"):
+            with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as fh:
+                fh.write("\n## Health check problems\n\n" + HEALTH_FILE.read_text())
+    else:
+        log("Health check: OK")
+    return streak
+
+
 # --------------------------------------------------------------------------- main
 
 def main() -> None:
@@ -516,6 +560,8 @@ def main() -> None:
     if not full:
         if state["sigma_sha"] == head:
             log(f"Nothing to do: already at SigmaHQ {head[:10]} with the same config.")
+            state["schema_fail_streak"] = check_health(cfg, state, state.get("counts", {}), schema_source)
+            write_json(state_path, state)
             return
         try:
             diff = git(sigma_dir, "diff", "--name-status", "--no-renames",
@@ -609,12 +655,15 @@ def main() -> None:
         if not any(d.iterdir()):
             d.rmdir()
 
+    prev_state = state
     state = {"sigma_sha": head, "fingerprint": fp, "versions": versions,
              "last_run": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
              "last_mode": "full" if full else "incremental", "target": cfg["target"],
              "schema_source": schema_source}
     write_json(db_path, db)
     counts = write_reports(db, cfg, state, versions)
+    state["counts"] = dict(counts)
+    state["schema_fail_streak"] = check_health(cfg, prev_state, counts, schema_source)
     write_json(state_path, state)
     log(f"Done. converted={counts['converted']} invalid={counts['invalid']} "
         f"failed={counts['failed']} skipped={counts['skipped']}")

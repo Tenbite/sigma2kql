@@ -2,3 +2,4 @@ sigma/
 node_modules/
 state/schema_*.json
 __pycache__/
+health_problems.txt

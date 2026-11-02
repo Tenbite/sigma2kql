@@ -1,11 +1,8 @@
 # sigma2kql configuration
 # Changing anything here (or in a custom pipeline file) triggers a full rebuild on the next run.
 
-# Which KQL flavor to generate:
-#   microsoft_xdr  - Defender XDR / MDE Advanced Hunting tables (DeviceProcessEvents, ...).
-#                    Also works in Sentinel when the Defender XDR connector streams those tables.
-#   sentinel_asim  - Sentinel ASIM parsers (imProcessCreate, imNetworkSession, ...)
-#   azure_monitor  - Log Analytics / Azure Monitor tables (SecurityEvent, ...)
+# Defender XDR Advanced Hunting tables (DeviceProcessEvents, ...).
+# This is the only target this repo is built and checked for.
 target: microsoft_xdr
 
 # Where the workflow clones SigmaHQ/sigma, and which of its rule folders to convert.
@@ -39,6 +36,12 @@ validate: true
 # git history and trigger a full rebuild. If the download fails, the cached copy is used.
 # Tables missing from the download fall back to the bundled schema.
 # Remove this block to validate with the bundled schema only.
+# Health check: the run is marked failed (so GitHub emails you) if any of these trip.
+health:
+  max_converted_drop_pct: 10   # converted rules fell by more than this % since the last run
+  max_new_invalid: 25          # this many more queries started failing validation
+  schema_fail_runs: 3          # live schema download failed this many runs in a row
+
 live_schema:
   url: https://xdrinternals.com/FullSchema-latest.json
   cache: state/xdr_schema.json
