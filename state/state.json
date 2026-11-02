@@ -1,7 +1,14 @@
 {
- "fingerprint": "c7083933bde1294250b6283f42d883f3533ccbf5712532846d1905b3ae4a342e",
+ "counts": {
+  "converted": 1910,
+  "failed": 1171,
+  "invalid": 14,
+  "skipped": 681
+ },
+ "fingerprint": "6d1b147e17e0ce45cdb015523cd0b3c967fe0bf5f50b34047f2bd1b53d364cb8",
  "last_mode": "full",
- "last_run": "2026-11-02 00:03 UTC",
+ "last_run": "2026-11-02 04:47 UTC",
+ "schema_fail_streak": 0,
  "schema_source": "downloaded from https://xdrinternals.com/FullSchema-latest.json (207 tables)",
  "sigma_sha": "05d1031f537e830b76da53bae2400c5814c89165",
  "target": "microsoft_xdr",

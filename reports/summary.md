@@ -2,7 +2,7 @@
 
 - Target: `microsoft_xdr`
 - SigmaHQ commit: `05d1031f537e830b76da53bae2400c5814c89165`
-- Last run: 2026-11-02 00:03 UTC (full)
+- Last run: 2026-11-02 04:47 UTC (full)
 - Tools: pySigma 1.5.1, pySigma-backend-kusto 1.0.1, kusto-language 12.4.1
 - Validation schema: downloaded from https://xdrinternals.com/FullSchema-latest.json (207 tables) (see schema_drift.md)
 
