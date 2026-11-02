@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6001 new: 13 Linux detection rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6001
+// Pull request author: saakovv
+// Change: new rule
+// Title: Linux Fileless Execution via Memfd Create
+// Sigma ID: c6e2d7a5-8f3b-4c97-d5e6-7a4f9b3c2d60
+// Status: experimental | Level: high
+// Author: Ivan Saakov
+// Date: 2026-05-10 | Modified: -
+// ATT&CK: stealth, T1620
+// Description: Detects execution of processes whose image path contains the memfd: prefix, indicating the
+//   binary was loaded from an anonymous in-memory file created via the memfd_create syscall rather
+//   than from disk. This is a common fileless malware technique that allows execution of payloads
+//   without writing to the filesystem, evading file-based antivirus and integrity monitoring.
+//   Legitimate use of memfd_create occurs in specific container runtimes and JIT compilers but is
+//   rare in production server workloads.
+// False positives:
+//   - Container runtimes using memfd_create for legitimate process bootstrapping
+//   - JIT compilers or language runtimes that use anonymous memory execution
+// References:
+//   - https://man7.org/linux/man-pages/man2/memfd_create.2.html
+//   - https://magisterquis.github.io/2018/03/31/in-memory-only-elf-execution.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e5bac28da3655c33390db7ef1503db8cd3babb5f/rules/linux/process_creation/proc_creation_lnx_memfd_create_fileless_exec.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath startswith "memfd:" and (not((InitiatingProcessFolderPath endswith "/runc" or InitiatingProcessFolderPath endswith "/containerd-shim" or InitiatingProcessFolderPath endswith "/nvidia-container-runtime")))

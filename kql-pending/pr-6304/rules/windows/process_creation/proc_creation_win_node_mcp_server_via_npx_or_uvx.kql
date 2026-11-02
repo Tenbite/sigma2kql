@@ -1,0 +1,33 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6304 new: detect MCP servers launched via npx or uvx
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6304
+// Pull request author: phoenix766
+// Change: new rule
+// Title: MCP Server Execution Attempt Via NPX Or UVX
+// Sigma ID: 56e93478-0d6c-49fd-9ff4-a04543d8220d
+// Status: experimental | Level: medium
+// Author: phoenix766
+// Date: 2026-09-17 | Modified: -
+// ATT&CK: execution, persistence, T1059.007, T1059.006, T1195.002
+// Description: Detects Node.EXE or UV launching an MCP (Model Context Protocol) server via "npx" or "uvx". MCP
+//   servers run with the privileges of the user and often expose local tools, files, or credentials
+//   to an AI agent. Attackers can persist or execute untrusted code by adding an "npx -y" or "uvx"
+//   MCP server entry to an agent config (Claude Desktop, Cursor, VS Code). Analysts should verify
+//   the package name, source, and parent process. Tune this rule based on whether MCP servers are
+//   allowed in your environment. In environments where AI agent tooling is authorized, this
+//   detection may reflect normal activity and the alert level should be adjusted accordingly.
+// False positives:
+//   - Legitimate MCP server startup from approved AI agent configurations (Claude Desktop, Cursor, VS Code).
+//   - Developers installing or testing official MCP packages.
+// References:
+//   - https://cheatsheetseries.owasp.org/cheatsheets/MCP_Security_Cheat_Sheet.html
+//   - https://modelcontextprotocol.io/docs/develop/connect-local-servers
+//   - https://github.com/modelcontextprotocol/servers
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ffcfb08b15e4de03103c31caa43323a04520eb38/rules/windows/process_creation/proc_creation_win_node_mcp_server_via_npx_or_uvx.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\node.exe" or ProcessVersionInfoOriginalFileName =~ "node.exe") and ProcessCommandLine contains "npx-cli.js" and (ProcessCommandLine contains "mcp-server" or ProcessCommandLine contains "@modelcontextprotocol/")) or (((FolderPath endswith "\\uvx.exe" or FolderPath endswith "\\uv.exe") or (ProcessVersionInfoOriginalFileName in~ ("uvx.exe", "uv.exe"))) and (ProcessCommandLine contains "mcp-server" or ProcessCommandLine contains "@modelcontextprotocol/"))

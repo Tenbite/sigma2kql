@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Potentially Suspicious Event Viewer Child Process
+// Sigma ID: be344333-921d-4c4d-8bb8-e584cf584780
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2017-03-19 | Modified: 2023-09-28
+// ATT&CK: privilege-escalation, T1548.002
+// Tags: car.2019-04-001
+// Description: Detects uncommon or suspicious child processes of "eventvwr.exe" which might indicate a UAC
+//   bypass attempt
+// False positives:
+//   - Unknown
+// References:
+//   - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
+//   - https://www.hybrid-analysis.com/sample/e122bc8bf291f15cab182a5d2d27b8db1e7019e4e96bb5cdbd1dfe7446f3f51f?environmentId=100
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_eventvwr_susp_child_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\eventvwr.exe" and (not((FolderPath endswith ":\\Windows\\System32\\mmc.exe" or FolderPath endswith ":\\Windows\\System32\\WerFault.exe" or FolderPath endswith ":\\Windows\\SysWOW64\\WerFault.exe")))

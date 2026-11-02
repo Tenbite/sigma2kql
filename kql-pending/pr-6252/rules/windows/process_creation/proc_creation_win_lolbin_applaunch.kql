@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6252 new: Applaunch ClickOnce Activation
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6252
+// Pull request author: JirayuThongchotchaung
+// Change: new rule
+// Title: Applaunch ClickOnce Activation
+// Sigma ID: 34465f76-30d9-4e6f-acca-8c449f2213b1
+// Status: experimental | Level: medium
+// Author: Jirayu Thongchotchaung
+// Date: 2026-08-24 | Modified: -
+// ATT&CK: execution, stealth, T1127.002
+// Description: Detects the execution of the LOLBIN Applaunch outside of the ClickOnce service dfsvc.exe, which
+//   can be used to activate arbitrary ClickOnce applications
+// False positives:
+//   - Legitimate activation of ClickOnce applications by development or deployment tooling
+// References:
+//   - https://lolbas-project.github.io/lolbas/Binaries/Applaunch/
+//   - https://nathan2.com/posts/clicktools
+//   - https://github.com/nasawyer7/clicktools/tree/240e1edcf9491cd565750758a6db59c553ef8e4b
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/44cd343745481643b181f4f18539db44618a44b4/rules/windows/process_creation/proc_creation_win_lolbin_applaunch.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\Applaunch.exe" or ProcessVersionInfoOriginalFileName =~ "applaunch.exe") and (ProcessCommandLine contains " /activate" or ProcessCommandLine contains " -activate")) and (not(InitiatingProcessFolderPath endswith "\\dfsvc.exe"))

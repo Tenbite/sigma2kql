@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6094 Add Sysinternals tooling and driver/UAC detection rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6094
+// Pull request author: einlamye
+// Change: new rule
+// Title: Network Capture Via Nmcap.EXE
+// Sigma ID: 792eefce-61b7-491f-b86c-1f4e7e6af9dd
+// Status: experimental | Level: medium
+// Author: EinLamYe
+// Date: 2026-06-29 | Modified: -
+// ATT&CK: credential-access, discovery, T1040
+// Description: Detects execution of Network Monitor's command line capture tool nmcap.exe to sniff network
+//   traffic to a capture file. Adversaries abuse this signed utility for network sniffing and
+//   credential harvesting without dropping third-party tooling.
+// False positives:
+//   - Legitimate network troubleshooting by administrators using Microsoft Network Monitor
+// References:
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Nmcap/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/8e7b36a9de00c979a098f16eb29c1c22fb63cb4b/rules/windows/process_creation/proc_creation_win_nmcap_network_capture.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\nmcap.exe" or ProcessVersionInfoOriginalFileName =~ "NMCap.exe") and (ProcessCommandLine contains "/capture" or ProcessCommandLine contains "/network" or ProcessCommandLine contains "/file")

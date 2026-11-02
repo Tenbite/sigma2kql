@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5968 new: CVE-2026-31431 Copy Fail Exploit Detection Rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5968
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: SUID Binary Spawning a Shell
+// Sigma ID: 1e7af986-229a-4739-a5e8-edfc55ed362c
+// Status: experimental | Level: high
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-04-30 | Modified: -
+// ATT&CK: privilege-escalation, execution, T1068, T1548.001
+// Description: Detects a SUID-root binary that has no legitimate reason to launch a shell doing exactly that.
+//   This pattern indicates shellcode or payload execution — e.g. the binary's page cache was
+//   poisoned so that running it executes a shell instead of its normal routine.
+// False positives:
+//   - Unknown
+// References:
+//   - https://gtfobins.github.io/
+//   - https://xint.io/blog/copy-fail-linux-distributions
+//   - https://github.com/theori-io/copy-fail-CVE-2026-31431
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/f978f702f404ad5049a7bbac0dd729a9959455fa/rules/linux/process_creation/proc_creation_lnx_suid_binary_shell_spawn.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (InitiatingProcessFolderPath endswith "/passwd" or InitiatingProcessFolderPath endswith "/mount" or InitiatingProcessFolderPath endswith "/umount" or InitiatingProcessFolderPath endswith "/newgrp" or InitiatingProcessFolderPath endswith "/gpasswd" or InitiatingProcessFolderPath endswith "/chfn" or InitiatingProcessFolderPath endswith "/chsh" or InitiatingProcessFolderPath endswith "/ping" or InitiatingProcessFolderPath endswith "/newuidmap" or InitiatingProcessFolderPath endswith "/newgidmap" or InitiatingProcessFolderPath endswith "/pkexec" or InitiatingProcessFolderPath endswith "/fusermount" or InitiatingProcessFolderPath endswith "/fusermount3" or InitiatingProcessFolderPath endswith "/expiry") and (FolderPath endswith "/sh" or FolderPath endswith "/dash" or FolderPath endswith "/bash" or FolderPath endswith "/ksh" or FolderPath endswith "/zsh" or FolderPath endswith "/ash" or FolderPath endswith "/tcsh" or FolderPath endswith "/csh")

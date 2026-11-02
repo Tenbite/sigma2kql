@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6274 Add 3 rules from a PyArmor-obfuscated PyInstaller loader detonation
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6274
+// Pull request author: dclayton454
+// Change: new rule
+// Title: Suspicious Double Extension Executable Launched From User Writable Path
+// Sigma ID: fc5cd64c-4e5f-46f3-b402-557f3128c842
+// Status: experimental | Level: high
+// Author: David Clayton - CTI @ thetechcollective
+// Date: 2026-08-17 | Modified: -
+// ATT&CK: stealth, T1036.007, execution, T1204.002
+// Tags: stp.4
+// Description: Detects execution of a binary whose filename ends in a document, archive, or source code
+//   extension followed by .exe, from a user-writable location such as Temp, Downloads, or
+//   C:\Users\Public. The observed cluster ships as composer.php.exe and composer.dat.exe, imitating
+//   a Composer artefact so a developer double-clicking it believes they are opening a PHP or data
+//   file.
+// False positives:
+//   - Self-extracting archives and installers that legitimately embed a data extension in the filename, for example a vendor package named with an internal build identifier.
+//   - Developer build output where a toolchain names artefacts after their source file, which is plausible on a build agent or engineering workstation.
+// References:
+//   - https://bazaar.abuse.ch/sample/d97ea10d1dbfe2a69e0d2387e8985635b20628495918abd54c4b052c0acf05b1/
+//   - https://tria.ge/260817-ktkv8swgra
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/237bd3d6c9cf55c339b709c9aafc7d93a4db456a/rules/windows/process_creation/proc_creation_win_double_extension_exec_user_writable.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath contains "\\AppData\\Local\\Temp\\" or FolderPath contains "\\AppData\\Roaming\\" or FolderPath contains "\\Users\\Public\\" or FolderPath contains "\\Downloads\\" or FolderPath contains "\\Windows\\Temp\\") and (FolderPath endswith ".php.exe" or FolderPath endswith ".dat.exe" or FolderPath endswith ".pdf.exe" or FolderPath endswith ".doc.exe" or FolderPath endswith ".docx.exe" or FolderPath endswith ".xls.exe" or FolderPath endswith ".xlsx.exe" or FolderPath endswith ".ppt.exe" or FolderPath endswith ".pptx.exe" or FolderPath endswith ".rtf.exe" or FolderPath endswith ".txt.exe" or FolderPath endswith ".csv.exe" or FolderPath endswith ".json.exe" or FolderPath endswith ".xml.exe" or FolderPath endswith ".log.exe" or FolderPath endswith ".jpg.exe" or FolderPath endswith ".jpeg.exe" or FolderPath endswith ".png.exe" or FolderPath endswith ".gif.exe" or FolderPath endswith ".svg.exe" or FolderPath endswith ".zip.exe" or FolderPath endswith ".rar.exe" or FolderPath endswith ".7z.exe" or FolderPath endswith ".iso.exe" or FolderPath endswith ".js.exe" or FolderPath endswith ".py.exe" or FolderPath endswith ".ps1.exe" or FolderPath endswith ".lock.exe" or FolderPath endswith ".cfg.exe" or FolderPath endswith ".ini.exe")

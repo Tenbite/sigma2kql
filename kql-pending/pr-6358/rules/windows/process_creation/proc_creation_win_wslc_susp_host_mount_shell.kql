@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6358 Detection wslc host mount shell
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6358
+// Pull request author: Diablo-research
+// Change: new rule
+// Title: Potentially Suspicious WSLC Host Directory Mount With Shell
+// Sigma ID: 92b757fa-dcf0-4659-a571-3704b2ed20e2
+// Status: experimental | Level: medium
+// Author: Diablo Research
+// Date: 2026-09-30 | Modified: -
+// ATT&CK: execution, stealth, T1059.004, T1610
+// Description: Detects Microsoft WSL container CLI execution that bind mounts a sensitive Windows host
+//   directory into a Linux container and invokes an inline Unix shell. This may allow a threat actor
+//   to access or modify host files with Linux tooling while the inner Linux process is not
+//   represented as a Windows child process.
+// False positives:
+//   - Legitimate container development or administrative workflows that intentionally bind mount Windows user or system directories and invoke an inline shell
+// References:
+//   - https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers
+//   - https://devblogs.microsoft.com/commandline/wslc-architecture-deep-dive/
+//   - https://blogs.windows.com/windowsdeveloper/2026/09/29/wsl-containers-now-generally-available/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/13869c863fa53fa3651b993365dffd5800b92000/rules/windows/process_creation/proc_creation_win_wslc_susp_host_mount_shell.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\wslc.exe" or FolderPath =~ "C:\\Program Files\\WSL\\container.exe" or ProcessVersionInfoOriginalFileName =~ "wslc.exe") and (ProcessCommandLine contains " run " or ProcessCommandLine contains " container run ") and ((ProcessCommandLine contains " -v " or ProcessCommandLine contains " --volume ") or (ProcessCommandLine contains " --mount " and ProcessCommandLine contains "type=bind")) and (ProcessCommandLine contains ":\\Users\\" or ProcessCommandLine contains ":\\Windows\\" or ProcessCommandLine contains ":\\ProgramData\\" or ProcessCommandLine contains ":\\Temp\\" or ProcessCommandLine contains ":\\inetpub\\") and (ProcessCommandLine contains " sh " or ProcessCommandLine contains " bash " or ProcessCommandLine contains " ash " or ProcessCommandLine contains " dash " or ProcessCommandLine contains " zsh " or ProcessCommandLine contains "/bin/sh" or ProcessCommandLine contains "/bin/bash" or ProcessCommandLine contains "/bin/ash" or ProcessCommandLine contains "/bin/dash" or ProcessCommandLine contains "/bin/zsh") and (ProcessCommandLine contains " -c " or ProcessCommandLine contains " -lc ")

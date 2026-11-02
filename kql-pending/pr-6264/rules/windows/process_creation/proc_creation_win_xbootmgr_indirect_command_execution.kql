@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6264 New Rule: Potential Indirect Command Execution Via XBootMgr.EXE
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6264
+// Pull request author: COMPUMAX-EC
+// Change: new rule
+// Title: Potential Indirect Command Execution Via XBootMgr.EXE
+// Sigma ID: 446e9bb7-804d-4dfe-9a9f-576d9ce35a3b
+// Status: experimental | Level: medium
+// Author: Geovanny Basantes
+// Date: 2026-08-25 | Modified: -
+// ATT&CK: stealth, T1202
+// Description: Detects execution of "xbootmgr.exe" (Windows Performance Toolkit boot/trace tool) with the
+//   "-callBack" or "-preTraceCmd" arguments, which cause it to launch an arbitrary executable before
+//   or after a performance trace completes. This can be abused as a way to execute a payload through
+//   a legitimate, signed Microsoft binary.
+// False positives:
+//   - Legitimate performance-trace automation scripts that use the "-callBack" or "-preTraceCmd" parameters
+// References:
+//   - https://github.com/LOLBAS-Project/LOLBAS/blob/9c5e3841081cac342e7603093253cb51512c8369/yml/OtherMSBinaries/XBootMgr.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e33996585f73029bfeb4499d2c8f625af12343b8/rules/windows/process_creation/proc_creation_win_xbootmgr_indirect_command_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\xbootmgr.exe" or ProcessVersionInfoOriginalFileName =~ "xbootmgr.exe") and (ProcessCommandLine contains "-callBack" or ProcessCommandLine contains "-preTraceCmd")

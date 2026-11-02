@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Suspicious Copy From or To System Directory
+// Sigma ID: fff9d2b7-e11c-4a69-93d3-40ef66189767
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems), Markus Neis, Tim Shelton (HAWK.IO), Nasreddine Bencherchali (Nextron Systems)
+// Date: 2020-07-03 | Modified: 2026-03-16
+// ATT&CK: stealth, T1036.003
+// Description: Detects a suspicious copy operation that tries to copy a program from system (System32,
+//   SysWOW64, WinSxS) directories to another on disk. Often used to move LOLBINs such as 'certutil'
+//   or 'desktopimgdownldr' to a different location with a different name in order to bypass
+//   detections based on locations.
+// False positives:
+//   - Depend on scripts and administrative tools used in the monitored environment (For example an admin scripts like https://www.itexperience.net/sccm-batch-files-and-32-bits-processes-on-64-bits-os/)
+//   - When cmd.exe and xcopy.exe are called directly
+//   - When the command contains the keywords but not in the correct order
+// References:
+//   - https://www.hybrid-analysis.com/sample/8da5b75b6380a41eee3a399c43dfe0d99eeefaa1fd21027a07b1ecaa4cd96fdd?environmentId=120
+//   - https://web.archive.org/web/20180331144337/https://www.fireeye.com/blog/threat-research/2018/03/sanny-malware-delivery-method-updated-in-recently-observed-attacks.html
+//   - https://thedfirreport.com/2023/08/28/html-smuggling-leads-to-domain-wide-ransomware/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_susp_copy_system_dir.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\cmd.exe" and ProcessCommandLine contains "copy ") or ((FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe") and (ProcessCommandLine contains "copy-item" or ProcessCommandLine contains " copy " or ProcessCommandLine contains "cpi " or ProcessCommandLine contains " cp ")) or ((FolderPath endswith "\\robocopy.exe" or FolderPath endswith "\\xcopy.exe") or (ProcessVersionInfoOriginalFileName in~ ("robocopy.exe", "XCOPY.EXE")))) and ProcessCommandLine matches regex "(?i)\\s['\"]?C:\\\\Windows\\\\(?:System32|SysWOW64|WinSxS)" and (not((FolderPath endswith "\\cmd.exe" and (ProcessCommandLine contains "/c copy" and ProcessCommandLine contains "\\Temp\\" and ProcessCommandLine contains "\\avira_system_speedup.exe") and (ProcessCommandLine contains "C:\\Program Files\\Avira\\" or ProcessCommandLine contains "C:\\Program Files (x86)\\Avira\\"))))

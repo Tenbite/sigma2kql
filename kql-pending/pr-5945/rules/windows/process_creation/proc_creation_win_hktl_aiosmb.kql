@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5945 new: add new rules for several AD related hacktools
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5945
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: HackTool - AIOSMB Suite Execution
+// Sigma ID: 0c40942c-fcdd-4692-8079-d2a21a9b1cfb
+// Status: experimental | Level: high
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-04-21 | Modified: -
+// ATT&CK: discovery, lateral-movement, T1021.002, T1087.002
+// Description: Detects execution of aiosmb command-line tools (asmbclient, asmbshareenum, asmbscanner,
+//   asmbgetfile) used for asynchronous SMB enumeration, interactive file access, share and host
+//   scanning, and lateral movement against Windows targets.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://github.com/skelsec/aiosmb
+//   - https://github.com/n00py/Outpacket
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/6b9ade7935a13d35a57e75ff2587fbedcc53ef56/rules/windows/process_creation/proc_creation_win_hktl_aiosmb.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "asmbclient" or ProcessCommandLine contains "asmbshareenum" or ProcessCommandLine contains "asmbscanner" or ProcessCommandLine contains "asmbgetfile" or ProcessCommandLine contains "asmbcertreq") or (ProcessCommandLine contains "smb+ntlm-password://" or ProcessCommandLine contains "smb+ntlm-nt://" or ProcessCommandLine contains "smb+sspi-ntlm://" or ProcessCommandLine contains "smb+kerberos-password://" or ProcessCommandLine contains "smb+kerberos-nt://" or ProcessCommandLine contains "smb2+kerberos-pfx://" or ProcessCommandLine contains "smb2+kerberos-pem://" or ProcessCommandLine contains "smb2+kerberos-certstore://" or ProcessCommandLine contains "smb+sspi-kerberos://" or ProcessCommandLine contains "smb+kerberos+ccache://" or ProcessCommandLine contains "smb+kerberos+aes://" or ProcessCommandLine contains "smb+kerberos+rc4://" or ProcessCommandLine contains "smb+kerberos+pfx://" or ProcessCommandLine contains "smb+negoex-pfx://" or ProcessCommandLine contains "smb+negoex-certstore://" or ProcessCommandLine contains "smb+quic+ntlm-password://" or ProcessCommandLine contains "smb+quic+ntlm-nt://" or ProcessCommandLine contains "smb+quic+kerberos-password://")

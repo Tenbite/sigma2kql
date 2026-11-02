@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6356 Add rule: Suspicious Makecab/Diantz File Staging Or Ingress
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6356
+// Pull request author: h-sinad
+// Change: new rule
+// Title: Suspicious Makecab/Diantz File Staging Or Ingress
+// Sigma ID: fb7ca7da-88f7-49db-a1ea-fe9a83f47602
+// Status: experimental | Level: high
+// Author: Danish
+// Date: 2026-09-30 | Modified: -
+// ATT&CK: collection, exfiltration, T1560.001, command-and-control, T1105
+// Description: Detects suspicious execution of "makecab.exe" or "diantz.exe" to package sensitive system files
+//   (e.g. Active Directory database, registry hives, browser user data, memory dumps) or to perform
+//   remote file ingress via UNC/WebDAV paths.
+// False positives:
+//   - Administrative backups of system hives or Active Directory databases using legacy cabinet packaging utilities like makecab or diantz are exceptionally rare and typically superseded by modern backup mechanisms or PowerShell scripts.
+// References:
+//   - https://lolbas-project.github.io/lolbas/Binaries/Makecab/
+//   - https://lolbas-project.github.io/lolbas/Binaries/Diantz/
+//   - https://byis.github.io/post/makecab/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/381df64598a9669de52dea8966ecbd7f5742088a/rules/windows/process_creation/proc_creation_win_lolbin_makecab_diantz_sensitive_staging.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\makecab.exe" or FolderPath endswith "\\diantz.exe") or (ProcessVersionInfoOriginalFileName in~ ("MakeCab.exe", "diantz.exe"))) and ((ProcessCommandLine contains "\\\\" or ProcessCommandLine contains "//") or (ProcessCommandLine contains "\\config\\SAM" or ProcessCommandLine contains "\\config\\SYSTEM" or ProcessCommandLine contains "\\config\\SECURITY" or ProcessCommandLine contains "\\ntds.dit" or ProcessCommandLine contains "\\Microsoft\\Credentials" or ProcessCommandLine contains "\\Google\\Chrome\\User Data" or ProcessCommandLine contains "\\Local State" or ProcessCommandLine contains ".dmp" or ProcessCommandLine contains ".dump"))

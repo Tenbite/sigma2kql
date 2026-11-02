@@ -1,0 +1,32 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6062 new: EDRChoker QoS ThrottleRate Set by WMI
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6062
+// Pull request author: 0xtamseel
+// Change: new rule
+// Title: QoS ThrottleRate Set by WMI
+// Sigma ID: e4b2d9a1-8f3a-4c9b-9e2a-1d7f6b5a3c21
+// Status: experimental | Level: medium
+// Author: Tamseel Ahmad
+// Date: 2026-10-13 | Modified: -
+// ATT&CK: defense-impairment, T1687, T1685
+// Description: Detects when a Quality of Service (QoS) Throttle Rate policy is created/updated by the Windows
+//   Management Instrumentation (WMI) provider service (wmiprvse.exe). Threat actors use WMI to
+//   remotely script or automate changes. They abuse this feature to choke outbound EDR connection,
+//   ultimately bypassing EDR, slow down data leaks to bypass filters, or cause intentional denial-
+//   of-service conditions on critical communication apps.
+// False positives:
+//   - Legitimate QOS throttle modification
+// References:
+//   - https://learn.microsoft.com/en-us/windows-server/networking/technologies/qos/qos-policy-top
+//   - https://www.zerosalarium.com/2026/06/edrchoker-choking-telemetry-stream-block-edr.html
+//   - https://github.com/TwoSevenOneT/EDRChoker/
+//   - https://www.ipurple.team/2026/06/17/qos-policies/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ffa52761739f35715ac8b21bba0b6a4d9844879a/rules/windows/registry/registry_event/registry_event_wmi_qos_throttlerate.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+// Note: 1 wildcard comparison(s) rewritten to 'matches regex' (KQL treats * in contains/endswith/== as a literal character)
+
+DeviceRegistryEvents
+| where InitiatingProcessFolderPath endswith "\\wmiprvse.exe" and (RegistryKey matches regex @"(?i)\\Software\\Policies\\Microsoft\\Windows\\QoS.*$" and RegistryKey contains "ThrottleRate")

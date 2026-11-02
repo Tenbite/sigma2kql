@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6001 new: 13 Linux detection rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6001
+// Pull request author: saakovv
+// Change: new rule
+// Title: Linux Dangerous Capability Set via Setcap
+// Sigma ID: f3b8a4d2-5c9e-4f64-a2b3-4d1c6e9f8a30
+// Status: experimental | Level: high
+// Author: Ivan Saakov
+// Date: 2026-05-10 | Modified: -
+// ATT&CK: persistence, privilege-escalation, T1548.001
+// Description: Detects use of setcap to assign dangerous Linux capabilities to an executable file. Capabilities
+//   such as cap_setuid, cap_sys_admin, cap_sys_ptrace, cap_sys_module, and cap_net_raw enable
+//   privilege escalation without a SUID bit, making them harder to detect. Attackers assign these
+//   capabilities to binaries they control to maintain persistent elevated access or to facilitate
+//   lateral movement by enabling low-privileged accounts to perform root-level operations.
+// False positives:
+//   - Package installation scripts that legitimately set capabilities on ping or similar utilities
+//   - Container runtime configuration setting required capabilities
+// References:
+//   - https://gtfobins.github.io/#capabilities
+//   - https://man7.org/linux/man-pages/man8/setcap.8.html
+//   - https://linux.die.net/man/7/capabilities
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e5bac28da3655c33390db7ef1503db8cd3babb5f/rules/linux/process_creation/proc_creation_lnx_setcap_dangerous_capabilities.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "/setcap" and (ProcessCommandLine contains "cap_setuid" or ProcessCommandLine contains "cap_setgid" or ProcessCommandLine contains "cap_sys_admin" or ProcessCommandLine contains "cap_sys_module" or ProcessCommandLine contains "cap_sys_ptrace" or ProcessCommandLine contains "cap_sys_rawio" or ProcessCommandLine contains "cap_dac_override" or ProcessCommandLine contains "cap_dac_read_search" or ProcessCommandLine contains "cap_net_raw" or ProcessCommandLine contains "cap_net_admin" or ProcessCommandLine contains "cap_bpf" or ProcessCommandLine contains "cap_setpcap" or ProcessCommandLine contains "cap_mac_admin")) and (not(ProcessCommandLine contains "cap_net_raw+ep /bin/ping"))

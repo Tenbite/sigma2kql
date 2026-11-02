@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6236 new: closes #4542 - add rules for IFEO Debugger tampering, disabling usb storage and windowsupdate
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6236
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: IFEO Debugger Entry Attempted via Command Line
+// Sigma ID: ecfda7d0-7ea9-484d-988b-0669df1bac94
+// Status: experimental | Level: medium
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-08-14 | Modified: -
+// ATT&CK: persistence, privilege-escalation, T1546.012
+// Description: Detects "reg.exe" or PowerShell trying to add a "Debugger" value under Image File Execution
+//   Options (IFEO) via the command line. Attackers use this to redirect any target executable to
+//   perform malicious actions as a debugger.
+// False positives:
+//   - Legitimate developers registering a real debugger binary via the command line during debugging sessions
+// References:
+//   - https://github.com/Siradankullanici/OpenSourceViruses/blob/3267564a35f6e13559a3119eb68d0da8d2e91a0a/suspiciousregchangesandtaskkils
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e6fa05ce10d4092a1de7d7380da240a34a30b555/rules/windows/process_creation/proc_creation_win_ifeo_debugger_susp_value.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\reg.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe") or (ProcessVersionInfoOriginalFileName in~ ("reg.exe", "PowerShell.EXE", "pwsh.dll"))) and ((ProcessCommandLine contains "\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\" and ProcessCommandLine contains "Debugger") and (ProcessCommandLine contains " add " or ProcessCommandLine contains "Set-ItemProperty " or ProcessCommandLine contains "New-ItemProperty " or ProcessCommandLine contains "sp "))

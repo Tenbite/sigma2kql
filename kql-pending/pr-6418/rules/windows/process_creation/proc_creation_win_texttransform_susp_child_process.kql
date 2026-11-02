@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6418 Detection texttransform suspicious child
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6418
+// Pull request author: Diablo-research
+// Change: new rule
+// Title: Potentially Suspicious Child Process Of TextTransform
+// Sigma ID: 3193e9fc-9ca4-446a-be24-b3cdb1f7e028
+// Status: experimental | Level: medium
+// Author: Diablo-research
+// Date: 2026-10-02 | Modified: -
+// ATT&CK: execution, stealth, T1127
+// Description: Detects potentially suspicious child processes spawned by Microsoft Visual Studio Text
+//   Transformation utilities. T4 text templates can contain C# code that is compiled and executed
+//   during transformation and could be abused to proxy execution through a trusted developer
+//   utility.
+// False positives:
+//   - Legitimate T4 templates or development and build automation that intentionally launch external command or script interpreters
+// References:
+//   - https://learn.microsoft.com/en-us/visualstudio/modeling/generating-files-with-the-texttransform-utility
+//   - https://learn.microsoft.com/en-us/visualstudio/modeling/debugging-a-t4-text-template
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/eb91fee02611d5bb322316e649fb5bd44ca10fe4/rules/windows/process_creation/proc_creation_win_texttransform_susp_child_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (InitiatingProcessFolderPath endswith "\\TextTransform.exe" or InitiatingProcessFolderPath endswith "\\TextTransformCore.exe") and (FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\mshta.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\regsvr32.exe" or FolderPath endswith "\\rundll32.exe" or FolderPath endswith "\\wscript.exe")

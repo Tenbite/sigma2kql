@@ -1,0 +1,38 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6078 new: Potential Browser Cache Smuggling Payload Extraction
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6078
+// Pull request author: Tetryl12
+// Change: new rule
+// Title: Potential Browser Cache Smuggling Payload Extraction
+// Sigma ID: 93e79eb5-2aca-4d1d-895d-0f529127e088
+// Status: experimental | Level: medium
+// Author: Chris Wright (https://github.com/Tetryl12)
+// Date: 2026-06-22 | Modified: -
+// ATT&CK: stealth, T1027, execution, T1059.001, T1204.004
+// Description: Detects a process reading, searching, or extracting content directly out of a web browser's on-
+//   disk cache directory (Chromium "Cache_Data", Firefox "cache2\entries", or the
+//   legacy/WebView2/Outlook "INetCache"). In the "cache smuggling" / "Living off the Browser"
+//   technique, a phishing page (commonly a ClickFix or FileFix lure) serves an executable payload
+//   disguised with an "image/jpeg" Content-Type so the browser silently caches it with no download
+//   prompt and no Mark-of-the-Web. The victim is then social-engineered into pasting a benign-
+//   looking command that carves the payload out of the cache file (often between two marker strings
+//   via regex), writes it to a writable/executable location, and runs it. Because no second network
+//   request is made, network/proxy controls and download/MotW-based detections are evaded. This rule
+//   targets the local extraction step rather than the (invisible) delivery step.
+// False positives:
+//   - Browser cache maintenance, backup, or DLP/AV tools that read cache contents. Tune via the Image / ParentImage of approved tooling.
+//   - Forensic or IR tooling (e.g. cache parsers) run by analysts. Filter on known investigator hosts/accounts.
+//   - Developers debugging browser cache behavior with PowerShell.
+// References:
+//   - https://expel.com/blog/cache-smuggling-when-a-picture-isnt-a-thousand-words/
+//   - https://malwaretech.com/2025/10/exif-smuggling.html
+//   - https://www.cybermaxx.com/resources/cache-smuggling-the-interesting-download-cradle-provided-by-your-internet-browser/
+//   - https://sensepost.com/blog/2023/browsers-cache-smuggling/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/a06ed17260fe996129061bbca888b168c84b03e9/rules/windows/process_creation/proc_creation_win_browser_cache_smuggling_extraction.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((ProcessCommandLine contains "\\Cache_Data" or ProcessCommandLine contains "\\cache2\\entries" or ProcessCommandLine contains "\\Windows\\INetCache") and (ProcessCommandLine contains "Get-ChildItem" or ProcessCommandLine contains "Get-Content" or ProcessCommandLine contains "[IO.File]::ReadAllBytes" or ProcessCommandLine contains "[System.IO.File]::ReadAllBytes" or ProcessCommandLine contains "ReadAllText" or ProcessCommandLine contains "Select-String" or ProcessCommandLine contains "findstr" or ProcessCommandLine contains "-match" or ProcessCommandLine contains "[regex]" or ProcessCommandLine contains ".Matches(" or ProcessCommandLine contains "Copy-Item" or ProcessCommandLine contains "Move-Item" or ProcessCommandLine contains "Expand-Archive" or ProcessCommandLine contains "FromBase64String" or ProcessCommandLine contains "certutil" or ProcessCommandLine contains "tar " or ProcessCommandLine contains "expand ")) and (not((FolderPath endswith "\\ccleaner.exe" or FolderPath endswith "\\ccleaner64.exe" or FolderPath endswith "\\bleachbit.exe" or FolderPath endswith "\\bleachbit_console.exe" or FolderPath endswith "\\cleanmgr.exe")))

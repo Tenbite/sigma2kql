@@ -1,0 +1,25 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Webshell Hacking Activity Patterns
+// Sigma ID: 4ebc877f-4612-45cb-b3a5-8e3834db36c9
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-03-17 | Modified: 2023-11-09
+// ATT&CK: persistence, discovery, T1505.003, T1018, T1033, T1087
+// Description: Detects certain parent child patterns found in cases in which a web shell is used to perform
+//   certain credential dumping or exfiltration activities on a compromised system
+// False positives:
+//   - Unlikely
+// References:
+//   - https://youtu.be/7aemGhaE9ds?t=641
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_webshell_hacking.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((InitiatingProcessFolderPath endswith "\\caddy.exe" or InitiatingProcessFolderPath endswith "\\httpd.exe" or InitiatingProcessFolderPath endswith "\\nginx.exe" or InitiatingProcessFolderPath endswith "\\php-cgi.exe" or InitiatingProcessFolderPath endswith "\\w3wp.exe" or InitiatingProcessFolderPath endswith "\\ws_tomcatservice.exe") or ((InitiatingProcessFolderPath endswith "\\java.exe" or InitiatingProcessFolderPath endswith "\\javaw.exe") and (InitiatingProcessFolderPath contains "-tomcat-" or InitiatingProcessFolderPath contains "\\tomcat")) or ((InitiatingProcessFolderPath endswith "\\java.exe" or InitiatingProcessFolderPath endswith "\\javaw.exe") and (ProcessCommandLine contains "catalina.jar" or ProcessCommandLine contains "CATALINA_HOME"))) and ((ProcessCommandLine contains "rundll32" and ProcessCommandLine contains "comsvcs") or (ProcessCommandLine contains " -hp" and ProcessCommandLine contains " a " and ProcessCommandLine contains " -m") or (ProcessCommandLine contains "net" and ProcessCommandLine contains " user " and ProcessCommandLine contains " /add") or (ProcessCommandLine contains "net" and ProcessCommandLine contains " localgroup " and ProcessCommandLine contains " administrators " and ProcessCommandLine contains "/add") or (FolderPath endswith "\\ntdsutil.exe" or FolderPath endswith "\\ldifde.exe" or FolderPath endswith "\\adfind.exe" or FolderPath endswith "\\procdump.exe" or FolderPath endswith "\\Nanodump.exe" or FolderPath endswith "\\vssadmin.exe" or FolderPath endswith "\\fsutil.exe") or (ProcessCommandLine contains " -decode " or ProcessCommandLine contains " -NoP " or ProcessCommandLine contains " -W Hidden " or ProcessCommandLine contains " /decode " or ProcessCommandLine contains " /ticket:" or ProcessCommandLine contains " sekurlsa" or ProcessCommandLine contains ".dmp full" or ProcessCommandLine contains ".downloadfile(" or ProcessCommandLine contains ".downloadstring(" or ProcessCommandLine contains "FromBase64String" or ProcessCommandLine contains "process call create" or ProcessCommandLine contains "reg save " or ProcessCommandLine contains "whoami /priv"))

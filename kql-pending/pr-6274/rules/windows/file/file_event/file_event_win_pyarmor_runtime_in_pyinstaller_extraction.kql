@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6274 Add 3 rules from a PyArmor-obfuscated PyInstaller loader detonation
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6274
+// Pull request author: dclayton454
+// Change: new rule
+// Title: Potential PyArmor Obfuscated PyInstaller Payload Extraction
+// Sigma ID: 677086ae-fcc3-4202-93b0-61932ab8ad36
+// Status: experimental | Level: medium
+// Author: David Clayton - CTI @ thetechcollective
+// Date: 2026-08-17 | Modified: -
+// ATT&CK: stealth, T1027.002
+// Tags: stp.2
+// Description: Detects the PyArmor runtime extension being written into a PyInstaller one-file extraction
+//   directory. PyInstaller unpacks to a _MEI prefixed folder at runtime, and the presence of
+//   pyarmor_runtime inside that folder means the bundled Python bytecode was deliberately obfuscated
+//   before packaging. The combination is common in commodity Python malware and rare in software an
+//   enterprise buys or builds.
+// False positives:
+//   - Commercial or internal Python applications distributed as PyInstaller bundles with PyArmor licence protection applied. This is the main expected source of noise and is most likely on developer and engineering estates.
+//   - Security or automation tooling packaged by a third party using the same build chain.
+// References:
+//   - https://bazaar.abuse.ch/sample/d97ea10d1dbfe2a69e0d2387e8985635b20628495918abd54c4b052c0acf05b1/
+//   - https://tria.ge/260817-ktkv8swgra
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/237bd3d6c9cf55c339b709c9aafc7d93a4db456a/rules/windows/file/file_event/file_event_win_pyarmor_runtime_in_pyinstaller_extraction.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where FolderPath contains "\\_MEI" and FolderPath contains "pyarmor_runtime"

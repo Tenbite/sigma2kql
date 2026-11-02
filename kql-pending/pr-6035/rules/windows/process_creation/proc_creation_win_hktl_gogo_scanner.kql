@@ -1,0 +1,32 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6035 Add HackTool - Gogo Scanner Execution Rule
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6035
+// Pull request author: Aryu-RU
+// Change: new rule
+// Title: HackTool - Gogo Scanner Execution
+// Sigma ID: 02b1996d-2f4b-4f4e-bb6f-ceeb05024bd6
+// Status: experimental | Level: high
+// Author: Aryu-RU
+// Date: 2026-05-30 | Modified: -
+// ATT&CK: discovery, T1046
+// Description: Detects execution of "gogo" (chainreactors/gogo), a high-performance open-source automated
+//   scanning engine designed for red teams. The tool uses distinctive Gogo-specific port-preset tags
+//   (e.g. "top1", "top2", "top3", "win", "db", "docker", "oracle") with the "-p" flag, supersmart
+//   scan modes ("-m ss", "-m sc"), and config-listing commands ("-P port", "-P workflow"). Cisco
+//   Talos documented its use by the China-nexus APT group UAT-8302 in their May 2026 report, where
+//   the operators downloaded "gogo_windows_amd64.exe" from the official GitHub releases and used it
+//   for internal network reconnaissance.
+// False positives:
+//   - Legitimate use of gogo by security professionals or system administrators for authorized network assessment.
+// References:
+//   - https://github.com/chainreactors/gogo
+//   - https://blog.talosintelligence.com/uat-8302/
+//   - https://chainreactors.github.io/wiki/gogo/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/1d3844c90bc1da83fd41b7c52d9474001694b6ab/rules/windows/process_creation/proc_creation_win_hktl_gogo_scanner.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\gogo.exe" or FolderPath endswith "\\gogo_windows_amd64.exe" or FolderPath endswith "\\gogo_windows_386.exe") and (ProcessCommandLine contains " -p top1" or ProcessCommandLine contains " -p top2" or ProcessCommandLine contains " -p top3" or ProcessCommandLine contains " -p win" or ProcessCommandLine contains " -p db" or ProcessCommandLine contains " -p docker" or ProcessCommandLine contains " -p oracle" or ProcessCommandLine contains " -p dubbo" or ProcessCommandLine contains " -p lotus" or ProcessCommandLine contains " -m ss" or ProcessCommandLine contains " -m sc" or ProcessCommandLine contains " -P port" or ProcessCommandLine contains " -P workflow")

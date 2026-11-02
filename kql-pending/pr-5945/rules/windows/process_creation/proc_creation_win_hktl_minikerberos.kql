@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5945 new: add new rules for several AD related hacktools
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5945
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: HackTool - Minikerberos AD Attack Tools Execution
+// Sigma ID: b31f6209-e49d-4c10-a68f-8df7ae29ddf6
+// Status: experimental | Level: high
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-04-21 | Modified: -
+// ATT&CK: credential-access, T1558.003, T1558.004, T1649
+// Description: Detects execution of minikerberos command-line tools used for Kerberos-based attacks including
+//   Kerberoasting, AS-REP roasting, PKINIT NT hash recovery (UnPAC-the-Hash), S4U2self/S4U2proxy
+//   delegation abuse, and Kerberos ticket manipulation.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://github.com/skelsec/minikerberos
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/6b9ade7935a13d35a57e75ff2587fbedcc53ef56/rules/windows/process_creation/proc_creation_win_hktl_minikerberos.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath contains "\\minikerberos-" or ProcessCommandLine contains "minikerberos-"

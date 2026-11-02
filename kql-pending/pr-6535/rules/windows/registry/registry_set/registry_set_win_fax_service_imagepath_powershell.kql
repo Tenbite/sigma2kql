@@ -1,0 +1,24 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6535 Add Fax service configuration detection and regression tests
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6535
+// Pull request author: saksham-17
+// Change: new rule
+// Title: Fax Service ImagePath Modified to PowerShell
+// Sigma ID: 9bcf060f-794a-40ff-b650-a846648f2507
+// Status: experimental | Level: high
+// Author: Saksham Bhattarai
+// Date: 2026-10-27 | Modified: -
+// ATT&CK: persistence, privilege-escalation, T1543.003
+// Description: Detects modification of the Fax service ImagePath to point to PowerShell.
+// False positives:
+//   - Authorized service configuration testing
+// References:
+//   - https://www.atomicredteam.io/docs/atomics/T1543.003
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/f47baf3393b0067b55ed44d5bd2c8641fc63447d/rules/windows/registry/registry_set/registry_set_win_fax_service_imagepath_powershell.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceRegistryEvents
+| where RegistryKey endswith "\\Services\\Fax\\ImagePath" and RegistryValueData contains "powershell.exe"

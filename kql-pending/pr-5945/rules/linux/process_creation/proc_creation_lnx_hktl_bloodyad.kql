@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5945 new: add new rules for several AD related hacktools
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5945
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: HackTool - BloodyAD Execution - Linux
+// Sigma ID: b7dda640-9d81-4e5d-b8c5-8dbf17f3d5f0
+// Status: experimental | Level: high
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-04-21 | Modified: -
+// ATT&CK: persistence, privilege-escalation, defense-evasion, T1098, T1484.001
+// Description: Detects execution of bloodyAD, an Active Directory privilege escalation framework that supports
+//   DACL manipulation, password resets, group membership changes, RBCD configuration, UAC flag
+//   modification, and computer account creation.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://github.com/CravateRouge/bloodyAD
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/6b9ade7935a13d35a57e75ff2587fbedcc53ef56/rules/linux/process_creation/proc_creation_lnx_hktl_bloodyad.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath contains "/bloodyAD" or ((FolderPath contains "/python" or ProcessVersionInfoOriginalFileName contains "python") and ProcessCommandLine contains "bloodyAD")

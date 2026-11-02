@@ -1,0 +1,30 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6122 update: Regsvr32 detection rules tuning and expansion
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6122
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: Potentially Suspicious Regsvr32 Remote Pattern
+// Sigma ID: 867356ee-9352-41c9-a8f2-1be690d78216
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2023-05-24 | Modified: 2026-10-18
+// ATT&CK: stealth, T1218.010
+// Description: Detects regsvr32 execution to load/register DLLs from remote locations via HTTP, HTTPS, or FTP
+//   protocols. This is a common technique used by attackers to bypass application whitelisting and
+//   execute malicious code.
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/mrd0x/status/1461041276514623491
+//   - https://twitter.com/tccontre18/status/1480950986650832903
+//   - https://lolbas-project.github.io/lolbas/Binaries/Regsvr32/
+//   - https://www.cyberproof.com/blog/beyond-powershell-analyzing-the-multi-action-clickfix-variant/
+//   - https://github.com/SuperKieran/WooyunDrops/blob/gh-pages/static/drops/1161.Use%20SCT%20to%20Bypass%20Application%20Whitelisting%20Protection.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/fba4b94a2237d0ec8fe1cd5dc9c4c29dc6d3e4c4/rules/windows/process_creation/proc_creation_win_regsvr32_remote_pattern.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\regsvr32.exe" or ProcessVersionInfoOriginalFileName =~ "REGSVR32.EXE") and (ProcessCommandLine contains " -i" or ProcessCommandLine contains " /i" or ProcessCommandLine contains " –i" or ProcessCommandLine contains " —i" or ProcessCommandLine contains " ―i" or ProcessCommandLine contains " -s" or ProcessCommandLine contains " /s" or ProcessCommandLine contains " –s" or ProcessCommandLine contains " —s" or ProcessCommandLine contains " ―s") and (ProcessCommandLine contains "ftp://" or ProcessCommandLine contains "http://" or ProcessCommandLine contains "https://")

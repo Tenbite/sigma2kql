@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6001 new: 13 Linux detection rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6001
+// Pull request author: saakovv
+// Change: new rule
+// Title: Linux TLS Reverse Shell via OpenSSL
+// Sigma ID: b2e9d4f7-8c1a-4e63-b5d2-3f7a1c8e6b40
+// Status: experimental | Level: high
+// Author: Ivan Saakov
+// Date: 2026-05-10 | Modified: -
+// ATT&CK: execution, T1059.004
+// Description: Detects execution of openssl with the s_client subcommand combined with -connect and shell
+//   indicators. Attackers use openssl to establish encrypted reverse shells that bypass simple
+//   cleartext detection of tools like netcat. The technique typically involves mkfifo or /dev/tcp
+//   alongside openssl to create a bidirectional encrypted channel to an attacker-controlled
+//   listener.
+// False positives:
+//   - Unlikely in production systems; security testing with explicit authorization
+// References:
+//   - https://gtfobins.github.io/gtfobins/openssl/
+//   - https://www.revshells.com/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e5bac28da3655c33390db7ef1503db8cd3babb5f/rules/linux/process_creation/proc_creation_lnx_openssl_tls_reverse_shell.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "/openssl" and ProcessCommandLine contains "s_client" and (ProcessCommandLine contains "/bin/sh" or ProcessCommandLine contains "/bin/bash" or ProcessCommandLine contains "/bin/zsh" or ProcessCommandLine contains "bash -i" or ProcessCommandLine contains "sh -i")

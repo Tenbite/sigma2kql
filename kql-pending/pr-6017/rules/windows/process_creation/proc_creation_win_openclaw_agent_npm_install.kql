@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6017 new: OpenClaw AI agent family detection rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6017
+// Pull request author: 0xdavidel
+// Change: new rule
+// Title: Potential Autonomous AI Agent NPM Install
+// Sigma ID: d36928ed-ae93-4ece-8e23-b6bc2c8c1032
+// Status: experimental | Level: medium
+// Author: David El (0xdavidel)
+// Date: 2026-05-15 | Modified: -
+// ATT&CK: initial-access, T1195.002
+// Description: Detects an npm install command whose arguments name a package in the OpenClaw agent family or
+//   its copycat ecosystem. The npm-cli.js invocation is observed as a child of the user shell with a
+//   CommandLine that contains both 'npm-cli.js install' and one of the package names. Catches the
+//   install moment, before the workspace is materialized, so it pairs with the working-directory and
+//   file-event sister rules for layered coverage.
+// False positives:
+//   - Sanctioned developer install of any of these packages. Apply a per-host or per-user allowlist filter.
+//   - Unrelated package whose name contains a substring collision. Tighten the package list to exact-token matches if seen in practice.
+// References:
+//   - https://github.com/openclaw/openclaw/blob/ea16a5e9e10c5b2be28ed46ea77ba5a7aa787d8c/docs/start/getting-started.md
+//   - https://github.com/HKUDS/nanobot/blob/9ccef018c222b198991d36db8166cfc0c3aa7ea5/README.md
+//   - https://github.com/nanocoai/nanoclaw/blob/975a2f0f5b0ea19bbf35fadfd394df35e5341d3a/README.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e059f905bf9cb7a6cca7112c72e213f4e9ee44b4/rules/windows/process_creation/proc_creation_win_openclaw_agent_npm_install.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "npm-cli.js" and ProcessCommandLine contains " install " and (ProcessCommandLine contains "openclaw" or ProcessCommandLine contains "moltbot" or ProcessCommandLine contains "moltbook" or ProcessCommandLine contains "clawdbot" or ProcessCommandLine contains "clawbot" or ProcessCommandLine contains "nanobot" or ProcessCommandLine contains "nanoclaw" or ProcessCommandLine contains "picoclaw" or ProcessCommandLine contains "zeroclaw" or ProcessCommandLine contains "moltis" or ProcessCommandLine contains "agentzero")

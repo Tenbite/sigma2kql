@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6095 Add cross-platform discovery/collection rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6095
+// Pull request author: einlamye
+// Change: new rule
+// Title: Safe Mode Boot Configuration Via Bcdedit.EXE
+// Sigma ID: 7ca598c6-3c96-4ff6-b9f6-e25352787664
+// Status: experimental | Level: high
+// Author: EinLamYe
+// Date: 2026-06-29 | Modified: -
+// ATT&CK: defense-impairment, T1688
+// Description: Detects the use of "bcdedit.exe" to configure the system to boot into Safe Mode via the
+//   "safeboot" option. Adversaries (notably ransomware operators) reboot endpoints into Safe Mode to
+//   disable endpoint security products that do not load with the limited Safe Mode driver set,
+//   allowing encryption or other actions to proceed unhindered.
+// False positives:
+//   - Administrators or troubleshooting scripts legitimately configuring Safe Mode boot
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/94153597065a5cb453168ae177f48c9d30e89edb/atomics/T1688/T1688.md
+//   - https://news.sophos.com/en-us/2020/05/01/ragnar-locker-ransomware-deploys-virtual-machine-to-dodge-security/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/0963893c6b14acd541f16d39469e1acf1ac9a8f0/rules/windows/process_creation/proc_creation_win_bcdedit_safeboot_config.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\bcdedit.exe" or ProcessVersionInfoOriginalFileName =~ "bcdedit.exe") and (ProcessCommandLine contains "set" and ProcessCommandLine contains "safeboot")

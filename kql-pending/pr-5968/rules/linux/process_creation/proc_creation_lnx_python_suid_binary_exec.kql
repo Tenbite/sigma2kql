@@ -1,0 +1,34 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5968 new: CVE-2026-31431 Copy Fail Exploit Detection Rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5968
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: Python Directly Spawning a SUID Binary
+// Sigma ID: 24368a8c-29e8-4b3d-ae18-d275682bb1ca
+// Status: experimental | Level: high
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-04-30 | Modified: -
+// ATT&CK: privilege-escalation, T1068, T1548.001
+// Description: Detects instances where a Python process directly spawns a SUID binary, which is anomalous and
+//   may indicate a privilege-escalation or injection attack. It is intended to catch privilege-
+//   escalation attacks where a Python script executes a SUID-root binary directly via
+//   subprocess.run() or os.execv() instead of the os.system() path (which inserts an intermediate
+//   shell). Caused by direct-exec PoC adaptations of page-cache poisoning exploits: after
+//   overwriting the SUID binary's page cache with shellcode, the attacker triggers it through a
+//   direct exec call so Python becomes the immediate parent of the SUID binary — bypassing the "sh
+//   -c <binary>" intermediate hop that os.system()-based detection relies on. The anomalous Python →
+//   SUID binary parent-child relationship is the key indicator, as legitimate Python programs rarely
+//   need to exec privileged SUID system tools.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://xint.io/blog/copy-fail-linux-distributions
+//   - https://github.com/theori-io/copy-fail-CVE-2026-31431
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/f978f702f404ad5049a7bbac0dd729a9959455fa/rules/linux/process_creation/proc_creation_lnx_python_suid_binary_exec.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (InitiatingProcessFolderPath endswith "/python" or InitiatingProcessFolderPath endswith "/python3" or InitiatingProcessFolderPath endswith "/python3.10" or InitiatingProcessFolderPath endswith "/python3.11" or InitiatingProcessFolderPath endswith "/python3.12" or InitiatingProcessFolderPath endswith "/python3.13") and (FolderPath endswith "/su" or FolderPath endswith "/sudo" or FolderPath endswith "/passwd" or FolderPath endswith "/mount" or FolderPath endswith "/newgrp" or FolderPath endswith "/gpasswd" or FolderPath endswith "/chfn" or FolderPath endswith "/chsh" or FolderPath endswith "/ping" or FolderPath endswith "/newuidmap" or FolderPath endswith "/newgidmap" or FolderPath endswith "/pkexec" or FolderPath endswith "/fusermount" or FolderPath endswith "/expiry" or FolderPath endswith "/fusermount3" or FolderPath endswith "/umount") and (ProcessCommandLine endswith "su" or ProcessCommandLine endswith "sudo" or ProcessCommandLine endswith "passwd" or ProcessCommandLine endswith "mount" or ProcessCommandLine endswith "newgrp" or ProcessCommandLine endswith "gpasswd" or ProcessCommandLine endswith "chfn" or ProcessCommandLine endswith "chsh" or ProcessCommandLine endswith "ping" or ProcessCommandLine endswith "newuidmap" or ProcessCommandLine endswith "newgidmap" or ProcessCommandLine endswith "pkexec" or ProcessCommandLine endswith "fusermount" or ProcessCommandLine endswith "expiry" or ProcessCommandLine endswith "fusermount3" or ProcessCommandLine endswith "umount")

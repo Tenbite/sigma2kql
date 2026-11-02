@@ -1,0 +1,30 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5958 new: Browser External Extensions Silent Install Detection (Windows, macOS, Linux)
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5958
+// Pull request author: Fz0x00
+// Change: new rule
+// Title: Potential Suspicious Browser External Extension File Creation on macOS
+// Sigma ID: d7ae9092-5cfd-4276-b74e-0fc910005fc2
+// Status: experimental | Level: medium
+// Author: PersonalRules
+// Date: 2026-04-23 | Modified: -
+// ATT&CK: persistence, T1176.001
+// Description: Detects the creation of External Extensions JSON files in browser-specific directories on macOS.
+//   External extensions can be installed from external update URLs without user interaction.
+//   Supported by Chrome, Chromium, and Edge. Adversaries may abuse this to silently install
+//   malicious browser extensions.
+// False positives:
+//   - Legitimate software installers registering browser extensions
+//   - Enterprise IT administrators deploying browser extensions via External Extensions
+// References:
+//   - https://learn.microsoft.com/en-us/microsoft-edge/extensions/developer-guide/alternate-distribution-options
+//   - https://chromium.googlesource.com/chromium/src/+/main/chrome/common/chrome_paths.cc
+//   - https://github.com/praetorian-inc/ChromeAlone
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/52dd384fb832f0cd09cb37b9b122f029f9168a9b/rules/macos/file_event/file_event_macos_browser_external_extension.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where FolderPath contains "/Library/Application Support/Google/Chrome/External Extensions/" or FolderPath contains "/Library/Application Support/Google/Chrome/External Extensions/" or FolderPath contains "/Library/Application Support/Chromium/External Extensions/" or FolderPath contains "/Library/Application Support/Microsoft/Edge/External Extensions/" or FolderPath contains "/Library/Application Support/Microsoft Edge/External Extensions/"

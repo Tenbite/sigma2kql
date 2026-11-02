@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6179 new: suspicious user agent detected in SharePoint request
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6179
+// Pull request author: swachchhanda000
+// Change: update to existing rule
+// Title: Suspicious File Write to SharePoint Layouts Directory
+// Sigma ID: 1f0489be-b496-4ddf-b3a9-5900f2044e9c
+// Status: test | Level: high
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2025-07-24 | Modified: -
+// ATT&CK: initial-access, T1190, persistence, T1505.003
+// Description: Detects suspicious file writes to SharePoint layouts directory which could indicate webshell
+//   activity or post-exploitation. This behavior has been observed in the exploitation of SharePoint
+//   vulnerabilities such as CVE-2025-49704, CVE-2025-49706 or CVE-2025-53770.
+// False positives:
+//   - Unknown
+// References:
+//   - https://unit42.paloaltonetworks.com/microsoft-sharepoint-cve-2025-49704-cve-2025-49706-cve-2025-53770/
+//   - https://www.microsoft.com/en-us/security/blog/2025/07/22/disrupting-active-exploitation-of-on-premises-sharepoint-vulnerabilities/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/f5aa98b409947b3a39ef52589912ec2ab9333cc9/rules/windows/file/file_event/file_event_win_susp_filewrite_in_sharepoint_layouts_dir.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where (InitiatingProcessFolderPath endswith "\\cmd.exe" or InitiatingProcessFolderPath endswith "\\powershell_ise.exe" or InitiatingProcessFolderPath endswith "\\powershell.exe" or InitiatingProcessFolderPath endswith "\\pwsh.exe" or InitiatingProcessFolderPath endswith "\\w3wp.exe") and (FolderPath startswith "C:\\Program Files\\Common Files\\Microsoft Shared\\Web Server Extensions\\" or FolderPath startswith "C:\\Program Files (x86)\\Common Files\\Microsoft Shared\\Web Server Extensions\\") and (FolderPath contains "\\15\\TEMPLATE\\LAYOUTS\\" or FolderPath contains "\\16\\TEMPLATE\\LAYOUTS\\") and (FolderPath endswith ".asax" or FolderPath endswith ".ascx" or FolderPath endswith ".ashx" or FolderPath endswith ".asmx" or FolderPath endswith ".asp" or FolderPath endswith ".aspx" or FolderPath endswith ".bat" or FolderPath endswith ".cmd" or FolderPath endswith ".cer" or FolderPath endswith ".config" or FolderPath endswith ".hta" or FolderPath endswith ".js" or FolderPath endswith ".jsp" or FolderPath endswith ".jspx" or FolderPath endswith ".php" or FolderPath endswith ".ps1" or FolderPath endswith ".vbs")

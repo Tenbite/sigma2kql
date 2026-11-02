@@ -1,0 +1,35 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6130 new: Node.js Package Manager Supply-Chain Execution Hunts (Windows/Linux/macOS)
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6130
+// Pull request author: NikoCosmico01
+// Change: new rule
+// Title: LOLBIN Or Encoded PowerShell Spawned By Node.js Package Manager
+// Sigma ID: 166bdb44-b051-46ef-8fe2-d9c9d18361c8
+// Status: experimental | Level: medium
+// Author: Nicolò Thei, NikoCosmico01
+// Date: 2026-07-12 | Modified: -
+// ATT&CK: execution, T1059.001, T1059.007, initial-access, T1195.002
+// Tags: detection.threat-hunting
+// Description: Detects a Node.js runtime or JavaScript package manager (node.exe / bun.exe, the executors
+//   behind npm, pnpm and yarn) spawning a download/execution LOLBIN or an obfuscated PowerShell
+//   command, either directly or through a "cmd /c" lifecycle-script shell. This behaviour is
+//   characteristic of install-time "lifecycle hook" (preinstall/postinstall) abuse used in modern
+//   npm supply-chain compromises (e.g. Shai-Hulud, the @tanstack "Mini Shai-Hulud" and the axios
+//   "plain-crypto-js" campaigns), where a trojanised dependency executes attacker code the moment it
+//   is installed on a developer or CI host. Unlike campaign-specific indicator rules, this is a
+//   generic behavioural hunt intended to surface the next compromise before its IOCs are published.
+// False positives:
+//   - Legitimate package "preinstall"/"postinstall" scripts that fetch prebuilt native binaries or invoke the Windows Script Host (some node-gyp / prebuild-install flows). Baseline per project and allowlist known-good packages.
+//   - Developer or CI setup tooling that intentionally shells out to PowerShell for provisioning tasks.
+// References:
+//   - https://socket.dev/blog/tanstack-npm-packages-compromised-mini-shai-hulud-supply-chain-attack
+//   - https://www.huntress.com/blog/supply-chain-compromise-axios-npm-package
+//   - https://docs.npmjs.com/cli/v10/using-npm/scripts
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/c32049570c6068e047800b4f7d973350b6a4360c/rules-threat-hunting/windows/process_creation/proc_creation_win_nodejs_pkg_manager_lolbin_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((InitiatingProcessFolderPath endswith "\\node.exe" or InitiatingProcessFolderPath endswith "\\bun.exe") and (FolderPath endswith "\\bitsadmin.exe" or FolderPath endswith "\\certutil.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\mshta.exe" or FolderPath endswith "\\regsvr32.exe" or FolderPath endswith "\\wscript.exe")) or ((InitiatingProcessFolderPath endswith "\\node.exe" or InitiatingProcessFolderPath endswith "\\bun.exe") and (FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe") and (ProcessCommandLine contains "bitsadmin" or ProcessCommandLine contains "certutil" or ProcessCommandLine contains "DownloadFile" or ProcessCommandLine contains "DownloadString" or ProcessCommandLine contains "FromBase64String" or ProcessCommandLine contains "Invoke-WebRequest" or ProcessCommandLine contains "iwr " or ProcessCommandLine contains "mshta" or ProcessCommandLine contains "regsvr32" or ProcessCommandLine contains "Start-BitsTransfer" or ProcessCommandLine contains " -enc" or ProcessCommandLine contains " -windowstyle hidden" or ProcessCommandLine contains " -w hidden"))

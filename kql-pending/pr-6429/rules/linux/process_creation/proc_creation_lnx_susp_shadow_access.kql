@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6429 Add rule: suspicious shadow file access via standard utilities
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6429
+// Pull request author: davidakanno56-bit
+// Change: new rule
+// Title: Suspicious Shadow File Access via Standard Utilities
+// Sigma ID: e996fae2-3045-4569-9dfe-c45c0c268c5c
+// Status: test | Level: medium
+// Author: David Akanno (@davidakanno56-bit)
+// Date: 2026-10-05 | Modified: -
+// ATT&CK: credential_access, T1003.008
+// Description: Detects standard text and file inspection utilities accessing shadow files to extract password
+//   hashes or inspect local credentials.
+// False positives:
+//   - Administrative user audit scripts
+//   - Backup utilities running under authorized service accounts
+// References:
+//   - https://attack.mitre.org/techniques/T1003/008/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/0b5491472ea42005d50a52a34efaaab2cdb68d55/rules/linux/process_creation/proc_creation_lnx_susp_shadow_access.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "/etc/shadow" or ProcessCommandLine contains "/etc/gshadow") and (FolderPath endswith "/cat" or FolderPath endswith "/head" or FolderPath endswith "/tail" or FolderPath endswith "/more" or FolderPath endswith "/less" or FolderPath endswith "/grep" or FolderPath endswith "/awk")

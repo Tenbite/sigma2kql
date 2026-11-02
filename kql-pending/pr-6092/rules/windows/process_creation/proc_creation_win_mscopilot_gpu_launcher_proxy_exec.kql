@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6092 Add ADS abuse and signed-binary LOLBIN detection rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6092
+// Pull request author: einlamye
+// Change: new rule
+// Title: Proxy Execution Via Mscopilot.EXE GPU-Launcher
+// Sigma ID: 6acb22bc-6287-4afd-9b57-9c4d6bc2e215
+// Status: experimental | Level: high
+// Author: EinLamYe
+// Date: 2026-06-29 | Modified: -
+// ATT&CK: stealth, T1218
+// Description: Detects abuse of the signed Microsoft Copilot Electron binary via the "--gpu-launcher" argument
+//   to proxy-execute an arbitrary command. The legitimate value points to the GPU process; attackers
+//   set it to a shell command for signed-binary proxy execution.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Mscopilot/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/c5875f6ddd2f5087d0f0a63a34a2ed4468a9d328/rules/windows/process_creation/proc_creation_win_mscopilot_gpu_launcher_proxy_exec.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\mscopilot.exe" or FolderPath endswith "\\mscopilot_proxy.exe") and ProcessCommandLine contains "--gpu-launcher=" and (ProcessCommandLine contains "cmd" or ProcessCommandLine contains "powershell" or ProcessCommandLine contains "pwsh" or ProcessCommandLine contains "&&" or ProcessCommandLine contains "rundll32" or ProcessCommandLine contains "regsvr32" or ProcessCommandLine contains "mshta")

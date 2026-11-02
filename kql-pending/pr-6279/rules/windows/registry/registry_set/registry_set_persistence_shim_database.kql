@@ -1,0 +1,30 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Potential Persistence Via Shim Database Modification
+// Sigma ID: dfb5b4e8-91d0-4291-b40a-e3b0d3942c45
+// Status: test | Level: medium
+// Author: frack113
+// Date: 2021-12-30 | Modified: 2025-10-22
+// ATT&CK: privilege-escalation, persistence, T1546.011
+// Description: Adversaries may establish persistence and/or elevate privileges by executing malicious content
+//   triggered by application shims. The Microsoft Windows Application Compatibility
+//   Infrastructure/Framework (Application Shim) was created to allow for backward compatibility of
+//   software as the operating system codebase changes over time
+// False positives:
+//   - Legitimate custom SHIM installations will also trigger this rule
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1546.011/T1546.011.md#atomic-test-3---registry-key-creation-andor-modification-events-for-sdb
+//   - https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+//   - https://andreafortuna.org/2018/11/12/process-injection-and-persistence-using-application-shimming/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/registry/registry_set/registry_set_persistence_shim_database.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+// Note: 2 wildcard comparison(s) rewritten to 'matches regex' (KQL treats * in contains/endswith/== as a literal character)
+
+DeviceRegistryEvents
+| where (RegistryKey matches regex @"(?i)\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\InstalledSDB.*$" or RegistryKey matches regex @"(?i)\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Custom.*$") and (not((RegistryValueData =~ "" or RegistryValueData =~ "(Empty)" or isnull(RegistryValueData))))

@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6459 new: COM TypeLib hijack via scriptlet moniker + script runtime loaded by Explorer
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6459
+// Pull request author: redsand
+// Change: new rule
+// Title: Windows Script Host Or Scriptlet Runtime Loaded By Explorer
+// Sigma ID: ae8719a3-b4ce-44f3-91a7-5dfba1f39f87
+// Status: experimental | Level: high
+// Author: Tim Shelton (HAWK.io)
+// Date: 2026-10-13 | Modified: -
+// ATT&CK: persistence, privilege-escalation, T1546.015, execution, T1059.007
+// Description: Detects explorer.exe loading "wshom.ocx" (WScript.Shell) or "scrobj.dll" (the scriptlet
+//   runtime). Explorer has no reason to host script objects. This happens when a COM or TypeLib
+//   hijack makes Explorer run a ".sct" scriptlet, which then typically calls WScript.Shell to start
+//   the payload.
+// False positives:
+//   - Third-party shell extensions that host script objects inside Explorer
+// References:
+//   - https://cicada-8.medium.com/hijack-the-typelib-new-com-persistence-technique-32ae1d284661
+//   - https://reliaquest.com/blog/threat-spotlight-hijacked-and-hidden-new-backdoor-and-persistence-technique/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/16c482306186f8827fdb39c72ba5f76b1a521d55/rules/windows/image_load/image_load_explorer_script_runtime_load.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceImageLoadEvents
+| where InitiatingProcessFolderPath endswith "\\explorer.exe" and (FolderPath endswith "\\scrobj.dll" or FolderPath endswith "\\wshom.ocx")

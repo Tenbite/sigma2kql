@@ -1,0 +1,35 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6034 Add detection for Hyper-V VM forced shutdown (ransomware preparation)
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6034
+// Pull request author: viizohh
+// Change: new rule
+// Title: Hyper-V Virtual Machine Forced Shutdown
+// Sigma ID: a18c0b6c-456a-4c0e-a1b8-9c8e0d5f4e3a
+// Status: test | Level: high
+// Author: Hunter Wright
+// Date: 2026-05-29 | Modified: -
+// ATT&CK: impact, T1489
+// Description: Detects forced shutdown of Hyper-V virtual machines via PowerShell Stop-VM cmdlet. Ransomware
+//   operators commonly shut down VMs before encryption to release file locks on VHDX files, enabling
+//   successful encryption. This technique was observed in Kyber ransomware (Rapid7, 2026) and other
+//   campaigns targeting virtualized environments. The rule focuses on forced shutdown operations
+//   (-Force, -TurnOff) and bulk VM shutdown patterns (Get-VM combined with Stop-VM) which are strong
+//   indicators of malicious intent. Note: This rule intentionally does not detect Stop-VM -Save
+//   (graceful shutdown with state save) to reduce false positives from legitimate VM maintenance.
+//   Ransomware typically uses -Force or -TurnOff for immediate impact.
+// False positives:
+//   - Legitimate Hyper-V administration and maintenance activities
+//   - Automated VM lifecycle management scripts
+//   - Disaster recovery testing and failover procedures
+//   - Hyper-V Replica planned failover operations
+// References:
+//   - https://www.rapid7.com/blog/post/tr-kyber-ransomware-double-trouble-windows-esxi-attacks-explained/
+//   - https://learn.microsoft.com/en-us/powershell/module/hyper-v/stop-vm
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/44ce5dc3ff505c4d55ca506572855118d26b7eb2/rules/windows/process_creation/proc_creation_win_hyperv_vm_forced_shutdown.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe") and ProcessCommandLine contains "Stop-VM" and ((ProcessCommandLine contains "-Force" or ProcessCommandLine contains "-TurnOff") or (ProcessCommandLine contains "Get-VM" and ProcessCommandLine contains "Stop-VM"))

@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6500 new: Contagious Interview (DPRK) EtherHiding Chain - Emerging Threat And Hunting Rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6500
+// Pull request author: popkir
+// Change: new rule
+// Title: NetSupport Client Dropped Into SettingSync ResCache Masquerade Path
+// Sigma ID: 0cc5995a-2fc4-431a-aebb-9c4849cbbf63
+// Status: experimental | Level: high
+// Author: Kirill Popov
+// Date: 2026-10-21 | Modified: -
+// ATT&CK: command-and-control, T1219.002, stealth, T1036.005
+// Tags: detection.emerging-threats
+// Description: Detects a portable NetSupport Manager client (client32.ini, Service.exe, NSM.LIC, PCICL32.DLL,
+//   the nsm-launch.vbs launcher or the implant's nsm-state.json) written below
+//   "%LOCALAPPDATA%\Microsoft\Windows\SettingSync\Caches\{GUID}\Win32\ResCache\", the masquerade
+//   path used by the "ss_nsm" ("Take PC") command of a DPRK "Contagious Interview" Node.js implant.
+//   Legitimate Windows settings-sync caches do not contain NetSupport components.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.ic3.gov/CSA/2026/260918.pdf
+//   - https://www.virustotal.com/gui/file/761e0adb34e6f89ba43fcd65cf861593bfee9319e38e6175394921309e83a254
+//   - https://www.virustotal.com/gui/file/06aa951ad5384f9af7cbfa10692181cf622effa8d3840d62e3c1f37072465c04
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/fa23002b3c18ef5eb6ee47ceedde81228ebef016/rules-emerging-threats/2026/TA/Contagious-Interview/file_event_win_mal_contagious_interview_netsupport_settingsync.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where (FolderPath contains "\\Microsoft\\Windows\\SettingSync\\Caches\\" and FolderPath contains "\\Win32\\ResCache\\") and (FolderPath endswith "\\client32.ini" or FolderPath endswith "\\Service.exe" or FolderPath endswith "\\NSM.LIC" or FolderPath endswith "\\PCICL32.DLL" or FolderPath endswith "\\nsm-launch.vbs" or FolderPath endswith "\\nsm-state.json")

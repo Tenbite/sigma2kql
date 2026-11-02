@@ -1,0 +1,25 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6329 Add dotnet-counters proxy execution detection
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6329
+// Pull request author: Diablo-research
+// Change: new rule
+// Title: Binary Proxy Execution Via Dotnet-Counters.EXE
+// Sigma ID: 89ee6dad-dabf-4ddd-b6a9-6087ce65e220
+// Status: experimental | Level: medium
+// Author: Nazar Diachok
+// Date: 2026-09-26 | Modified: -
+// ATT&CK: execution, stealth, T1127
+// Description: Detects the use of dotnet-counters.exe to launch an arbitrary child process.
+// False positives:
+//   - Legitimate use of the utility to collect performance counters from a program at startup.
+// References:
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Dotnet-Counters/
+//   - https://learn.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-counters
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/3b1f8d33bbe7a006fbf9a89e2b189055be587139/rules/windows/process_creation/proc_creation_win_dotnet_counters_lolbin_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\dotnet-counters.exe" or ProcessVersionInfoOriginalFileName =~ "dotnet-counters.dll") and (ProcessCommandLine contains "-- " and ProcessCommandLine contains "collect")

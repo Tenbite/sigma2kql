@@ -1,0 +1,33 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6319 new: Rundll32 Execution of DLL Masquerading as Non-Executable File Type
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6319
+// Pull request author: PpT2211
+// Change: new rule
+// Title: Rundll32 Execution of DLL Masquerading as Non-Executable File Type
+// Sigma ID: 3e6b8f1a-2d5c-4a9e-b1f4-7c8d0a2e5f6b
+// Status: experimental | Level: high
+// Author: Pavan Pothamsetti (PpT2211)
+// Date: 2026-08-28 | Modified: -
+// ATT&CK: defense-evasion, execution, T1218.011, T1036.008
+// Description: Detects rundll32.exe being invoked either: (a) against a file with a non-DLL/non-executable
+//   extension (e.g. .jpg, .png, .pdf, .txt, .ini, .html, .js) followed by an exported function call
+//   — a common evasion where a malicious DLL is renamed to a benign extension to bypass extension-
+//   based filtering, or (b) from a user-writable staging directory (Temp, AppData, ProgramData,
+//   Public, Downloads) — a broader signal since legitimate rundll32 targets are almost always
+//   shipped under Program Files/System32, not dropped into user-writable paths at runtime. Excludes
+//   cases where the parent process is msiexec.exe, since MSI custom actions legitimately spawn
+//   rundll32 against .tmp/.dat staging files during installation.
+// False positives:
+//   - Other legitimate installers/updaters (e.g. Squirrel-based apps, some ClickOnce deployments) that stage payloads with non-standard extensions before invoking rundll32. Extend filter_parent_msiexec if you identify these in your environment
+//   - Some legitimate software (browser components, printer/scanner utilities) loads DLLs from AppData under normal operation, so baseline the staging-module branch before production
+//   - Rare legitimate help/media viewer integrations that pass non-.dll files to rundll32
+// References:
+//   - https://attack.mitre.org/techniques/T1218/011/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/4c99ed8f3da19ef7f1a61ad067d629b480e35b17/rules/windows/process_creation/proc_creation_win_rundll32_susp_non_dll_file_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "\\rundll32.exe" and (ProcessCommandLine matches regex "(?i)rundll32(\\.exe)?\\s.*\\.(jpg|png|gif|ico|pdf|docx|ppt|txt|inf|dat|tmp|ini|html|htm|js)\"?," or ProcessCommandLine matches regex "(?i)rundll32(\\.exe)?\"?\\s+\"?[^,]*\\\\(AppData\\\\Local\\\\Temp|AppData\\\\Roaming|ProgramData|Users\\\\Public|Downloads)\\\\[^,]*,") and (not(InitiatingProcessFolderPath endswith "\\msiexec.exe"))

@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6474 new: AOMEI Backupper supply chain compromise rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6474
+// Pull request author: veeramani-sl-12207
+// Change: new rule
+// Title: Suspicious Executable Created In AOMEI Backupper Tmphtml Directory
+// Sigma ID: d18188bb-42c7-4c37-8a50-b3c865c5508d
+// Status: experimental | Level: high
+// Author: Veeramani
+// Date: 2026-08-29 | Modified: -
+// ATT&CK: initial-access, T1195.002, stealth
+// Description: Detects a file creation event for any executable inside the "tmphtml" staging directory beneath
+//   the AOMEI Backupper installation path, where the creating process is Backupper.exe. The
+//   application stages popup resources here before relocating them to html\; a genuine promotional
+//   bundle contains no executables, so an .exe written to this path indicates a tampered bundle.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.manageengine.com/threat-analysis-lab/aomei-backupper-supply-chain-compromise.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/61757c593d21d62428a54bb9b9191a1de0e0ca82/rules/windows/file/file_event/file_event_win_aomei_backupper_susp_exe_in_tmphtml.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where (InitiatingProcessFolderPath contains "\\AOMEI\\AOMEI Backupper\\" and InitiatingProcessFolderPath endswith "\\Backupper.exe") and ((FolderPath contains "\\AOMEI\\AOMEI Backupper\\" and FolderPath contains "\\tmphtml\\") and FolderPath endswith ".exe")

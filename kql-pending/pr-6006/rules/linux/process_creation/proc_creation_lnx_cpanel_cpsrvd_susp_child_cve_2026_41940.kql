@@ -1,0 +1,33 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6006 CVE-2026-41940 - cPanel and WHM CRLF authentication bypass detection
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6006
+// Pull request author: cocopollo
+// Change: new rule
+// Title: CVE-2026-41940 cPanel Service Daemon Suspicious Child Process
+// Sigma ID: 984a21f0-4d82-4fdc-a2b7-a0e6a1e51c03
+// Status: experimental | Level: critical
+// Author: MahmoudSwelam
+// Date: 2026-05-01 | Modified: 2026-05-10
+// ATT&CK: execution, T1059.004, discovery, T1033, persistence, T1505.003
+// Description: Detects post-exploitation command execution from CVE-2026-41940, a critical authentication
+//   bypass in cPanel and WHM (CVSS 9.8). After bypassing authentication via CRLF injection into
+//   cpsrvd session files, attackers execute arbitrary commands through the cpsrvd or cpdavd daemon
+//   running as root. Spawning shells, recon tools, download utilities, or interpreters as direct
+//   children of these daemons is strongly anomalous.
+// False positives:
+//   - Custom cPanel plugins or hooks that legitimately invoke shell scripts as cpsrvd children
+//   - Administrative cPanel update processes that temporarily spawn interpreters
+//   - Monitoring agents operating under the cPanel process context
+// References:
+//   - https://support.cpanel.net/hc/en-us/articles/40073787579671
+//   - https://labs.watchtowr.com/the-internet-is-falling-down-falling-down-falling-down-cpanel-whm-authentication-bypass-cve-2026-41940/
+//   - https://www.rapid7.com/blog/post/etr-cve-2026-41940-cpanel-whm-authentication-bypass/
+//   - https://nvd.nist.gov/vuln/detail/CVE-2026-41940
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/054ac9150b40dc6e99867b87fd4c6db40222c2d4/rules/linux/process_creation/proc_creation_lnx_cpanel_cpsrvd_susp_child_cve_2026_41940.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (InitiatingProcessFolderPath endswith "/cpsrvd" or InitiatingProcessFolderPath endswith "/cpsrvd-ssl" or InitiatingProcessFolderPath endswith "/cpdavd" or InitiatingProcessFolderPath endswith "/cpdavd-ssl") and ((FolderPath endswith "/bash" or FolderPath endswith "/sh" or FolderPath endswith "/dash" or FolderPath endswith "/zsh" or FolderPath endswith "/ksh" or FolderPath endswith "/tcsh") or (FolderPath endswith "/whoami" or FolderPath endswith "/id" or FolderPath endswith "/uname" or FolderPath endswith "/hostname" or FolderPath endswith "/ifconfig" or FolderPath endswith "/ip" or FolderPath endswith "/netstat" or FolderPath endswith "/ss" or FolderPath endswith "/ps" or FolderPath endswith "/ls") or (FolderPath endswith "/curl" or FolderPath endswith "/wget" or FolderPath endswith "/fetch" or FolderPath endswith "/tftp" or FolderPath endswith "/ftp") or (FolderPath endswith "/python" or FolderPath endswith "/python2" or FolderPath endswith "/python3" or FolderPath endswith "/perl" or FolderPath endswith "/ruby" or FolderPath endswith "/php" or FolderPath endswith "/node"))

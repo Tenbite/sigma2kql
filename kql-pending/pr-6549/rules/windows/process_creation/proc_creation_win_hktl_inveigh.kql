@@ -1,0 +1,25 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6549 Fix OriginalFileName with an incorrect leading backslash across Windows process creation rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6549
+// Pull request author: Shaivarth
+// Change: update to existing rule
+// Title: HackTool - Inveigh Execution
+// Sigma ID: b99a1518-1ad5-4f65-bc95-1ffff97a8fd0
+// Status: test | Level: critical
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-10-24 | Modified: 2026-10-31
+// ATT&CK: credential-access, T1003.001
+// Description: Detects the use of Inveigh a cross-platform .NET IPv4/IPv6 machine-in-the-middle tool
+// False positives:
+//   - Very unlikely
+// References:
+//   - https://github.com/Kevin-Robertson/Inveigh
+//   - https://thedfirreport.com/2020/11/23/pysa-mespinoza-ransomware/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/58263811faa8c59e19256b604300e758b50d4ac3/rules/windows/process_creation/proc_creation_win_hktl_inveigh.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "\\Inveigh.exe" or (ProcessVersionInfoOriginalFileName in~ ("Inveigh.exe", "Inveigh.dll")) or ProcessVersionInfoFileDescription =~ "Inveigh" or (ProcessCommandLine contains " -SpooferIP" or ProcessCommandLine contains " -ReplyToIPs " or ProcessCommandLine contains " -ReplyToDomains " or ProcessCommandLine contains " -ReplyToMACs " or ProcessCommandLine contains " -SnifferIP")

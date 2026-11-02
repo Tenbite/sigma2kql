@@ -1,0 +1,25 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Potential DLL Sideloading Via comctl32.dll
+// Sigma ID: 6360757a-d460-456c-8b13-74cf0e60cceb
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems), Subhash Popuri (@pbssubhash)
+// Date: 2022-12-16 | Modified: 2022-12-19
+// ATT&CK: persistence, privilege-escalation, execution, stealth, T1574.001
+// Description: Detects potential DLL sideloading using comctl32.dll to obtain system privileges
+// False positives:
+//   - Unlikely
+// References:
+//   - https://github.com/binderlabs/DirCreate2System
+//   - https://github.com/sailay1996/awesome_windows_logical_bugs/blob/60cbb23a801f4c3195deac1cc46df27c225c3d07/dir_create2system.txt
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/image_load/image_load_side_load_comctl32.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceImageLoadEvents
+| where (FolderPath startswith "C:\\Windows\\System32\\logonUI.exe.local\\" or FolderPath startswith "C:\\Windows\\System32\\werFault.exe.local\\" or FolderPath startswith "C:\\Windows\\System32\\consent.exe.local\\" or FolderPath startswith "C:\\Windows\\System32\\narrator.exe.local\\" or FolderPath startswith "C:\\windows\\system32\\wermgr.exe.local\\") and FolderPath endswith "\\comctl32.dll"

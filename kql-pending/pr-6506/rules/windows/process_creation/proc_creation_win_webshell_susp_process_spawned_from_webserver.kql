@@ -1,0 +1,25 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6506 new: Add php2shell (CVE-2026-109618/9) detection rules and update existing webshell coverage
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6506
+// Pull request author: swachchhanda000
+// Change: update to existing rule
+// Title: Suspicious Process By Web Server Process
+// Sigma ID: 8202070f-edeb-4d31-a010-a26c72ac5600
+// Status: test | Level: high
+// Author: Thomas Patzke, Florian Roth (Nextron Systems), Zach Stanford @svch0st, Tim Shelton, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2019-01-16 | Modified: 2026-10-22
+// ATT&CK: persistence, initial-access, T1505.003, T1190
+// Description: Detects potentially suspicious processes being spawned by a web server process which could be
+//   the result of a successfully placed web shell or exploitation
+// False positives:
+//   - Particular web applications may spawn a shell process legitimately
+// References:
+//   - https://media.defense.gov/2020/Jun/09/2002313081/-1/-1/0/CSI-DETECT-AND-PREVENT-WEB-SHELL-MALWARE-20200422.PDF
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e611049e02f5f9b9dd2c40c87f77f5e349275f2c/rules/windows/process_creation/proc_creation_win_webshell_susp_process_spawned_from_webserver.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((InitiatingProcessFolderPath endswith "\\ArcSOC.exe" or InitiatingProcessFolderPath endswith "\\apache.exe" or InitiatingProcessFolderPath endswith "\\apache2.exe" or InitiatingProcessFolderPath endswith "\\caddy.exe" or InitiatingProcessFolderPath endswith "\\frankenphp.exe" or InitiatingProcessFolderPath endswith "\\httpd.exe" or InitiatingProcessFolderPath endswith "\\iisexpress.exe" or InitiatingProcessFolderPath endswith "\\lighttpd.exe" or InitiatingProcessFolderPath endswith "\\nginx.exe" or InitiatingProcessFolderPath endswith "\\php-cgi.exe" or InitiatingProcessFolderPath endswith "\\php-fpm.exe" or InitiatingProcessFolderPath endswith "\\php-win.exe" or InitiatingProcessFolderPath endswith "\\php.exe" or InitiatingProcessFolderPath endswith "\\phpdbg.exe" or InitiatingProcessFolderPath endswith "\\roadrunner.exe" or InitiatingProcessFolderPath endswith "\\tomcat.exe" or InitiatingProcessFolderPath endswith "\\tomcat10.exe" or InitiatingProcessFolderPath endswith "\\tomcat9.exe" or InitiatingProcessFolderPath endswith "\\UMWorkerProcess.exe" or InitiatingProcessFolderPath endswith "\\unit.exe" or InitiatingProcessFolderPath endswith "\\w3wp.exe" or InitiatingProcessFolderPath endswith "\\ws_tomcatservice.exe") or ((InitiatingProcessFolderPath endswith "\\java.exe" or InitiatingProcessFolderPath endswith "\\javaw.exe") and (InitiatingProcessFolderPath contains "-tomcat-" or InitiatingProcessFolderPath contains "\\tomcat")) or ((InitiatingProcessFolderPath endswith "\\java.exe" or InitiatingProcessFolderPath endswith "\\javaw.exe") and (InitiatingProcessCommandLine contains "CATALINA_HOME" or InitiatingProcessCommandLine contains "catalina.home" or InitiatingProcessCommandLine contains "catalina.jar"))) and (FolderPath endswith "\\arp.exe" or FolderPath endswith "\\at.exe" or FolderPath endswith "\\bash.exe" or FolderPath endswith "\\bitsadmin.exe" or FolderPath endswith "\\certutil.exe" or FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\dsget.exe" or FolderPath endswith "\\hostname.exe" or FolderPath endswith "\\nbtstat.exe" or FolderPath endswith "\\net.exe" or FolderPath endswith "\\net1.exe" or FolderPath endswith "\\netdom.exe" or FolderPath endswith "\\netsh.exe" or FolderPath endswith "\\nltest.exe" or FolderPath endswith "\\ntdsutil.exe" or FolderPath endswith "\\powershell_ise.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\qprocess.exe" or FolderPath endswith "\\query.exe" or FolderPath endswith "\\qwinsta.exe" or FolderPath endswith "\\reg.exe" or FolderPath endswith "\\rundll32.exe" or FolderPath endswith "\\sc.exe" or FolderPath endswith "\\sh.exe" or FolderPath endswith "\\wmic.exe" or FolderPath endswith "\\wscript.exe" or FolderPath endswith "\\wusa.exe") and (not(((InitiatingProcessFolderPath endswith "\\java.exe" and ProcessCommandLine endswith "Windows\\system32\\cmd.exe /c C:\\ManageEngine\\ADManager \"Plus\\ES\\bin\\elasticsearch.bat -Enode.name=RMP-NODE1 -pelasticsearch-pid.txt") or (InitiatingProcessFolderPath endswith "\\java.exe" and (ProcessCommandLine contains "sc query" and ProcessCommandLine contains "ADManager Plus")))))

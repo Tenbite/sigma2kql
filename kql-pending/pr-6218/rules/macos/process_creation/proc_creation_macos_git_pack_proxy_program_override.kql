@@ -1,0 +1,33 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6218 Add Git configuration command execution rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6218
+// Pull request author: signalblur
+// Change: new rule
+// Title: Git Pack or Proxy Program Override - MacOS
+// Sigma ID: 07a6e448-bb76-4b68-8102-6484c21ea4fc
+// Status: experimental | Level: medium
+// Author: David Burkett (@signalblur)
+// Date: 2026-08-11 | Modified: -
+// ATT&CK: execution, T1059.004
+// Description: Detects Git being told to run a caller-supplied program in place of one of the helpers it
+//   normally starts for itself. The "--upload-pack" and "--receive-pack" options, their
+//   "remote.<name>.uploadpack" and "remote.<name>.receivepack" configuration equivalents,
+//   "uploadpack.packObjectsHook" and "core.gitProxy" each name a program that Git executes while
+//   moving objects to or from a repository. Against a local path or a local clone that program runs
+//   on the host issuing the command, which turns an otherwise ordinary looking Git invocation into
+//   command execution.
+// False positives:
+//   - Connecting to a server that keeps Git outside the default path, which is the documented reason to pass "--upload-pack" or "--receive-pack".
+//   - A proxy program configured for the deprecated "git://" protocol in an environment that still restricts direct outbound connections.
+// References:
+//   - https://git-scm.com/docs/git-config
+//   - https://git-scm.com/docs/git-clone
+//   - https://git-scm.com/docs/git-push
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/525309ab68cce53dd9b31a4b81cd80862b6058f6/rules/macos/process_creation/proc_creation_macos_git_pack_proxy_program_override.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "/git" and (ProcessCommandLine contains "--receive-pack" or ProcessCommandLine contains "--upload-pack" or ProcessCommandLine contains ".receivepack" or ProcessCommandLine contains ".uploadpack" or ProcessCommandLine contains "core.gitProxy" or ProcessCommandLine contains "uploadpack.packObjectsHook")

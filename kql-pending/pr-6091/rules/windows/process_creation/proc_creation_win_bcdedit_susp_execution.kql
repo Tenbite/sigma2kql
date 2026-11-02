@@ -1,0 +1,25 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6091 Enrich ATT&CK tags (T1654/T1652) and dedupe bcdedit safeboot logic
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6091
+// Pull request author: einlamye
+// Change: update to existing rule
+// Title: Potential Ransomware or Unauthorized MBR Tampering Via Bcdedit.EXE
+// Sigma ID: c9fbe8e9-119d-40a6-9b59-dd58a5d84429
+// Status: test | Level: medium
+// Author: @neu5ron
+// Date: 2019-02-07 | Modified: 2026-06-29
+// ATT&CK: stealth, T1070, persistence, T1542.003
+// Description: Detects potential malicious and unauthorized usage of bcdedit.exe
+// False positives:
+//   - Administrators or recovery/troubleshooting scripts legitimately deleting, importing or reconfiguring boot configuration data
+// References:
+//   - https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/bcdedit--set
+//   - https://twitter.com/malwrhunterteam/status/1372536434125512712/photo/2
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/6518cc50cd0ec1b32f3f086470293c355d6522f4/rules/windows/process_creation/proc_creation_win_bcdedit_susp_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\bcdedit.exe" or ProcessVersionInfoOriginalFileName =~ "bcdedit.exe") and (ProcessCommandLine contains "delete" or ProcessCommandLine contains "deletevalue" or ProcessCommandLine contains "import")

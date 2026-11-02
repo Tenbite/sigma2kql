@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6176 Add NTUSER.MAN Persistence and HiveSwarming Detection Rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6176
+// Pull request author: Nullbyte0x
+// Change: new rule
+// Title: Potential Mandatory Profile Persistence Via NTUSER.MAN Creation
+// Sigma ID: f4b983ea-615e-4a71-8ad9-cc42ebb4817e
+// Status: experimental | Level: high
+// Author: Ammar Jokhadar (Thawd Security)
+// Date: 2026-07-21 | Modified: -
+// ATT&CK: persistence, privilege-escalation, T1547
+// Description: Detects the creation or modification of an NTUSER.MAN file in a user profile path. NTUSER.MAN is
+//   used for mandatory profiles and takes precedence over NTUSER.DAT when Windows loads the user's
+//   HKCU hive at logon. Attackers can stage a modified hive as NTUSER.MAN to introduce HKCU
+//   persistence without generating registry write telemetry.
+// False positives:
+//   - Legitimate mandatory profile deployment in kiosk, shared workstation, or roaming profile environments.
+// References:
+//   - https://deceptiq.com/blog/ntuser-man-registry-persistence
+//   - https://learn.microsoft.com/en-us/windows-server/storage/folder-redirection/deploy-roaming-user-profiles
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/761f24ae2d4456a47936bec5b63984577fe9324f/rules/windows/file/file_event/file_event_win_ntuser_man_profile_creation.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where (FolderPath contains ":\\Users\\" and FolderPath endswith "\\NTUSER.MAN") or (FolderPath startswith "\\" and FolderPath endswith "\\NTUSER.MAN")

@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6242 update: linux anti forensics rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6242
+// Pull request author: swachchhanda000
+// Change: update to existing rule
+// Title: Shell Command History Tampering
+// Sigma ID: 1182f3b3-e716-4efa-99ab-d2685d04360f
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems), Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2022-06-20 | Modified: 2026-08-21
+// ATT&CK: stealth, T1070.003
+// Description: Detects commands that try to clear or tamper with the Linux command history. This technique is
+//   used by threat actors in order to evade defenses and execute commands without them being
+//   recorded in files such as "bash_history" or "zsh_history".
+// False positives:
+//   - Legitimate administration activities
+// References:
+//   - https://github.com/sleventyeleven/linuxprivchecker/
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.003/T1070.003.md
+//   - https://www.hackers-arise.com/post/2016/06/20/covering-your-bash-shell-tracks-antiforensics
+//   - https://www.cadosecurity.com/spinning-yarn-a-new-linux-malware-campaign-targets-docker-apache-hadoop-redis-and-confluence/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/d826f6d9370fc59d350588c5c605409fe3c431aa/rules/linux/process_creation/proc_creation_lnx_susp_history_delete.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (((FolderPath endswith "/rm" or FolderPath endswith "/unlink" or FolderPath endswith "/shred") or (FolderPath endswith "/truncate" and ProcessCommandLine matches regex "(-s|--size[=\\s])\\s{0,8}0") or (FolderPath endswith "/ln" and (ProcessCommandLine contains " /dev/null " or ProcessCommandLine contains " /dev/zero")) or (FolderPath endswith "/chattr" and ProcessCommandLine contains " +i")) and (ProcessCommandLine contains "sh_history" or ProcessCommandLine contains ".history" or ProcessCommandLine contains "zhistory")) or ((FolderPath endswith "/ash" or FolderPath endswith "/bash" or FolderPath endswith "/busybox" or FolderPath endswith "/csh" or FolderPath endswith "/dash" or FolderPath endswith "/fish" or FolderPath endswith "/ksh" or FolderPath endswith "/sh" or FolderPath endswith "/tcsh" or FolderPath endswith "/zsh") and ((ProcessCommandLine contains "\"\" >" and ProcessCommandLine contains "sh_history") or (ProcessCommandLine contains "> ~/." and ProcessCommandLine contains "sh_history") or ProcessCommandLine contains "HISTFILE=/dev/null" or ProcessCommandLine contains "HISTFILESIZE=0" or ProcessCommandLine contains "history -c" or ProcessCommandLine contains "history -w" or ProcessCommandLine contains "HISTSIZE=0" or ProcessCommandLine contains "shopt -ou history" or ProcessCommandLine contains "shopt -uo history"))

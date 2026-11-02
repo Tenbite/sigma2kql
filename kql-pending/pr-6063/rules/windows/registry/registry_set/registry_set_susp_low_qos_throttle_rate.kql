@@ -1,0 +1,34 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6063 new: edrchoker qos throttle rate modification rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6063
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: Suspicious QoS ThrottleRate Set to Abnormally Low Value
+// Sigma ID: 87249584-7a6b-43c8-83b4-6a0a3941b1f4
+// Status: experimental | Level: high
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-06-09 | Modified: -
+// ATT&CK: defense-impairment, T1685
+// Description: Detects suspicious setting of Windows QoS ThrottleRate policies to abnormally low values that
+//   would effectively cut off network access for targeted processes. The technique sets a
+//   ThrottleRate registry value to an abnormally low value under the QoS Group Policy key, causing
+//   TCP/UDP connections for matched processes to time out and cutting off security agent telemetry.
+//   Legitimate QoS policies use human-scale bandwidth values; a throttle rate at or below 1KB/s
+//   (0-1024 bytes/sec) is too low for any real administrative use and is a strong indicator of
+//   deliberate tampering to starve a process of network access - commonly targeting EDR, AV, or
+//   other security services to suppress telemetry or block cloud lookups.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/TwoSevenOneT/EDRChoker/
+//   - https://www.zerosalarium.com/2026/06/edrchoker-choking-telemetry-stream-block-edr.html
+//   - https://learn.microsoft.com/en-us/previous-versions/windows/desktop/qoswmiprov/msft-netqospolicysettingdata
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/17172ba8e70f32db2d8132fe1562146c80087920/rules/windows/registry/registry_set/registry_set_susp_low_qos_throttle_rate.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+// Note: 1 wildcard comparison(s) rewritten to 'matches regex' (KQL treats * in contains/endswith/== as a literal character)
+
+DeviceRegistryEvents
+| where (RegistryKey matches regex @"(?i)\\Software\\Policies\\Microsoft\\Windows\\QoS.*$" and RegistryKey endswith "\\ThrottleRate") and ((RegistryValueData startswith "QWORD (0x00000000-0x000000" or RegistryValueData startswith "QWORD (0x00000000-0x000001" or RegistryValueData startswith "QWORD (0x00000000-0x000002" or RegistryValueData startswith "QWORD (0x00000000-0x000003") or RegistryValueData =~ "QWORD (0x00000000-0x00000400)")

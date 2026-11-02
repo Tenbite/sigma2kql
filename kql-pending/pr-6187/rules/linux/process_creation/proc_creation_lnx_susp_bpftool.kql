@@ -1,0 +1,30 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6187 new: Suspicious Bpftool State Modification
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6187
+// Pull request author: Char0n1507
+// Change: new rule
+// Title: Suspicious Bpftool State Modification
+// Sigma ID: a444680c-0216-4f1a-8a4f-8e88b7d1b632
+// Status: experimental | Level: high
+// Author: Sri Charan
+// Date: 2026-07-28 | Modified: -
+// ATT&CK: persistence, defense-evasion, T1547.006, T1562
+// Description: Detects the execution of the 'bpftool' command to load, attach, or pin eBPF programs and maps.
+//   Adversaries and rootkits (e.g., BPFDoor, Symbiote) often leverage eBPF for stealthy persistence
+//   and network evasion. While 'bpftool' is a legitimate administrative utility for introspection,
+//   unauthorized usage to load or modify eBPF objects outside of known administrative scripts is
+//   highly suspicious.
+// False positives:
+//   - Legitimate execution of bpftool by system administrators for network troubleshooting or observability tool deployments (e.g., Cilium, Datadog).
+// References:
+//   - https://www.elastic.co/security-labs/getting-bpfdoor-off-its-hinges
+//   - https://redcanary.com/blog/ebpf-for-security/
+//   - https://attack.mitre.org/techniques/T1547/006/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/a13f5263eb6b24b5c904a7573dd2f68c68f1d4e4/rules/linux/process_creation/proc_creation_lnx_susp_bpftool.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "/bpftool" or ProcessCommandLine contains "bpftool ") and (ProcessCommandLine contains " prog load" or ProcessCommandLine contains " prog attach" or ProcessCommandLine contains " prog pin" or ProcessCommandLine contains " map pin" or ProcessCommandLine contains " prog detach")

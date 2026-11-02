@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6451 Add macOS encoded payload piped to shell rule
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6451
+// Pull request author: yana-ivanov
+// Change: new rule
+// Title: Suspicious Encoded Payload Piped To Shell - macOS
+// Sigma ID: b9a60caf-969e-4033-9513-2f097adee039
+// Status: experimental | Level: high
+// Author: Yana Ivanov
+// Date: 2026-10-10 | Modified: -
+// ATT&CK: execution, stealth, command-and-control, T1059.004, T1105, T1027
+// Description: Detects a command line that downloads content with curl, decodes it with base64 or gunzip, and
+//   pipes the result into a shell interpreter. This chain is used by macOS ClickFix campaigns, where
+//   a user is socially engineered into pasting a prepared command into Terminal, and by the MacSync
+//   and AMOS infostealer infection chains. The decode step is what separates this from legitimate
+//   installer one-liners, which fetch and execute without decoding.
+// False positives:
+//   - Installation scripts that fetch a compressed archive and pipe it through a shell, which is uncommon but not unheard of in developer tooling
+// References:
+//   - https://www.microsoft.com/en-us/security/blog/2026/08/18/hunting-macsync-stealer-infrastructure-through-behavioral-pivots/
+//   - https://securelist.com/macsync-new-version/121383/
+//   - https://hunt.io/blog/macos-clickfix-applescript-terminal-phishing
+//   - https://unit42.paloaltonetworks.com/atomic-macos-amos-stealer-activity
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/746407b8668625051554d31bf2574686b1a62b55/rules/macos/process_creation/proc_creation_macos_susp_encoded_payload_piped_to_shell.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "curl" and (ProcessCommandLine contains "base64 -d" or ProcessCommandLine contains "base64 --decode" or ProcessCommandLine contains "gunzip" or ProcessCommandLine contains "gzip -d" or ProcessCommandLine contains "xxd -r") and (ProcessCommandLine contains "| sh" or ProcessCommandLine contains "|sh" or ProcessCommandLine contains "| bash" or ProcessCommandLine contains "|bash" or ProcessCommandLine contains "| zsh" or ProcessCommandLine contains "|zsh" or ProcessCommandLine contains "| /bin/sh" or ProcessCommandLine contains "| /bin/bash" or ProcessCommandLine contains "| /bin/zsh" or ProcessCommandLine contains "|/bin/sh" or ProcessCommandLine contains "|/bin/bash" or ProcessCommandLine contains "|/bin/zsh")

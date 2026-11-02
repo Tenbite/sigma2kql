@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5945 new: add new rules for several AD related hacktools
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5945
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: HackTool - Impacket Attack Scripts Execution
+// Sigma ID: 13462d36-3c93-4b92-9ab4-ad34f500ef34
+// Status: experimental | Level: high
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-04-22 | Modified: -
+// ATT&CK: execution, lateral-movement, credential-access, discovery, T1047, T1021.002, T1003, T1087.002
+// Description: Detects execution of impacket attack scripts via the Python interpreter on Windows. Impacket
+//   provides Python implementations of various Windows network protocols and is widely used for
+//   lateral movement (wmiexec, psexec, smbexec), credential access (secretsdump), Kerberos abuse
+//   (GetNPUsers, GetUserSPNs), NTLM relay (ntlmrelayx), and Active Directory enumeration and
+//   manipulation.
+// False positives:
+//   - Legitimate use of impacket in authorised red team engagements
+//   - Scripts legitimately named services.py or reg.py unrelated to impacket
+// References:
+//   - https://github.com/fortra/impacket
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/6b9ade7935a13d35a57e75ff2587fbedcc53ef56/rules/windows/process_creation/proc_creation_win_hktl_impacket_scripts.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath contains "\\python" or ProcessVersionInfoOriginalFileName contains "python") and (ProcessCommandLine contains "secretsdump.py" or ProcessCommandLine contains "wmiexec.py" or ProcessCommandLine contains "psexec.py" or ProcessCommandLine contains "smbexec.py" or ProcessCommandLine contains "atexec.py" or ProcessCommandLine contains "dcomexec.py" or ProcessCommandLine contains "ntlmrelayx.py" or ProcessCommandLine contains "smbrelayx.py" or ProcessCommandLine contains "GetNPUsers.py" or ProcessCommandLine contains "GetUserSPNs.py" or ProcessCommandLine contains "getTGT.py" or ProcessCommandLine contains "getST.py" or ProcessCommandLine contains "ticketer.py" or ProcessCommandLine contains "ticketConverter.py" or ProcessCommandLine contains "goldenPac.py" or ProcessCommandLine contains "raiseChild.py" or ProcessCommandLine contains "dacledit.py" or ProcessCommandLine contains "owneredit.py" or ProcessCommandLine contains "rbcd.py" or ProcessCommandLine contains "addcomputer.py" or ProcessCommandLine contains "lookupsid.py" or ProcessCommandLine contains "findDelegation.py" or ProcessCommandLine contains "GetADUsers.py" or ProcessCommandLine contains "GetADComputers.py" or ProcessCommandLine contains "samrdump.py" or ProcessCommandLine contains "rpcdump.py" or ProcessCommandLine contains "rpcmap.py" or ProcessCommandLine contains "services.py" or ProcessCommandLine contains "reg.py" or ProcessCommandLine contains "wmiquery.py" or ProcessCommandLine contains "dpapi.py")

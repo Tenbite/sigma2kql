@@ -1,0 +1,30 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5955 new: Remote Debugging Detection for Linux and macOS (Chromium + Firefox)
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5955
+// Pull request author: Fz0x00
+// Change: new rule
+// Title: Potential Cookie Theft via Firefox Remote Debugging on macOS
+// Sigma ID: a28c80e4-69dc-4236-a872-2ff48ee92225
+// Status: experimental | Level: medium
+// Author: PersonalRules
+// Date: 2026-04-23 | Modified: -
+// ATT&CK: credential-access, T1539
+// Description: Detects the use of the Firefox remote debugging argument which can be abused to steal browser
+//   cookies, session data, and credentials. An adversary may launch Firefox with -start-debugger-
+//   server to open a debugging port and connect via Remote Debugging Protocol to extract sensitive
+//   data.
+// False positives:
+//   - Developers debugging Firefox extensions or web applications
+//   - Automated testing frameworks using Firefox remote debugging
+// References:
+//   - https://firefox-source-docs.mozilla.org/devtools-user/about_colon_debugging/
+//   - https://github.com/wunderwuzzi23/firefox-cookiemonster
+//   - https://www.mdsec.co.uk/2022/10/analysing-lastpass-part-1/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/1170f436bbbf22972502a467ac84a05a81d07267/rules/macos/process_creation/proc_creation_macos_browsers_firefox_remote_debugging.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "-start-debugger-server"

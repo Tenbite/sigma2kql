@@ -1,0 +1,30 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6089 rules/windows: add Dev Tunnel hosting or creation process_creation rule
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6089
+// Pull request author: BL3IP
+// Change: new rule
+// Title: Dev Tunnel Hosting Or Creation Execution
+// Sigma ID: f2a7c4d9-3b18-4e6a-9c52-8d1e0a7b6f34
+// Status: experimental | Level: medium
+// Author: Cyber Portfolio
+// Date: 2026-06-27 | Modified: -
+// ATT&CK: command-and-control, T1572
+// Description: Detects execution of the Microsoft "devtunnel" CLI to create or host a Dev Tunnel, which exposes
+//   a local port or endpoint to the internet through Microsoft infrastructure (*.devtunnels.ms).
+//   Adversaries abuse Dev Tunnels for command-and-control, reverse shells and persistent remote
+//   access that blends in with trusted Microsoft domains. This rule complements existing network and
+//   DNS detections by catching the on-host tunnel setup.
+// False positives:
+//   - Legitimate use of Microsoft Dev Tunnels by developers exposing local services for testing.
+// References:
+//   - https://blueteamops.medium.com/detecting-dev-tunnels-16f0994dc3e2
+//   - https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/cli-commands
+//   - https://cydefops.com/devtunnels-unleashed
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/61daeaac695556fd2c27f1e62e8b84ac79dd8fb1/rules/windows/process_creation/proc_creation_win_devtunnel_host_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "\\devtunnel.exe" and (ProcessCommandLine contains " host" or ProcessCommandLine contains " create" or ProcessCommandLine contains " port forward")

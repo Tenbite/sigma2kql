@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Cab File Extraction Via Wusa.EXE From Potentially Suspicious Paths
+// Sigma ID: c74c0390-3e20-41fd-a69a-128f0275a5ea
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-08-05 | Modified: 2023-11-28
+// ATT&CK: execution
+// Description: Detects the execution of the "wusa.exe" (Windows Update Standalone Installer) utility to extract
+//   ".cab" files using the "/extract" argument from potentially suspicious paths.
+// False positives:
+//   - Unknown
+// References:
+//   - https://web.archive.org/web/20180331144337/https://www.fireeye.com/blog/threat-research/2018/03/sanny-malware-delivery-method-updated-in-recently-observed-attacks.html
+//   - https://www.echotrail.io/insights/search/wusa.exe/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_wusa_cab_files_extraction_from_susp_paths.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\wusa.exe" and ProcessCommandLine contains "/extract:") and (ProcessCommandLine contains ":\\PerfLogs\\" or ProcessCommandLine contains ":\\Users\\Public\\" or ProcessCommandLine contains ":\\Windows\\Temp\\" or ProcessCommandLine contains "\\Appdata\\Local\\Temp\\")

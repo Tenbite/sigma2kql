@@ -1,0 +1,34 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5548 update: windowsInstaller com object related rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5548
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: Obfuscated PowerShell MSI Install via WindowsInstaller COM
+// Sigma ID: 390d8f1a-2668-4160-a83e-ce92f95ab21d
+// Status: experimental | Level: high
+// Author: Meroujan Antonyan (vx3r)
+// Date: 2025-05-27 | Modified: 2025-07-28
+// ATT&CK: stealth, execution, T1027.010, T1218.007, T1059.001
+// Description: Detects the execution of obfuscated PowerShell commands that attempt to install MSI packages via
+//   the Windows Installer COM object (`WindowsInstaller.Installer`). The technique involves
+//   manipulating strings to hide functionality, such as constructing class names using string
+//   insertion (e.g., 'indowsInstaller.Installer'.Insert(0,'W')) and correcting malformed URLs (e.g.,
+//   converting 'htps://' to 'https://') at runtime. This behavior is commonly associated with
+//   malware loaders or droppers that aim to bypass static detection by hiding intent in runtime-
+//   generated strings and using legitimate tools for code execution. The use of `InstallProduct` and
+//   COM object creation, particularly combined with hidden window execution and suppressed UI,
+//   indicates an attempt to install software (likely malicious) without user interaction.
+// False positives:
+//   - Unknown
+// References:
+//   - https://informationsecuritybuzz.com/the-real-danger-behind-a-simple-windows-shortcut/
+//   - https://redcanary.com/blog/threat-intelligence/intelligence-insights-may-2025/
+//   - https://www.virustotal.com/gui/file/f9710b0ba4de5fa0e7ec27da462d4d2fc6838eba83a19f23f6617a466bbad457
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/444a7d19c4e5be471aa81f4e62c2336034611932/rules/windows/process_creation/proc_creation_win_powershell_comobject_msi_obfuscated_install.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\powershell_ise.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe") or (ProcessVersionInfoOriginalFileName in~ ("PowerShell_ISE.EXE", "PowerShell.EXE", "pwsh.dll"))) and (ProcessCommandLine contains "-ComObject" and ProcessCommandLine contains "InstallProduct(" and ProcessCommandLine contains ".Insert(" and ProcessCommandLine contains "UILevel")

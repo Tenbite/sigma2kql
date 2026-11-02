@@ -1,0 +1,32 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6017 new: OpenClaw AI agent family detection rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6017
+// Pull request author: 0xdavidel
+// Change: new rule
+// Title: Potential Autonomous AI Agent Workspace File Creation
+// Sigma ID: 97e942d3-2e3d-41f0-8fea-8a33fc199db0
+// Status: experimental | Level: medium
+// Author: David El (0xdavidel)
+// Date: 2026-05-15 | Modified: -
+// ATT&CK: initial-access, T1195.002
+// Description: Detects FileCreate events under the dot-folder used by the OpenClaw agent family and its copycat
+//   ecosystem. Catches initial workspace bootstrap, credential and session state writes, and ongoing
+//   tool I/O. Sister rule to proc_creation_win_openclaw_agent_workdir.yml. Fires even when the
+//   writing process is not itself running with its CurrentDirectory under the folder, for example a
+//   setup script that absolute-paths into the workspace.
+// False positives:
+//   - Sanctioned developer or operator use of these agents. Apply a per-host or per-user allowlist filter.
+//   - Apple Hermes JavaScript engine bytecode cache (Meta React Native, present in Slack, Discord, Messenger, Electron apps). The .hermes folder is intentionally NOT covered by this rule to avoid that false positive.
+//   - Backup or sync software touching the user profile that happens to traverse one of these folders.
+// References:
+//   - https://github.com/openclaw/openclaw/blob/ea16a5e9e10c5b2be28ed46ea77ba5a7aa787d8c/README.md
+//   - https://github.com/HKUDS/nanobot/blob/9ccef018c222b198991d36db8166cfc0c3aa7ea5/README.md
+//   - https://github.com/nanocoai/nanoclaw/blob/975a2f0f5b0ea19bbf35fadfd394df35e5341d3a/README.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e059f905bf9cb7a6cca7112c72e213f4e9ee44b4/rules/windows/file/file_event/file_event_win_openclaw_agent_workspace_created.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where FolderPath contains "\\.openclaw\\" or FolderPath contains "\\.moltbot\\" or FolderPath contains "\\.moltbook\\" or FolderPath contains "\\.clawdbot\\" or FolderPath contains "\\.clawd\\" or FolderPath contains "\\.clawbot\\" or FolderPath contains "\\.nanobot\\" or FolderPath contains "\\.nanoclaw\\" or FolderPath contains "\\.picoclaw\\" or FolderPath contains "\\.zeroclaw\\" or FolderPath contains "\\.moltis\\" or FolderPath contains "\\.agentzero\\"

@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Bypass UAC via CMSTP
+// Sigma ID: e66779cc-383e-4224-a3a4-267eeb585c40
+// Status: test | Level: high
+// Author: E.M. Anhaus (originally from Atomic Blue Detections, Endgame), oscd.community
+// Date: 2019-10-24 | Modified: 2022-08-30
+// ATT&CK: privilege-escalation, stealth, T1548.002, T1218.003
+// Description: Detect commandline usage of Microsoft Connection Manager Profile Installer (cmstp.exe) to
+//   install specially formatted local .INF files
+// False positives:
+//   - Legitimate use of cmstp.exe utility by legitimate user
+// References:
+//   - https://eqllib.readthedocs.io/en/latest/analytics/e584f1a1-c303-4885-8a66-21360c90995b.html
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.003/T1218.003.md
+//   - https://lolbas-project.github.io/lolbas/Binaries/Cmstp/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_uac_bypass_cmstp.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\cmstp.exe" or ProcessVersionInfoOriginalFileName =~ "CMSTP.EXE") and (ProcessCommandLine contains "/s" or ProcessCommandLine contains "-s" or ProcessCommandLine contains "/au" or ProcessCommandLine contains "-au" or ProcessCommandLine contains "/ni" or ProcessCommandLine contains "-ni")

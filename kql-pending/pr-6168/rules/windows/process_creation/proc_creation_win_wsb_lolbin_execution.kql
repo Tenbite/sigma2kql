@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6168 add sigma rules for Windows Sandbox
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6168
+// Pull request author: unrooted
+// Change: new rule
+// Title: Arbitrary Command Execution Using Windows Sandbox CLI
+// Sigma ID: 2116ff63-a084-4168-b10c-7a4750b53d6d
+// Status: experimental | Level: medium
+// Author: Konrad 'unrooted' Klawikowski
+// Date: 2026-07-22 | Modified: -
+// ATT&CK: execution, stealth, privilege-escalation, lateral-movement, exfiltration, command-and-control, T1218, T1564.006, T1105
+// Description: Detects potential abuse of the Windows Sandbox CLI (wsb.exe, available on Windows 11 24H2 and
+//   later) as a LOLBIN.
+// False positives:
+//   - Developers, QA, or CI pipelines that script Windows Sandbox from inline XML configurations or drive a running sandbox via the wsb.exe CLI for build/test verification
+//   - Power users who script Sandbox usage to avoid maintaining .wsb files on disk
+// References:
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Wsb/
+//   - https://learn.microsoft.com/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-cli
+//   - https://web.archive.org/web/20250116184008/http://blog.syscall.party/2020/12/02/weaponizing-windows-sandbox.html
+//   - https://github.com/LloydLabs/wsb-detect
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e690cf7a8be81d20e2688ad8cc3866640f1d8fce/rules/windows/process_creation/proc_creation_win_wsb_lolbin_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\wsb.exe" or ProcessVersionInfoOriginalFileName =~ "wsb.exe") and ((ProcessCommandLine contains "--config" and ProcessCommandLine contains "<LogonCommand>") or (ProcessCommandLine contains " -r System" or ProcessCommandLine contains " --run-as System" or ProcessCommandLine contains "--allow-write"))

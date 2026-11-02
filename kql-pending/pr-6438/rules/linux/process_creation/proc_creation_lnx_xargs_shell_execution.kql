@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6438 Add Linux rule: Potential Shell Or Command Execution Via Xargs
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6438
+// Pull request author: defamp
+// Change: new rule
+// Title: Potential Shell Or Command Execution Via Xargs
+// Sigma ID: b9d97509-9e2f-4086-810a-f289b78aec3b
+// Status: experimental | Level: high
+// Author: Defa Mulya Pratama
+// Date: 2026-10-07 | Modified: -
+// ATT&CK: execution, T1059
+// Description: Detects the use of "xargs" with the "-a /dev/null" (or "--arg-file=/dev/null") option to execute
+//   a command with no input. This is a GTFOBins technique used to spawn a shell or run arbitrary
+//   commands, and when "xargs" is executed with elevated privileges (e.g. via sudo) it is abused for
+//   privilege escalation or to break out of restricted environments.
+// False positives:
+//   - Unlikely. Reading arguments from "/dev/null" provides no input and is rarely used in legitimate automation.
+// References:
+//   - https://gtfobins.github.io/gtfobins/xargs/
+//   - https://www.elastic.co/guide/en/security/current/linux-restricted-shell-breakout-via-linux-binary-s.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/61e8a9a31c2f90fc7eff8601c2e3dda08bb09d52/rules/linux/process_creation/proc_creation_lnx_xargs_shell_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "/xargs" and (ProcessCommandLine contains "-a /dev/null" or ProcessCommandLine contains "--arg-file=/dev/null" or ProcessCommandLine contains "--arg-file /dev/null")

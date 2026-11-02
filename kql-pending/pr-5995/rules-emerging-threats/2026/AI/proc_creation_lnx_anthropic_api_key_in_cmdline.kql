@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5995 Add 4 detection rules for LLM and MCP attack surface
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5995
+// Pull request author: ipunithgowda
+// Change: new rule
+// Title: Anthropic API Key Pattern In Process Command Line - Linux
+// Sigma ID: e858a877-40df-48cf-a312-7ac00ee446aa
+// Status: experimental | Level: high
+// Author: Punith Gowda (Network Intelligence)
+// Date: 2026-05-10 | Modified: -
+// ATT&CK: credential-access, T1552.001
+// Tags: detection.emerging-threats
+// Description: Detects long-lived Anthropic API key patterns (sk-ant-api03-...) in the command line of any
+//   process. Keys passed as positional arguments are visible to any local user via /proc and ps, and
+//   routinely leak into shell history and CI logs.
+// False positives:
+//   - Developer workstations running Anthropic SDK examples that hardcode keys for local testing
+//   - Misconfigured CI jobs that expand secrets into argv before the runtime can scrub them
+// References:
+//   - https://docs.anthropic.com/en/api/getting-started
+//   - https://owasp.org/www-project-top-10-for-large-language-model-applications/
+//   - https://nvd.nist.gov/800-53/Rev5/control/IA-5
+//   - https://attack.mitre.org/techniques/T1552/001/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/58c8781964014aba73b404e32ceafbb27d6668c8/rules-emerging-threats/2026/AI/proc_creation_lnx_anthropic_api_key_in_cmdline.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "sk-ant-api03-"

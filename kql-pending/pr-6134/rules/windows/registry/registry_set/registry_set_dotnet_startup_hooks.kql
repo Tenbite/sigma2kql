@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6134 Add .NET startup hook persistence detection
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6134
+// Pull request author: BlAck9D
+// Change: new rule
+// Title: Potential .NET Startup Hook Persistence
+// Sigma ID: c69f1c1c-d571-41ea-aecc-1de968362750
+// Status: experimental | Level: medium
+// Author: bushidoSen
+// Date: 2026-07-13 | Modified: -
+// ATT&CK: execution, persistence, privilege-escalation, stealth, T1574
+// Description: Detects the persistent configuration of a .NET startup hook through the "DOTNET_STARTUP_HOOKS"
+//   environment variable. An assembly configured in this variable is loaded and executed before the
+//   entry point of every affected .NET application.
+// False positives:
+//   - Legitimate observability, profiling, or development tooling that configures a .NET startup hook persistently
+// References:
+//   - https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-environment-variables#dotnet_startup_hooks
+//   - https://persistence-info.github.io/Data/dotnetstartuphooks.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/f402a60afc4bd910c876351e5f5b3fa84590362e/rules/windows/registry/registry_set/registry_set_dotnet_startup_hooks.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceRegistryEvents
+| where RegistryKey endswith "\\DOTNET_STARTUP_HOOKS"

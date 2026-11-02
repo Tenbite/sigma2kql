@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6236 new: closes #4542 - add rules for IFEO Debugger tampering, disabling usb storage and windowsupdate
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6236
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: Process Execution Hijacking Via IFEO Debugger Entry
+// Sigma ID: c81b6de9-b054-44b4-9d8a-3478750d805b
+// Status: experimental | Level: high
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-08-14 | Modified: -
+// ATT&CK: persistence, privilege-escalation, T1546.012
+// Description: Detects any registry write adding a "Debugger" value under Image File Execution Options (IFEO)
+//   for common administrative, security and system binaries. Attackers use this technique to
+//   silently redirect to malicious commands when a user attempt to launch a target executable or
+//   preventing it from launching at all.
+// False positives:
+//   - Legitimate debuggers registered for administrative, security or system binaries
+// References:
+//   - https://www.hexacorn.com/blog/2013/01/19/beyond-good-ol-run-key-part-13/
+//   - https://github.com/Siradankullanici/OpenSourceViruses/blob/3267564a35f6e13559a3119eb68d0da8d2e91a0a/suspiciousregchangesandtaskkils
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e6fa05ce10d4092a1de7d7380da240a34a30b555/rules/windows/registry/registry_set/registry_set_ifeo_debugger_admin_tools_tamper.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceRegistryEvents
+| where RegistryKey endswith "\\Image File Execution Options\\calc.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\cleanmgr.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\control.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\msconfig.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\msinfo32.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\mmc.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\mspaint.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\mstsc.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\powershell_ise.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\regedit.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\regedt32.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\SecEdit.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\takeown.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\taskmgr.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\explorer.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\rundll32.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\runonce.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\svchost.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\winlogon.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\SecurityHealthSystray.exe\\Debugger" or RegistryKey endswith "\\Image File Execution Options\\SystemResetPlatform.exe\\Debugger"

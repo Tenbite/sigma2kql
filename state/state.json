@@ -5,12 +5,12 @@
   "invalid": 14,
   "skipped": 681
  },
- "fingerprint": "6d1b147e17e0ce45cdb015523cd0b3c967fe0bf5f50b34047f2bd1b53d364cb8",
+ "fingerprint": "862b5b97626fdccdf8da143201dc8128f16c987c13716b527156a1c30f184358",
  "last_mode": "full",
- "last_run": "2026-11-02 04:47 UTC",
+ "last_run": "2026-11-02 16:03 UTC",
  "schema_fail_streak": 0,
  "schema_source": "downloaded from https://xdrinternals.com/FullSchema-latest.json (207 tables)",
- "sigma_sha": "05d1031f537e830b76da53bae2400c5814c89165",
+ "sigma_sha": "ccbb0369507f796db0b0ae6854c8a2be471b9d84",
  "target": "microsoft_xdr",
  "versions": {
   "kusto-language": "12.4.1",

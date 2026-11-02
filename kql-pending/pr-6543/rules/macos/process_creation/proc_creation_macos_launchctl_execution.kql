@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6543 Update macOS launchctl rule to cover the bootstrap verb
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6543
+// Pull request author: bryand410
+// Change: update to existing rule
+// Title: Launch Agent/Daemon Execution Via Launchctl
+// Sigma ID: ae9d710f-dcd1-4f75-a0a5-93a73b5dda0e
+// Status: test | Level: medium
+// Author: Pratinav Chandra
+// Date: 2024-05-13 | Modified: 2026-10-30
+// ATT&CK: privilege-escalation, execution, persistence, T1569.001, T1543.001, T1543.004
+// Description: Detects the execution of programs as Launch Agents or Launch Daemons using launchctl on macOS.
+// False positives:
+//   - Legitimate administration activities is expected to trigger false positives. Investigate the command line being passed to determine if the service or launch agent are suspicious.
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1569.001/T1569.001.md
+//   - https://www.sentinelone.com/labs/20-common-tools-techniques-used-by-macos-threat-actors-malware/
+//   - https://www.welivesecurity.com/2020/07/16/mac-cryptocurrency-trading-application-rebranded-bundled-malware/
+//   - https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html
+//   - https://www.loobins.io/binaries/launchctl/
+//   - https://www.cisa.gov/news-events/analysis-reports/ar21-048a
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/0e7c4ad7c0d72c072676d1a720c3faf71323a062/rules/macos/process_creation/proc_creation_macos_launchctl_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "/launchctl" and (ProcessCommandLine contains "bootstrap" or ProcessCommandLine contains "submit" or ProcessCommandLine contains "load" or ProcessCommandLine contains "start")

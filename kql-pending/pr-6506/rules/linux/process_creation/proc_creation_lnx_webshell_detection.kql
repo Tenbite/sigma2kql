@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6506 new: Add php2shell (CVE-2026-109618/9) detection rules and update existing webshell coverage
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6506
+// Pull request author: swachchhanda000
+// Change: update to existing rule
+// Title: Linux Webshell Indicators
+// Sigma ID: 818f7b24-0fba-4c49-a073-8b755573b9c7
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+// Date: 2021-10-15 | Modified: 2026-10-22
+// ATT&CK: persistence, T1505.003
+// Description: Detects suspicious sub processes of web server processes
+// False positives:
+//   - Web applications that invoke Linux command line tools
+// References:
+//   - https://www.acunetix.com/blog/articles/web-shells-101-using-php-introduction-web-shells-part-2/
+//   - https://media.defense.gov/2020/Jun/09/2002313081/-1/-1/0/CSI-DETECT-AND-PREVENT-WEB-SHELL-MALWARE-20200422.PDF
+//   - https://www.huntress.com/blog/php2shell-leaked-critical-php-vulnerabilities
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e611049e02f5f9b9dd2c40c87f77f5e349275f2c/rules/linux/process_creation/proc_creation_lnx_webshell_detection.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((InitiatingProcessFolderPath endswith "/apache" or InitiatingProcessFolderPath endswith "/apache2" or InitiatingProcessFolderPath endswith "/caddy" or InitiatingProcessFolderPath endswith "/frankenphp" or InitiatingProcessFolderPath endswith "/gunicorn" or InitiatingProcessFolderPath endswith "/httpd" or InitiatingProcessFolderPath endswith "/lighttpd" or InitiatingProcessFolderPath endswith "/nginx" or InitiatingProcessFolderPath endswith "/node" or InitiatingProcessFolderPath endswith "/nodejs" or InitiatingProcessFolderPath endswith "/passenger" or InitiatingProcessFolderPath endswith "/php" or InitiatingProcessFolderPath endswith "/php-cgi" or InitiatingProcessFolderPath endswith "/php-fpm" or InitiatingProcessFolderPath endswith "/bin/rr" or InitiatingProcessFolderPath endswith "/tomcat" or InitiatingProcessFolderPath endswith "/unicorn" or InitiatingProcessFolderPath endswith "/unit" or InitiatingProcessFolderPath endswith "/uwsgi") or (InitiatingProcessCommandLine contains "/bin/java" and InitiatingProcessCommandLine contains "tomcat") or (InitiatingProcessCommandLine contains "/bin/java" and InitiatingProcessCommandLine contains "websphere")) and (((FolderPath endswith "/ash" or FolderPath endswith "/bash" or FolderPath endswith "/busybox" or FolderPath endswith "/csh" or FolderPath endswith "/dash" or FolderPath endswith "/ksh" or FolderPath endswith "/sh" or FolderPath endswith "/tcsh" or FolderPath endswith "/zsh") and (ProcessCommandLine contains "-c \"id" or ProcessCommandLine contains ";id" or ProcessCommandLine contains "cat /etc/" or ProcessCommandLine contains "crontab" or ProcessCommandLine contains "curl " or ProcessCommandLine contains "hostname" or ProcessCommandLine contains "id;" or ProcessCommandLine contains "id\"" or ProcessCommandLine contains "ifconfig" or ProcessCommandLine contains "iptables" or ProcessCommandLine contains "perl" or ProcessCommandLine contains "python" or ProcessCommandLine contains "ruby" or ProcessCommandLine contains "uname" or ProcessCommandLine contains "wget " or ProcessCommandLine contains "whoami")) or ((FolderPath endswith "/bin/cat" or FolderPath endswith "/bin/crontab" or FolderPath endswith "/uname" or FolderPath endswith "/curl" or FolderPath endswith "/hostname" or FolderPath endswith "/ifconfig" or FolderPath endswith "/ip" or FolderPath endswith "/iptables" or FolderPath endswith "/netstat" or FolderPath endswith "/pwd" or FolderPath endswith "/route" or FolderPath endswith "/wget" or FolderPath endswith "/whoami" or FolderPath endswith "/perl" or FolderPath endswith "/ruby") or FolderPath contains "/python")) and (not((InitiatingProcessFolderPath endswith "/node" and ProcessCommandLine contains "ip neigh show")))

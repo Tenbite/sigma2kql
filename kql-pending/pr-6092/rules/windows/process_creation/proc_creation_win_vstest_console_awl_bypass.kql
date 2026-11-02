@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6092 Add ADS abuse and signed-binary LOLBIN detection rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6092
+// Pull request author: einlamye
+// Change: new rule
+// Title: Potential AWL Bypass Via Vstest.Console.EXE
+// Sigma ID: 853fb94c-277f-416b-a567-32168fc97156
+// Status: experimental | Level: medium
+// Author: EinLamYe
+// Date: 2026-06-29 | Modified: -
+// ATT&CK: execution, stealth, T1127
+// Description: Detects vstest.console.exe loading a DLL test container from outside a Visual Studio/dotnet
+//   context. The signed VS test runner can be abused to execute arbitrary code via a malicious test
+//   DLL, bypassing application allow-listing.
+// False positives:
+//   - Software testing and CI/CD pipelines running unit tests (filter by parent process or installation path)
+// References:
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/vstest.console/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/c5875f6ddd2f5087d0f0a63a34a2ed4468a9d328/rules/windows/process_creation/proc_creation_win_vstest_console_awl_bypass.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\vstest.console.exe" or ProcessVersionInfoOriginalFileName =~ "vstest.console.exe") and ProcessCommandLine contains ".dll") and (not((InitiatingProcessFolderPath endswith "\\devenv.exe" or InitiatingProcessFolderPath endswith "\\dotnet.exe" or InitiatingProcessFolderPath endswith "\\msbuild.exe" or InitiatingProcessFolderPath endswith "\\vstest.console.exe" or InitiatingProcessFolderPath endswith "\\testhost.exe" or InitiatingProcessFolderPath endswith "\\vstest.executionengine.exe")))

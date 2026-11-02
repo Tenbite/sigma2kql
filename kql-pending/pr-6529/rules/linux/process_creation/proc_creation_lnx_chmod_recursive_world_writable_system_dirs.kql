@@ -1,0 +1,32 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6529 feat(rules): detect recursive world-writable chmod on system directories
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6529
+// Pull request author: PHM-Audit
+// Change: new rule
+// Title: Chmod Recursive World-Writable Mode on System Directories
+// Sigma ID: e5152b6e-804b-47f5-9ccf-991e5af84dae
+// Status: test | Level: high
+// Author: PHM-Audit
+// Date: 2026-10-27 | Modified: -
+// ATT&CK: defense-impairment, privilege-escalation, T1222.002
+// Description: Detects recursive chmod invocations that grant world-writable permissions on the filesystem
+//   root, system directories or home directories. A mode is world-writable when the others-writable
+//   bit (value 2) is set, i.e. the octal mode ends in 2/3/6/7 (verified against POSIX bit semantics,
+//   16/16 case consistency). The octal mode is anchored to the chmod argument position to avoid
+//   matching unrelated numeric tokens. Recursive world-writable modes on these paths enable backdoor
+//   persistence and privilege escalation. The same command on application subdirectories is a common
+//   (risky) deployment practice, so only system-critical targets are matched to keep the false-
+//   positive rate low.
+// False positives:
+//   - Rare administrative recursion over system paths, e.g. restoring permissions from a backup script. Apply additional filters as needed before pushing to production.
+// References:
+//   - https://attack.mitre.org/techniques/T1222/002/
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1222.002/T1222.002.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/11a2f78067366b0fb471c65d0b283cedb86baf47/rules/linux/process_creation/proc_creation_lnx_chmod_recursive_world_writable_system_dirs.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "/chmod" and ProcessCommandLine matches regex "\\s-[a-zA-Z]*R[a-zA-Z]*(?:\\s|[0-9])|\\s--recursive(?:\\s|$)" and ProcessCommandLine matches regex "chmod(?:\\s+--?[a-zA-Z]+)*\\s+[0-7]*[2367]\\b" and ProcessCommandLine matches regex "\\s/(?:etc|usr|var|boot|home|root|lib|lib64|bin|sbin)(?:\\s|$|/)|\\s/(?:\\s|$)" and (not((ProcessCommandLine contains " /tmp" or (InitiatingProcessCommandLine contains "/var/lib/dpkg/info/" and InitiatingProcessCommandLine contains ".postinst configure"))))

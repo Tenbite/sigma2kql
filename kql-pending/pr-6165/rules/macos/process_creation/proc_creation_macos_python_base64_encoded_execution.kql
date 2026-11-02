@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6165 feat: Add Python One-Liners with Base64 Decoding macOS rule
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6165
+// Pull request author: Breakingpoint608
+// Change: new rule
+// Title: Python One-Liners with Base64 Decoding - macOS
+// Sigma ID: 20787d51-2fc4-4ff1-82d8-b434d0fa3427
+// Status: experimental | Level: high
+// Author: Ritika (IsThisRitika)
+// Date: 2026-07-21 | Modified: -
+// ATT&CK: execution, stealth, T1059.006, T1027.010
+// Description: Detects the use of Python's base64 decoding functions in command line executions on macOS
+//   systems. Malicious scripts often use python one-liners to decode and execute base64-encoded
+//   payloads, which is a common technique for obfuscation and evasion.
+// False positives:
+//   - Legitimate use of Python for decoding data, which is uncommon in typical enterprise environments but possible in development or data analysis contexts.
+// References:
+//   - https://docs.python.org/3/library/base64.html
+//   - https://www.virustotal.com/gui/file/bc43e925d7b4b74319f6e74e836a96f1997ba404e14ac566cf12a21e9da463db/behavior
+//   - https://cloud.google.com/blog/topics/threat-intelligence/cybercriminals-weaponize-fake-ai-websites
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/a3f770d2d1eada0564b167c75d68f079ca6ed1d1/rules/macos/process_creation/proc_creation_macos_python_base64_encoded_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath contains "/python" and ((ProcessCommandLine contains "import" and ProcessCommandLine contains "base64" and ProcessCommandLine contains " -c") and (ProcessCommandLine contains ".decode" or ProcessCommandLine contains "b16decode" or ProcessCommandLine contains "b32decode" or ProcessCommandLine contains "b32hexdecode" or ProcessCommandLine contains "b64decode" or ProcessCommandLine contains "b85decode" or ProcessCommandLine contains "z85decode"))

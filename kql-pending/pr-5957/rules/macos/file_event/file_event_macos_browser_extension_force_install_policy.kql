@@ -1,0 +1,33 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5957 new: Browser Extension Force Install via Policy Detection (Windows, macOS, Linux)
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5957
+// Pull request author: Fz0x00
+// Change: new rule
+// Title: Potential Suspicious Browser Extension Force Install via Policy Plist on macOS
+// Sigma ID: 57da49dc-00d7-4c48-8927-9d635ceff932
+// Status: experimental | Level: medium
+// Author: PersonalRules
+// Date: 2026-04-23 | Modified: -
+// ATT&CK: persistence, T1176.001
+// Description: Detects the creation of browser policy plist files on macOS that can force-install extensions.
+//   The ExtensionInstallForcelist policy silently installs extensions that users cannot disable or
+//   remove. Adversaries may abuse these to persist malicious browser extensions across reboots
+//   without user interaction.
+// False positives:
+//   - Enterprise IT administrators deploying browser extensions via policy plist
+//   - MDM tools managing browser policies
+// References:
+//   - https://chromeenterprise.google/policies/#ExtensionInstallForcelist
+//   - https://chromeenterprise.google/policies/#ExtensionSettings
+//   - https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#extensioninstallforcelist
+//   - https://learn.microsoft.com/en-us/deployedge/configure-microsoft-edge-on-mac
+//   - https://support.google.com/chrome/a/answer/9020077
+//   - https://github.com/praetorian-inc/ChromeAlone
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/526405083b950916d7e784ee66c6fab0b0211c44/rules/macos/file_event/file_event_macos_browser_extension_force_install_policy.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where FolderPath endswith "/Library/Preferences/com.google.Chrome.plist" or FolderPath endswith "/Library/Preferences/com.microsoft.Edge.plist"

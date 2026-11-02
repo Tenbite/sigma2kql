@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Trust Access Disable For VBApplications
+// Sigma ID: 1a5c46e9-f32f-42f7-b2bc-6e9084db7fbf
+// Status: test | Level: high
+// Author: Trent Liffick (@tliffick), Nasreddine Bencherchali (Nextron Systems)
+// Date: 2020-05-22 | Modified: 2023-08-17
+// ATT&CK: persistence, defense-impairment, T1112
+// Description: Detects registry changes to Microsoft Office "AccessVBOM" to a value of "1" which disables trust
+//   access for VBA on the victim machine and lets attackers execute malicious macros without any
+//   Microsoft Office warnings.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://twitter.com/inversecos/status/1494174785621819397
+//   - https://www.mcafee.com/blogs/other-blogs/mcafee-labs/zloader-with-a-new-infection-technique/
+//   - https://securelist.com/scarcruft-surveilling-north-korean-defectors-and-human-rights-activists/105074/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/registry/registry_set/registry_set_office_access_vbom_tamper.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceRegistryEvents
+| where RegistryKey endswith "\\Security\\AccessVBOM" and RegistryValueData =~ "DWORD (0x00000001)"

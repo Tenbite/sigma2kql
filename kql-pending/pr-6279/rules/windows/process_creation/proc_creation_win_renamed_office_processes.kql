@@ -1,0 +1,24 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Renamed Office Binary Execution
+// Sigma ID: 0b0cd537-fc77-4e6e-a973-e53495c1083d
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-12-20 | Modified: 2025-12-09
+// ATT&CK: stealth, T1036.003
+// Description: Detects the execution of a renamed office binary
+// False positives:
+//   - Unknown
+// References:
+//   - https://infosec.exchange/@sbousseaden/109542254124022664
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_renamed_office_processes.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((ProcessVersionInfoOriginalFileName in~ ("Excel.exe", "MSACCESS.EXE", "MSPUB.EXE", "OneNote.exe", "OneNoteM.exe", "OUTLOOK.EXE", "POWERPNT.EXE", "WinWord.exe", "Olk.exe")) or (ProcessVersionInfoFileDescription in~ ("Microsoft Access", "Microsoft Excel", "Microsoft OneNote", "Microsoft Outlook", "Microsoft PowerPoint", "Microsoft Publisher", "Microsoft Word", "Sent to OneNote Tool"))) and (not((FolderPath endswith "\\EXCEL.exe" or FolderPath endswith "\\excelcnv.exe" or FolderPath endswith "\\MSACCESS.exe" or FolderPath endswith "\\MSPUB.EXE" or FolderPath endswith "\\ONENOTE.EXE" or FolderPath endswith "\\ONENOTEM.EXE" or FolderPath endswith "\\OUTLOOK.EXE" or FolderPath endswith "\\POWERPNT.EXE" or FolderPath endswith "\\WINWORD.exe" or FolderPath endswith "\\OLK.EXE")))

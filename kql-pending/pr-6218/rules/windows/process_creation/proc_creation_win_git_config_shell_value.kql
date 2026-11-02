@@ -1,0 +1,33 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6218 Add Git configuration command execution rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6218
+// Pull request author: signalblur
+// Change: new rule
+// Title: Shell Command in Git Configuration Value - Windows
+// Sigma ID: b179883a-72e1-4807-a157-811e26dfa6ae
+// Status: experimental | Level: high
+// Author: David Burkett (@signalblur)
+// Date: 2026-08-11 | Modified: -
+// ATT&CK: execution, T1059
+// Description: Detects a Git configuration key set on the command line to a value that invokes a shell or a
+//   scripting interpreter. Git runs the values of keys such as core.pager, core.fsmonitor,
+//   core.editor, diff.external and sequence.editor as commands during ordinary operations, and
+//   treats a credential.helper or alias value beginning with an exclamation mark as a shell snippet,
+//   so one "-c key=value" pair turns a routine Git command into command execution. Windows records
+//   the command line as a single string, so the quoting around such a value is preserved and is
+//   matched here alongside the bare form. Git for Windows also ships a POSIX shell, which is why the
+//   Unix interpreter spellings are matched next to the native ones.
+// False positives:
+//   - A shell based credential helper set inline, such as the AWS CodeCommit helper, whose value legitimately begins with an exclamation mark.
+//   - A Git command whose arguments quote both a configuration key and a shell invocation, such as a commit message that describes this behaviour.
+// References:
+//   - https://git-scm.com/docs/git-config
+//   - https://www.vulncheck.com/advisories/hermes-webui-rce-via-git-configuration-injection
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/525309ab68cce53dd9b31a4b81cd80862b6058f6/rules/windows/process_creation/proc_creation_win_git_config_shell_value.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "\\git.exe" and (ProcessCommandLine contains "alias." or ProcessCommandLine contains "core.alternateRefsCommand" or ProcessCommandLine contains "core.editor" or ProcessCommandLine contains "core.fsmonitor" or ProcessCommandLine contains "core.pager" or ProcessCommandLine contains "core.sshCommand" or ProcessCommandLine contains "credential.helper" or ProcessCommandLine contains "diff.external" or ProcessCommandLine contains "filter." or ProcessCommandLine contains "pager." or ProcessCommandLine contains "sequence.editor") and (ProcessCommandLine contains "/dev/tcp/" or ProcessCommandLine contains "=!" or ProcessCommandLine contains "=\"!" or ProcessCommandLine contains "='!" or ProcessCommandLine contains "cmd /c" or ProcessCommandLine contains "cmd.exe /c" or ProcessCommandLine contains "nc -e" or ProcessCommandLine contains "perl -e" or ProcessCommandLine contains "powershell -" or ProcessCommandLine contains "powershell.exe -" or ProcessCommandLine contains "pwsh -" or ProcessCommandLine contains "python -c" or ProcessCommandLine contains "python3 -c" or ProcessCommandLine contains "ruby -e" or ProcessCommandLine contains "sh -c")

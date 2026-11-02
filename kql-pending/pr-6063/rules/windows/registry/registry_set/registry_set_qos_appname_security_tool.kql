@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6063 new: edrchoker qos throttle rate modification rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6063
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: QoS Policy AppName Set to Security Tool
+// Sigma ID: 60f09f19-f203-4185-9532-d17ce5c39b6f
+// Status: experimental | Level: high
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-06-09 | Modified: -
+// ATT&CK: defense-impairment, T1685
+// Description: Detects registry modifications setting the AppName value under the Windows QoS policy key to
+//   known security tool process names. AppName is a QoS policy setting that can be used to target
+//   specific processes for QoS related actions, such as throttling their network bandwidth. QoS
+//   policies targeting security tools (e.g. EDR agents) are highly suspicious as they may indicate
+//   an attempt to throttle network access for those tools, silencing telemetry without terminating
+//   the process.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/TwoSevenOneT/EDRChoker/
+//   - https://www.zerosalarium.com/2026/06/edrchoker-choking-telemetry-stream-block-edr.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/17172ba8e70f32db2d8132fe1562146c80087920/rules/windows/registry/registry_set/registry_set_qos_appname_security_tool.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+// Note: 1 wildcard comparison(s) rewritten to 'matches regex' (KQL treats * in contains/endswith/== as a literal character)
+
+DeviceRegistryEvents
+| where RegistryKey matches regex @"(?i)\\Software\\Policies\\Microsoft\\Windows\\QoS.*$" and RegistryKey endswith "\\AppName" and (RegistryValueData in~ ("MpDefenderCoreService.exe", "MsMpEng.exe", "MsSense.exe", "NisSrv.exe", "SenseCncProxy.exe", "SenseIR.exe", "SenseNdr.exe", "SenseSampleUploader.exe", "elastic-agent.exe", "elastic-endpoint.exe", "filebeat.exe", "winlogbeat.exe", "xagt.exe", "QualysAgent.exe", "SentinelAgent.exe", "SentinelAgentWorker.exe", "SentinelBrowserNativeHost.exe", "SentinelHelperService.exe", "LogProcessorService.exe", "SentinelServiceHost.exe", "SentinelStaticEngine.exe", "SentinelStaticEngineScanner.exe", "AmSvc.exe", "CrAmTray.exe", "CrsSvc.exe", "CylanceSvc.exe", "ExecutionPreventionSvc.exe", "CybereasonAV.exe", "cb.exe", "CbDefense.exe", "TaniumClient.exe", "TaniumCX.exe", "TaniumDetectEngine.exe", "cyserver.exe", "CyveraService.exe", "CyvrFsFlt.exe", "Traps.exe", "fortiedr.exe", "EIConnector.exe", "sfc.exe", "ekrn.exe", "hurukai.exe", "CETASvc.exe", "EndpointBasecamp.exe", "WSCommunicator.exe", "CNTAoSMgr.exe", "Ntrtscan.exe", "PccNTMon.exe", "TMBMSRV.exe", "TmCCSF.exe", "TmListen.exe", "TmWSCSvc.exe", "CSFalconContainer.exe", "CSFalconService.exe", "ds_agent.exe", "bdredline.exe", "SavService.exe", "RepMgr.exe", "SEPMasterService.exe", "mcshield.exe", "AvastSvc.exe", "SentinelOne.exe"))

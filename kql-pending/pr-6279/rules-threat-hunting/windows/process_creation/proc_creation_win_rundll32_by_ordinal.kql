@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: DLL Call by Ordinal Via Rundll32.EXE
+// Sigma ID: e79a9e79-eb72-4e78-a628-0e7e8f59e89c
+// Status: stable | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2019-10-22 | Modified: 2024-07-16
+// ATT&CK: stealth, T1218.011
+// Tags: detection.threat-hunting
+// Description: Detects calls of DLLs exports by ordinal numbers via rundll32.dll.
+// False positives:
+//   - False positives depend on scripts and administrative tools used in the monitored environment.
+//   - Windows control panel elements have been identified as source (mmc).
+// References:
+//   - https://web.archive.org/web/20200530031906/https://techtalk.pcmatic.com/2017/11/30/running-dll-files-malware-analysis/
+//   - https://github.com/Neo23x0/DLLRunner
+//   - https://twitter.com/cyb3rops/status/1186631731543236608
+//   - https://www.welivesecurity.com/2022/03/01/isaacwiper-hermeticwizard-wiper-worm-targeting-ukraine/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules-threat-hunting/windows/process_creation/proc_creation_win_rundll32_by_ordinal.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\rundll32.exe" or ProcessVersionInfoOriginalFileName =~ "RUNDLL32.EXE") and (ProcessCommandLine contains ",#" or ProcessCommandLine contains ", #" or ProcessCommandLine contains ".dll #" or ProcessCommandLine contains ".ocx #")) and (not(((ProcessCommandLine contains "EDGEHTML.dll" and ProcessCommandLine contains "#141") or ((InitiatingProcessFolderPath contains "\\Msbuild\\Current\\Bin\\" or InitiatingProcessFolderPath contains "\\VC\\Tools\\MSVC\\" or InitiatingProcessFolderPath contains "\\Tracker.exe") and (ProcessCommandLine contains "\\FileTracker32.dll,#1" or ProcessCommandLine contains "\\FileTracker32.dll\",#1" or ProcessCommandLine contains "\\FileTracker64.dll,#1" or ProcessCommandLine contains "\\FileTracker64.dll\",#1")))))

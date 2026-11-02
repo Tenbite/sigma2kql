@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6236 new: closes #4542 - add rules for IFEO Debugger tampering, disabling usb storage and windowsupdate
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6236
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: Potential Third-Party Antivirus Protection Disabled Via Registry
+// Sigma ID: 1c486b8b-0357-4589-930b-1671314462e3
+// Status: experimental | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems), Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-08-14 | Modified: -
+// ATT&CK: defense-impairment, T1685
+// Description: Detects registry modifications that disable antivirus protection or self-defense mechanisms of
+//   common third-party security products. Ransomware and targeted attackers commonly disable these
+//   protections before deploying their payload to prevent the AV from blocking or removing malicious
+//   activity.
+// False positives:
+//   - Some FP may occur when the feature is disabled by the AV itself, you should always investigate if the action was legitimate
+// References:
+//   - https://github.com/Siradankullanici/OpenSourceViruses/blob/3267564a35f6e13559a3119eb68d0da8d2e91a0a/suspiciousregchangesandtaskkils
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e6fa05ce10d4092a1de7d7380da240a34a30b555/rules/windows/registry/registry_set/registry_set_third_party_av_tamper.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceRegistryEvents
+| where (RegistryKey contains "\\SOFTWARE\\AVAST Software\\Avast\\aswidsagenta" and RegistryValueData =~ "DWORD (0x00000000)") or (RegistryKey contains "\\SOFTWARE\\AVG\\DisableAv" and RegistryValueData =~ "DWORD (0x00000001)") or (RegistryKey contains "\\SOFTWARE\\Avira\\ProductEnabled" and RegistryValueData =~ "DWORD (0x00000000)") or (RegistryKey contains "\\SOFTWARE\\Bitdefender\\BlockUserModeAccess" and RegistryValueData =~ "DWORD (0x00000001)") or ((RegistryKey contains "\\SOFTWARE\\ESET\\ESET Security\\ProtectEnabled" or RegistryKey contains "\\SOFTWARE\\ESET\\ESET Security\\EnableHIPS") and RegistryValueData =~ "DWORD (0x00000000)") or (RegistryKey contains "\\SOFTWARE\\KasperskyLab\\Enable" and RegistryValueData =~ "DWORD (0x00000000)") or (RegistryKey contains "\\SOFTWARE\\Malwarebytes\\MalwareProtectionEnabled" and RegistryValueData =~ "DWORD (0x00000000)") or (RegistryKey contains "\\SOFTWARE\\McAfee\\bDisableSelfProtection" and RegistryValueData =~ "DWORD (0x00000001)") or (RegistryKey contains "\\SOFTWARE\\Norton\\Enable" and RegistryValueData =~ "DWORD (0x00000000)") or ((RegistryKey contains "\\Sophos Endpoint Defense\\TamperProtection\\Config\\SAVEnabled" or RegistryKey contains "\\Sophos Endpoint Defense\\TamperProtection\\Config\\SEDEnabled" or RegistryKey contains "\\Sophos\\SAVService\\TamperProtection\\Enabled") and RegistryValueData =~ "DWORD (0x00000000)")

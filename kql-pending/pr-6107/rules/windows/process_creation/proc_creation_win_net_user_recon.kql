@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6107 fix: net user rules coverage and deprecate redundant rule
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6107
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: Local And Domain Account Discovery Via Net.EXE
+// Sigma ID: a46bc5a9-7a3c-416e-95d0-ff219c779002
+// Status: test | Level: medium
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-07-03 | Modified: -
+// ATT&CK: discovery, T1087.001, T1087.002
+// Description: Detects the use of net.exe to enumerate local or domain user accounts. This covers listing all
+//   accounts, querying a specific account's details, or enumerating domain users via the /domain
+//   flag.
+// False positives:
+//   - Administrators querying account status as part of routine checks or scripts
+// References:
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/net-user
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/779cc65416e75596f3840432492078f866132d1c/rules/windows/process_creation/proc_creation_win_net_user_recon.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (((FolderPath endswith "\\net.exe" or FolderPath endswith "\\net1.exe") or (ProcessVersionInfoOriginalFileName in~ ("net.exe", "net1.exe"))) and ProcessCommandLine contains " user ") and (not((ProcessCommandLine contains "/active" or ProcessCommandLine contains "/add" or ProcessCommandLine contains "/delete" or ProcessCommandLine contains "/expires" or ProcessCommandLine contains "/fullname" or ProcessCommandLine contains "/comment" or ProcessCommandLine contains "/homedir" or ProcessCommandLine contains "/passwordreq" or ProcessCommandLine contains "/passwordchg" or ProcessCommandLine contains "/logonpasswordchg" or ProcessCommandLine contains "/times" or ProcessCommandLine contains "/workstations" or ProcessCommandLine contains "/scriptpath")))

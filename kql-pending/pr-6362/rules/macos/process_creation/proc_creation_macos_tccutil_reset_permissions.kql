@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6362 new: TCC Permissions Reset Via Tccutil
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6362
+// Pull request author: Varunpoojari
+// Change: new rule
+// Title: TCC Permissions Reset Via Tccutil
+// Sigma ID: 8e937b49-ea64-4f7b-9797-0c59a0a0a5dc
+// Status: experimental | Level: medium
+// Author: Varun Poojari
+// Date: 2026-10-01 | Modified: -
+// ATT&CK: privilege-escalation, T1548.006
+// Description: Detects the use of tccutil to reset Transparency, Consent, and Control (TCC) permissions for
+//   AppleEvents or for all services. macOS infostealers such as Banshee reset AppleEvents
+//   permissions to clear previous consent decisions and re-trigger automation prompts that let them
+//   control other applications. Investigate the parent process, as legitimate resets are usually
+//   performed by administrators or MDM tooling.
+// False positives:
+//   - Administrators or MDM solutions (e.g. Jamf, Kandji) resetting TCC permissions during troubleshooting
+// References:
+//   - https://www.loobins.io/binaries/tccutil/
+//   - https://research.checkpoint.com/2025/banshee-macos-stealer-that-stole-code-from-macos-xprotect/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/209cd21a0fc022a39a118163fca79a2184a2e981/rules/macos/process_creation/proc_creation_macos_tccutil_reset_permissions.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "/tccutil" and ProcessCommandLine contains " reset " and (ProcessCommandLine contains " AppleEvents" or ProcessCommandLine contains " All")

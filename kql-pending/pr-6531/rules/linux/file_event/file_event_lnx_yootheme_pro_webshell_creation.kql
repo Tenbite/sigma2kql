@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6531 Detect yootheme pro CVE 2026 102785
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6531
+// Pull request author: saksham-17
+// Change: new rule
+// Title: YOOtheme Pro Suspicious Webshell Creation
+// Sigma ID: b405fad6-2c60-4dad-895e-0820e3022df2
+// Status: experimental | Level: high
+// Author: Saksham Bhattarai
+// Date: 2026-10-27 | Modified: -
+// ATT&CK: persistence, T1505.003
+// Description: Detects creation of PHP files matching the specific webshell filename pattern reported during
+//   exploitation of CVE-2026-102785 affecting YOOtheme Pro.
+// False positives:
+//   - Legitimate files matching the reported naming pattern
+// References:
+//   - https://github.com/PaloAltoNetworks/Unit42-timely-threat-intel/blob/main/2026-10-26-exploitation-of-CVE-2026-102785.txt
+//   - https://github.com/advisories/GHSA-8w8j-f6ph-29mm
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/5e0a25257e913fea03fbb8fe966f0f913bf383c2/rules/linux/file_event/file_event_lnx_yootheme_pro_webshell_creation.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where FolderPath matches regex "(?i)(?:^|/)wp-content/uploads/yt[0-9a-f]{7}\\.php$"

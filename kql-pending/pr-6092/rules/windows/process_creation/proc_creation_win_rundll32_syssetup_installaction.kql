@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6092 Add ADS abuse and signed-binary LOLBIN detection rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6092
+// Pull request author: einlamye
+// Change: new rule
+// Title: Application Whitelisting Bypass Via Syssetup.DLL
+// Sigma ID: d661eda1-aa47-4a2a-85ff-c39a0515fd5c
+// Status: experimental | Level: high
+// Author: EinLamYe
+// Date: 2026-06-29 | Modified: -
+// ATT&CK: execution, stealth, T1127, T1218.011
+// Description: Detects execution of "syssetup.dll" via rundll32 calling the "SetupInfObjectInstallAction"
+//   export against an INF file. Adversaries abuse this signed library to run local or remote
+//   scriptlet/executable payloads referenced from a crafted INF file, bypassing application
+//   whitelisting (AWL).
+// False positives:
+//   - Unknown
+// References:
+//   - https://lolbas-project.github.io/lolbas/Libraries/Syssetup/
+//   - https://twitter.com/pabraeken/status/994392481927258113
+//   - https://github.com/huntresslabs/evading-autoruns
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/c5875f6ddd2f5087d0f0a63a34a2ed4468a9d328/rules/windows/process_creation/proc_creation_win_rundll32_syssetup_installaction.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\rundll32.exe" or ProcessVersionInfoOriginalFileName =~ "RUNDLL32.EXE") and (ProcessCommandLine contains "syssetup" and ProcessCommandLine contains "SetupInfObjectInstallAction")

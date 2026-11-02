@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6201 Add rule: Sudo GTFOBins Shell Escape Privilege Escalation - Linux
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6201
+// Pull request author: Aymwvn
+// Change: new rule
+// Title: Potential Privilege Escalation Via Sudo GTFOBins Shell Escape - Linux
+// Sigma ID: 4c8e2f7a-1b6d-4e93-8a2f-7d5c9b3e1a4f
+// Status: experimental | Level: high
+// Author: Aymane Boualam
+// Date: 2026-08-05 | Modified: -
+// ATT&CK: privilege-escalation, T1548.003
+// Description: Detects a GTFOBins-listed binary spawning a shell as a direct child of sudo. This indicates a
+//   low-privileged user with narrow sudo rights on a single binary (via sudoers misconfiguration)
+//   escaping to a root shell.
+// False positives:
+//   - Legitimate administrative use of these binaries under sudo is rare but possible in scripted maintenance tasks — review CommandLine context.
+// References:
+//   - https://gtfobins.github.io/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/dc0e23f4f183631f3e0d0e7ded7b464423c8d95f/rules/linux/process_creation/proc_creation_lnx_priv_esc_sudo_gtfobins_parent.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "/sudo" and (FolderPath endswith "/find" or FolderPath endswith "/vim" or FolderPath endswith "/vi" or FolderPath endswith "/awk" or FolderPath endswith "/less" or FolderPath endswith "/more" or FolderPath endswith "/python" or FolderPath endswith "/python3" or FolderPath endswith "/perl" or FolderPath endswith "/nmap" or FolderPath endswith "/man" or FolderPath endswith "/gdb" or FolderPath endswith "/ftp") and (ProcessCommandLine contains "/bin/sh" or ProcessCommandLine contains "/bin/bash" or ProcessCommandLine contains "/bin/dash" or ProcessCommandLine contains "/bin/zsh" or ProcessCommandLine contains "-exec" or ProcessCommandLine contains "!bash" or ProcessCommandLine contains "!sh")

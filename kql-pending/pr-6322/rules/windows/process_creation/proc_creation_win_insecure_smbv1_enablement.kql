@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6322 Add detection rule for insecure SMBv1 enablement
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6322
+// Pull request author: fabjan4u
+// Change: new rule
+// Title: Insecure SMBv1 Protocol Enablement
+// Sigma ID: d421ceee-0a4c-4ecd-8e11-0f0478618433
+// Status: experimental | Level: high
+// Author: Fabian Cras (mboRijnland / CIV Smart Technology)
+// Date: 2026-09-23 | Modified: -
+// ATT&CK: defense-evasion, lateral-movement, T1562.001, T1021.002
+// Description: Detects attempts to re-enable the deprecated and insecure SMBv1 protocol via PowerShell cmdlets,
+//   DISM, or Service Control Manager. Adversaries may enable SMBv1 to exploit legacy vulnerabilities
+//   (e.g. EternalBlue) or conduct lateral movement.
+// False positives:
+//   - Rare administrative deployment of legacy application dependencies
+// References:
+//   - https://learn.microsoft.com/en-us/windows-server/storage/file-server/troubleshoot/detect-enable-and-disable-smbv1-v2-v3
+//   - https://www.cisa.gov/news-events/alerts/2017/01/16/risks-using-smbv1
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/a3ae7b8b8d0d2a1aa1ee9e67e69105d770fab7dd/rules/windows/process_creation/proc_creation_win_insecure_smbv1_enablement.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "Set-SmbServerConfiguration" and ProcessCommandLine contains "-EnableSMB1Protocol" and ProcessCommandLine contains "$true") or (ProcessCommandLine contains "Enable-WindowsOptionalFeature" and ProcessCommandLine contains "SMB1Protocol") or (FolderPath endswith "\\dism.exe" and (ProcessCommandLine contains "/enable-feature" and ProcessCommandLine contains "SMB1Protocol")) or (FolderPath endswith "\\sc.exe" and (ProcessCommandLine contains "config" and ProcessCommandLine contains "mrxsmb10" and ProcessCommandLine contains "start="))

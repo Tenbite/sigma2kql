@@ -1,0 +1,24 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Suspicious Userinit Child Process
+// Sigma ID: b655a06a-31c0-477a-95c2-3726b83d649d
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems), Samir Bousseaden (idea)
+// Date: 2019-06-17 | Modified: 2025-10-17
+// ATT&CK: privilege-escalation, stealth, T1055
+// Description: Detects a suspicious child process of userinit
+// False positives:
+//   - Administrative scripts
+// References:
+//   - https://twitter.com/SBousseaden/status/1139811587760562176
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_susp_userinit_child.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\userinit.exe" and (not((ProcessCommandLine contains "\\netlogon\\" or (FolderPath endswith "\\explorer.exe" or ProcessVersionInfoOriginalFileName =~ "explorer.exe" or ProcessCommandLine =~ "C:\\Windows\\Explorer.EXE") or isnull(FolderPath))))

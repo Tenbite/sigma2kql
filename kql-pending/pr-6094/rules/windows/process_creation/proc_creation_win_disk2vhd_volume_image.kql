@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6094 Add Sysinternals tooling and driver/UAC detection rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6094
+// Pull request author: einlamye
+// Change: new rule
+// Title: Volume Image Creation Via Disk2vhd
+// Sigma ID: 7b5668f7-e7d9-4845-a935-18aa6ce9ff40
+// Status: experimental | Level: medium
+// Author: EinLamYe
+// Date: 2026-06-29 | Modified: -
+// ATT&CK: credential-access, collection, T1003.003, T1005
+// Description: Detects execution of the Sysinternals Disk2vhd tool, which clones a live volume into a VHD/VHDX.
+//   Adversaries abuse it to obtain an offline copy of a system volume (e.g. a Domain Controller's C:
+//   containing NTDS.dit and the SAM/SYSTEM hives) for offline credential extraction.
+// False positives:
+//   - Legitimate virtual machine migration or backup by administrators
+// References:
+//   - https://learn.microsoft.com/en-us/sysinternals/downloads/disk2vhd
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/8e7b36a9de00c979a098f16eb29c1c22fb63cb4b/rules/windows/process_creation/proc_creation_win_disk2vhd_volume_image.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "\\disk2vhd.exe" or ProcessVersionInfoOriginalFileName =~ "Disk2Vhd.exe"

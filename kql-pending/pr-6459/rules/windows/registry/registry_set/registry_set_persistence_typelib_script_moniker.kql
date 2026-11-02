@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6459 new: COM TypeLib hijack via scriptlet moniker + script runtime loaded by Explorer
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6459
+// Pull request author: redsand
+// Change: new rule
+// Title: COM TypeLib Hijack Via Scriptlet Or Remote Moniker
+// Sigma ID: a077d7ab-3c9c-41d9-a1e7-db2c78cabe1e
+// Status: experimental | Level: high
+// Author: Tim Shelton (HAWK.io)
+// Date: 2026-10-13 | Modified: -
+// ATT&CK: persistence, privilege-escalation, T1546.015
+// Description: Detects a type library whose win32/win64 path is set to a "script:" moniker, a ".sct" scriptlet
+//   or a URL. Type libraries are registered to DLL, OCX or TLB files. Windows resolves a "script:"
+//   path through scrobj.dll and runs the scriptlet in whichever process loads the type library.
+//   Attackers register the hijack under the user's own HKCU\Software\Classes\TypeLib (no admin
+//   rights needed) for a type library that Explorer loads at logon, such as the Microsoft Scriptlet
+//   Library {EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}.
+// False positives:
+//   - Unknown
+// References:
+//   - https://cicada-8.medium.com/hijack-the-typelib-new-com-persistence-technique-32ae1d284661
+//   - https://reliaquest.com/blog/threat-spotlight-hijacked-and-hidden-new-backdoor-and-persistence-technique/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/16c482306186f8827fdb39c72ba5f76b1a521d55/rules/windows/registry/registry_set/registry_set_persistence_typelib_script_moniker.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+// Note: 1 wildcard comparison(s) rewritten to 'matches regex' (KQL treats * in contains/endswith/== as a literal character)
+
+DeviceRegistryEvents
+| where RegistryKey matches regex @"(?i)\\TypeLib.*$" and (RegistryKey contains "\\win32" or RegistryKey contains "\\win64") and ((RegistryValueData startswith "script:" or RegistryValueData startswith "http:" or RegistryValueData startswith "https:") or RegistryValueData contains ".sct")

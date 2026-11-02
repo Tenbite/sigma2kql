@@ -1,0 +1,32 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6030 new: OpenAI Codex sandbox abuse detection rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6030
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: OpenAI Codex Sandbox Configuration Files Modified By Unexpected Process
+// Sigma ID: a2c6d4e7-1f3b-4a8c-be1f-4b5c6d7e8f9a
+// Status: experimental | Level: medium
+// Author: Jonathan Johnson, Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-05-26 | Modified: -
+// ATT&CK: credential-access, execution, persistence, stealth, T1552.001, T1574
+// Description: Detects modification of sensitive OpenAI Codex sandbox configuration files under the .codex
+//   directory by a process other than the legitimate Codex binaries. The .codex directory contains
+//   the sandbox setup marker, encrypted sandbox user credentials (.sandbox-
+//   secrets\sandbox_users.json), capability SIDs (cap_sid), and the command runner binary itself.
+//   Tampering with these files by an unrelated process may indicate credential harvesting of the
+//   DPAPI-encrypted sandbox credentials, persistence via replacement, or attempts to manipulate the
+//   capability SID file to weaken workspace isolation. Note: Codex does not remove these artifacts
+//   on uninstall, so they may be present on systems where Codex has been previously installed.
+// False positives:
+//   - Backup software that creates temporary copies of files for backup purposes following similar file directory patterns
+// References:
+//   - https://jonny-johnson.medium.com/a-deep-dive-into-codex-windows-sandbox-a2489bf4ae91
+//   - https://openai.com/index/building-codex-windows-sandbox/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/a20c16d6d3eef0c2c625df9d2ac3e18c1b12187c/rules/windows/file/file_event/file_event_win_codex_config_dir_tampering.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where (FolderPath contains "\\.codex\\" and (FolderPath endswith "\\sandbox_users.json" or FolderPath endswith "\\setup_marker.json" or FolderPath endswith "\\cap_sid" or FolderPath endswith "\\sandbox.log")) and (not(((InitiatingProcessFolderPath endswith "\\codex.exe" or InitiatingProcessFolderPath endswith "\\codex-windows-sandbox-setup.exe") and InitiatingProcessFolderPath contains "\\codex-command-runner-")))

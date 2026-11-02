@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6124 Add rule: HackTool - PrintSpoofer Execution
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6124
+// Pull request author: ashish-cybersec
+// Change: new rule
+// Title: HackTool - PrintSpoofer Execution
+// Sigma ID: 8d280471-b4a1-4105-8417-c6edc0c3bf9b
+// Status: experimental | Level: high
+// Author: Ashish Pulivarthy (ashish-cybersec)
+// Date: 2026-07-10 | Modified: -
+// ATT&CK: privilege-escalation, stealth, T1134.001
+// Description: Detects the execution of PrintSpoofer, a privilege escalation tool by @itm4n that abuses the
+//   Windows Print Spooler service and named pipe impersonation to escalate from LOCAL/NETWORK
+//   SERVICE to SYSTEM using the SeImpersonatePrivilege token privilege. The tool is widely used in
+//   red team engagements and post-exploitation scenarios, particularly on IIS or SQL Server service
+//   accounts that carry SeImpersonatePrivilege by default. It is effective on Windows 10 and Windows
+//   Server 2016/2019.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/itm4n/PrintSpoofer
+//   - https://itm4n.github.io/printspoofer-abusing-impersonate-privileges/
+//   - https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/roguepotato-and-printspoofer
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/d36f5f09311e4f9c34f951176e7b91e87dbb11b6/rules/windows/process_creation/proc_creation_win_hktl_printspoofer.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\PrintSpoofer.exe" or FolderPath endswith "\\PrintSpoofer32.exe" or FolderPath endswith "\\PrintSpoofer64.exe") or ProcessVersionInfoOriginalFileName =~ "PrintSpoofer.exe") or ((ProcessCommandLine contains " -i -c " or ProcessCommandLine contains " -d ") and ProcessCommandLine contains "pipe\\spoolss")

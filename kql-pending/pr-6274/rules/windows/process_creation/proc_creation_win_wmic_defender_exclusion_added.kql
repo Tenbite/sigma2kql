@@ -1,0 +1,32 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6274 Add 3 rules from a PyArmor-obfuscated PyInstaller loader detonation
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6274
+// Pull request author: dclayton454
+// Change: new rule
+// Title: Suspicious Microsoft Defender Exclusion Added Via WMIC
+// Sigma ID: 27cf3735-02a9-4c63-91fc-2a03e651f8cf
+// Status: experimental | Level: high
+// Author: David Clayton - CTI @ thetechcollective
+// Date: 2026-08-17 | Modified: -
+// ATT&CK: stealth, T1564.012, defense-impairment, T1685, execution, T1047
+// Tags: stp.4
+// Description: Detects WMIC being used to add or modify a Microsoft Defender exclusion by calling the
+//   MSFT_MpPreference class in the root\Microsoft\Windows\Defender namespace. Administrators and
+//   vendor installers overwhelmingly use the Add-MpPreference PowerShell cmdlet for this, so the
+//   WMIC path is a strong signal of an automated payload carving out a safe staging directory before
+//   writing to it.
+// False positives:
+//   - Endpoint deployment or hardening scripts that apply vendor-recommended antivirus exclusions for database, backup, or virtualisation software. These normally run from a known deployment agent parent process and reference a Program Files path rather than a user-writable one.
+//   - Legacy in-house automation that predates the Defender PowerShell module and still shells out to WMIC.
+//   - Security product installers that register their own binaries as exclusions during setup.
+// References:
+//   - https://bazaar.abuse.ch/sample/d97ea10d1dbfe2a69e0d2387e8985635b20628495918abd54c4b052c0acf05b1/
+//   - https://tria.ge/260817-ktkv8swgra
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/237bd3d6c9cf55c339b709c9aafc7d93a4db456a/rules/windows/process_creation/proc_creation_win_wmic_defender_exclusion_added.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\wmic.exe" or ProcessVersionInfoOriginalFileName =~ "wmic.exe") and ProcessCommandLine contains "MSFT_MpPreference" and (ProcessCommandLine contains "ExclusionPath" or ProcessCommandLine contains "ExclusionProcess" or ProcessCommandLine contains "ExclusionExtension" or ProcessCommandLine contains "ExclusionIpAddress")

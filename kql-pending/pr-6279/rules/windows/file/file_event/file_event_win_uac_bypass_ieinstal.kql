@@ -1,0 +1,24 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: UAC Bypass Using IEInstal - File
+// Sigma ID: bdd8157d-8e85-4397-bb82-f06cc9c71dbb
+// Status: test | Level: high
+// Author: Christian Burkard (Nextron Systems)
+// Date: 2021-08-30 | Modified: 2022-10-09
+// ATT&CK: privilege-escalation, T1548.002
+// Description: Detects the pattern of UAC Bypass using IEInstal.exe (UACMe 64)
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/hfiref0x/UACME
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/file/file_event/file_event_win_uac_bypass_ieinstal.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where InitiatingProcessFolderPath =~ "C:\\Program Files\\Internet Explorer\\IEInstal.exe" and FolderPath startswith "C:\\Users\\" and FolderPath contains "\\AppData\\Local\\Temp\\" and FolderPath endswith "consent.exe"

@@ -1,0 +1,25 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6094 Add Sysinternals tooling and driver/UAC detection rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6094
+// Pull request author: einlamye
+// Change: new rule
+// Title: Security Software Termination Via PsKill
+// Sigma ID: 130f6033-d9db-4df8-81c3-8eda43f05f0d
+// Status: experimental | Level: high
+// Author: EinLamYe
+// Date: 2026-06-29 | Modified: -
+// ATT&CK: defense-impairment, T1685
+// Description: Detects the Sysinternals PsKill utility being used to terminate security, EDR or antivirus
+//   processes - a defense-evasion / impair-defenses technique.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://learn.microsoft.com/en-us/sysinternals/downloads/pskill
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/8e7b36a9de00c979a098f16eb29c1c22fb63cb4b/rules/windows/process_creation/proc_creation_win_pskill_security_process_termination.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\pskill.exe" or FolderPath endswith "\\pskill64.exe") or ProcessVersionInfoOriginalFileName =~ "pskill.exe") and (ProcessCommandLine contains "MsMpEng" or ProcessCommandLine contains "MsSense" or ProcessCommandLine contains "SenseIR" or ProcessCommandLine contains "CSFalcon" or ProcessCommandLine contains "CSAgent" or ProcessCommandLine contains "SentinelAgent" or ProcessCommandLine contains "SentinelOne" or ProcessCommandLine contains "CylanceSvc" or ProcessCommandLine contains "xagt" or ProcessCommandLine contains "Sophos" or ProcessCommandLine contains "CarbonBlack" or ProcessCommandLine contains "MBAMService" or ProcessCommandLine contains "WinDefend" or ProcessCommandLine contains "SecurityHealthService" or ProcessCommandLine contains "Defender")

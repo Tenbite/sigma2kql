@@ -1,0 +1,24 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Unusual Parent Process For Cmd.EXE
+// Sigma ID: 4b991083-3d0e-44ce-8fc4-b254025d8d4b
+// Status: test | Level: medium
+// Author: Tim Rauch, Elastic (idea)
+// Date: 2022-09-21 | Modified: 2023-12-05
+// ATT&CK: execution, T1059
+// Description: Detects suspicious parent process for cmd.exe
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.elastic.co/guide/en/security/current/unusual-parent-process-for-cmd.exe.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_cmd_unusual_parent.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "\\cmd.exe" and (InitiatingProcessFolderPath endswith "\\csrss.exe" or InitiatingProcessFolderPath endswith "\\ctfmon.exe" or InitiatingProcessFolderPath endswith "\\dllhost.exe" or InitiatingProcessFolderPath endswith "\\epad.exe" or InitiatingProcessFolderPath endswith "\\FlashPlayerUpdateService.exe" or InitiatingProcessFolderPath endswith "\\GoogleUpdate.exe" or InitiatingProcessFolderPath endswith "\\jucheck.exe" or InitiatingProcessFolderPath endswith "\\jusched.exe" or InitiatingProcessFolderPath endswith "\\LogonUI.exe" or InitiatingProcessFolderPath endswith "\\lsass.exe" or InitiatingProcessFolderPath endswith "\\regsvr32.exe" or InitiatingProcessFolderPath endswith "\\SearchIndexer.exe" or InitiatingProcessFolderPath endswith "\\SearchProtocolHost.exe" or InitiatingProcessFolderPath endswith "\\SIHClient.exe" or InitiatingProcessFolderPath endswith "\\sihost.exe" or InitiatingProcessFolderPath endswith "\\slui.exe" or InitiatingProcessFolderPath endswith "\\spoolsv.exe" or InitiatingProcessFolderPath endswith "\\sppsvc.exe" or InitiatingProcessFolderPath endswith "\\taskhostw.exe" or InitiatingProcessFolderPath endswith "\\unsecapp.exe" or InitiatingProcessFolderPath endswith "\\WerFault.exe" or InitiatingProcessFolderPath endswith "\\wermgr.exe" or InitiatingProcessFolderPath endswith "\\wlanext.exe" or InitiatingProcessFolderPath endswith "\\WUDFHost.exe")

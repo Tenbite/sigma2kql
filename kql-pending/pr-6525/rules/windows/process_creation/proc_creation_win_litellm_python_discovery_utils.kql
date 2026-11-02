@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6525 Add detection rules for LiteLLM 1.107.0 cook.pth supply-chain compromise
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6525
+// Pull request author: ntwindows2
+// Change: new rule
+// Title: Python Process Spawning Windows Discovery Utilities
+// Sigma ID: 9e9d430e-f278-4c33-b0a7-f2e024f80d9a
+// Status: experimental | Level: medium
+// Author: Gangadhar
+// Date: 2026-10-27 | Modified: -
+// ATT&CK: discovery, T1082, T1016
+// Description: Detects Python launching Windows system or network discovery utilities. Observed in the LiteLLM
+//   1.107.0 supply-chain compromise, where a malicious "cook.pth" startup hook caused the Python
+//   interpreter to import a credential collector that invokes these utilities during interpreter
+//   startup, independent of the script being executed.
+// False positives:
+//   - Administrative or diagnostic Python scripts
+//   - Network automation or inventory tooling written in Python
+// References:
+//   - https://www.microsoft.com/en-us/security/blog/2026/10/23/inside-the-litellm-1-107-0-supply-chain-compromise-credential-theft-through-python-startup-hooks/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/3a37619e6c1b7b3fdf640a86b97c539e893f2f4c/rules/windows/process_creation/proc_creation_win_litellm_python_discovery_utils.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (InitiatingProcessFolderPath endswith "\\python.exe" or InitiatingProcessFolderPath endswith "\\pythonw.exe") and (FolderPath endswith "\\systeminfo.exe" or FolderPath endswith "\\ipconfig.exe" or FolderPath endswith "\\route.exe" or FolderPath endswith "\\arp.exe" or FolderPath endswith "\\netstat.exe")

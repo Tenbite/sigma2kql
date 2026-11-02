@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Schedule Task Creation From Env Variable Or Potentially Suspicious Path Via Schtasks.EXE
+// Sigma ID: 81325ce1-be01-4250-944f-b4789644556f
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-02-21 | Modified: 2025-10-07
+// ATT&CK: privilege-escalation, persistence, execution, T1053.005
+// Description: Detects Schtask creations that point to a suspicious folder or an environment variable often
+//   used by malware
+// False positives:
+//   - Benign scheduled tasks creations or executions that happen often during software installations
+//   - Software that uses the AppData folder and scheduled tasks to update the software in the AppData folders
+// References:
+//   - https://www.welivesecurity.com/2022/01/18/donot-go-do-not-respawn/
+//   - https://www.joesandbox.com/analysis/514608/0/html#324415FF7D8324231381BAD48A052F85DF04
+//   - https://blog.talosintelligence.com/gophish-powerrat-dcrat/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_schtasks_env_folder.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (((FolderPath endswith "\\schtasks.exe" and (ProcessCommandLine contains " -create " or ProcessCommandLine contains " /create " or ProcessCommandLine contains " –create " or ProcessCommandLine contains " —create " or ProcessCommandLine contains " ―create ")) and (ProcessCommandLine contains ":\\Perflogs" or ProcessCommandLine contains ":\\Users\\All Users\\" or ProcessCommandLine contains ":\\Users\\Default\\" or ProcessCommandLine contains ":\\Users\\Public" or ProcessCommandLine contains ":\\Windows\\Temp" or ProcessCommandLine contains "\\AppData\\Local\\" or ProcessCommandLine contains "\\AppData\\Roaming\\" or ProcessCommandLine contains "%AppData%" or ProcessCommandLine contains "%Public%")) or (InitiatingProcessCommandLine endswith "\\svchost.exe -k netsvcs -p -s Schedule" and (ProcessCommandLine contains ":\\Perflogs" or ProcessCommandLine contains ":\\Windows\\Temp" or ProcessCommandLine contains "\\Users\\Public" or ProcessCommandLine contains "%Public%"))) and (not(((InitiatingProcessCommandLine contains "unattended.ini" or ProcessCommandLine contains "update_task.xml") or ProcessCommandLine contains "/Create /TN TVInstallRestore /TR" or (ProcessCommandLine contains "/Create /Xml " and ProcessCommandLine contains "\\Temp\\.CR." and ProcessCommandLine contains "\\Avira_Security_Installation.xml") or ((ProcessCommandLine contains "/Create /F /TN" and ProcessCommandLine contains "/Xml " and ProcessCommandLine contains "\\Temp\\" and ProcessCommandLine contains "Avira_") and (ProcessCommandLine contains ".tmp\\UpdateFallbackTask.xml" or ProcessCommandLine contains ".tmp\\WatchdogServiceControlManagerTimeout.xml" or ProcessCommandLine contains ".tmp\\SystrayAutostart.xml" or ProcessCommandLine contains ".tmp\\MaintenanceTask.xml")) or (ProcessCommandLine contains "\\Temp\\" and ProcessCommandLine contains "/Create /TN \"klcp_update\" /XML " and ProcessCommandLine contains "\\klcp_update_task.xml"))))

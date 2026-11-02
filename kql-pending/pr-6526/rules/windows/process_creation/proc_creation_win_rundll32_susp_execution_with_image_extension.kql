@@ -1,0 +1,24 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6526 fix: Suspicious Rundll32 Execution With Image Extension - filter the WebDAV client (davclnt.dll,DavSetCookie)
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6526
+// Pull request author: redsand
+// Change: update to existing rule
+// Title: Suspicious Rundll32 Execution With Image Extension
+// Sigma ID: 4aa6040b-3f28-44e3-a769-9208e5feb5ec
+// Status: test | Level: high
+// Author: Hieu Tran
+// Date: 2023-03-13 | Modified: 2026-10-26
+// ATT&CK: stealth, T1218.011
+// Description: Detects the execution of Rundll32.exe with DLL files masquerading as image files
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.zscaler.com/blogs/security-research/onenote-growing-threat-malware-distribution
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/eeb3f198c4f2435ae7843c6e937c940adb02335a/rules/windows/process_creation/proc_creation_win_rundll32_susp_execution_with_image_extension.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\rundll32.exe" or ProcessVersionInfoOriginalFileName =~ "RUNDLL32.exe") and (ProcessCommandLine contains ".bmp" or ProcessCommandLine contains ".cr2" or ProcessCommandLine contains ".eps" or ProcessCommandLine contains ".gif" or ProcessCommandLine contains ".ico" or ProcessCommandLine contains ".jpeg" or ProcessCommandLine contains ".jpg" or ProcessCommandLine contains ".nef" or ProcessCommandLine contains ".orf" or ProcessCommandLine contains ".png" or ProcessCommandLine contains ".raw" or ProcessCommandLine contains ".sr2" or ProcessCommandLine contains ".tif" or ProcessCommandLine contains ".tiff")) and (not(ProcessCommandLine contains "C:\\Windows\\system32\\davclnt.dll,DavSetCookie "))

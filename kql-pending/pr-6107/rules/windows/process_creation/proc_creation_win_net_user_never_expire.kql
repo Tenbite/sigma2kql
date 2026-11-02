@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6107 fix: net user rules coverage and deprecate redundant rule
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6107
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: User Account Configured With Never Expire Option Via Net.EXE
+// Sigma ID: b9f0e6f5-09b4-4358-bae4-08408705bd5c
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-07-12 | Modified: 2026-07-03
+// ATT&CK: persistence, privilege-escalation, T1098, T1136.001
+// Description: Detects configuration of user accounts with the "never expire" option via net.exe, either during
+//   account creation or when modifying an existing account. This is a common technique used by
+//   adversaries to maintain persistence on a compromised system.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/779cc65416e75596f3840432492078f866132d1c/rules/windows/process_creation/proc_creation_win_net_user_never_expire.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\net.exe" or FolderPath endswith "\\net1.exe") or (ProcessVersionInfoOriginalFileName in~ ("net.exe", "net1.exe"))) and (ProcessCommandLine contains "user" and ProcessCommandLine contains "expires:never")

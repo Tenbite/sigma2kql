@@ -1,0 +1,24 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6122 update: Regsvr32 detection rules tuning and expansion
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6122
+// Pull request author: swachchhanda000
+// Change: update to existing rule
+// Title: Rundll32 Execution With Uncommon DLL Extension
+// Sigma ID: c3a99af4-35a9-4668-879e-c09aeb4f2bdf
+// Status: test | Level: medium
+// Author: Tim Shelton, Florian Roth (Nextron Systems), Yassine Oukessou
+// Date: 2022-01-13 | Modified: 2026-10-18
+// ATT&CK: stealth, T1218.011
+// Description: Detects the execution of rundll32 with a command line that doesn't contain a common extension
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/mrd0x/status/1481630810495139841?s=12
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/fba4b94a2237d0ec8fe1cd5dc9c4c29dc6d3e4c4/rules/windows/process_creation/proc_creation_win_rundll32_uncommon_dll_extension.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\rundll32.exe" or ProcessVersionInfoOriginalFileName =~ "RUNDLL32.EXE") and (not((isnull(ProcessCommandLine) or ProcessCommandLine =~ "" or ((ProcessCommandLine contains ".cpl " or ProcessCommandLine contains ".cpl," or ProcessCommandLine contains ".cpl\"" or ProcessCommandLine contains ".cpl'" or ProcessCommandLine contains ".dll " or ProcessCommandLine contains ".dll," or ProcessCommandLine contains ".dll\"" or ProcessCommandLine contains ".dll'" or ProcessCommandLine contains ".inf " or ProcessCommandLine contains ".inf," or ProcessCommandLine contains ".inf\"" or ProcessCommandLine contains ".inf'") or (ProcessCommandLine endswith ".cpl" or ProcessCommandLine endswith ".dll" or ProcessCommandLine endswith ".inf")) or (ProcessCommandLine in~ ("\"C:\\Windows\\System32\\rundll32.exe\"", "\"C:\\Windows\\SysWOW64\\rundll32.exe\"")) or ProcessCommandLine contains " -localserver " or (InitiatingProcessFolderPath endswith "\\msiexec.exe" and (ProcessCommandLine contains ":\\Windows\\Installer\\" and ProcessCommandLine contains ".tmp" and ProcessCommandLine contains "zzzzInvokeManagedCustomActionOutOfProc")) or (FolderPath =~ "C:\\Windows\\System32\\rundll32.exe" and InitiatingProcessFolderPath =~ "C:\\Windows\\System32\\svchost.exe" and ProcessCommandLine contains " streamci,StreamingDeviceSetup {")))) and (not((InitiatingProcessCommandLine contains ":\\Users\\" and InitiatingProcessCommandLine contains "\\AppData\\Local\\Microsoft\\EdgeUpdate\\Install\\{" and InitiatingProcessCommandLine contains "\\EDGEMITMP_" and InitiatingProcessCommandLine contains ".tmp\\setup.exe" and InitiatingProcessCommandLine contains "--install-archive=" and InitiatingProcessCommandLine contains "--previous-version=" and InitiatingProcessCommandLine contains "--msedgewebview --verbose-logging --do-not-launch-msedge --user-level")))

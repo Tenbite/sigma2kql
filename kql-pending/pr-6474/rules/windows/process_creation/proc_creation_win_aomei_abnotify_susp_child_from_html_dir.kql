@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6474 new: AOMEI Backupper supply chain compromise rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6474
+// Pull request author: veeramani-sl-12207
+// Change: new rule
+// Title: Suspicious AOMEI ABNotify Child Process From Html Directory
+// Sigma ID: 3768e7d0-ba38-48fa-a630-d25bb50438de
+// Status: experimental | Level: high
+// Author: Veeramani
+// Date: 2026-06-11 | Modified: -
+// ATT&CK: stealth, T1036.005
+// Description: Detects ABNotify.exe, running from the standard AOMEI Backupper installation path, spawning any
+//   executable located in the html\ rendering hierarchy. This directory is intended for rendering
+//   assets, not executables; a child process launched from here indicates a hijacked upgrade
+//   workflow triggered through the AOMEI notification agent with no user interaction.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.manageengine.com/threat-analysis-lab/aomei-backupper-supply-chain-compromise.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/61757c593d21d62428a54bb9b9191a1de0e0ca82/rules/windows/process_creation/proc_creation_win_aomei_abnotify_susp_child_from_html_dir.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (InitiatingProcessFolderPath contains "\\AOMEI\\AOMEI Backupper\\" and InitiatingProcessFolderPath endswith "\\ABNotify.exe") and ((FolderPath contains "\\AOMEI\\AOMEI Backupper\\" and FolderPath contains "\\html\\") and FolderPath endswith ".exe")

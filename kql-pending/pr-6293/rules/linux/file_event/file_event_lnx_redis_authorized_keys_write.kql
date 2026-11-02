@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6293 new: Redis Server Process Writing To SSH Authorized Keys File
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6293
+// Pull request author: PixelatedContinuum
+// Change: new rule
+// Title: Redis Server Process Writing To SSH Authorized Keys File
+// Sigma ID: 5a6dff70-3536-49cb-b14a-f39da78d417c
+// Status: experimental | Level: high
+// Author: The Hunters Ledger
+// Date: 2026-07-17 | Modified: -
+// ATT&CK: persistence, privilege-escalation, T1098.004
+// Description: Detects the redis-server process writing to a user's SSH authorized_keys file. An
+//   unauthenticated Redis instance can be made to write its database to an arbitrary path via CONFIG
+//   SET dir and CONFIG SET dbfilename followed by SAVE, which is used to append an attacker-
+//   controlled SSH public key and gain persistent shell access. A legitimate Redis deployment does
+//   not write to this path.
+// False positives:
+//   - Unlikely. No legitimate Redis deployment configuration writes to this file
+// References:
+//   - https://hacktricks.wiki/en/network-services-pentesting/6379-pentesting-redis.html
+//   - https://the-hunters-ledger.com/hunting-detections/seasia-gov-exploitation-toolkit-144-172-106-236-detections/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/a3b8eddb0eb40b37b6a359cd34d4cdd994325e81/rules/linux/file_event/file_event_lnx_redis_authorized_keys_write.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where InitiatingProcessFolderPath endswith "/redis-server" and FolderPath endswith "/.ssh/authorized_keys"

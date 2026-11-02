@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6054 new: susp package execution
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6054
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: GitHub Token Access Via GH CLI Spawned By Script Interpreters - Linux
+// Sigma ID: 7b2e4f91-3c5d-4a8e-b6f0-1d9e2c7a4b5f
+// Status: experimental | Level: high
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-06-08 | Modified: -
+// ATT&CK: credential-access, T1528, execution, T1059.004
+// Description: Detects the GitHub CLI (gh) being executed to access stored GitHub authentication tokens, when
+//   spawned by build tools such as bun, node, or Python. Malicious packages published to npm, JSR,
+//   or PyPI have been observed running these commands during install/postinstall hooks to silently
+//   exfiltrate the victim's stored GitHub authentication token.
+// False positives:
+//   - Unknown
+// References:
+//   - https://unit42.paloaltonetworks.com/monitoring-npm-supply-chain-attacks/
+//   - https://www.elastic.co/blog/shai-hulud-worm-npm-supply-chain-compromise
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/a8da5bad2e662e7a8fbc523c716b0fde1192f983/rules/linux/process_creation/proc_creation_lnx_script_interpretors_github_token_access.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((InitiatingProcessFolderPath endswith "/bun" or InitiatingProcessFolderPath endswith "/node") or InitiatingProcessFolderPath contains "python") and ((ProcessCommandLine contains "gh " and ProcessCommandLine contains " auth " and ProcessCommandLine contains "token") or (ProcessCommandLine contains "gh " and ProcessCommandLine contains "config" and ProcessCommandLine contains " get" and ProcessCommandLine contains "oauth_token"))

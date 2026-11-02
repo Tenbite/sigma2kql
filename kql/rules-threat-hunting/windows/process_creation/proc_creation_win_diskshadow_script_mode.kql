@@ -15,7 +15,7 @@
 //   - https://www.ired.team/offensive-security/credential-access-and-credential-dumping/ntds.dit-enumeration
 //   - https://medium.com/@cyberjyot/lolbin-execution-via-diskshadow-f6ff681a27a4
 //   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/diskshadow
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/rules-threat-hunting/windows/process_creation/proc_creation_win_diskshadow_script_mode.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ccbb0369507f796db0b0ae6854c8a2be471b9d84/rules-threat-hunting/windows/process_creation/proc_creation_win_diskshadow_script_mode.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)

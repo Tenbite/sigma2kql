@@ -1,0 +1,25 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: RDP Connection Allowed Via Netsh.EXE
+// Sigma ID: 01aeb693-138d-49d2-9403-c4f52d7d3d62
+// Status: test | Level: high
+// Author: Sander Wiebing
+// Date: 2020-05-23 | Modified: 2023-12-11
+// ATT&CK: defense-impairment, T1686.003
+// Description: Detects usage of the netsh command to open and allow connections to port 3389 (RDP). As seen
+//   used by Sarwent Malware
+// False positives:
+//   - Legitimate administration activity
+// References:
+//   - https://labs.sentinelone.com/sarwent-malware-updates-command-detonation/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_netsh_fw_allow_rdp.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\netsh.exe" or ProcessVersionInfoOriginalFileName =~ "netsh.exe") and ((ProcessCommandLine contains "firewall " and ProcessCommandLine contains "add " and ProcessCommandLine contains "tcp " and ProcessCommandLine contains "3389") and (ProcessCommandLine contains "portopening" or ProcessCommandLine contains "allow"))

@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6419 Detection testwindowremoteagent uncommon location
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6419
+// Pull request author: Diablo-research
+// Change: new rule
+// Title: Potentially Suspicious TestWindowRemoteAgent Execution From Uncommon Location
+// Sigma ID: a74b332e-0f71-409f-bd85-1492d98bab76
+// Status: experimental | Level: medium
+// Author: Diablo Research
+// Date: 2026-10-02 | Modified: -
+// ATT&CK: exfiltration, T1048
+// Description: Detects the Microsoft Visual Studio Test Window Remote Agent executing from outside expected
+//   Visual Studio installation directories in outbound client mode. The binary is listed by LOLBAS
+//   and can be abused for attacker-controlled network activity such as DNS-based exfiltration.
+// False positives:
+//   - Developers or administrators who intentionally copy the Visual Studio remote agent to a non-default location and use it for legitimate remote testing.
+// References:
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Testwindowremoteagent/
+//   - https://learn.microsoft.com/en-us/visualstudio/test/remote-testing?view=visualstudio
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/c3e196e0b6e240167f34c8e742c6eabe5707de8e/rules/windows/process_creation/proc_creation_win_testwindowremoteagent_uncommon_location.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\TestWindowRemoteAgent.exe" or ProcessVersionInfoOriginalFileName =~ "TestWindowRemoteAgent.dll") and ProcessCommandLine contains " start " and (ProcessCommandLine contains " -h " or ProcessCommandLine contains " --hostname ") and (ProcessCommandLine contains " -p " or ProcessCommandLine contains " --port ")) and (not((FolderPath startswith "C:\\Program Files\\Microsoft Visual Studio\\" or FolderPath startswith "C:\\Program Files (x86)\\Microsoft Visual Studio\\")))

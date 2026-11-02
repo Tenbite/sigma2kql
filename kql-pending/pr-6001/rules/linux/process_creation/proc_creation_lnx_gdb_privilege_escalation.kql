@@ -1,0 +1,30 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6001 new: 13 Linux detection rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6001
+// Pull request author: saakovv
+// Change: new rule
+// Title: Linux Privilege Escalation via GDB Debugger
+// Sigma ID: f9b5a1d8-2c6e-4f21-a8b9-1d7c3e6f5a90
+// Status: experimental | Level: high
+// Author: Ivan Saakov
+// Date: 2026-05-10 | Modified: -
+// ATT&CK: privilege-escalation, T1548.003
+// Description: Detects use of the GDB debugger to attach to running processes or execute shell commands, which
+//   can be leveraged for privilege escalation. When executed with sudo or against privileged
+//   processes via --pid, GDB can inject and execute arbitrary code in the context of that process.
+//   This technique allows attackers to spawn root shells by calling system() or execve() within a
+//   privileged process without writing files to disk.
+// False positives:
+//   - Legitimate developer debugging of processes in a development environment
+//   - Security researchers analyzing binaries in an isolated sandbox
+// References:
+//   - https://gtfobins.github.io/gtfobins/gdb/
+//   - https://man7.org/linux/man-pages/man1/gdb.1.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e5bac28da3655c33390db7ef1503db8cd3babb5f/rules/linux/process_creation/proc_creation_lnx_gdb_privilege_escalation.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "/gdb" and (ProcessCommandLine contains "--pid" or ProcessCommandLine contains " -p " or ProcessCommandLine contains "--eval-command" or ProcessCommandLine contains "-ex " or ProcessCommandLine contains "call system" or ProcessCommandLine contains "call execve")) or (ProcessCommandLine contains "sudo" and ProcessCommandLine contains "gdb")

@@ -1,0 +1,34 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6313 new: Potential Container Escape Via Docker Socket Or Host Namespace Access
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6313
+// Pull request author: aaronsawit
+// Change: new rule
+// Title: Potential Container Escape Via Docker Socket Or Host Namespace Access
+// Sigma ID: 0efe4005-85b1-46f0-a83c-3c942cfe455a
+// Status: experimental | Level: medium
+// Author: Aaron Sawit
+// Date: 2026-09-21 | Modified: -
+// ATT&CK: privilege-escalation, execution, T1611, T1610
+// Description: Detects the start of a container that shares the host PID namespace, mounts the Docker socket or
+//   the host root filesystem, or is granted the SYS_ADMIN capability. Each of these options removes
+//   a part of the isolation between the container and the host and is a well-known path to escape
+//   from a container to the host. An attacker with access to the Docker CLI or API can use these
+//   options to gain root privileges on the host. Some monitoring agents, reverse proxies and
+//   container management tools legitimately require these options. It is recommended to baseline
+//   those and filter them by image name.
+// False positives:
+//   - Monitoring agents, reverse proxies and container management tools that require access to the Docker socket
+//   - Administrators debugging the host from a container
+// References:
+//   - https://docs.docker.com/engine/security/
+//   - https://docs.docker.com/engine/containers/run/
+//   - https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html
+//   - https://blog.trailofbits.com/2019/07/19/understanding-docker-container-escapes/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/7c55f069b9ee54ff104a49fee719ea7ebbf89ea2/rules/linux/process_creation/proc_creation_lnx_container_host_access_flags.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "/docker" or FolderPath endswith "/nerdctl" or FolderPath endswith "/podman") and (ProcessCommandLine contains " create " or ProcessCommandLine contains " run ") and (ProcessCommandLine contains "--cap-add SYS_ADMIN" or ProcessCommandLine contains "--cap-add=SYS_ADMIN" or ProcessCommandLine contains "--pid host" or ProcessCommandLine contains "--pid=host" or ProcessCommandLine contains "-v /:/" or ProcessCommandLine contains "--volume /:/" or ProcessCommandLine contains "/var/run/docker.sock:" or ProcessCommandLine contains "/run/docker.sock:")

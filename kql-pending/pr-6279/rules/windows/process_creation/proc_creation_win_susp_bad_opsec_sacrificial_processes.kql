@@ -1,0 +1,34 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Bad Opsec Defaults Sacrificial Processes With Improper Arguments
+// Sigma ID: a7c3d773-caef-227e-a7e7-c2f13c622329
+// Status: test | Level: high
+// Author: Oleg Kolesnikov @securonix invrep_de, oscd.community, Florian Roth (Nextron Systems), Christian Burkard (Nextron Systems)
+// Date: 2020-10-23 | Modified: 2024-08-15
+// ATT&CK: stealth, T1218.011
+// Description: Detects attackers using tooling with bad opsec defaults. E.g. spawning a sacrificial process to
+//   inject a capability into the process without taking into account how the process is normally
+//   run. One trivial example of this is using rundll32.exe without arguments as a sacrificial
+//   process (default in CS, now highlighted by c2lint), running WerFault without arguments (Kraken -
+//   credit am0nsec), and other examples.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://blog.malwarebytes.com/malwarebytes-news/2020/10/kraken-attack-abuses-wer-service/
+//   - https://www.cobaltstrike.com/help-opsec
+//   - https://twitter.com/CyberRaiju/status/1251492025678983169
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/regsvr32
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/rundll32
+//   - https://learn.microsoft.com/en-us/dotnet/framework/tools/regasm-exe-assembly-registration-tool
+//   - https://learn.microsoft.com/en-us/dotnet/framework/tools/regsvcs-exe-net-services-installation-tool
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_susp_bad_opsec_sacrificial_processes.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\WerFault.exe" and ProcessCommandLine endswith "WerFault.exe") or (FolderPath endswith "\\rundll32.exe" and ProcessCommandLine endswith "rundll32.exe") or (FolderPath endswith "\\regsvcs.exe" and ProcessCommandLine endswith "regsvcs.exe") or (FolderPath endswith "\\regasm.exe" and ProcessCommandLine endswith "regasm.exe") or (FolderPath endswith "\\regsvr32.exe" and ProcessCommandLine endswith "regsvr32.exe")) and (not(((InitiatingProcessFolderPath contains "\\AppData\\Local\\Microsoft\\EdgeUpdate\\Install\\{" and FolderPath endswith "\\rundll32.exe" and ProcessCommandLine endswith "rundll32.exe") or ((InitiatingProcessFolderPath contains "\\AppData\\Local\\BraveSoftware\\Brave-Browser\\Application\\" or InitiatingProcessFolderPath contains "\\AppData\\Local\\Google\\Chrome\\Application\\") and InitiatingProcessFolderPath endswith "\\Installer\\setup.exe" and InitiatingProcessCommandLine contains "--uninstall " and FolderPath endswith "\\rundll32.exe" and ProcessCommandLine endswith "rundll32.exe"))))

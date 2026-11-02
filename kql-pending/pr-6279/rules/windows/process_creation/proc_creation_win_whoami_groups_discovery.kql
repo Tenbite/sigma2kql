@@ -1,0 +1,25 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Group Membership Reconnaissance Via Whoami.EXE
+// Sigma ID: bd8b828d-0dca-48e1-8a63-8a58ecf2644f
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-02-28 | Modified: -
+// ATT&CK: discovery, T1033
+// Description: Detects the execution of whoami.exe with the /group command line flag to show group membership
+//   for the current user, account type, security identifiers (SID), and attributes.
+// False positives:
+//   - Unknown
+// References:
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/whoami
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_whoami_groups_discovery.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\whoami.exe" or ProcessVersionInfoOriginalFileName =~ "whoami.exe") and (ProcessCommandLine contains " /groups" or ProcessCommandLine contains " -groups")

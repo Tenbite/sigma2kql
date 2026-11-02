@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5945 new: add new rules for several AD related hacktools
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5945
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: HackTool - Kerberos Manipulation Tool CLI Patterns - Linux
+// Sigma ID: 43b20ff5-48aa-4445-b76a-faea5f3e1c54
+// Status: experimental | Level: high
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-04-21 | Modified: -
+// ATT&CK: credential-access, T1558, T1558.003, T1558.004, T1649
+// Description: Detects command-line patterns associated with Kerberos manipulation and attack tools such as
+//   minikerberos, impacket, krbrelayx, and similar frameworks. Covers TGT/TGS retrieval,
+//   Kerberoasting, AS-REP roasting, PKINIT abuse, S4U delegation exploitation, ticket forgery,
+//   ccache/kirbi ticket conversion and manipulation, hash decryption, and Kerberos relay attacks.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://github.com/skelsec/minikerberos
+//   - https://github.com/fortra/impacket
+//   - https://github.com/dirkjanm/PKINITtools
+//   - https://github.com/dirkjanm/krbrelayx
+//   - https://github.com/ShutdownRepo/targetedKerberoast
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/6b9ade7935a13d35a57e75ff2587fbedcc53ef56/rules/linux/process_creation/proc_creation_lnx_hktl_kerberos_manipulation_tools.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "getTGT" or ProcessCommandLine contains "getTGS" or ProcessCommandLine contains "asktgt" or ProcessCommandLine contains "asktgs" or ProcessCommandLine contains "getST" or ProcessCommandLine contains "kerberoast" or ProcessCommandLine contains "asreproast" or ProcessCommandLine contains "GetUserSPNs" or ProcessCommandLine contains "GetNPUsers" or ProcessCommandLine contains "targetedKerberoast" or ProcessCommandLine contains "getNTPKInit" or ProcessCommandLine contains "getntkpkinit" or ProcessCommandLine contains "kerb23hashdecrypt" or ProcessCommandLine contains "getS4U2self" or ProcessCommandLine contains "getS4U2proxy" or ProcessCommandLine contains "findDelegation" or ProcessCommandLine contains "tgtdeleg" or ProcessCommandLine contains "ticketer" or ProcessCommandLine contains "goldenPac" or ProcessCommandLine contains "raiseChild" or ProcessCommandLine contains "tgssub" or ProcessCommandLine contains "getPac" or ProcessCommandLine contains "ticketConverter" or ProcessCommandLine contains "ccacheroast" or ProcessCommandLine contains "ccache2kirbi" or ProcessCommandLine contains "kirbi2ccache" or ProcessCommandLine contains "ccacheedit" or ProcessCommandLine contains " kirbi " or ProcessCommandLine contains "krbrelayx"

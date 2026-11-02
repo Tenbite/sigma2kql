@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6530 Add rules for proxy execution via Ntsd, PIX and UE-V AppLauncher
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6530
+// Pull request author: AditiNagpure
+// Change: new rule
+// Title: Suspicious Child Process Of UE-V AppLauncher
+// Sigma ID: 6def4ed1-2425-48c6-91b4-f2710dc4a6f2
+// Status: experimental | Level: medium
+// Author: Aditi Nagpure
+// Date: 2026-10-27 | Modified: -
+// ATT&CK: execution, stealth, T1127
+// Description: Detects "AppLauncher.exe", part of the Microsoft User Experience Virtualization (UE-V) Template
+//   Generator in the Windows ADK, spawning a shell or a common LOLBIN as a child process. Attackers
+//   can abuse this signed tool to proxy execution of arbitrary binaries.
+// False positives:
+//   - Administrators generating UE-V settings location templates for a script host or shell-based application
+// References:
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/AppLauncher/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/1f5bf909d1aed0c116000c632651f0ecc539b2d7/rules/windows/process_creation/proc_creation_win_uev_applauncher_susp_child_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\Microsoft User Experience Virtualization\\Management\\AppLauncher.exe" and ((FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\mshta.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\regsvr32.exe" or FolderPath endswith "\\rundll32.exe" or FolderPath endswith "\\wscript.exe") or (ProcessVersionInfoOriginalFileName in~ ("Cmd.Exe", "cscript.exe", "MSHTA.EXE", "PowerShell.EXE", "pwsh.dll", "REGSVR32.EXE", "RUNDLL32.EXE", "wscript.exe")))

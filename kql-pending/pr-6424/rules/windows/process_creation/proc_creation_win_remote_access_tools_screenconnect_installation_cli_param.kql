@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6424 fix: Remote Access Tool - ScreenConnect Installation Execution - remove optional '&c=' parameter
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6424
+// Pull request author: Securityinbits
+// Change: update to existing rule
+// Title: Remote Access Tool - ScreenConnect Installation Execution
+// Sigma ID: 75bfe6e6-cd8e-429e-91d3-03921e1d7962
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2021-02-11 | Modified: 2026-10-04
+// ATT&CK: persistence, initial-access, T1133
+// Description: Detects ScreenConnect program starts that establish a remote access to a system. The selection
+//   matches the four parameters present in every observed ScreenConnect access launch string: the
+//   session type (e=Access&), the guest role (y=Guest&), the relay port (&p=) and the session key
+//   (&k=). The optional custom-properties parameter (&c=) is not required.
+// False positives:
+//   - Legitimate use by administrative staff
+// References:
+//   - https://www.anomali.com/blog/probable-iranian-cyber-actors-static-kitten-conducting-cyberespionage-campaign-targeting-uae-and-kuwait-government-agencies
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/9e712c626ad1d5edcdc68eb2d2797f30b80d23a7/rules/windows/process_creation/proc_creation_win_remote_access_tools_screenconnect_installation_cli_param.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "e=Access&" and ProcessCommandLine contains "y=Guest&" and ProcessCommandLine contains "&p=" and ProcessCommandLine contains "&k="

@@ -1,0 +1,30 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6258 New rule: Potential Virtualization/Sandbox Evasion Via WMI Or Registry Recon
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6258
+// Pull request author: Ruben-PO
+// Change: new rule
+// Title: Potential Virtualization/Sandbox Evasion Via WMI Or Registry Recon
+// Sigma ID: 15439227-665d-464e-8cc9-661a6eaf99f7
+// Status: experimental | Level: medium
+// Author: Ruben Perez Otero
+// Date: 2026-08-26 | Modified: 2026-09-18
+// ATT&CK: defense-evasion, discovery, T1497.001
+// Description: Detects processes querying well-known WMI classes or registry values used to fingerprint virtual
+//   machines and sandboxes (BIOS/board manufacturer strings, thermal zone presence, disk/video
+//   controller identifiers). This is commonly done by malware and loaders before deciding whether to
+//   detonate their real payload, in order to avoid analysis environments. The only existing Sigma
+//   coverage for this sub-technique targets PowerShell Script Block Logging exclusively; this rule
+//   instead relies on Process Creation, which is far more commonly enabled, and additionally covers
+//   reg.exe invocations.
+// False positives:
+//   - Legitimate IT asset inventory, hardware/software audit, and RMM (Remote Monitoring and Management) tooling routinely queries the same WMI classes and registry values as part of normal hardware discovery. Baseline and, where possible, filter by known-good parent processes or scheduled tasks in your environment.
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/6132b92779873cb0d05bef07ba0a480d47eb1cc8/atomics/T1497.001/T1497.001.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e847b1bcbcc9832383e7678a3ac4791b9ab56e4e/rules/windows/process_creation/proc_creation_win_virt_sandbox_evasion_wmi_registry_recon.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\reg.exe" or ProcessVersionInfoOriginalFileName =~ "reg.exe") and (ProcessCommandLine contains "HARDWARE\\DESCRIPTION\\System" or ProcessCommandLine contains "HARDWARE\\DESCRIPTION\\System\\CentralProcessor") and (ProcessCommandLine contains "SystemBiosVersion" or ProcessCommandLine contains "VideoBiosVersion" or ProcessCommandLine contains "SystemManufacturer" or ProcessCommandLine contains "SystemProductName" or ProcessCommandLine contains "BaseBoardManufacturer" or ProcessCommandLine contains "BaseBoardProduct" or ProcessCommandLine contains "ProcessorNameString" or ProcessCommandLine contains "Identifier")) or (((FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe") or (ProcessVersionInfoOriginalFileName in~ ("PowerShell.EXE", "pwsh.dll"))) and (ProcessCommandLine contains "Get-WmiObject" or ProcessCommandLine contains "Get-CimInstance" or ProcessCommandLine contains "gwmi" or ProcessCommandLine contains "gcim") and (ProcessCommandLine contains "Win32_ComputerSystem" or ProcessCommandLine contains "Win32_BIOS" or ProcessCommandLine contains "Win32_DiskDrive" or ProcessCommandLine contains "Win32_VideoController" or ProcessCommandLine contains "Win32_PnPEntity" or ProcessCommandLine contains "MSAcpi_ThermalZoneTemperature" or ProcessCommandLine contains "Win32_Fan"))

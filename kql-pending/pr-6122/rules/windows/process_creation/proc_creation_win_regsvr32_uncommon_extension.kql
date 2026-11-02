@@ -1,0 +1,25 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6122 update: Regsvr32 detection rules tuning and expansion
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6122
+// Pull request author: swachchhanda000
+// Change: update to existing rule
+// Title: Regsvr32 DLL Execution With Uncommon Extension
+// Sigma ID: 50919691-7302-437f-8e10-1fe088afa145
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2019-07-17 | Modified: 2026-10-18
+// ATT&CK: privilege-escalation, persistence, stealth, T1574, execution
+// Description: Detects a "regsvr32" execution where the DLL doesn't contain a common file extension. Threat
+//   actors often rename their malicious DLLs to often benign file extensions to avoid detection.
+// False positives:
+//   - Other legitimate extensions currently not in the list either from third party or specific Windows components.
+// References:
+//   - https://app.any.run/tasks/34221348-072d-4b70-93f3-aa71f6ebecad/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/fba4b94a2237d0ec8fe1cd5dc9c4c29dc6d3e4c4/rules/windows/process_creation/proc_creation_win_regsvr32_uncommon_extension.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\regsvr32.exe" or ProcessVersionInfoOriginalFileName =~ "REGSVR32.EXE") and (not(((ProcessCommandLine contains ".ax" or ProcessCommandLine contains ".cpl" or ProcessCommandLine contains ".dll" or ProcessCommandLine contains ".ocx") or isnull(ProcessCommandLine) or ProcessCommandLine =~ "" or (ProcessCommandLine in~ ("\"C:\\WINDOWS\\system32\\regsvr32.exe\"", "\"C:\\WINDOWS\\SysWOW64\\regsvr32.exe\""))))) and (not((ProcessCommandLine contains ".ppl" or ProcessCommandLine contains ".bav")))

@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6508 Add Windows rules for T1547.012 Print Processors persistence
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6508
+// Pull request author: ali-vrd
+// Change: new rule
+// Title: Drop Binaries Into Print Processor Directory
+// Sigma ID: 26138a6f-5c63-44ea-a341-c114530124bf
+// Status: experimental | Level: high
+// Author: ialivrd
+// Date: 2026-10-22 | Modified: -
+// ATT&CK: persistence, privilege-escalation, T1547.012
+// Description: Detects the creation of executable files inside the Windows print processor directory. Print
+//   processors are DLLs that are loaded by the print spooler service (spoolsv.exe), which runs as
+//   SYSTEM. Adversaries may drop malicious DLLs in this directory and register them for persistence
+//   and/or privilege escalation as seen in the PipeMon campaign.
+// False positives:
+//   - Legitimate installation of printer software that ships its own print processor
+// References:
+//   - https://www.welivesecurity.com/2020/05/21/no-game-over-winnti-group/
+//   - https://learn.microsoft.com/en-us/windows/win32/printdocs/addprintprocessor
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/4ff1a4fb9b90c019e441903afb0f48d3ec1a084e/rules/windows/file/file_event/file_event_win_susp_print_processor_folder_drop.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where (FolderPath contains "\\spool\\prtprocs\\" and (FolderPath endswith ".dll" or FolderPath endswith ".exe" or FolderPath endswith ".sys")) and (not(((InitiatingProcessFolderPath endswith "\\TrustedInstaller.exe" or InitiatingProcessFolderPath endswith "\\TiWorker.exe") or InitiatingProcessFolderPath endswith "\\spoolsv.exe")))

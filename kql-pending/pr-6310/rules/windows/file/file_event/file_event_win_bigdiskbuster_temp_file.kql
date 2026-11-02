@@ -1,0 +1,30 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6310 new: Potential BigDiskBuster-Like Buster-File Creation in TEMP
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6310
+// Pull request author: DevCop95
+// Change: new rule
+// Title: Potential BigDiskBuster-Like Buster-File Creation in TEMP
+// Sigma ID: 15755e6b-a54d-4a6e-9773-554c724f8a63
+// Status: experimental | Level: medium
+// Author: DevCop95
+// Date: 2026-09-20 | Modified: -
+// ATT&CK: defense-impairment, T1685
+// Description: Detects the creation of GUID-braced files in user TEMP directories. This corresponds to the
+//   buster-file stage of the BigDiskBuster technique, where hidden files sized to all free disk
+//   space are created to cause Windows Defender platform and signature updates to fail due to disk
+//   exhaustion.
+// False positives:
+//   - Software installers staging temporary payloads using GUID-braced names
+//   - Developer test suites creating GUID-named temporary fixtures
+// References:
+//   - https://github.com/DevCop95/BDB-Guardian
+//   - https://github.com/MSNightmare/BigDiskBuster
+//   - https://www.levelblue.com/blogs/spiderlabs-blog/filling-the-well-nightmare-eclipses-bigdiskbuster-and-the-defender-update-that-never-lands
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/045197a3c9ce6642816f7bd2416d74d994b014ec/rules/windows/file/file_event/file_event_win_bigdiskbuster_temp_file.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where FolderPath matches regex "\\\\AppData\\\\Local\\\\Temp\\\\\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}$" and (not((InitiatingProcessFolderPath in~ ("C:\\Windows\\System32\\taskhost.exe", "C:\\Windows\\SysWOW64\\taskhost.exe")))) and (not(((InitiatingProcessFolderPath endswith "\\TeamViewer\\tv_x64.exe" or InitiatingProcessFolderPath endswith "\\TeamViewer\\tv_w32.exe") or (InitiatingProcessFolderPath contains "\\.vscode\\extensions\\" and InitiatingProcessFolderPath endswith "\\cpptools.exe") or (InitiatingProcessFolderPath startswith "C:\\Users\\" and InitiatingProcessFolderPath contains "\\AppData\\Local\\Temp\\" and InitiatingProcessFolderPath endswith "\\target.exe"))))

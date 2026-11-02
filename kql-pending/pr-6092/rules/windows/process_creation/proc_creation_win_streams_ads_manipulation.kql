@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6092 Add ADS abuse and signed-binary LOLBIN detection rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6092
+// Pull request author: einlamye
+// Change: new rule
+// Title: Alternate Data Stream Manipulation Via Streams.EXE
+// Sigma ID: 03d5e4aa-7040-464f-80bf-0744c3c20f19
+// Status: experimental | Level: medium
+// Author: EinLamYe
+// Date: 2026-06-29 | Modified: -
+// ATT&CK: stealth, T1564.004, T1070
+// Description: Detects execution of the Sysinternals Streams utility, used to enumerate or delete NTFS
+//   Alternate Data Streams. Adversaries abuse it to inspect, strip Mark-of-the-Web, or remove ADS-
+//   hidden payloads as an anti-forensic / defense-evasion action.
+// False positives:
+//   - Administrators inspecting alternate data streams
+// References:
+//   - https://learn.microsoft.com/en-us/sysinternals/downloads/streams
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/c5875f6ddd2f5087d0f0a63a34a2ed4468a9d328/rules/windows/process_creation/proc_creation_win_streams_ads_manipulation.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\streams.exe" or FolderPath endswith "\\streams64.exe") or ProcessVersionInfoOriginalFileName =~ "streams.exe"

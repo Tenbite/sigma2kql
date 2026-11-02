@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: HackTool - Dumpert Process Dumper Default File
+// Sigma ID: 93d94efc-d7ad-4161-ad7d-1638c4f908d8
+// Status: test | Level: critical
+// Author: Florian Roth (Nextron Systems)
+// Date: 2020-02-04 | Modified: 2023-05-09
+// ATT&CK: credential-access, T1003.001
+// Description: Detects the creation of the default dump file used by Outflank Dumpert tool. A process dumper,
+//   which dumps the lsass process memory
+// False positives:
+//   - Very unlikely
+// References:
+//   - https://github.com/outflanknl/Dumpert
+//   - https://unit42.paloaltonetworks.com/actors-still-exploiting-sharepoint-vulnerability/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/file/file_event/file_event_win_hktl_dumpert.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where FolderPath endswith "dumpert.dmp"

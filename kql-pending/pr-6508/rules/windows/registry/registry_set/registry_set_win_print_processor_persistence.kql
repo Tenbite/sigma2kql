@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6508 Add Windows rules for T1547.012 Print Processors persistence
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6508
+// Pull request author: ali-vrd
+// Change: new rule
+// Title: Potential Print Processor Persistence Via Registry
+// Sigma ID: 54f43364-0af7-4bc4-abf7-5d1d63fb88a1
+// Status: experimental | Level: high
+// Author: ialivrd
+// Date: 2026-10-22 | Modified: -
+// ATT&CK: persistence, privilege-escalation, T1547.012
+// Description: Detects the registration of a new print processor through the "Print Processors" registry key.
+//   Print processors are DLLs that are loaded by the print spooler service (spoolsv.exe), which runs
+//   as SYSTEM. Adversaries may abuse this mechanism to execute malicious DLLs for persistence and/or
+//   privilege escalation.
+// False positives:
+//   - Legitimate installation of third-party printer software that registers its own print processor
+// References:
+//   - https://www.welivesecurity.com/2020/05/21/no-game-over-winnti-group/
+//   - https://learn.microsoft.com/en-us/windows/win32/printdocs/addprintprocessor
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/4ff1a4fb9b90c019e441903afb0f48d3ec1a084e/rules/windows/registry/registry_set/registry_set_win_print_processor_persistence.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+// Note: 2 wildcard comparison(s) rewritten to 'matches regex' (KQL treats * in contains/endswith/== as a literal character)
+
+DeviceRegistryEvents
+| where (RegistryKey matches regex @"(?i)\\Control\\Print\\Environments.*$" and RegistryKey matches regex @"(?i)\\Print Processors.*$") and (not((InitiatingProcessFolderPath endswith "\\spoolsv.exe" and RegistryValueData endswith "winprint.dll")))

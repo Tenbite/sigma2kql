@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6506 new: Add php2shell (CVE-2026-109618/9) detection rules and update existing webshell coverage
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6506
+// Pull request author: swachchhanda000
+// Change: update to existing rule
+// Title: Webshell Tool Reconnaissance Activity
+// Sigma ID: f64e5c19-879c-4bae-b471-6d84c8339677
+// Status: test | Level: high
+// Author: Cian Heasley, Florian Roth (Nextron Systems)
+// Date: 2020-07-22 | Modified: 2026-10-22
+// ATT&CK: persistence, T1505.003
+// Description: Detects processes spawned from web servers (PHP, Tomcat, IIS, etc.) that perform reconnaissance
+//   looking for the existence of popular scripting tools (perl, python, wget) on the system via the
+//   help commands
+// False positives:
+//   - Unknown
+// References:
+//   - https://ragged-lab.blogspot.com/2020/07/webshells-automating-reconnaissance.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e611049e02f5f9b9dd2c40c87f77f5e349275f2c/rules/windows/process_creation/proc_creation_win_webshell_tool_recon.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((InitiatingProcessFolderPath endswith "\\ArcSOC.exe" or InitiatingProcessFolderPath endswith "\\apache.exe" or InitiatingProcessFolderPath endswith "\\apache2.exe" or InitiatingProcessFolderPath endswith "\\caddy.exe" or InitiatingProcessFolderPath endswith "\\frankenphp.exe" or InitiatingProcessFolderPath endswith "\\httpd.exe" or InitiatingProcessFolderPath endswith "\\iisexpress.exe" or InitiatingProcessFolderPath endswith "\\lighttpd.exe" or InitiatingProcessFolderPath endswith "\\nginx.exe" or InitiatingProcessFolderPath endswith "\\php-cgi.exe" or InitiatingProcessFolderPath endswith "\\php-fpm.exe" or InitiatingProcessFolderPath endswith "\\php-win.exe" or InitiatingProcessFolderPath endswith "\\php.exe" or InitiatingProcessFolderPath endswith "\\phpdbg.exe" or InitiatingProcessFolderPath endswith "\\roadrunner.exe" or InitiatingProcessFolderPath endswith "\\tomcat.exe" or InitiatingProcessFolderPath endswith "\\tomcat10.exe" or InitiatingProcessFolderPath endswith "\\tomcat9.exe" or InitiatingProcessFolderPath endswith "\\unit.exe" or InitiatingProcessFolderPath endswith "\\w3wp.exe" or InitiatingProcessFolderPath endswith "\\ws_tomcatservice.exe") or ((InitiatingProcessFolderPath endswith "\\java.exe" or InitiatingProcessFolderPath endswith "\\javaw.exe") and (InitiatingProcessFolderPath contains "-tomcat-" or InitiatingProcessFolderPath contains "\\tomcat")) or ((InitiatingProcessFolderPath endswith "\\java.exe" or InitiatingProcessFolderPath endswith "\\javaw.exe") and (ProcessCommandLine contains "CATALINA_HOME" or ProcessCommandLine contains "catalina.jar"))) and (ProcessCommandLine contains "perl --help" or ProcessCommandLine contains "perl -h" or ProcessCommandLine contains "python --help" or ProcessCommandLine contains "python -h" or ProcessCommandLine contains "python3 --help" or ProcessCommandLine contains "python3 -h" or ProcessCommandLine contains "wget --help")

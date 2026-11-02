@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5871 Add detection for suspicious DNS parsing/execution chain via Run dial…
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5871
+// Pull request author: thredb
+// Change: new rule
+// Title: Suspicious DNS Parsing Or Execution Chain Via Run Dialog
+// Sigma ID: b2b0c81d-9811-4788-94af-52021df33f39
+// Status: experimental | Level: high
+// Author: Davide Ciacciolo (Gyala S.r.l.), Andrea Ottolino (Gyala S.r.l.)
+// Date: 2026-02-16 | Modified: -
+// ATT&CK: execution, T1204.004, T1059.001, T1059.003, command-and-control, T1071.004, T1105
+// Description: Detects suspicious command lines executed via the Windows Run dialog that combine DNS lookup
+//   commands with output parsing or execution primitives commonly seen in ClickFix-style staging
+//   activity.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.microsoft.com/en-us/security/blog/2025/08/21/think-before-you-clickfix-analyzing-the-clickfix-social-engineering-technique/
+//   - https://thehackernews.com/2026/02/microsoft-discloses-dns-based-clickfix.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/b0c390d3e561fdf4e844acc73284c72359db5146/rules/windows/process_creation/proc_creation_win_susp_dns_parsing_or_execution_run_dialog.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\explorer.exe" and (FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe") and (ProcessCommandLine contains "nslookup" or ProcessCommandLine contains "Resolve-DnsName" or ProcessCommandLine contains "certutil -dns" or ProcessCommandLine contains "dig") and ((ProcessCommandLine contains "for /f" or ProcessCommandLine contains "tokens=" or ProcessCommandLine contains "delims=" or ProcessCommandLine contains "more" or ProcessCommandLine contains "findstr" or ProcessCommandLine contains "Select-String" or ProcessCommandLine contains "Out-String") or (ProcessCommandLine contains "| cmd" or ProcessCommandLine contains "| powershell" or ProcessCommandLine contains "| pwsh" or ProcessCommandLine contains "iex" or ProcessCommandLine contains "Invoke-Expression" or ProcessCommandLine contains "Invoke-Command" or ProcessCommandLine contains "iwr" or ProcessCommandLine contains "Invoke-WebRequest" or ProcessCommandLine contains "curl" or ProcessCommandLine contains "wget" or ProcessCommandLine contains "Start-BitsTransfer" or ProcessCommandLine contains "WebClient" or ProcessCommandLine contains "DownloadString" or ProcessCommandLine contains "DownloadFile"))

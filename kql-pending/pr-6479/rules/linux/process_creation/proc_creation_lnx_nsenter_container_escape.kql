@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6479 new: Cloud IMDS Credential Theft and Nsenter Container Escape detections
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6479
+// Pull request author: Gideon145
+// Change: new rule
+// Title: Nsenter Escape to Host Namespace
+// Sigma ID: b48ed9ae-609f-4c0f-a1ac-c687aa1ee11b
+// Status: experimental | Level: high
+// Author: Gideon Opukeme
+// Date: 2026-10-18 | Modified: -
+// ATT&CK: privilege-escalation, T1611
+// Description: Detects the use of nsenter to enter the host process and mount namespaces from within a
+//   container. This is a common container escape technique used to break out of a container and
+//   execute commands on the underlying host.
+// False positives:
+//   - Administrators using nsenter to debug or manage containers from the host
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1611/T1611.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/9e6f2ce2ad48879a6a46c8bb7909a9c5271c41c4/rules/linux/process_creation/proc_creation_lnx_nsenter_container_escape.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "/nsenter" and (ProcessCommandLine contains "--mount=/proc/1/ns/" or ProcessCommandLine contains "--net=/proc/1/ns/" or ProcessCommandLine contains "-t 1" or ProcessCommandLine contains "--target 1")

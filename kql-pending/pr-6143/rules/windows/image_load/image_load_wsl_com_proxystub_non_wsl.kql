@@ -1,0 +1,33 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6143 new: WSL COM Proxy-Stub Loaded by Non-WSL Process
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6143
+// Pull request author: Thanh-WuTan
+// Change: new rule
+// Title: WSL COM Proxy-Stub Loaded by Non-WSL Process
+// Sigma ID: 16926aae-e41e-4978-b704-855ae7cea9e7
+// Status: experimental | Level: high
+// Author: Ai Thanh Vu, VinSOC Lab
+// Date: 2026-07-15 | Modified: -
+// ATT&CK: execution, T1559.001
+// Description: Detects a process that is not a known Windows Subsystem for Linux (WSL) binary loading
+//   "wslserviceproxystub.dll", the COM proxy-stub used to marshal calls to the ILxssUserSession
+//   interface exposed by wslservice.exe. Tooling that starts WSL guest execution by calling
+//   CreateLxProcess over COM directly, without spawning wsl.exe, must load this proxy-stub to
+//   marshal the interface. A load by a non-WSL image is therefore a strong indicator of COM-based
+//   WSL activation that leaves no wsl.exe command line for process-creation detections to observe.
+// False positives:
+//   - Windows Subsystem for Linux management or endpoint-security tooling that legitimately activates the WSL COM interface; allowlist by image path or code signer
+//   - Future first-party WSL client binaries not present in the filter list
+// References:
+//   - https://specterops.io/blog/2026/01/16/one-wsl-bof-to-rule-them-all/
+//   - https://github.com/MayerDaniel/the-one-wsl-bof
+//   - https://jonny-johnson.medium.com/wsl-com-hooking-rtti-3abbf873d61f
+//   - https://github.com/microsoft/WSL/blob/master/doc/docs/technical-documentation/wslservice.exe.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/784c6313186227250812bef0cc6c1a70c398ced1/rules/windows/image_load/image_load_wsl_com_proxystub_non_wsl.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceImageLoadEvents
+| where FolderPath endswith "\\wslserviceproxystub.dll" and (not((InitiatingProcessFolderPath endswith "\\wsl.exe" or InitiatingProcessFolderPath endswith "\\wslservice.exe" or InitiatingProcessFolderPath endswith "\\wslhost.exe" or InitiatingProcessFolderPath endswith "\\wslrelay.exe" or InitiatingProcessFolderPath endswith "\\wslg.exe" or InitiatingProcessFolderPath endswith "\\wslconfig.exe" or InitiatingProcessFolderPath endswith "\\wsldevicehost.exe")))

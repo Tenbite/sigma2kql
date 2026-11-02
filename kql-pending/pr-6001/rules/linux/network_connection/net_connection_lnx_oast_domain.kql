@@ -1,0 +1,32 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6001 new: 13 Linux detection rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6001
+// Pull request author: saakovv
+// Change: new rule
+// Title: Linux Network Connection to OAST Domain
+// Sigma ID: d1a5b8f3-3e9c-4b42-d4f1-2c6a9e5b8d30
+// Status: experimental | Level: high
+// Author: Ivan Saakov
+// Date: 2026-05-10 | Modified: -
+// ATT&CK: command-and-control, T1071.001
+// Description: Detects outbound network connections from Linux hosts to known Out-of-Band Application Security
+//   Testing (OAST) infrastructure domains such as Burp Collaborator, Interactsh, Canarytokens, and
+//   similar callback services. In production environments these connections indicate successful
+//   exploitation of a blind vulnerability such as blind RCE, blind SSRF, blind SQLi, or XXE
+//   injection, where the attacker injected a payload that forced the server to reach out to an
+//   external callback endpoint they control.
+// False positives:
+//   - Authorized red team exercise using OAST infrastructure
+//   - Security researchers testing web applications in a non-production environment
+// References:
+//   - https://portswigger.net/burp/documentation/collaborator
+//   - https://github.com/projectdiscovery/interactsh
+//   - https://canarytokens.org/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e5bac28da3655c33390db7ef1503db8cd3babb5f/rules/linux/network_connection/net_connection_lnx_oast_domain.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceNetworkEvents
+| where RemoteUrl contains "burpcollaborator.net" or RemoteUrl contains "oastify.com" or RemoteUrl contains "interact.sh" or RemoteUrl contains "oast.pro" or RemoteUrl contains "oast.site" or RemoteUrl contains "oast.online" or RemoteUrl contains "oast.fun" or RemoteUrl contains "oast.me" or RemoteUrl contains "canarytokens.com" or RemoteUrl contains "dnslog.cn" or RemoteUrl contains "ceye.io" or RemoteUrl contains "requestbin.net" or RemoteUrl contains "webhook.site" or RemoteUrl contains "pipedream.net" or RemoteUrl contains "interactsh.com"

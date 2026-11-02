@@ -1,0 +1,32 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6519 new: Systemd Generator Created
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6519
+// Pull request author: jejex0
+// Change: new rule
+// Title: Systemd Generator Created
+// Sigma ID: 5d177477-2a4d-401e-a78b-1a24ba5c2238
+// Status: experimental | Level: medium
+// Author: jejex0
+// Date: 2026-10-26 | Modified: -
+// ATT&CK: persistence, privilege-escalation, T1037, T1543.002
+// Description: Detects the creation of files in systemd generator directories. Systemd executes generators very
+//   early during boot and on configuration reload to dynamically generate unit files, symlinks, or
+//   drop-ins. An adversary can create a malicious generator to execute arbitrary code before regular
+//   services start and maintain persistence. System generators run as root, while user generators
+//   run with the privileges of the user session.
+// False positives:
+//   - Legitimate systemd package upgrades or custom generators deployed by administrators
+//   - Package managers or configuration management tools creating generator files
+//   - Temporary editor files created in generator directories
+// References:
+//   - https://pberba.github.io/security/2022/02/07/linux-threat-hunting-for-persistence-systemd-generators/
+//   - https://www.elastic.co/security-labs/primer-on-persistence-mechanisms
+//   - https://www.freedesktop.org/software/systemd/man/latest/systemd.generator.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/2a62432d7decfb5e98c3ae3ea5175b4715ca9168/rules/linux/file_event/file_event_lnx_persistence_systemd_generator_created.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where (FolderPath startswith "/etc/systemd/system-generators/" or FolderPath startswith "/etc/systemd/user-generators/" or FolderPath startswith "/lib/systemd/system-generators/" or FolderPath startswith "/lib/systemd/user-generators/" or FolderPath startswith "/run/systemd/system-generators/" or FolderPath startswith "/run/systemd/user-generators/" or FolderPath startswith "/usr/lib/systemd/system-generators/" or FolderPath startswith "/usr/lib/systemd/user-generators/" or FolderPath startswith "/usr/local/lib/systemd/system-generators/" or FolderPath startswith "/usr/local/lib/systemd/user-generators/") and (not(((InitiatingProcessFolderPath endswith "/apk" or InitiatingProcessFolderPath endswith "/apt" or InitiatingProcessFolderPath endswith "/apt-get" or InitiatingProcessFolderPath endswith "/dnf" or InitiatingProcessFolderPath endswith "/dnf-automatic" or InitiatingProcessFolderPath endswith "/dpkg" or InitiatingProcessFolderPath endswith "/dpkg-divert" or InitiatingProcessFolderPath endswith "/microdnf" or InitiatingProcessFolderPath endswith "/pacman" or InitiatingProcessFolderPath endswith "/packagekitd" or InitiatingProcessFolderPath endswith "/rpm" or InitiatingProcessFolderPath endswith "/snapd" or InitiatingProcessFolderPath endswith "/yum" or InitiatingProcessFolderPath endswith "/zypper") or (FolderPath endswith ".dpkg-new" or FolderPath endswith ".dpkg-remove" or FolderPath endswith ".swp" or FolderPath endswith ".swpx" or FolderPath endswith ".swx"))))

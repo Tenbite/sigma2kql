@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Whoami.EXE Execution From Privileged Process
+// Sigma ID: 79ce34ca-af29-4d0e-b832-fc1b377020db
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems), Teymur Kheirkhabarov
+// Date: 2022-01-28 | Modified: 2023-12-04
+// ATT&CK: privilege-escalation, discovery, T1033
+// Description: Detects the execution of "whoami.exe" by privileged accounts that are often abused by threat
+//   actors
+// False positives:
+//   - Unknown
+// References:
+//   - https://speakerdeck.com/heirhabarov/hunting-for-privilege-escalation-in-windows-environment
+//   - https://web.archive.org/web/20221019044836/https://nsudo.m2team.org/en-us/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_whoami_execution_from_high_priv_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (ProcessVersionInfoOriginalFileName =~ "whoami.exe" or FolderPath endswith "\\whoami.exe") and (AccountName contains "AUTHORI" or AccountName contains "AUTORI" or AccountName contains "TrustedInstaller")

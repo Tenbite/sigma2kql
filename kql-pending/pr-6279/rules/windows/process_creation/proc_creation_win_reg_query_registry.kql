@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Potential Configuration And Service Reconnaissance Via Reg.EXE
+// Sigma ID: 970007b7-ce32-49d0-a4a4-fbef016950bd
+// Status: test | Level: medium
+// Author: Timur Zinniatullin, oscd.community
+// Date: 2019-10-21 | Modified: 2026-10-19
+// ATT&CK: discovery, T1012, T1007
+// Description: Detects the usage of "reg.exe" in order to query reconnaissance information from the registry.
+//   Adversaries may interact with the Windows registry to gather information about credentials, the
+//   system, configuration, and installed software.
+// False positives:
+//   - Discord
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1012/T1012.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_reg_query_registry.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\reg.exe" or ProcessVersionInfoOriginalFileName =~ "reg.exe") and ProcessCommandLine contains " query " and (ProcessCommandLine contains "currentVersion\\windows" or ProcessCommandLine contains "winlogon\\" or ProcessCommandLine contains "currentVersion\\shellServiceObjectDelayLoad" or ProcessCommandLine contains "currentVersion\\run" or ProcessCommandLine contains "currentVersion\\policies\\explorer\\run" or ProcessCommandLine contains "currentcontrolset\\services")) and (not((InitiatingProcessFolderPath endswith "\\Yammer.exe" and ProcessCommandLine =~ "C:\\Windows\\system32\\reg.exe QUERY HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v Yammer")))

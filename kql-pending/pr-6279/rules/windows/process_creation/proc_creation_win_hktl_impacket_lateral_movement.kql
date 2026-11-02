@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: HackTool - Potential Impacket Lateral Movement Activity
+// Sigma ID: 10c14723-61c7-4c75-92ca-9af245723ad2
+// Status: stable | Level: high
+// Author: Ecco, oscd.community, Jonhnathan Ribeiro, Tim Rauch
+// Date: 2019-09-03 | Modified: 2023-02-21
+// ATT&CK: execution, T1047, lateral-movement, T1021.003
+// Description: Detects wmiexec/dcomexec/atexec/smbexec from Impacket framework
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/SecureAuthCorp/impacket/blob/8b1a99f7c715702eafe3f24851817bb64721b156/examples/wmiexec.py
+//   - https://github.com/SecureAuthCorp/impacket/blob/8b1a99f7c715702eafe3f24851817bb64721b156/examples/atexec.py
+//   - https://github.com/SecureAuthCorp/impacket/blob/8b1a99f7c715702eafe3f24851817bb64721b156/examples/smbexec.py
+//   - https://github.com/SecureAuthCorp/impacket/blob/8b1a99f7c715702eafe3f24851817bb64721b156/examples/dcomexec.py
+//   - https://www.elastic.co/guide/en/security/current/suspicious-cmd-execution-via-wmi.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_hktl_impacket_lateral_movement.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((InitiatingProcessFolderPath endswith "\\wmiprvse.exe" or InitiatingProcessFolderPath endswith "\\mmc.exe" or InitiatingProcessFolderPath endswith "\\explorer.exe" or InitiatingProcessFolderPath endswith "\\services.exe") and (ProcessCommandLine contains "cmd.exe" and ProcessCommandLine contains "/Q" and ProcessCommandLine contains "/c" and ProcessCommandLine contains "\\\\127.0.0.1\\" and ProcessCommandLine contains "&1")) or ((InitiatingProcessCommandLine contains "svchost.exe -k netsvcs" or InitiatingProcessCommandLine contains "taskeng.exe") and (ProcessCommandLine contains "cmd.exe" and ProcessCommandLine contains "/C" and ProcessCommandLine contains "Windows\\Temp\\" and ProcessCommandLine contains "&1"))

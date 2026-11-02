@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6335 Add OpenAI Codex CLI approval and sandbox bypass detection
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6335
+// Pull request author: iampelumiade
+// Change: new rule
+// Title: OpenAI Codex CLI Approval and Sandbox Bypass Mode
+// Sigma ID: a4a836c2-4612-4a56-ba67-6ac3e1e49b38
+// Status: experimental | Level: medium
+// Author: Michael Adedeji
+// Date: 2026-09-26 | Modified: -
+// Description: Detects execution of the OpenAI Codex CLI with command-line options that bypass approval prompts
+//   and sandbox restrictions. The "--dangerously-bypass-approvals-and-sandbox" option skips
+//   confirmation prompts and executes commands without sandboxing. The "--yolo" option is an alias
+//   for the same behavior. This mode is intended for environments that provide an external isolation
+//   boundary.
+// False positives:
+//   - Legitimate use in isolated development, testing, or automation environments where approval and sandbox bypass behavior is explicitly intended.
+// References:
+//   - https://github.com/openai/codex/blob/06f97622f8529feef0d230fc37519c36c6bb2eeb/codex-rs/utils/cli/src/shared_options.rs
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/16f0ad34fe5766d6d5a85d164e62a6680e859145/rules/windows/process_creation/proc_creation_win_codex_approval_sandbox_bypass.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "\\codex.exe" and (ProcessCommandLine contains "--dangerously-bypass-approvals-and-sandbox" or ProcessCommandLine contains "--yolo")

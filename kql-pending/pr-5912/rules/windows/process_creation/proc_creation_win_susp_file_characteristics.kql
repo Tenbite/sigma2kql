@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5912 Update rule Suspicious File Characteristics Due to Missing Fields to include additional values
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5912
+// Pull request author: FlorianBracq
+// Change: update to existing rule
+// Title: Suspicious File Characteristics Due to Missing Fields
+// Sigma ID: 9637e8a5-7131-4f7f-bdc7-2b05d8670c43
+// Status: test | Level: medium
+// Author: Markus Neis, Sander Wiebing
+// Date: 2018-11-22 | Modified: 2026-03-24
+// ATT&CK: execution, T1059.006
+// Description: Detects Executables in the Downloads folder without FileVersion,Description,Product,Company
+//   likely created with py2exe
+// False positives:
+//   - Rarely there are benign executables that have no VERSION INFORMATION that need to be base lined
+// References:
+//   - https://securelist.com/muddywater/88059/
+//   - https://www.virustotal.com/#/file/276a765a10f98cda1a38d3a31e7483585ca3722ecad19d784441293acf1b7beb/detection
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/295c846b85e274d0bf01569bffbc2ab9abf539a9/rules/windows/process_creation/proc_creation_win_susp_file_characteristics.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((ProcessVersionInfoFileDescription =~ "?" and ProcessVersionInfoProductVersion =~ "?") or (ProcessVersionInfoFileDescription =~ "?" and ProcessVersionInfoProductName =~ "?") or (ProcessVersionInfoFileDescription =~ "?" and ProcessVersionInfoCompanyName =~ "?") or (ProcessVersionInfoFileDescription =~ "" and ProcessVersionInfoProductVersion =~ "" and ProcessVersionInfoProductName =~ "" and ProcessVersionInfoCompanyName =~ "") or (isnull(ProcessVersionInfoFileDescription) and isnull(ProcessVersionInfoProductVersion) and isnull(ProcessVersionInfoProductName) and isnull(ProcessVersionInfoCompanyName))) and FolderPath contains "\\Downloads\\"

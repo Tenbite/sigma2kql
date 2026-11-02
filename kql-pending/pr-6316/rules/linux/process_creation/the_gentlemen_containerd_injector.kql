@@ -1,0 +1,24 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6316 Add detection rule for containerd systemd hijacking. Tag The Gentlemen.
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6316
+// Pull request author: cybercoldiceberg
+// Change: new rule
+// Title: Masqueraded Containerd Systemd Hijacking and Shadow X11 Persistence
+// Sigma ID: 4f7d3a2b-9655-4c2a-9e16-1601bc9555cf
+// Status: experimental | Level: critical
+// Author: CyberCold
+// Date: 2026-09-21 | Modified: -
+// Description: Detects a malicious binary masquerading as containerd/dockerd using D-Bus to manipulate systemd,
+//   creating virtual X11 display locks, and utilizing Tor fallback channels.
+// False positives:
+//   - Highly customized administrative maintenance scripts altering local cluster runtimes.
+// References:
+//   - Internal Incident Report: Operational BlueTrace (INC-2026-09-16-01)
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/551d97ca20c7e4a046f56391a864b81a2071de89/rules/linux/process_creation/the_gentlemen_containerd_injector.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "/containerd" or FolderPath endswith "/dockerd") and (not((FolderPath startswith "/usr/bin/" or FolderPath startswith "/usr/local/bin/" or FolderPath startswith "/run/containerd/")))) or (ProcessCommandLine contains "/tmp/.X1024-lock" or ProcessCommandLine contains "/tmp/.X1025-lock") or (ProcessCommandLine contains "listen.onion" or ProcessCommandLine contains "socks5://") or (ProcessCommandLine contains "systemctl stop containerd" or ProcessCommandLine contains "systemctl disable containerd" or ProcessCommandLine contains "systemctl stop docker.service")

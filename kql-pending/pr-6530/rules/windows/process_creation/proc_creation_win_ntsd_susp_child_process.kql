@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6530 Add rules for proxy execution via Ntsd, PIX and UE-V AppLauncher
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6530
+// Pull request author: AditiNagpure
+// Change: new rule
+// Title: Suspicious Child Process Of Ntsd.EXE
+// Sigma ID: 2ead58ff-53ba-443c-ba82-87c0ec698b1f
+// Status: experimental | Level: medium
+// Author: Aditi Nagpure
+// Date: 2026-10-27 | Modified: -
+// ATT&CK: execution, stealth, T1127
+// Description: Detects "ntsd.exe" (Microsoft NT Symbolic Debugger) spawning a shell or a common LOLBIN as a
+//   child process. Attackers can abuse this signed debugger to proxy execution of arbitrary
+//   commands, for example via the "-g" flag.
+// False positives:
+//   - Developers debugging scripts or command-line tools with ntsd
+// References:
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Ntsd/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/1f5bf909d1aed0c116000c632651f0ecc539b2d7/rules/windows/process_creation/proc_creation_win_ntsd_susp_child_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\ntsd.exe" and ((FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\mshta.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\regsvr32.exe" or FolderPath endswith "\\rundll32.exe" or FolderPath endswith "\\wscript.exe") or (ProcessVersionInfoOriginalFileName in~ ("Cmd.Exe", "cscript.exe", "MSHTA.EXE", "PowerShell.EXE", "pwsh.dll", "REGSVR32.EXE", "RUNDLL32.EXE", "wscript.exe")))

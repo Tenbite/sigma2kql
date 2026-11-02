@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6122 update: Regsvr32 detection rules tuning and expansion
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6122
+// Pull request author: swachchhanda000
+// Change: update to existing rule
+// Title: Potential Regsvr32 Commandline Flag Anomaly
+// Sigma ID: b236190c-1c61-41e9-84b3-3fe03f6d76b0
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2019-07-13 | Modified: 2026-10-18
+// ATT&CK: stealth, T1218.010
+// Description: Detects regsvr32 invocations where the "/i" (DllInstall) flag is used without "/n" (skip
+//   DllRegisterServer/DllUnregisterServer). Legitimate use of "/i" is normally paired with "/n"
+//   since DllInstall is meant as an alternative to the standard registration path. When "/n" is
+//   absent, regsvr32 both registers the DLL and runs DllInstall, which is an unusual combination
+//   outside of abuse scenarios.
+// False positives:
+//   - Administrator typo might cause some false positives
+// References:
+//   - https://twitter.com/sbousseaden/status/1282441816986484737?s=12
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/fba4b94a2237d0ec8fe1cd5dc9c4c29dc6d3e4c4/rules/windows/process_creation/proc_creation_win_regsvr32_flags_anomaly.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\regsvr32.exe" or ProcessVersionInfoOriginalFileName =~ "REGSVR32.EXE") and (ProcessCommandLine contains " -i" or ProcessCommandLine contains " /i" or ProcessCommandLine contains " –i" or ProcessCommandLine contains " —i" or ProcessCommandLine contains " ―i")) and (not(ProcessCommandLine contains " -n " or ProcessCommandLine contains " /n " or ProcessCommandLine contains " –n " or ProcessCommandLine contains " —n " or ProcessCommandLine contains " ―n "))

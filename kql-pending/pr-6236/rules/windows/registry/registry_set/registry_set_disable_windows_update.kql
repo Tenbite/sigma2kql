@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6236 new: closes #4542 - add rules for IFEO Debugger tampering, disabling usb storage and windowsupdate
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6236
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: Windows Update Disabled Via Registry
+// Sigma ID: 1bff5de9-819d-41f3-90cd-b4dae2443bef
+// Status: experimental | Level: medium
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-08-14 | Modified: -
+// ATT&CK: defense-impairment, T1685
+// Description: Detects registry modifications that disable Windows Update automatic updates or block access to
+//   the Windows Update service entirely. Malware and ransomware commonly disable Windows Update to
+//   prevent security patches from being applied and to stop update-triggered reboots that could
+//   interfere with their operation.
+// False positives:
+//   - Legitimate disabling of Windows Update via Group Policy or other administrative tools
+// References:
+//   - https://github.com/jebofponderworthy/windows-tools/blob/d43204b11e47163f842b5a4ffd76163f27ef69e2/incoming/Enable-Windows-Update-Using-Registry.ps1
+//   - https://github.com/jebofponderworthy/windows-tools/blob/7039ad4326793ff3e6935e1ee8bdd3694cb71793/tools/update-windows-with-reboot.ps1
+//   - https://github.com/Siradankullanici/OpenSourceViruses/blob/3267564a35f6e13559a3119eb68d0da8d2e91a0a/suspiciousregchangesandtaskkils
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e6fa05ce10d4092a1de7d7380da240a34a30b555/rules/windows/registry/registry_set/registry_set_disable_windows_update.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceRegistryEvents
+| where (RegistryKey contains "\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate" or RegistryKey contains "\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer" or RegistryKey contains "\\SYSTEM\\Internet Communication Management\\Internet Communication") and (RegistryKey endswith "\\AU\\NoAutoUpdate" or RegistryKey endswith "\\DisableWindowsUpdateAccess") and RegistryValueData =~ "DWORD (0x00000001)"

@@ -1,0 +1,25 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Code Execution via Pcwutl.dll
+// Sigma ID: 9386d78a-7207-4048-9c9f-a93a7c2d1c05
+// Status: test | Level: medium
+// Author: Julia Fomina, oscd.community
+// Date: 2020-10-05 | Modified: 2023-02-09
+// ATT&CK: stealth, T1218.011
+// Description: Detects launch of executable by calling the LaunchApplication function from pcwutl.dll library.
+// False positives:
+//   - Use of Program Compatibility Troubleshooter Helper
+// References:
+//   - https://lolbas-project.github.io/lolbas/Libraries/Pcwutl/
+//   - https://twitter.com/harr0ey/status/989617817849876488
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_lolbin_pcwutl.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\rundll32.exe" or ProcessVersionInfoOriginalFileName =~ "RUNDLL32.EXE") and (ProcessCommandLine contains "pcwutl" and ProcessCommandLine contains "LaunchApplication")

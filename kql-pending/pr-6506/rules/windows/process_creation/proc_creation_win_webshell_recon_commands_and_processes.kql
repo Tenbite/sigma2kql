@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6506 new: Add php2shell (CVE-2026-109618/9) detection rules and update existing webshell coverage
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6506
+// Pull request author: swachchhanda000
+// Change: update to existing rule
+// Title: Webshell Detection With Command Line Keywords
+// Sigma ID: bed2a484-9348-4143-8a8a-b801c979301c
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, Anton Kutepov, oscd.community, Chad Hudson, Matt Anderson
+// Date: 2017-01-01 | Modified: 2026-10-22
+// ATT&CK: persistence, discovery, T1505.003, T1018, T1033, T1087
+// Description: Detects certain command line parameters often used during reconnaissance activity via web shells
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.fireeye.com/blog/threat-research/2013/08/breaking-down-the-china-chopper-web-shell-part-ii.html
+//   - https://unit42.paloaltonetworks.com/bumblebee-webshell-xhunt-campaign/
+//   - https://www.huntress.com/blog/threat-advisory-oh-no-cleo-cleo-software-actively-being-exploited-in-the-wild
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e611049e02f5f9b9dd2c40c87f77f5e349275f2c/rules/windows/process_creation/proc_creation_win_webshell_recon_commands_and_processes.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((InitiatingProcessFolderPath endswith "\\ArcSOC.exe" or InitiatingProcessFolderPath endswith "\\apache.exe" or InitiatingProcessFolderPath endswith "\\apache2.exe" or InitiatingProcessFolderPath endswith "\\caddy.exe" or InitiatingProcessFolderPath endswith "\\frankenphp.exe" or InitiatingProcessFolderPath endswith "\\httpd.exe" or InitiatingProcessFolderPath endswith "\\iisexpress.exe" or InitiatingProcessFolderPath endswith "\\lighttpd.exe" or InitiatingProcessFolderPath endswith "\\nginx.exe" or InitiatingProcessFolderPath endswith "\\php-cgi.exe" or InitiatingProcessFolderPath endswith "\\php-fpm.exe" or InitiatingProcessFolderPath endswith "\\php-win.exe" or InitiatingProcessFolderPath endswith "\\php.exe" or InitiatingProcessFolderPath endswith "\\phpdbg.exe" or InitiatingProcessFolderPath endswith "\\roadrunner.exe" or InitiatingProcessFolderPath endswith "\\tomcat.exe" or InitiatingProcessFolderPath endswith "\\tomcat10.exe" or InitiatingProcessFolderPath endswith "\\tomcat9.exe" or InitiatingProcessFolderPath endswith "\\unit.exe" or InitiatingProcessFolderPath endswith "\\w3wp.exe" or InitiatingProcessFolderPath endswith "\\ws_tomcatservice.exe") or ((InitiatingProcessFolderPath endswith "\\java.exe" or InitiatingProcessFolderPath endswith "\\javaw.exe") and (InitiatingProcessFolderPath contains "-tomcat-" or InitiatingProcessFolderPath contains "\\tomcat")) or ((InitiatingProcessFolderPath endswith "\\java.exe" or InitiatingProcessFolderPath endswith "\\javaw.exe") and (ProcessCommandLine contains "catalina.jar" or ProcessCommandLine contains "CATALINA_HOME"))) and (((ProcessVersionInfoOriginalFileName in~ ("net.exe", "net1.exe")) and (ProcessCommandLine contains " user " or ProcessCommandLine contains " use " or ProcessCommandLine contains " group ")) or (ProcessVersionInfoOriginalFileName =~ "ping.exe" and ProcessCommandLine contains " -n ") or (ProcessCommandLine contains "&cd&echo" or ProcessCommandLine contains "cd /d ") or (ProcessVersionInfoOriginalFileName =~ "wmic.exe" and ProcessCommandLine contains " /node:") or ((FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe") and (ProcessCommandLine contains " -enc " or ProcessCommandLine contains " -EncodedCommand " or ProcessCommandLine contains " -w hidden " or ProcessCommandLine contains " -windowstyle hidden" or ProcessCommandLine contains ".WebClient).Download")) or ((FolderPath endswith "\\dsquery.exe" or FolderPath endswith "\\find.exe" or FolderPath endswith "\\findstr.exe" or FolderPath endswith "\\ipconfig.exe" or FolderPath endswith "\\netstat.exe" or FolderPath endswith "\\nslookup.exe" or FolderPath endswith "\\pathping.exe" or FolderPath endswith "\\quser.exe" or FolderPath endswith "\\schtasks.exe" or FolderPath endswith "\\systeminfo.exe" or FolderPath endswith "\\tasklist.exe" or FolderPath endswith "\\tracert.exe" or FolderPath endswith "\\wevtutil.exe" or FolderPath endswith "\\whoami.exe") or (ProcessVersionInfoOriginalFileName in~ ("dsquery.exe", "find.exe", "findstr.exe", "ipconfig.exe", "netstat.exe", "nslookup.exe", "pathping.exe", "quser.exe", "schtasks.exe", "sysinfo.exe", "tasklist.exe", "tracert.exe", "VSSADMIN.EXE", "wevtutil.exe", "whoami.exe"))) or (ProcessCommandLine contains " Test-NetConnection " or ProcessCommandLine contains "dir \\"))

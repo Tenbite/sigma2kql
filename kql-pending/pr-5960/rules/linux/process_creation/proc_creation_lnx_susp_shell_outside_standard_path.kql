@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5960 new: CVE-2026-41651 Pack2TheRoot detection rules and generic Linux LPE coverage
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5960
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: Shell Process Executed Outside Standard Binary Paths
+// Sigma ID: 34b37c17-63f4-40da-8f9f-828e2ab0df31
+// Status: experimental | Level: medium
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-04-24 | Modified: -
+// ATT&CK: privilege-escalation, stealth, execution, T1036, T1548.001, T1059.004
+// Description: Detects shell processes (bash, sh, dash, zsh, ksh, fish, etc.) executed from paths outside
+//   standard system binary directories. Legitimate shells reside under /bin, /usr/bin, or
+//   /usr/local/bin or some mounted overlay of those paths. Execution from writable locations such as
+//   /tmp, /home, /dev/shm, or /var is a strong indicator of a dropped SUID shell, a staged payload,
+//   or a container/namespace escape technique.
+// False positives:
+//   - Custom shell installations in non-standard prefix paths (e.g. /opt, /snap, /nix)
+//   - Container runtimes with overlayfs mounts that remap /bin
+// References:
+//   - https://gtfobins.github.io/gtfobins/bash/#suid
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/f8f8984ea4e01afa9b9a4f55559461818bd16d5a/rules/linux/process_creation/proc_creation_lnx_susp_shell_outside_standard_path.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "/bash" or FolderPath endswith "/sh" or FolderPath endswith "/dash" or FolderPath endswith "/zsh" or FolderPath endswith "/ksh" or FolderPath endswith "/mksh" or FolderPath endswith "/csh" or FolderPath endswith "/tcsh" or FolderPath endswith "/fish") and (not((FolderPath startswith "/bin/" or FolderPath startswith "/usr/bin/" or FolderPath startswith "/sbin/" or FolderPath startswith "/usr/sbin/" or FolderPath startswith "/usr/local/bin/" or FolderPath startswith "/usr/local/sbin/" or FolderPath startswith "/mnt/")))

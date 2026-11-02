@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6242 update: linux anti forensics rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6242
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: Linux Kernel Ring Buffer Cleared via Dmesg
+// Sigma ID: 146e004e-5373-4a63-8088-689eb278ae1d
+// Status: experimental | Level: medium
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-08-19 | Modified: -
+// ATT&CK: defense-impairment, T1685.006
+// Description: Detects the use of 'dmesg' to clear the kernel ring buffer, which removes kernel log messages
+//   that could contain evidence of exploitation, privilege escalation, or hardware errors. Threat
+//   actors use this technique to destroy forensic artifacts after gaining access to a system.
+// False positives:
+//   - Unknown
+// References:
+//   - https://tlpblack.net/blog/20260728-a-deep-dive-into-bytetobreach-s-bytetocrypt-ransomware
+//   - https://man7.org/linux/man-pages/man1/dmesg.1.html
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.002/T1070.002.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/d826f6d9370fc59d350588c5c605409fe3c431aa/rules/linux/process_creation/proc_creation_lnx_dmesg_clear_ring_buffer.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "/dmesg" and ((ProcessCommandLine contains " -C " or ProcessCommandLine contains "-clear") or ProcessCommandLine endswith " -C")

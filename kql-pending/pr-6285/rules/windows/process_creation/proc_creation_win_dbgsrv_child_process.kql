@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6285 Add DbgSrv.exe child process detection
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6285
+// Pull request author: gagechisholm
+// Change: new rule
+// Title: Potential DbgSrv.EXE Abuse
+// Sigma ID: 90ef0cfb-ccbe-4504-b280-414f9c54d4d0
+// Status: experimental | Level: medium
+// Author: Gage Chisholm
+// Date: 2026-09-10 | Modified: -
+// ATT&CK: execution, stealth, T1127
+// Description: Detects child processes spawned by DbgSrv.exe, a Microsoft debugging process server that can be
+//   abused to execute arbitrary processes through a trusted developer utility.
+// False positives:
+//   - Legitimate use of DbgSrv.exe to create processes during debugging sessions
+// References:
+//   - https://github.com/LOLBAS-Project/LOLBAS/blob/58c62744ab84ad3049c09ba2c613f0e744d92c9c/yml/OtherMSBinaries/Dbgsrv.yml
+//   - https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/dbgsrv-command-line-options
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ef3b3d4c0282e589c70b2f35e2adcf5aff966e6f/rules/windows/process_creation/proc_creation_win_dbgsrv_child_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\dbgsrv.exe"

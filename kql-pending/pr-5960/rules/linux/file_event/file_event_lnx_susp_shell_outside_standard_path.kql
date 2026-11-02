@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5960 new: CVE-2026-41651 Pack2TheRoot detection rules and generic Linux LPE coverage
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5960
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: Shell Binary Created Outside Standard Binary Paths
+// Sigma ID: 4c9f47b5-eb6d-4799-827d-e1bd1545097f
+// Status: experimental | Level: medium
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-04-24 | Modified: -
+// ATT&CK: privilege-escalation, stealth, execution, T1036, T1548.001, T1059.004
+// Description: Detects creation of shell binary files (bash, sh, dash, zsh, ksh, fish, etc.) in paths outside
+//   standard system binary directories. Dropping a shell binary into a writable location such as
+//   /tmp, /home, or /dev/shm is a common step in privilege escalation chains — for example, an
+//   exploit postinst script creating a SUID bash copy (CVE-2026-41651) or an attacker staging a
+//   shell for later execution. This complements the corresponding process_creation rule by catching
+//   the file drop before execution occurs.
+// False positives:
+//   - Package managers installing shells to custom prefixes (e.g. /opt, /snap, /nix)
+//   - Container image builds writing shell binaries to overlay mounts
+// References:
+//   - https://gtfobins.github.io/gtfobins/bash/#suid
+//   - https://github.com/Vozec/CVE-2026-41651
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/f8f8984ea4e01afa9b9a4f55559461818bd16d5a/rules/linux/file_event/file_event_lnx_susp_shell_outside_standard_path.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where (FolderPath endswith "/bash" or FolderPath endswith "/sh" or FolderPath endswith "/dash" or FolderPath endswith "/zsh" or FolderPath endswith "/ksh" or FolderPath endswith "/mksh" or FolderPath endswith "/csh" or FolderPath endswith "/tcsh" or FolderPath endswith "/fish") and (not((FolderPath startswith "/bin/" or FolderPath startswith "/usr/bin/" or FolderPath startswith "/sbin/" or FolderPath startswith "/usr/sbin/" or FolderPath startswith "/usr/local/bin/" or FolderPath startswith "/usr/local/sbin/" or FolderPath startswith "/mnt/")))

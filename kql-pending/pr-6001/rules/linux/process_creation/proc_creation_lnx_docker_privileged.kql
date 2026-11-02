@@ -1,0 +1,30 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6001 new: 13 Linux detection rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6001
+// Pull request author: saakovv
+// Change: new rule
+// Title: Linux Privileged Docker Container Execution
+// Sigma ID: c9f4a7e2-2d8b-4a31-c3e9-1b5f8d4a7c20
+// Status: experimental | Level: high
+// Author: Ivan Saakov
+// Date: 2026-05-10 | Modified: -
+// ATT&CK: privilege-escalation, T1611
+// Description: Detects execution of docker run or docker exec with the --privileged flag. A privileged
+//   container has full access to the host kernel, all devices, and bypasses Docker namespace
+//   isolation. Attackers exploit this to mount the host filesystem, load kernel modules, access raw
+//   devices, and escape the container to gain root on the underlying host. The --restart=always flag
+//   combined with --privileged additionally establishes persistent access.
+// False positives:
+//   - Legitimate use of privileged containers by platform or infrastructure teams
+//   - Container runtime components that require privileged mode for system operations
+// References:
+//   - https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities
+//   - https://www.trendmicro.com/en_us/research/19/l/why-running-a-privileged-container-in-docker-is-a-bad-idea.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e5bac28da3655c33390db7ef1503db8cd3babb5f/rules/linux/process_creation/proc_creation_lnx_docker_privileged.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "/docker" and ProcessCommandLine contains "--privileged") and (ProcessCommandLine contains " run " or ProcessCommandLine contains " exec ")

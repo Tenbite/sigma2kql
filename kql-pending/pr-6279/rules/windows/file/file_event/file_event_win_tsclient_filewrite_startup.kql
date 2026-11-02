@@ -1,0 +1,25 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Hijack Legit RDP Session to Move Laterally
+// Sigma ID: 52753ea4-b3a0-4365-910d-36cff487b789
+// Status: test | Level: high
+// Author: Samir Bousseaden
+// Date: 2019-02-21 | Modified: 2021-11-27
+// ATT&CK: command-and-control, T1219.002
+// Description: Detects the usage of tsclient share to place a backdoor on the RDP source machine's startup
+//   folder
+// False positives:
+//   - Unlikely
+// References:
+//   - Internal Research
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/file/file_event/file_event_win_tsclient_filewrite_startup.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where InitiatingProcessFolderPath endswith "\\mstsc.exe" and FolderPath contains "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\"

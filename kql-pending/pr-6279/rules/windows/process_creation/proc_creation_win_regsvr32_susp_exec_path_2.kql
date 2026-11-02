@@ -1,0 +1,24 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Regsvr32 Execution From Highly Suspicious Location
+// Sigma ID: 327ff235-94eb-4f06-b9de-aaee571324be
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-05-26 | Modified: -
+// ATT&CK: stealth, T1218.010
+// Description: Detects execution of regsvr32 where the DLL is located in a highly suspicious locations
+// False positives:
+//   - Unlikely
+// References:
+//   - Internal Research
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_regsvr32_susp_exec_path_2.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\regsvr32.exe" or ProcessVersionInfoOriginalFileName =~ "REGSVR32.EXE") and ((ProcessCommandLine contains ":\\PerfLogs\\" or ProcessCommandLine contains ":\\Temp\\" or ProcessCommandLine contains "\\Windows\\Registration\\CRMLog" or ProcessCommandLine contains "\\Windows\\System32\\com\\dmp\\" or ProcessCommandLine contains "\\Windows\\System32\\FxsTmp\\" or ProcessCommandLine contains "\\Windows\\System32\\Microsoft\\Crypto\\RSA\\MachineKeys\\" or ProcessCommandLine contains "\\Windows\\System32\\spool\\drivers\\color\\" or ProcessCommandLine contains "\\Windows\\System32\\spool\\PRINTERS\\" or ProcessCommandLine contains "\\Windows\\System32\\spool\\SERVERS\\" or ProcessCommandLine contains "\\Windows\\System32\\Tasks_Migrated\\" or ProcessCommandLine contains "\\Windows\\System32\\Tasks\\Microsoft\\Windows\\SyncCenter\\" or ProcessCommandLine contains "\\Windows\\SysWOW64\\com\\dmp\\" or ProcessCommandLine contains "\\Windows\\SysWOW64\\FxsTmp\\" or ProcessCommandLine contains "\\Windows\\SysWOW64\\Tasks\\Microsoft\\Windows\\PLA\\System\\" or ProcessCommandLine contains "\\Windows\\SysWOW64\\Tasks\\Microsoft\\Windows\\SyncCenter\\" or ProcessCommandLine contains "\\Windows\\Tasks\\" or ProcessCommandLine contains "\\Windows\\Tracing\\") or ((ProcessCommandLine contains " \"C:\\" or ProcessCommandLine contains " C:\\" or ProcessCommandLine contains " 'C:\\" or ProcessCommandLine contains "D:\\") and (not((ProcessCommandLine contains "C:\\Program Files (x86)\\" or ProcessCommandLine contains "C:\\Program Files\\" or ProcessCommandLine contains "C:\\ProgramData\\" or ProcessCommandLine contains "C:\\Users\\" or ProcessCommandLine contains " C:\\Windows\\" or ProcessCommandLine contains " \"C:\\Windows\\" or ProcessCommandLine contains " 'C:\\Windows\\"))))) and (not((ProcessCommandLine =~ "" or isnull(ProcessCommandLine))))

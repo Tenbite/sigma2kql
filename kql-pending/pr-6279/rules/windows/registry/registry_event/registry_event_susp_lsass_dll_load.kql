@@ -1,0 +1,25 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: DLL Load via LSASS
+// Sigma ID: b3503044-60ce-4bf4-bbcb-e3db98788823
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2019-10-16 | Modified: 2022-04-21
+// ATT&CK: privilege-escalation, execution, persistence, T1547.008
+// Description: Detects a method to load DLL via LSASS process using an undocumented Registry key
+// False positives:
+//   - Unknown
+// References:
+//   - https://blog.xpnsec.com/exploring-mimikatz-part-1/
+//   - https://twitter.com/SBousseaden/status/1183745981189427200
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/registry/registry_event/registry_event_susp_lsass_dll_load.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceRegistryEvents
+| where (RegistryKey contains "\\CurrentControlSet\\Services\\NTDS\\DirectoryServiceExtPt" or RegistryKey contains "\\CurrentControlSet\\Services\\NTDS\\LsaDbExtPt") and (not((InitiatingProcessFolderPath =~ "C:\\Windows\\system32\\lsass.exe" and (RegistryValueData in~ ("%%systemroot%%\\system32\\ntdsa.dll", "%%systemroot%%\\system32\\lsadb.dll")))))

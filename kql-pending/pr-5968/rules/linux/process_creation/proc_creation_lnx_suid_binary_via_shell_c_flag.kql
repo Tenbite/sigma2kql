@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5968 new: CVE-2026-31431 Copy Fail Exploit Detection Rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5968
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: SUID Binary Spawned as Child of Shell Invoked With Command Flag
+// Sigma ID: c165bee3-1f3c-4a2d-9f8c-d9427722dd4f
+// Status: experimental | Level: high
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-04-30 | Modified: -
+// ATT&CK: privilege-escalation, T1068, T1548.001
+// Description: Detects a SUID-root binary spawned as the direct child of a shell that was invoked with "-c
+//   <binary>" where the parent shell's CommandLine ends with just the binary name and no flags. This
+//   is the artifact of os.system("<binary>") calls used in privilege-escalation exploits that poison
+//   the page cache of a SUID binary and trigger its execution via Python's os module.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://gtfobins.github.io/
+//   - https://xint.io/blog/copy-fail-linux-distributions
+//   - https://github.com/theori-io/copy-fail-CVE-2026-31431
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/f978f702f404ad5049a7bbac0dd729a9959455fa/rules/linux/process_creation/proc_creation_lnx_suid_binary_via_shell_c_flag.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (InitiatingProcessFolderPath endswith "/sh" or InitiatingProcessFolderPath endswith "/dash" or InitiatingProcessFolderPath endswith "/bash" or InitiatingProcessFolderPath endswith "/ksh" or InitiatingProcessFolderPath endswith "/zsh" or InitiatingProcessFolderPath endswith "/ash" or InitiatingProcessFolderPath endswith "/tcsh" or InitiatingProcessFolderPath endswith "/csh") and InitiatingProcessCommandLine contains "-c " and (InitiatingProcessCommandLine endswith "su" or InitiatingProcessCommandLine endswith "sudo" or InitiatingProcessCommandLine endswith "passwd" or InitiatingProcessCommandLine endswith "mount" or InitiatingProcessCommandLine endswith "newgrp" or InitiatingProcessCommandLine endswith "gpasswd" or InitiatingProcessCommandLine endswith "chfn" or InitiatingProcessCommandLine endswith "chsh" or InitiatingProcessCommandLine endswith "ping" or InitiatingProcessCommandLine endswith "newuidmap" or InitiatingProcessCommandLine endswith "newgidmap" or InitiatingProcessCommandLine endswith "pkexec" or InitiatingProcessCommandLine endswith "fusermount" or InitiatingProcessCommandLine endswith "fusermount3" or InitiatingProcessCommandLine endswith "expiry") and (FolderPath endswith "/su" or FolderPath endswith "/sudo" or FolderPath endswith "/passwd" or FolderPath endswith "/mount" or FolderPath endswith "/umount" or FolderPath endswith "/newgrp" or FolderPath endswith "/gpasswd" or FolderPath endswith "/chfn" or FolderPath endswith "/chsh" or FolderPath endswith "/newuidmap" or FolderPath endswith "/newgidmap" or FolderPath endswith "/pkexec" or FolderPath endswith "/fusermount" or FolderPath endswith "/fusermount3" or FolderPath endswith "/expiry")

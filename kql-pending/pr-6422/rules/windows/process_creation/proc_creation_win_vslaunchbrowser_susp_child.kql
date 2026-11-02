@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6422 New Rule: Potentially Suspicious Child Process Of VSLaunchBrowser
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6422
+// Pull request author: Diablo-research
+// Change: new rule
+// Title: Potentially Suspicious Child Process Of VSLaunchBrowser
+// Sigma ID: c3e93803-fb6c-4eba-8c2c-d3a5002d1d5f
+// Status: experimental | Level: medium
+// Author: Diablo Research
+// Date: 2026-10-03 | Modified: -
+// ATT&CK: execution, stealth, T1127
+// Description: Detects potentially suspicious command and script interpreters spawned by the Microsoft Visual
+//   Studio VSLaunchBrowser utility. VSLaunchBrowser can open local or remote resources through their
+//   associated file handlers and could be abused to proxy execution through a trusted developer
+//   utility.
+// False positives:
+//   - Legitimate Visual Studio development or debugging workflows that intentionally open command or script files through VSLaunchBrowser
+// References:
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/VsLaunchBrowser/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/892545b4610932e189f2f79467197818e7b89c15/rules/windows/process_creation/proc_creation_win_vslaunchbrowser_susp_child.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\VSLaunchBrowser.exe" and (FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\mshta.exe" or FolderPath endswith "\\msiexec.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\regsvr32.exe" or FolderPath endswith "\\rundll32.exe" or FolderPath endswith "\\wscript.exe")

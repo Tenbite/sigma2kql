@@ -1,0 +1,36 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6163 New Agent Skills Installation Attempt Via Node - Linux
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6163
+// Pull request author: IsThisRitika
+// Change: new rule
+// Title: New Agent Skills Installation Attempt Via Node - Linux
+// Sigma ID: ab582088-55d2-48f2-b707-ee5699d127cd
+// Status: experimental | Level: medium
+// Author: Ritika <YOUR GITHUB HANDLE>
+// Date: 2026-07-21 | Modified: -
+// ATT&CK: execution, T1059.007
+// Description: Detects the attempt to install new skills for AI agents using the "npx skills" command on Linux
+//   systems. Agent skills enhance AI agents with new capabilities, but attackers may abuse this
+//   mechanism to inject malicious commands executed by the agent on behalf of the user. The "npx
+//   skills" command can install skills for various agents (e.g., Claude Code, Cursor, and others).
+//   Analysts should review any installed skills to verify their legitimacy. Note: Tune this rule
+//   based on whether AI agent tooling is allowed in your environment. In environments where such
+//   tooling is authorized, this detection may reflect normal activity and the alert level should be
+//   adjusted accordingly. In environments where AI agent tooling is not permitted, this activity is
+//   likely suspicious and may require immediate investigation.
+// False positives:
+//   - This rule will be triggered when a new agent skill is installed regardless if it is benign or malicious.
+//   - High false positive rate expected in environments where AI agent tooling is authorized and commonly used, such as developer workstations or CI/CD build agents.
+// References:
+//   - https://blog.lukaszolejnik.com/supply-chain-risk-of-agentic-ai-infecting-infrastructures-via-skill-worms/
+//   - https://github.com/vercel-labs/skills/blob/1f7fbc8d0e49c4e0601d364696bd1bdd15e80967/README.md
+//   - https://opensourcemalware.com/blog/clawdbot-skills-ganked-your-crypto
+//   - https://promptintel.novahunting.ai/molt
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/9f4385a83b710a218be47d7206b0a2b237f6d522/rules/linux/process_creation/proc_creation_lnx_node_new_agent_skills_installed.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "/node" and (ProcessCommandLine contains "npx-cli.js" and ProcessCommandLine contains "skills " and ProcessCommandLine contains " add ")

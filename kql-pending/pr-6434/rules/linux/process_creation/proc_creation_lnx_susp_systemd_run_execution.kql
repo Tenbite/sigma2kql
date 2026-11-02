@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6434 Add Linux rule: Potential Execution Or Persistence Via Systemd-Run
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6434
+// Pull request author: defamp
+// Change: new rule
+// Title: Potential Execution Or Persistence Via Systemd-Run
+// Sigma ID: 57b35be1-5231-496b-ba3c-af772b5f9f90
+// Status: experimental | Level: medium
+// Author: Defa Mulya Pratama
+// Date: 2026-10-07 | Modified: -
+// ATT&CK: execution, persistence, privilege-escalation, T1053.006, T1569.002
+// Description: Detects potentially suspicious execution of the "systemd-run" utility. Attackers can abuse
+//   "systemd-run" to launch commands, scripts or reverse shells as a transient service, scope or
+//   timer. This allows the payload to run under a trusted system process, detach from the current
+//   session, evade process-tree based monitoring and establish persistence via transient timers.
+// False positives:
+//   - Legitimate administrators or automation tools using "systemd-run" to launch scheduled or transient services and scripts.
+// References:
+//   - https://www.elastic.co/guide/en/security/current/potential-proxy-execution-via-systemd-run.html
+//   - https://redcanary.com/blog/threat-detection/attck-t1501-understanding-systemd-service-persistence/
+//   - https://www.freedesktop.org/software/systemd/man/latest/systemd-run.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/c9299c7e08ccc45fe117ce59f53d062d264d2c3d/rules/linux/process_creation/proc_creation_lnx_susp_systemd_run_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "/systemd-run" and ((ProcessCommandLine contains "--on-active" or ProcessCommandLine contains "--on-boot" or ProcessCommandLine contains "--on-calendar" or ProcessCommandLine contains "--on-startup" or ProcessCommandLine contains "--on-unit-active" or ProcessCommandLine contains "--on-unit-inactive" or ProcessCommandLine contains "--timer-property") or (ProcessCommandLine contains "/dev/shm/" or ProcessCommandLine contains "/tmp/" or ProcessCommandLine contains "/var/tmp/" or ProcessCommandLine contains "/bin/bash" or ProcessCommandLine contains "/bin/sh" or ProcessCommandLine contains "bash -c" or ProcessCommandLine contains "sh -c" or ProcessCommandLine contains "--remain-after-exit"))

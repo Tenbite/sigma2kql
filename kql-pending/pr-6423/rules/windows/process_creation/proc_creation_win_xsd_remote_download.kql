@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6423 Remote File Download Via Xsd.EXE
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6423
+// Pull request author: Diablo-research
+// Change: new rule
+// Title: Remote File Download Via Xsd.EXE
+// Sigma ID: d961be19-a693-4777-8d2b-63cdd661a7cf
+// Status: experimental | Level: medium
+// Author: Diablo Research
+// Date: 2026-10-04 | Modified: -
+// ATT&CK: command-and-control, T1105
+// Description: Detects the Microsoft XML Schema Definition Tool "xsd.exe" loading input from a remote HTTP or
+//   HTTPS location. Adversaries may abuse this behavior to retrieve remote content using a
+//   Microsoft-signed developer utility.
+// False positives:
+//   - Legitimate use of Xsd.exe with remote XML or schema resources by developers
+// References:
+//   - https://learn.microsoft.com/en-us/dotnet/standard/serialization/xml-schema-definition-tool-xsd-exe
+//   - https://github.com/LOLBAS-Project/LOLBAS/blob/a79893e7ad7fe69e9eeb37c82e90685e10663312/yml/OtherMSBinaries/xsd.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/2a2bb5284c15792e5b07190ad35ff81f1b7988d9/rules/windows/process_creation/proc_creation_win_xsd_remote_download.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\xsd.exe" or ProcessVersionInfoOriginalFileName =~ "xsd.exe") and (ProcessCommandLine contains "http://" or ProcessCommandLine contains "https://")

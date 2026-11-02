@@ -1,0 +1,30 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6540 Sigma: PavinLoader fake-driver MSI campaign (MSBuild from %LOCALAPPDATA%, MSBUILDENABLEALLPROPERTYFUNCTIONS, fake dllhost/taskhostw tasks, m
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6540
+// Pull request author: fotedev
+// Change: new rule
+// Title: Potential PavinLoader MSBuild Execution from User-Writable Path via cmd.exe
+// Sigma ID: a5280adc-4014-4201-bd72-ec3a3085aa64
+// Status: experimental | Level: medium
+// Author: fotedev
+// Date: 2026-10-29 | Modified: -
+// ATT&CK: execution, defense-impairment, T1127.001
+// Description: Detects MSBuild.exe running from a user-writable directory (for example %LOCALAPPDATA% or
+//   %TEMP%) with cmd.exe as the parent process. Observed in the PavinLoader incident: a fake .NET
+//   solution ("CatalogIngestor" / "Ingestion Labs") ships a bundled MSBuild.exe (255,904 bytes,
+//   4.8.9032.0, Authenticode HashMismatch) that build.cmd invokes from %LOCALAPPDATA% after setting
+//   MSBUILDENABLEALLPROPERTYFUNCTIONS=1. In-memory assembly loading follows via Internal.targets
+//   property functions.
+// False positives:
+//   - Developer workstations or CI agents that intentionally run portable MSBuild copies from user-writable directories
+// References:
+//   - Verified internal incident report, Trojan.PavinLoader (Malwarebytes family naming), 2026-10-29
+//   - https://attack.mitre.org/techniques/T1127/001/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/a477302bc4d0372ca2d1b32b2981597468776c0c/rules/windows/process_creation/proc_creation_win_msbuild_user_writable_path_cmd_parent.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\cmd.exe" and FolderPath endswith "\\MSBuild.exe" and (FolderPath contains "\\AppData\\Local\\" or FolderPath contains "\\AppData\\Roaming\\" or FolderPath contains "\\Users\\Public\\" or FolderPath contains "\\ProgramData\\")

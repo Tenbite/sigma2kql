@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: New Port Forwarding Rule Added Via Netsh.EXE
+// Sigma ID: 322ed9ec-fcab-4f67-9a34-e7c6aef43614
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems), omkar72, oscd.community, Swachchhanda Shrawan Poudel
+// Date: 2019-01-29 | Modified: 2023-09-01
+// ATT&CK: lateral-movement, command-and-control, T1090
+// Description: Detects the execution of netsh commands that configure a new port forwarding (PortProxy) rule
+// False positives:
+//   - Legitimate administration activity
+//   - WSL2 network bridge PowerShell script used for WSL/Kubernetes/Docker (e.g. https://github.com/microsoft/WSL/issues/4150#issuecomment-504209723)
+// References:
+//   - https://www.fireeye.com/blog/threat-research/2019/01/bypassing-network-restrictions-through-rdp-tunneling.html
+//   - https://adepts.of0x.cc/netsh-portproxy-code/
+//   - https://www.dfirnotes.net/portproxy_detection/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_netsh_port_forwarding.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\netsh.exe" or ProcessVersionInfoOriginalFileName =~ "netsh.exe") and ((ProcessCommandLine contains "interface" and ProcessCommandLine contains "portproxy" and ProcessCommandLine contains "add" and ProcessCommandLine contains "v4tov4") or (ProcessCommandLine contains "i " and ProcessCommandLine contains "p " and ProcessCommandLine contains "a " and ProcessCommandLine contains "v ") or (ProcessCommandLine contains "connectp" and ProcessCommandLine contains "listena" and ProcessCommandLine contains "c="))

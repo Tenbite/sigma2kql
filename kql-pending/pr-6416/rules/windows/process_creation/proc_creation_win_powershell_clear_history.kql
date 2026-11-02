@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6416 Add restore point disable and PS history clearing rules; expand service tamper coverage
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6416
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: Clear PowerShell History via CommandLine
+// Sigma ID: 8b1f125c-c933-46d0-a510-1ab15cc45326
+// Status: experimental | Level: medium
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-10-02 | Modified: -
+// ATT&CK: stealth, T1070.003
+// Description: Detects PowerShell command line invocations that clear or disable the PSReadLine command history
+//   via Remove-Item, Clear-History, or Set-PSReadlineOption.
+// False positives:
+//   - Legitimate PowerShell scripts
+// References:
+//   - https://gist.github.com/hook-s3c/7363a856c3cdbadeb71085147f042c1a
+//   - https://securelist.ru/tr/hacking-cat/117062/
+//   - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/clear-history?view=powershell-7.6
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/b52c3cce054de01ac594f211f111b75c62e6267f/rules/windows/process_creation/proc_creation_win_powershell_clear_history.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe") or (ProcessVersionInfoOriginalFileName in~ ("PowerShell.EXE", "pwsh.dll"))) and ((ProcessCommandLine contains "Clear-History" or (ProcessCommandLine contains "Set-PSReadlineOption" and ProcessCommandLine contains "HistorySaveStyle" and ProcessCommandLine contains "SaveNothing")) or ((ProcessCommandLine contains "Remove-Item " or ProcessCommandLine contains "rm " or ProcessCommandLine contains "del ") and (ProcessCommandLine contains "ConsoleHost_history.txt" or ProcessCommandLine contains "(Get-PSReadlineOption).HistorySavePath")))

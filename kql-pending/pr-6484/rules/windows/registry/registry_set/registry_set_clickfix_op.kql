@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6484 new: ClickFix Operation String in Registry
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6484
+// Pull request author: joshnck
+// Change: new rule
+// Title: ClickFix File Operation
+// Sigma ID: 1673de24-0f48-46f2-954d-e5bd4d6bb7b5
+// Status: experimental | Level: medium
+// Author: Josh Nickels
+// Date: 2026-10-19 | Modified: -
+// ATT&CK: execution, T1204
+// Description: File operations performed in the Run prompt are pretty rare and the ' in ' and ' do ' keywords
+//   identify a clickfix pattern similar to " %f in (f_*) do @if"
+// False positives:
+//   - Legitimate operations in Run prompt
+// References:
+//   - https://x.com/MsftSecIntel/status/2106197481960706155
+//   - https://thehackernews.com/2026/10/clickfix-smuggles-payloads-through.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/685a44a3afe1194e88acbf2c184879d230e19667/rules/windows/registry/registry_set/registry_set_clickfix_op.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceRegistryEvents
+| where RegistryKey endswith "\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\RunMRU" and (RegistryValueData contains "cmd" or RegistryValueData contains "pwsh" or RegistryValueData contains "powershell" or RegistryValueData contains "bash" or RegistryValueData contains "wsl" or RegistryValueData contains "wscript" or RegistryValueData contains "cscript") and (RegistryValueData contains " in " or RegistryValueData contains " do ")

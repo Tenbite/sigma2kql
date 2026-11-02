@@ -1,0 +1,30 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6230 new: silent-call rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6230
+// Pull request author: mromanode
+// Change: new rule
+// Title: Sudo GDB Attach to PID 1
+// Sigma ID: c6e908ad-59ff-43a3-8884-87ead9dad726
+// Status: experimental | Level: high
+// Author: mromanode
+// Date: 2026-08-13 | Modified: -
+// ATT&CK: privilege-escalation, T1548.003
+// Description: Detects sudo executions of gdb attaching to PID 1 with a command file (i.e., '--command=' or '-x
+//   ') located in temporary directories ('/tmp', '/var/tmp', '/dev/shm'). This pattern indicates an
+//   attempt to escalate privileges by abusing misconfigured sudoers entries permitting passwordless
+//   gdb execution, as observed against Cisco CUCM 15.x where the 'tomcat' user can run 'sudo -n
+//   /usr/bin/gdb -pid 1 --command=/tmp/gdb_file'.
+// False positives:
+//   - Legitimate system administrators debugging PID 1 (rare in production)
+//   - Development environments with authorized debugging of the init process
+//   - Security or monitoring tooling legitimately attaching debuggers to system processes
+// References:
+//   - https://github.com/0xReadingSteiner/Silent-Call/blob/f91488d674f17b4a3b16754b0dc49f07d61ef35e/poc.sh
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/1be67c44ad0e0a439efa8e64f11141b1ec0c2c78/rules/linux/process_creation/proc_creation_lnx_sudo_gdb_attach_pid1.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "/sudo" and ProcessCommandLine contains "gdb" and ProcessCommandLine matches regex "(-pid\\s+1|--pid[=\\s]1|-p\\s+1)" and (ProcessCommandLine contains "--command=" or ProcessCommandLine contains "--command " or ProcessCommandLine contains "-x ") and ProcessCommandLine matches regex "/tmp/|/var/tmp/|/dev/shm/") and (not((InitiatingProcessFolderPath contains "eclipse" or InitiatingProcessFolderPath contains "vscode" or InitiatingProcessFolderPath contains "intellij")))

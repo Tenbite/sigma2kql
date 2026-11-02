@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Potentially Suspicious Regsvr32 HTTP/FTP Pattern
+// Sigma ID: 867356ee-9352-41c9-a8f2-1be690d78216
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems)
+// Date: 2023-05-24 | Modified: 2023-05-26
+// ATT&CK: stealth, T1218.010
+// Description: Detects regsvr32 execution to download/install/register new DLLs that are hosted on Web or FTP
+//   servers.
+// False positives:
+//   - Unknown
+// References:
+//   - https://twitter.com/mrd0x/status/1461041276514623491
+//   - https://twitter.com/tccontre18/status/1480950986650832903
+//   - https://lolbas-project.github.io/lolbas/Binaries/Regsvr32/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_regsvr32_network_pattern.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\regsvr32.exe" or ProcessVersionInfoOriginalFileName =~ "REGSVR32.EXE") and (ProcessCommandLine contains " /i" or ProcessCommandLine contains " -i") and (ProcessCommandLine contains "ftp" or ProcessCommandLine contains "http")

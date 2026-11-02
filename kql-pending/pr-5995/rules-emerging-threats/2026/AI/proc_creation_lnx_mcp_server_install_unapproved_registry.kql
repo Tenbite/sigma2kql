@@ -1,0 +1,35 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5995 Add 4 detection rules for LLM and MCP attack surface
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5995
+// Pull request author: ipunithgowda
+// Change: new rule
+// Title: MCP Server Installed From Non-Approved Registry - Linux
+// Sigma ID: f8adc8ec-515a-4d6b-9998-b419d6906ee8
+// Status: experimental | Level: high
+// Author: Punith Gowda (Network Intelligence)
+// Date: 2026-05-10 | Modified: -
+// ATT&CK: initial-access, execution, T1195.002
+// Tags: detection.emerging-threats
+// Description: Detects installation of Model Context Protocol (MCP) servers via 'claude mcp add', 'mcp
+//   install', or npm/pip install of mcp-server-* packages from sources other than the official MCP
+//   registry at registry.modelcontextprotocol.io. Untrusted MCP servers run with the same privileges
+//   as the calling agent and have direct tool-execution access, making this a high-value supply-
+//   chain backdoor vector. Note: local development paths, git URLs, and 'npm link' installs
+//   intentionally fire here. Tune via the filter or via private-registry allow-listing.
+// False positives:
+//   - Internal MCP servers published to a private registry that the SOC has not yet allow-listed
+//   - Developers iterating on a local MCP server via 'npm link' or editable installs
+//   - Tuning required for orgs using the official MCP packages with version pins (e.g. '@modelcontextprotocol/server-git@0.6.2')
+// References:
+//   - https://modelcontextprotocol.io/docs/concepts/architecture
+//   - https://registry.modelcontextprotocol.io/
+//   - https://owasp.org/www-project-mcp-top-10/
+//   - https://docs.anthropic.com/en/docs/claude-code/mcp
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/58c8781964014aba73b404e32ceafbb27d6668c8/rules-emerging-threats/2026/AI/proc_creation_lnx_mcp_server_install_unapproved_registry.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((ProcessCommandLine contains "claude mcp add" or ProcessCommandLine contains "mcp install") or ((FolderPath endswith "/npm" or FolderPath endswith "/npx" or FolderPath endswith "/yarn" or FolderPath endswith "/pnpm" or FolderPath endswith "/pip" or FolderPath endswith "/pip3" or FolderPath endswith "/uv" or FolderPath endswith "/uvx") and (ProcessCommandLine contains "mcp-server-" or ProcessCommandLine contains "@modelcontextprotocol/server-" or ProcessCommandLine contains "mcp-server@"))) and (not((ProcessCommandLine contains "registry.modelcontextprotocol.io" or (ProcessCommandLine endswith "@modelcontextprotocol/server-filesystem" or ProcessCommandLine endswith "@modelcontextprotocol/server-git" or ProcessCommandLine endswith "@modelcontextprotocol/server-github" or ProcessCommandLine endswith "@modelcontextprotocol/server-postgres" or ProcessCommandLine endswith "@modelcontextprotocol/server-sqlite"))))

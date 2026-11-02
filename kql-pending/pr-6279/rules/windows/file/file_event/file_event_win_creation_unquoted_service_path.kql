@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6279 🩺 add regression data from evtx-attack-samples
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6279
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Creation Exe for Service with Unquoted Path
+// Sigma ID: 8c3c76ca-8f8b-4b1d-aaf3-81aebcd367c9
+// Status: test | Level: high
+// Author: frack113
+// Date: 2021-12-30 | Modified: -
+// ATT&CK: privilege-escalation, persistence, T1547.009
+// Description: Adversaries may execute their own malicious payloads by hijacking vulnerable file path
+//   references. Adversaries can take advantage of paths that lack surrounding quotations by placing
+//   an executable in a higher level directory within the path, so that Windows will choose the
+//   adversary's executable to launch.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1574.009/T1574.009.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/file/file_event/file_event_win_creation_unquoted_service_path.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where FolderPath =~ "C:\\program.exe"

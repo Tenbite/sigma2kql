@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6168 add sigma rules for Windows Sandbox
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6168
+// Pull request author: unrooted
+// Change: new rule
+// Title: Runtime Read-Write Host-Folder Sharing Via Windows Sandbox CLI
+// Sigma ID: c8faeb88-b4de-4242-ba6c-57f7a75e114a
+// Status: experimental | Level: medium
+// Author: Konrad 'unrooted' Klawikowski
+// Date: 2026-07-22 | Modified: -
+// ATT&CK: lateral-movement, exfiltration, command-and-control, T1105
+// Description: Detects use of the wsb.exe share subcommand with --allow-write, which dynamically maps a host
+//   folder into a running Windows Sandbox with sandbox-to-host write permissions.
+// False positives:
+//   - Interactive Sandbox users adding folders to a running sandbox via the wsb.exe CLI as documented Microsoft workflow
+//   - Automation that intentionally grants write-back access to a sandbox for output collection
+// References:
+//   - https://learn.microsoft.com/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-cli#share
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Wsb/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e690cf7a8be81d20e2688ad8cc3866640f1d8fce/rules/windows/process_creation/proc_creation_win_wsb_share_allow_write.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\wsb.exe" or ProcessVersionInfoOriginalFileName =~ "wsb.exe") and (ProcessCommandLine contains " share " and ProcessCommandLine contains "--allow-write")
