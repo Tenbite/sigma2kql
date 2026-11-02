@@ -1,4 +1,13 @@
+---
+name: Report a bad rule
+about: A converted query is wrong, broken, or too noisy
+title: "[Rule] "
+labels: bad-rule
+---
 
+**Rule title or Sigma ID:**
+
+**What's wrong?** (pick one, or describe)
 - [ ] Query errors in Advanced Hunting
 - [ ] Never matches when it should
 - [ ] Too many false positives

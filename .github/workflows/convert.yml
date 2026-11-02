@@ -54,6 +54,14 @@ jobs:
       - name: Convert and validate
         run: python scripts/convert.py ${{ inputs.full && '--full' || '' }}
 
+      # Pending rules from open SigmaHQ pull requests. Rebuilt from scratch each run, so merged or
+      # closed pull requests drop out automatically. A failure here never blocks the main run.
+      - name: Convert open SigmaHQ pull requests (pending rules)
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/pending.py
+
       - name: Build search page
         run: python scripts/build_site.py
 
@@ -61,7 +69,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A kql reports state docs
+          git add -A kql kql-pending reports state docs
           if git diff --cached --quiet; then
             echo "No changes."
             exit 0

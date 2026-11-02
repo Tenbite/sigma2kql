@@ -10,7 +10,7 @@
 [![Rule license](https://img.shields.io/badge/rules-DRL%201.1-555)](https://github.com/SigmaHQ/Detection-Rule-License)
 [![Code license](https://img.shields.io/badge/code-MIT-555)](LICENSE)
 
-### [Search the rules](https://tenbite.github.io/simga2kql/) · [Rule index](kql/INDEX.md) · [Latest run report](reports/summary.md)
+### [Search the rules](https://tenbite.github.io/simga2kql/) · [Rule index](kql/INDEX.md) · [Pending rules](kql-pending/INDEX.md) · [Latest run report](reports/summary.md)
 
 </div>
 
@@ -20,7 +20,8 @@
 ## What this is
 
 1. **A ready-to-use KQL library.** About 1,900 SigmaHQ rules as Defender XDR Advanced Hunting queries, one `.kql` file per rule. [Search and filter them](https://tenbite.github.io/simga2kql/) by level, platform, ATT&CK tactic, technique, or table, and copy any query in one click.
-2. **A reusable pipeline.** A free GitHub Actions workflow you can fork to keep your own copy current, or point at your own Sigma rules.
+2. **Pending rules.** Rules from **open SigmaHQ pull requests**, converted before they're merged, in [`kql-pending/`](kql-pending/INDEX.md). Clearly labeled on the [search page](https://tenbite.github.io/simga2kql/#stg=Pending) and filterable. See [Pending rules](#pending-rules).
+3. **A reusable pipeline.** A free GitHub Actions workflow you can fork to keep your own copy current, or point at your own Sigma rules.
 
 ## How conversions are checked
 
@@ -36,6 +37,19 @@ Converting Sigma to KQL is the easy part. These checks run on every rule, every 
 | **Nightly health check** | Fails the run and emails the maintainer if converted rules drop sharply, validation failures spike, or the schema download keeps failing. |
 
 Rules that can't be converted, mostly because Defender has no table for that data (PowerShell script block logs, Windows Security events, web, proxy, and cloud logs), are listed with the reason in [`reports/failed.md`](reports/failed.md).
+
+## Pending rules
+
+New detections often sit in SigmaHQ pull requests for days or weeks before they're merged. Each night, the pipeline also converts rules from **open, non-draft pull requests** into [`kql-pending/`](kql-pending/INDEX.md), one folder per pull request.
+
+> [!CAUTION]
+> Pending rules have **not been reviewed or merged by SigmaHQ**. They may change, be rejected, or be wrong. Use them for early hunting only.
+
+- **Labeled everywhere:** each file's header and the search page mark it as pending, with a link to its pull request and whether it's a new rule or an update to an existing one.
+- **Same checks:** pending rules go through the same conversion fixes and KQL validation as published rules.
+- **Cleans itself up:** the folder is rebuilt from scratch every night. When a pull request is merged, its pending rules disappear and the rule shows up in `kql/`. When one is closed, its pending rules simply disappear.
+
+Results of each pending run are in [`reports/pending.md`](reports/pending.md). Turn pending rules off with `pending: enabled: false` in `config.yml`.
 
 ## Using a query
 
@@ -72,9 +86,10 @@ Any change to `config.yml`, a custom pipeline, the scripts, the tool versions, o
 | Path | Contents |
 |---|---|
 | `kql/` | One `.kql` file per rule, mirroring SigmaHQ's folders, plus `INDEX.md` |
+| `kql-pending/` | Rules from open SigmaHQ pull requests, one folder per pull request, plus `INDEX.md` |
 | `docs/` | The search page (GitHub Pages) |
 | `reports/` | Run summary, failures, validation rejections, wildcard rewrites, schema drift |
-| `scripts/` | `convert.py` (pipeline) and `build_site.py` (search page) |
+| `scripts/` | `convert.py` (pipeline), `pending.py` (pending rules from pull requests), and `build_site.py` (search page) |
 | `validator/` | The KQL validator (Node, Kusto.Language) |
 | `pipelines/custom.yml` | Extra field mappings and fixes |
 | `state/` | Last processed commit and cached Defender schema |
@@ -97,7 +112,7 @@ Any change to `config.yml`, a custom pipeline, the scripts, the tool versions, o
 
 ## License
 
-- **Rules** (`kql/`, `docs/rules.json`) are derived from SigmaHQ and remain under the [Detection Rule License (DRL) 1.1](https://github.com/SigmaHQ/Detection-Rule-License). Each file keeps the original author and Sigma ID; keep them if you redistribute.
+- **Rules** (`kql/`, `kql-pending/`, `docs/rules.json`) are derived from SigmaHQ and remain under the [Detection Rule License (DRL) 1.1](https://github.com/SigmaHQ/Detection-Rule-License). Each file keeps the original author and Sigma ID; keep them if you redistribute.
 - **Code** (scripts, workflow, validator, search page) is under the [MIT License](LICENSE).
 
 Not affiliated with SigmaHQ, Microsoft, AttackIQ, XDRInternals, or Anthropic.

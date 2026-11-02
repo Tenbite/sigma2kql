@@ -66,10 +66,12 @@ def parse_block(block: str) -> dict:
 def build(cfg: dict) -> int:
     out_dir = ROOT / "docs"
     out_dir.mkdir(exist_ok=True)
-    kql_root = ROOT / cfg["output_dir"]
+    pending_dir = (cfg.get("pending") or {}).get("output_dir", "kql-pending")
+    roots = [(ROOT / cfg["output_dir"], cfg["output_dir"], "Published"), (ROOT / pending_dir, pending_dir, "Pending")]
     records = []
-    for path in sorted(kql_root.rglob("*.kql")):
-        rel = str(path.relative_to(kql_root))
+    for kql_root, out_name, stage, path in ((r, n, st, p) for r, n, st in roots if r.exists() for p in sorted(r.rglob("*.kql"))):
+        full_rel = str(path.relative_to(kql_root))
+        rel = full_rel.split("/", 1)[1] if stage == "Pending" else full_rel   # drop the pr-<n>/ prefix
         blocks = path.read_text(encoding="utf-8").split("\n\n// ----------\n\n")
         first = parse_block(blocks[0])
         queries = [parse_block(b)["query"] for b in blocks]
@@ -93,8 +95,12 @@ def build(cfg: dict) -> int:
             "de": first.get("Description", ""),
             "fp": first.get("False positives", []) if isinstance(first.get("False positives"), list) else [],
             "sg": first.get("Sigma rule", ""),
-            "kp": f"{cfg['output_dir']}/{rel}",
+            "kp": f"{out_name}/{full_rel}",
             "q": "\n\n".join(queries),
+            "stg": stage,
+            "pr": first.get("Pull request", ""),
+            "pru": first.get("Pull request URL", ""),
+            "ch": first.get("Change", ""),
         })
     records.sort(key=lambda r: (LEVEL_ORDER.get(r["lv"], 9), r["t"].lower()))
     (out_dir / "rules.json").write_text(json.dumps(records, separators=(",", ":")), encoding="utf-8")
@@ -155,6 +161,8 @@ pre { margin: 0; padding: 12px; background: #0f1317; border: 1px solid var(--rul
 .copy { padding: 5px 10px; background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; }
 .links { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.88rem; margin-top: 10px; }
 #more { display: block; margin: 16px auto 0; padding: 9px 16px; background: var(--panel); color: var(--ink); border: 1px solid var(--rule); border-radius: 8px; cursor: pointer; }
+.pv { display: inline-block; margin-left: 6px; font-size: 0.72rem; font-weight: 700; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--high); color: var(--high); vertical-align: 2px; }
+.pvnote { padding: 8px 10px; border-left: 3px solid var(--high); background: var(--bg); color: var(--muted) !important; font-size: 0.9rem; }
 .empty { color: var(--muted); padding: 24px 0; text-align: center; }
 footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--rule); }
 footer .wrap { padding-top: 14px; padding-bottom: 28px; }
@@ -164,7 +172,7 @@ footer .wrap { padding-top: 14px; padding-bottom: 28px; }
 <body>
 <header><div class="wrap">
   <h1>Sigma to Defender KQL</h1>
-  <p class="sub">SigmaHQ rules converted to Microsoft Defender XDR Advanced Hunting queries. Rebuilt nightly. <a href="https://github.com/Tenbite/simga2kql">Repo</a></p>
+  <p class="sub">SigmaHQ rules converted to Microsoft Defender XDR Advanced Hunting queries, plus pending rules from open SigmaHQ pull requests (labeled). Rebuilt nightly. <a href="https://github.com/Tenbite/simga2kql">Repo</a></p>
   <p class="warn">Machine-generated and not tested against real telemetry. Provided as is, with no warranty. Run as a hunt and tune before using as a detection. Rules are under the <a href="https://github.com/SigmaHQ/Detection-Rule-License">Detection Rule License 1.1</a>.</p>
 </div></header>
 
@@ -176,6 +184,7 @@ footer .wrap { padding-top: 14px; padding-bottom: 28px; }
     <select id="f-ta" aria-label="ATT&CK tactic"><option value="">All tactics</option></select>
     <select id="f-tb" aria-label="Defender table"><option value="">All tables</option></select>
     <select id="f-src" aria-label="Source folder"><option value="">All sources</option></select>
+    <select id="f-stg" aria-label="Stage"><option value="">Published + pending</option></select>
     <button id="reset" type="button">Clear</button>
     <span id="count" aria-live="polite">Loading rules…</span>
   </div>
@@ -196,7 +205,7 @@ footer .wrap { padding-top: 14px; padding-bottom: 28px; }
   let all = [], shown = [], limit = PAGE;
   const $ = id => document.getElementById(id);
   const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const F = { lv: $('f-lv'), pf: $('f-pf'), ta: $('f-ta'), tb: $('f-tb'), src: $('f-src') };
+  const F = { lv: $('f-lv'), pf: $('f-pf'), ta: $('f-ta'), tb: $('f-tb'), src: $('f-src'), stg: $('f-stg') };
   const LV = ['critical', 'high', 'medium', 'low', 'informational'];
 
   function fill(sel, values) {
@@ -225,6 +234,7 @@ footer .wrap { padding-top: 14px; padding-bottom: 28px; }
       (!F.ta.value || r.ta.includes(F.ta.value)) &&
       (!F.tb.value || r.tb === F.tb.value) &&
       (!F.src.value || r.src === F.src.value) &&
+      (!F.stg.value || r.stg === F.stg.value) &&
       terms.every(t => r._s.includes(t)));
     limit = PAGE;
     writeHash();
@@ -235,9 +245,10 @@ footer .wrap { padding-top: 14px; padding-bottom: 28px; }
     const fp = r.fp.length ? `<h4>False positives</h4><ul>${r.fp.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
     return `<details class="rule"><summary>
         <span class="lv ${esc(r.lv)}">${esc(r.lv)}</span>
-        <span class="title">${esc(r.t)}</span>
+        <span class="title">${esc(r.t)}${r.stg === 'Pending' ? ' <span class="pv">Pending</span>' : ''}</span>
         <span class="meta"><span>${esc(r.tb)}</span><span>${esc(r.pf)}</span>${r.te.length ? `<span>${esc(r.te.join(', '))}</span>` : ''}${r.ta.length ? `<span>${esc(r.ta.join(', '))}</span>` : ''}</span>
       </summary><div class="body">
+        ${r.stg === 'Pending' ? `<p class="pvnote">From an <strong>open SigmaHQ pull request</strong> (${esc(r.ch)}). Not reviewed or merged yet, so it may change or be rejected. <a href="${esc(r.pru)}">Pull request ${esc(r.pr.split(' ')[0])}</a></p>` : ''}
         ${r.de ? `<p>${esc(r.de)}</p>` : ''}
         ${fp}
         <div class="qhead"><h4 style="margin:0">KQL</h4><button class="copy" type="button">Copy query</button></div>
@@ -272,12 +283,13 @@ footer .wrap { padding-top: 14px; padding-bottom: 28px; }
 
   fetch('rules.json').then(r => r.json()).then(data => {
     all = data;
-    all.forEach(r => { r._s = [r.t, r.de, r.id, r.tb, r.pf, r.au, r.te.join(' '), r.ta.join(' '), r.q].join(' ').toLowerCase(); });
+    all.forEach(r => { r._s = [r.t, r.de, r.id, r.tb, r.pf, r.au, r.te.join(' '), r.ta.join(' '), r.pr, r.stg, r.q].join(' ').toLowerCase(); });
     fill(F.lv, LV.filter(l => all.some(r => r.lv === l)));
     fill(F.pf, uniq(r => r.pf).sort());
     fill(F.ta, uniq(r => r.ta).sort());
     fill(F.tb, uniq(r => r.tb).sort());
     fill(F.src, uniq(r => r.src).sort());
+    fill(F.stg, ['Published', 'Pending'].filter(v => all.some(r => r.stg === v)));
     readHash();
     apply();
   }).catch(() => { $('count').textContent = 'Could not load rules.json'; });

@@ -30,18 +30,27 @@ state_file: state/state.json
 # Queries that fail validation are not written to output_dir; they go to reports/validation_failed.md.
 validate: true
 
-# Validate against the current Defender XDR schema instead of the one bundled with
-# pySigma-backend-kusto (last updated Sept 2024). Only used with target: microsoft_xdr.
-# Each successful download is saved to `cache` and committed, so schema changes show up in
-# git history and trigger a full rebuild. If the download fails, the cached copy is used.
-# Tables missing from the download fall back to the bundled schema.
-# Remove this block to validate with the bundled schema only.
+# Pending rules: also convert rules from OPEN SigmaHQ pull requests into kql-pending/.
+# Rebuilt from scratch every run, so merged or closed pull requests disappear automatically.
+pending:
+  enabled: true
+  output_dir: kql-pending
+  include_drafts: false            # draft pull requests are usually unfinished
+  statuses: [stable, test, experimental]
+  levels: [medium, high, critical]
+
 # Health check: the run is marked failed (so GitHub emails you) if any of these trip.
 health:
   max_converted_drop_pct: 10   # converted rules fell by more than this % since the last run
   max_new_invalid: 25          # this many more queries started failing validation
   schema_fail_runs: 3          # live schema download failed this many runs in a row
 
+# Validate against the current Defender XDR schema instead of the one bundled with
+# pySigma-backend-kusto (last updated Sept 2024). Only used with target: microsoft_xdr.
+# Each successful download is saved to `cache` and committed, so schema changes show up in
+# git history and trigger a full rebuild. If the download fails, the cached copy is used.
+# Tables missing from the download fall back to the bundled schema.
+# Remove this block to validate with the bundled schema only.
 live_schema:
   url: https://xdrinternals.com/FullSchema-latest.json
   cache: state/xdr_schema.json
