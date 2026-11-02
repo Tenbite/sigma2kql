@@ -38,6 +38,9 @@ def platform_of(rel: str) -> str:
     return "Other"
 
 
+LIST_FIELDS = {"False positives", "References"}   # header fields written as "- item" lines
+
+
 def parse_block(block: str) -> dict:
     meta, query_lines, current = {}, [], None
     for line in block.splitlines():
@@ -47,10 +50,14 @@ def parse_block(block: str) -> dict:
         text = line[2:]
         if text.startswith("   ") and current:  # continuation of the previous field
             item = text.strip()
-            if item.startswith("- "):
-                meta.setdefault(current, []).append(item[2:])
-            elif isinstance(meta.get(current), str):
-                meta[current] += " " + item
+            value = meta.get(current)
+            if isinstance(value, list):        # list fields (false positives, references)
+                if item.startswith("- ") or not value:
+                    value.append(item[2:] if item.startswith("- ") else item)
+                else:
+                    value[-1] += " " + item
+            else:                              # text fields: a wrapped line may start with "- "
+                meta[current] = (str(value or "") + " " + item).strip()
             continue
         m = re.match(r" ([A-Za-z&' ]+):\s?(.*)$", text)
         if not m:
@@ -58,7 +65,7 @@ def parse_block(block: str) -> dict:
             continue
         key, value = m.group(1).strip(), m.group(2).strip()
         current = key
-        meta[key] = value if value else []
+        meta[key] = value if value or key not in LIST_FIELDS else []
     meta["query"] = "\n".join(query_lines).strip()
     return meta
 
@@ -69,7 +76,9 @@ def build(cfg: dict) -> int:
     pending_dir = (cfg.get("pending") or {}).get("output_dir", "kql-pending")
     roots = [(ROOT / cfg["output_dir"], cfg["output_dir"], "Published"), (ROOT / pending_dir, pending_dir, "Pending")]
     records = []
+    skipped = []
     for kql_root, out_name, stage, path in ((r, n, st, p) for r, n, st in roots if r.exists() for p in sorted(r.rglob("*.kql"))):
+      try:
         full_rel = str(path.relative_to(kql_root))
         rel = full_rel.split("/", 1)[1] if stage == "Pending" else full_rel   # drop the pr-<n>/ prefix
         blocks = path.read_text(encoding="utf-8").split("\n\n// ----------\n\n")
@@ -102,6 +111,10 @@ def build(cfg: dict) -> int:
             "pru": first.get("Pull request URL", ""),
             "ch": first.get("Change", ""),
         })
+      except Exception as exc:  # one odd file must never take the whole page down
+        skipped.append(f"{path}: {exc}")
+    for line in skipped:
+        print(f"WARNING: skipped {line}")
     records.sort(key=lambda r: (LEVEL_ORDER.get(r["lv"], 9), r["t"].lower()))
     (out_dir / "rules.json").write_text(json.dumps(records, separators=(",", ":")), encoding="utf-8")
     built = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
@@ -172,7 +185,7 @@ footer .wrap { padding-top: 14px; padding-bottom: 28px; }
 <body>
 <header><div class="wrap">
   <h1>Sigma to Defender KQL</h1>
-  <p class="sub">SigmaHQ rules converted to Microsoft Defender XDR Advanced Hunting queries, plus pending rules from open SigmaHQ pull requests (labeled). Rebuilt nightly. <a href="https://github.com/Tenbite/simga2kql">Repo</a></p>
+  <p class="sub">SigmaHQ rules converted to Microsoft Defender XDR Advanced Hunting queries, plus pending rules from open SigmaHQ pull requests (labeled). Rebuilt nightly. <a href="https://github.com/Tenbite/sigma2kql">Repo</a></p>
   <p class="warn">Machine-generated and not tested against real telemetry. Provided as is, with no warranty. Run as a hunt and tune before using as a detection. Rules are under the <a href="https://github.com/SigmaHQ/Detection-Rule-License">Detection Rule License 1.1</a>.</p>
 </div></header>
 
@@ -255,7 +268,7 @@ footer .wrap { padding-top: 14px; padding-bottom: 28px; }
         <pre>${esc(r.q)}</pre>
         <div class="links">
           ${r.sg ? `<a href="${esc(r.sg)}">Sigma rule</a>` : ''}
-          <a href="https://github.com/Tenbite/simga2kql/blob/main/${esc(r.kp)}">KQL file</a>
+          <a href="https://github.com/Tenbite/sigma2kql/blob/main/${esc(r.kp)}">KQL file</a>
           <span style="color:var(--muted)">by ${esc(r.au || 'unknown')}${r.dt ? ', ' + esc(r.dt) : ''}</span>
         </div>
       </div></details>`;
