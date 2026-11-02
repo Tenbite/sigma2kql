@@ -50,6 +50,9 @@ KUSTO_TYPES = {
     "string": "string", "int": "int", "integer": "int", "long": "long", "real": "real",
     "double": "real", "bool": "bool", "boolean": "bool", "datetime": "datetime",
     "date/time": "datetime", "dynamic": "dynamic", "guid": "guid", "timespan": "timespan",
+    # .NET names used by the Defender portal schema export
+    "int16": "int", "int32": "int", "int64": "long", "byte": "int", "sbyte": "int",
+    "single": "real", "decimal": "decimal", "object": "dynamic",
 }
 
 DRL = "Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License"
@@ -92,10 +95,11 @@ def tool_versions() -> dict:
     return versions
 
 
-def fingerprint(cfg_text: str, cfg: dict, versions: dict) -> str:
+def fingerprint(cfg_text: str, cfg: dict, versions: dict, schema: dict) -> str:
     h = hashlib.sha256()
     h.update(Path(__file__).read_bytes())  # editing this script triggers a rebuild
     h.update(cfg_text.encode())
+    h.update(json.dumps(schema, sort_keys=True).encode())  # a schema change triggers a rebuild
     for p in cfg.get("custom_pipelines") or []:
         path = ROOT / p
         h.update(path.read_bytes() if path.exists() else b"missing")
@@ -119,7 +123,8 @@ def build_backend(cfg: dict) -> KustoBackend:
     return KustoBackend(processing_pipeline=combined)
 
 
-def export_schema(target: str, out: Path) -> None:
+def bundled_schema(target: str) -> dict:
+    """The table schema shipped inside pySigma-backend-kusto (can lag behind Microsoft)."""
     _, _, tables_mod, tables_var = TARGETS[target]
     mod = importlib.import_module(tables_mod)
     tables = getattr(mod, tables_var)
@@ -131,7 +136,72 @@ def export_schema(target: str, out: Path) -> None:
         merged = {**common, **cols}
         schema[table] = {name: KUSTO_TYPES.get(str(info.get("data_type", "")).lower(), "string")
                          for name, info in merged.items()}
-    write_json(out, schema)
+    return schema
+
+
+def parse_portal_schema(data) -> dict:
+    """Normalize a Defender portal schema export: [{Name, Schema: [{Name, Type}, ...]}, ...]."""
+    tables = data.get("Tables", data.get("tables", [])) if isinstance(data, dict) else data
+    out = {}
+    for t in tables:
+        name, cols = t.get("Name"), t.get("Schema") or []
+        if not name or not cols:
+            continue
+        out[name] = {c["Name"]: KUSTO_TYPES.get(str(c.get("Type", "")).lower(), "string")
+                     for c in cols if c.get("Name")}
+    return out
+
+
+def live_schema(cfg: dict) -> tuple[dict, str]:
+    """Download the current schema (see `live_schema` in config.yml). Falls back to the cached
+    copy from the last successful download. Returns ({} , reason) when neither is usable."""
+    opts = cfg.get("live_schema") or {}
+    if cfg["target"] != "microsoft_xdr" or not opts.get("url"):
+        return {}, "not configured"
+    cache = ROOT / opts.get("cache", "state/xdr_schema.json")
+    required = opts.get("required_tables", ["DeviceProcessEvents"])
+    try:
+        import urllib.request
+        req = urllib.request.Request(opts["url"], headers={"User-Agent": "sigma2kql"})
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            schema = parse_portal_schema(json.loads(resp.read().decode("utf-8-sig")))
+        missing = [t for t in required if t not in schema]
+        if missing:
+            raise ValueError(f"download is missing required tables: {', '.join(missing)}")
+        write_json(cache, schema)
+        return schema, f"downloaded from {opts['url']} ({len(schema)} tables)"
+    except Exception as exc:  # noqa: BLE001
+        cached = load_json(cache, {})
+        if cached:
+            return cached, f"cached copy ({len(cached)} tables) - download failed: {exc}"
+        return {}, f"unavailable - download failed: {exc}"
+
+
+def schema_drift(bundled: dict, live: dict) -> list[str]:
+    """Markdown lines comparing the backend's bundled schema with the live one."""
+    lines = []
+    for table in sorted(set(bundled) & set(live)):
+        gone = sorted(set(bundled[table]) - set(live[table]))
+        new = sorted(set(live[table]) - set(bundled[table]))
+        retyped = sorted(c for c in set(bundled[table]) & set(live[table])
+                         if bundled[table][c] != live[table][c])
+        if not (gone or new or retyped):
+            continue
+        lines += [f"## {table}", ""]
+        if gone:
+            lines.append(f"- **Not in the live schema** (queries using these fail validation): {', '.join(gone)}")
+        if retyped:
+            lines.append("- **Type changed:** " + ", ".join(
+                f"{c} ({bundled[table][c]} → {live[table][c]})" for c in retyped))
+        if new:
+            lines.append(f"- New columns the backend doesn't know about: {', '.join(new)}")
+        lines.append("")
+    only_bundled = sorted(set(bundled) - set(live))
+    if only_bundled:
+        lines += ["## Tables only in the bundled schema", "",
+                  "Kept for validation because the live export doesn't list them: "
+                  + ", ".join(only_bundled), ""]
+    return lines
 
 
 def validate(queries: list[dict], schema: Path) -> dict:
@@ -189,7 +259,48 @@ def logsource_str(rule: SigmaRule) -> str:
     return "/".join(x for x in (ls.product, ls.category, ls.service) if x) or "none"
 
 
-def header(rule: SigmaRule, rel: str, sha: str, cfg: dict, versions: dict, validation: str) -> str:
+# --------------------------------------------------------------------------- wildcard fix
+#
+# The Kusto backend sometimes leaves a Sigma wildcard (*) inside a string comparison, e.g.
+#   RegistryKey endswith "\\Schedule\\TaskCache\\Tree*"
+# KQL treats that * as a literal asterisk, so the comparison silently never matches.
+# We rewrite each such comparison to an equivalent case-insensitive regex.
+
+_CMP = re.compile(r'(?P<field>\b\w+) (?P<op>contains|endswith|startswith|has|=~|==) '
+                  r'"(?P<val>(?:[^"\\]|\\.)*)"')
+_RE_META = set(r".^$|?+()[]{}\\")
+
+
+def _kql_unescape(s: str) -> str:
+    return re.sub(r"\\(.)", r"\1", s)
+
+
+def _regex_literal(s: str) -> str:
+    return "".join("\\" + ch if ch in _RE_META else ch for ch in s)
+
+
+def rewrite_wildcards(query: str) -> tuple[str, int]:
+    count = 0
+
+    def fix(m: re.Match) -> str:
+        nonlocal count
+        raw = _kql_unescape(m.group("val"))
+        if "*" not in raw:
+            return m.group(0)
+        count += 1
+        body = ".*".join(_regex_literal(part) for part in raw.split("*"))
+        op = m.group("op")
+        anchored = {"startswith": f"^{body}", "endswith": f"{body}$",
+                    "=~": f"^{body}$", "==": f"^{body}$"}.get(op, body)
+        flags = "" if op == "==" else "(?i)"
+        pattern = (flags + anchored).replace('"', '""')
+        return f'{m.group("field")} matches regex @"{pattern}"'
+
+    return _CMP.sub(fix, query), count
+
+
+def header(rule: SigmaRule, rel: str, sha: str, cfg: dict, versions: dict, validation: str,
+           rewrites: int = 0) -> str:
     attack, other = attack_tags(rule)
     lines = [f"// Title: {rule.title}",
              f"// Sigma ID: {rule.id}",
@@ -212,7 +323,11 @@ def header(rule: SigmaRule, rel: str, sha: str, cfg: dict, versions: dict, valid
               f"// License: {DRL}",
               f"// Converted by sigma2kql (target: {cfg['target']}, pySigma {versions['pySigma']}, "
               f"pySigma-backend-kusto {versions['pySigma-backend-kusto']})",
-              f"// Validation: {validation}"]
+              f"// Validation: {validation}",
+              "// Machine-generated and not tested against real telemetry. Verify before use as a detection."]
+    if rewrites:
+        lines.append(f"// Note: {rewrites} wildcard comparison(s) rewritten to 'matches regex' "
+                     "(KQL treats * in contains/endswith/== as a literal character)")
     return "\n".join(lines)
 
 
@@ -248,6 +363,11 @@ def process_file(rel: str, sigma_dir: Path, backend: KustoBackend, cfg: dict) ->
             info["queries"] = [q for q in backend.convert_rule(rule) if q.strip()]
             if not info["queries"]:
                 raise ValueError("Empty query: nothing in the detection maps to the target")
+            info["rewrites"] = 0
+            if cfg.get("rewrite_wildcards", True):
+                fixed = [rewrite_wildcards(q) for q in info["queries"]]
+                info["queries"] = [q for q, _ in fixed]
+                info["rewrites"] = sum(n for _, n in fixed)
         except Exception as exc:  # noqa: BLE001
             entry["reason"] = short_error(exc)
             entry["title"] = rule.title
@@ -275,7 +395,11 @@ def write_reports(db: dict, cfg: dict, state: dict, versions: dict) -> dict:
            f"{counts['converted']} rules converted from SigmaHQ commit "
            f"[`{state['sigma_sha'][:10]}`](https://github.com/SigmaHQ/sigma/commit/{state['sigma_sha']}). "
            f"Last run: {state['last_run']}.", "",
-           f"Rules are licensed under the {DRL}. Each file keeps the original author and Sigma ID.", ""]
+           f"Rules are licensed under the {DRL}. Each file keeps the original author and Sigma ID.", "",
+           "> [!WARNING]",
+           "> These queries are machine-generated and have not been tested against real telemetry. "
+           "Validation confirms they are valid KQL, not that they detect what the Sigma rule describes. "
+           "Run them as hunts and tune them before using any as a detection.", ""]
     for folder, items in sorted(by_folder.items()):
         idx += [f"## {folder} ({len(items)})", "", "| Rule | Level | ATT&CK | Table |", "|---|---|---|---|"]
         for rel, e in items:
@@ -307,18 +431,33 @@ def write_reports(db: dict, cfg: dict, state: dict, versions: dict) -> dict:
         lines += ["", "```kql", *e.get("queries", []), "```", ""]
     (rep_dir / "validation_failed.md").write_text("\n".join(lines) + "\n")
 
+    # reports/wildcard_rewrites.md
+    rewritten = {r: e for r, e in db.items() if e.get("wildcard_rewrites")}
+    lines = ["# Wildcard rewrites", "",
+             "The backend left a Sigma `*` wildcard inside a `contains`/`endswith`/`==` comparison in these "
+             "rules. KQL treats that as a literal asterisk, so the comparison would never match. Each one was "
+             "rewritten to an equivalent case-insensitive `matches regex` and then validated.", "",
+             "| Rule | Level | Rewrites | KQL |", "|---|---|---|---|"]
+    for r, e in sorted(rewritten.items()):
+        title = e["title"].replace("|", "\\|")
+        lines.append(f"| {title} | {e['level']} | {e['wildcard_rewrites']} | [{Path(e['kql']).name}](../{e['kql']}) |")
+    (rep_dir / "wildcard_rewrites.md").write_text("\n".join(lines) + "\n")
+
     # reports/summary.md
     skipped = Counter(e["reason"].split(" (")[0] for e in db.values() if e["result"] == "skipped")
     summary = ["# sigma2kql run summary", "",
                f"- Target: `{cfg['target']}`",
                f"- SigmaHQ commit: `{state['sigma_sha']}`",
                f"- Last run: {state['last_run']} ({state['last_mode']})",
-               f"- Tools: " + ", ".join(f"{k} {v}" for k, v in versions.items()), "",
+               f"- Tools: " + ", ".join(f"{k} {v}" for k, v in versions.items()),
+               f"- Validation schema: {state.get('schema_source', 'bundled')} (see schema_drift.md)", "",
                "| Result | Rules |", "|---|---|",
                f"| Converted and valid | {counts['converted']} |",
                f"| Failed validation | {counts['invalid']} |",
                f"| Failed conversion | {counts['failed']} |",
                f"| Skipped | {counts['skipped']} |", "",
+               f"Converted rules with wildcard comparisons rewritten to regex: {len(rewritten)} "
+               "(see wildcard_rewrites.md)", "",
                "Skipped breakdown: " + ", ".join(f"{k}: {v}" for k, v in skipped.most_common()), "",
                "Top conversion failures:", ""]
     summary += [f"- {g}: {n}" for g, n in groups.most_common(10)]
@@ -352,7 +491,21 @@ def main() -> None:
     db_path = rep_dir / "rules.json"
 
     versions = tool_versions()
-    fp = fingerprint(cfg_text, cfg, versions)
+
+    # ---- schema used for validation: live Defender schema where available, bundled otherwise
+    bundled = bundled_schema(cfg["target"])
+    live, schema_source = live_schema(cfg)
+    schema = {**bundled, **live}
+    log(f"Live schema: {schema_source}")
+    rep_dir.mkdir(parents=True, exist_ok=True)
+    drift = ["# Schema drift", "",
+             f"Live schema: {schema_source}", "",
+             "Compares the schema bundled with pySigma-backend-kusto against the live Defender schema. "
+             "Validation uses the live schema for every table it lists.", ""]
+    drift += schema_drift(bundled, live) if live else ["No live schema in use."]
+    (rep_dir / "schema_drift.md").write_text("\n".join(drift) + "\n")
+
+    fp = fingerprint(cfg_text, cfg, versions, schema)
     state = load_json(state_path, {})
     head = git(sigma_dir, "rev-parse", "HEAD")
     rule_dirs = cfg["rule_dirs"]
@@ -406,13 +559,13 @@ def main() -> None:
     # ---- validate
     verdicts = {}
     if do_validate:
-        schema = ROOT / "state" / f"schema_{cfg['target']}.json"
-        export_schema(cfg["target"], schema)
+        schema_path = ROOT / "state" / f"schema_{cfg['target']}.json"
+        write_json(schema_path, schema)
         batch = [{"id": f"{rel}#{n}#{q}", "query": query}
                  for rel, e in results.items() if e["result"] == "converted"
                  for n, info in enumerate(e["rules"]) for q, query in enumerate(info["queries"])]
         log(f"Validating {len(batch)} queries with Kusto.Language {versions['kusto-language']}...")
-        verdicts = validate(batch, schema)
+        verdicts = validate(batch, schema_path)
 
     # ---- write .kql files and update DB
     for rel, e in results.items():
@@ -429,7 +582,8 @@ def main() -> None:
         elif too_deep:
             validation = "syntax only - query too deeply nested for full semantic analysis"
         else:
-            validation = f"passed (Kusto.Language {versions['kusto-language']}, {cfg['target']} schema)"
+            validation = (f"passed (Kusto.Language {versions['kusto-language']}, "
+                          f"{'live Defender' if live else 'bundled ' + cfg['target']} schema)")
         first = e["rules"][0]
         queries = [q for info in e["rules"] for q in info["queries"]]
         base = {"title": first["title"], "id": first["id"], "level": first["level"],
@@ -437,15 +591,18 @@ def main() -> None:
         if errors:
             db[rel] = {**base, "result": "invalid", "errors": errors, "queries": queries}
             continue
-        blocks = [header(info["rule"], rel, head, cfg, versions, validation) + "\n\n" + "\n\n".join(info["queries"])
+        blocks = [header(info["rule"], rel, head, cfg, versions, validation, info.get("rewrites", 0))
+                  + "\n\n" + "\n\n".join(info["queries"])
                   for info in e["rules"]]
+        rewrites = sum(info.get("rewrites", 0) for info in e["rules"])
         kql_rel = f"{cfg['output_dir']}/{Path(rel).with_suffix('.kql')}"
         kql_path = ROOT / kql_rel
         kql_path.parent.mkdir(parents=True, exist_ok=True)
         kql_path.write_text("\n\n// ----------\n\n".join(blocks) + "\n", encoding="utf-8")
         table = queries[0].split("\n", 1)[0].split("|")[0].strip() if queries else ""
         db[rel] = {**base, "result": "converted", "kql": kql_rel, "table": table,
-                   "validation": "partial" if too_deep else ("passed" if do_validate else "not run")}
+                   "validation": "partial" if too_deep else ("passed" if do_validate else "not run"),
+                   "wildcard_rewrites": rewrites}
 
     # ---- clean up empty folders left by deletions
     for d in sorted((p for p in out_dir.rglob("*") if p.is_dir()), key=lambda p: len(p.parts), reverse=True):
@@ -454,7 +611,8 @@ def main() -> None:
 
     state = {"sigma_sha": head, "fingerprint": fp, "versions": versions,
              "last_run": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
-             "last_mode": "full" if full else "incremental", "target": cfg["target"]}
+             "last_mode": "full" if full else "incremental", "target": cfg["target"],
+             "schema_source": schema_source}
     write_json(db_path, db)
     counts = write_reports(db, cfg, state, versions)
     write_json(state_path, state)

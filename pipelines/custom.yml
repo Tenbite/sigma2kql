@@ -26,6 +26,44 @@ transformations:
         product: windows
         category: file_rename
 
+  # file_delete rules map to DeviceFileEvents, which also holds creates and modifications.
+  # Without this they match any file event at the path, not just deletions.
+  - id: file_delete_actiontype
+    type: add_condition
+    conditions:
+      ActionType: FileDeleted
+    rule_conditions:
+      - type: logsource
+        category: file_delete
+
+  # Same problem for registry deletions in DeviceRegistryEvents.
+  - id: registry_delete_actiontype
+    type: add_condition
+    conditions:
+      ActionType: [RegistryKeyDeleted, RegistryValueDeleted]
+    rule_conditions:
+      - type: logsource
+        category: registry_delete
+
+  # MDE doesn't record file reads, so file_access rules would match file writes instead.
+  # Fail them on purpose so they show up in reports/failed.md with this reason.
+  - id: file_access_unsupported
+    type: rule_failure
+    message: "MDE does not record file reads; file_access rules would match writes instead"
+    rule_conditions:
+      - type: logsource
+        category: file_access
+
+  # GrandParentImage maps to InitiatingProcessParentFileName, which holds only a file name
+  # (rundll32.exe), so `endswith "\rundll32.exe"` never matches. Strip the path part.
+  - id: grandparent_strip_path
+    type: replace_string
+    regex: '^.*\\'
+    replacement: ''
+    field_name_conditions:
+      - type: include_fields
+        fields: [GrandParentImage]
+
   # Template - copy, uncomment and edit:
   # - id: my_mapping
   #   type: field_name_mapping

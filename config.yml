@@ -32,3 +32,19 @@ state_file: state/state.json
 # Validate every query with Microsoft's Kusto parser before writing it.
 # Queries that fail validation are not written to output_dir; they go to reports/validation_failed.md.
 validate: true
+
+# Validate against the current Defender XDR schema instead of the one bundled with
+# pySigma-backend-kusto (last updated Sept 2024). Only used with target: microsoft_xdr.
+# Each successful download is saved to `cache` and committed, so schema changes show up in
+# git history and trigger a full rebuild. If the download fails, the cached copy is used.
+# Tables missing from the download fall back to the bundled schema.
+# Remove this block to validate with the bundled schema only.
+live_schema:
+  url: https://xdrinternals.com/FullSchema-latest.json
+  cache: state/xdr_schema.json
+  required_tables: [DeviceProcessEvents, DeviceRegistryEvents, DeviceFileEvents]
+
+# Rewrite comparisons where the backend left a Sigma * wildcard inside a string
+# (e.g. endswith "...\Tree*"), which KQL would treat as a literal asterisk and never match.
+# Rewritten rules are listed in reports/wildcard_rewrites.md.
+rewrite_wildcards: true
