@@ -4,13 +4,13 @@
 
 **SigmaHQ detection rules, converted to Microsoft Defender XDR KQL. Validated and rebuilt every night.**
 
-[![Nightly conversion](https://github.com/Tenbite/simga2kql/actions/workflows/convert.yml/badge.svg)](https://github.com/Tenbite/simga2kql/actions/workflows/convert.yml)
+[![Nightly conversion](https://github.com/Tenbite/sigma2kql/actions/workflows/convert.yml/badge.svg)](https://github.com/Tenbite/sigma2kql/actions/workflows/convert.yml)
 ![Rules](https://img.shields.io/badge/rules-1%2C900%2B-1f6f8b)
 ![Target](https://img.shields.io/badge/target-Defender%20XDR%20Advanced%20Hunting-1f6f8b)
 [![Rule license](https://img.shields.io/badge/rules-DRL%201.1-555)](https://github.com/SigmaHQ/Detection-Rule-License)
 [![Code license](https://img.shields.io/badge/code-MIT-555)](LICENSE)
 
-### [Search the rules](https://tenbite.github.io/simga2kql/) · [Rule index](kql/INDEX.md) · [Pending rules](kql-pending/INDEX.md) · [Latest run report](reports/summary.md)
+### [Search the rules](https://tenbite.github.io/sigma2kql/) · [Rule index](kql/INDEX.md) · [Pending rules](kql-pending/INDEX.md) · [Latest run report](reports/summary.md)
 
 </div>
 
@@ -19,8 +19,8 @@
 
 ## What this is
 
-1. **A ready-to-use KQL library.** About 1,900 SigmaHQ rules as Defender XDR Advanced Hunting queries, one `.kql` file per rule. [Search and filter them](https://tenbite.github.io/simga2kql/) by level, platform, ATT&CK tactic, technique, or table, and copy any query in one click.
-2. **Pending rules.** Rules from **open SigmaHQ pull requests**, converted before they're merged, in [`kql-pending/`](kql-pending/INDEX.md). Clearly labeled on the [search page](https://tenbite.github.io/simga2kql/#stg=Pending) and filterable. See [Pending rules](#pending-rules).
+1. **A ready-to-use KQL library.** About 1,900 SigmaHQ rules as Defender XDR Advanced Hunting queries, one `.kql` file per rule. [Search and filter them](https://tenbite.github.io/sigma2kql/) by level, platform, ATT&CK tactic, technique, or table, and copy any query in one click.
+2. **Pending rules.** Rules from **open SigmaHQ pull requests**, converted before they're merged, in [`kql-pending/`](kql-pending/INDEX.md). Clearly labeled on the [search page](https://tenbite.github.io/sigma2kql/#stg=Pending) and filterable. See [Pending rules](#pending-rules).
 3. **A reusable pipeline.** A free GitHub Actions workflow you can fork to keep your own copy current, or point at your own Sigma rules.
 
 ## How conversions are checked
@@ -53,7 +53,7 @@ Results of each pending run are in [`reports/pending.md`](reports/pending.md). T
 
 ## Using a query
 
-1. Find a rule on the [search page](https://tenbite.github.io/simga2kql/) or in the [rule index](kql/INDEX.md).
+1. Find a rule on the [search page](https://tenbite.github.io/sigma2kql/) or in the [rule index](kql/INDEX.md).
 2. Copy the query into **security.microsoft.com → Hunting → Advanced hunting**.
 3. Run it as a hunt, review the results, and tune it before turning it into a detection.
 
@@ -98,7 +98,7 @@ Any change to `config.yml`, a custom pipeline, the scripts, the tool versions, o
 
 ## Found a bad rule?
 
-[Open an issue](https://github.com/Tenbite/simga2kql/issues/new?template=bad-rule.md) with the rule title and what's wrong. Problems with the detection logic itself belong upstream in [SigmaHQ](https://github.com/SigmaHQ/sigma/issues).
+[Open an issue](https://github.com/Tenbite/sigma2kql/issues/new?template=bad-rule.md) with the rule title and what's wrong. Problems with the detection logic itself belong upstream in [SigmaHQ](https://github.com/SigmaHQ/sigma/issues).
 
 ## Credits
 
