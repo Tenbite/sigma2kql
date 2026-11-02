@@ -1,0 +1,8 @@
+
+- [ ] Query errors in Advanced Hunting
+- [ ] Never matches when it should
+- [ ] Too many false positives
+- [ ] Doesn't match the Sigma rule's intent
+- [ ] Other
+
+**Details:** what you ran, what you expected, and what you got. Please remove any sensitive data from results.
