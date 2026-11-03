@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6557 Add Entroprism AIP self-built detection rules (6 rules)
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6557
+// Pull request author: ckcto
+// Change: new rule
+// Title: Sandbox / Virtualization Environment Detection
+// Sigma ID: a1eceaaa-7b4b-52bc-565d-2b34ce72abc6
+// Status: experimental | Level: medium
+// Author: Entroprism (Beijing Yijun Foreign Trade Co., Ltd.)
+// Date: 2026-11-03 | Modified: -
+// ATT&CK: T1497
+// Tags: detection.threat_hunting
+// Description: Detects attempts to identify virtualization or sandbox environments via VM artifact queries or
+//   macOS hardware model probing.
+// False positives:
+//   - legitimate virtualization management tools
+// References:
+//   - https://entroprism.net
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/02019c7f616fa2b4879138907ad45880092bf5b9/rules/windows/process_creation/sandbox__virtualization_environment_detection.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "VMware" or ProcessCommandLine contains "VBoxService" or ProcessCommandLine contains "vbox" or ProcessCommandLine contains "qemu-ga") or (ProcessCommandLine contains "sysctl hw.model" or ProcessCommandLine contains "ioreg -l")

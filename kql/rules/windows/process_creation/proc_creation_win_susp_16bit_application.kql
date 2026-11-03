@@ -13,7 +13,7 @@
 //   - https://support.microsoft.com/fr-fr/topic/an-ms-dos-based-program-that-uses-the-ms-dos-protected-mode-interface-crashes-on-a-computer-that-is-running-windows-7-5dc739ea-987b-b458-15e4-d28d5cca63c7
 //   - https://app.any.run/tasks/93fe92fa-8b2b-4d92-8c09-a841aed2e793/
 //   - https://app.any.run/tasks/214094a7-0abc-4a7b-a564-1b757faed79d/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ccbb0369507f796db0b0ae6854c8a2be471b9d84/rules/windows/process_creation/proc_creation_win_susp_16bit_application.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/adf5a626c4a776f3f023056f0f398b9523a2f09e/rules/windows/process_creation/proc_creation_win_susp_16bit_application.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)

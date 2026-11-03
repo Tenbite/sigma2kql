@@ -1,6 +1,6 @@
 # Schema drift
 
-Live schema: downloaded from https://xdrinternals.com/FullSchema-latest.json (207 tables)
+Live schema: downloaded from https://xdrinternals.com/FullSchema-latest.json (209 tables)
 
 Compares the schema bundled with pySigma-backend-kusto against the live Defender schema. Validation uses the live schema for every table it lists.
 

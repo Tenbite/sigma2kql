@@ -22,6 +22,7 @@ header { border-bottom: 1px solid var(--rule); }
 header .wrap { padding-top: 20px; padding-bottom: 16px; }
 h1 { font-size: 1.45rem; margin: 0 0 4px; letter-spacing: -0.01em; }
 .sub { color: var(--muted); margin: 0; font-size: 0.93rem; }
+.warn strong { color: var(--ink); }
 .warn { margin: 12px 0 0; padding: 8px 12px; border-left: 3px solid var(--high); background: var(--panel); color: var(--muted); font-size: 0.88rem; }
 .controls { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--rule); }
 .controls .wrap { padding-top: 12px; padding-bottom: 12px; display: grid; gap: 10px; }
@@ -34,7 +35,12 @@ select { padding: 7px 8px; background: var(--panel); color: var(--ink); border: 
 main .wrap { padding-top: 12px; padding-bottom: 40px; }
 details.rule { border: 1px solid var(--rule); border-radius: 8px; background: var(--panel); margin-bottom: 8px; }
 details.rule[open] { background: var(--raise); }
-summary { list-style: none; cursor: pointer; padding: 10px 12px; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; align-items: baseline; }
+summary { list-style: none; cursor: pointer; padding: 10px 12px; display: grid; grid-template-columns: auto 1fr auto; gap: 4px 10px; align-items: baseline; }
+summary:hover .title { color: var(--accent); }
+.chev { grid-column: 3; grid-row: 1 / span 2; align-self: center; display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 0.8rem; white-space: nowrap; }
+.chev::after { content: ""; width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) translate(-2px, -2px); transition: transform .15s; }
+details.rule[open] .chev::after { transform: rotate(-135deg) translate(-2px, -2px); }
+details.rule[open] .chev .hint { display: none; }
 summary::-webkit-details-marker { display: none; }
 .lv { font-size: 0.75rem; font-weight: 700; padding: 2px 7px; border-radius: 999px; color: var(--accent-ink); text-transform: capitalize; }
 .lv.critical { background: var(--crit); } .lv.high { background: var(--high); } .lv.medium { background: var(--med); } .lv.low { background: var(--low); }
@@ -47,21 +53,30 @@ summary::-webkit-details-marker { display: none; }
 pre { margin: 0; padding: 12px; background: #0f1317; border: 1px solid var(--rule); border-radius: 6px; overflow-x: auto; font-family: var(--mono); font-size: 0.82rem; line-height: 1.45; white-space: pre-wrap; word-break: break-word; }
 .qhead { display: flex; justify-content: space-between; align-items: center; margin: 12px 0 6px; }
 .copy { padding: 5px 10px; background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; }
+.btns { display: flex; gap: 8px; }
+.link { padding: 5px 10px; background: none; color: var(--accent); border: 1px solid var(--rule); border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
+.link:hover { border-color: var(--accent); }
+.shared { margin: 0 0 10px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--panel); color: var(--muted); font-size: 0.9rem; }
+.shared button { background: none; border: 0; padding: 0; color: var(--accent); text-decoration: underline; cursor: pointer; font: inherit; }
 .links { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.88rem; margin-top: 10px; }
-#more { display: block; margin: 16px auto 0; padding: 9px 16px; background: var(--panel); color: var(--ink); border: 1px solid var(--rule); border-radius: 8px; cursor: pointer; }
+.pager[hidden] { display: none; }
+.pager { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; margin-top: 16px; padding: 14px; border: 1px dashed var(--rule); border-radius: 8px; color: var(--muted); font-size: 0.9rem; }
+.pager span { width: 100%; text-align: center; }
+.pager button { padding: 9px 16px; background: var(--panel); color: var(--ink); border: 1px solid var(--rule); border-radius: 8px; cursor: pointer; font-size: 0.9rem; }
+#more { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
 .pv { display: inline-block; margin-left: 6px; font-size: 0.72rem; font-weight: 700; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--high); color: var(--high); vertical-align: 2px; }
 .pvnote { padding: 8px 10px; border-left: 3px solid var(--high); background: var(--bg); color: var(--muted) !important; font-size: 0.9rem; }
 .empty { color: var(--muted); padding: 24px 0; text-align: center; }
 footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--rule); }
 footer .wrap { padding-top: 14px; padding-bottom: 28px; }
-@media (max-width: 600px) { .controls { position: static; } #count { width: 100%; margin-left: 0; } select { flex: 1 1 45%; } }
+@media (max-width: 600px) { .controls { position: static; } #count { width: 100%; margin-left: 0; } select { flex: 1 1 45%; } .chev .hint { display: none; } }
 </style>
 </head>
 <body>
 <header><div class="wrap">
   <h1>Sigma to Defender KQL</h1>
-  <p class="sub">SigmaHQ rules converted to Microsoft Defender XDR Advanced Hunting queries, plus pending rules from open SigmaHQ pull requests (labeled). Rebuilt nightly. <a href="https://github.com/Tenbite/sigma2kql">Repo</a></p>
-  <p class="warn">Machine-generated and not tested against real telemetry. Provided as is, with no warranty. Run as a hunt and tune before using as a detection. Rules are under the <a href="https://github.com/SigmaHQ/Detection-Rule-License">Detection Rule License 1.1</a>.</p>
+  <p class="sub">Detection and hunting rules written by the <a href="https://github.com/SigmaHQ/sigma">SigmaHQ</a> community, converted to Microsoft Defender XDR Advanced Hunting queries. Includes pending rules from open SigmaHQ pull requests (labeled). Rebuilt nightly, last updated Nov 3, 2026. <a href="https://github.com/Tenbite/sigma2kql">Source on GitHub</a></p>
+  <p class="warn"><strong>How it's made:</strong> converted with pySigma and its Kusto backend, then every query is validated with Microsoft's KQL parser and checked against the latest Defender schema from XDRInternals. <strong>Not tested against real telemetry.</strong> Run as a hunt and tune before using as a detection. Provided as is. Rules are under the <a href="https://github.com/SigmaHQ/Detection-Rule-License">Detection Rule License 1.1</a>.</p>
 </div></header>
 
 <div class="controls"><div class="wrap">
@@ -73,27 +88,36 @@ footer .wrap { padding-top: 14px; padding-bottom: 28px; }
     <select id="f-tb" aria-label="Defender table"><option value="">All tables</option></select>
     <select id="f-src" aria-label="Source folder"><option value="">All sources</option></select>
     <select id="f-stg" aria-label="Stage"><option value="">Published + pending</option></select>
+    <select id="f-dt" aria-label="Updated"><option value="">Any date</option><option value="7">Updated last 7 days</option><option value="30">Updated last 30 days</option><option value="90">Updated last 90 days</option><option value="365">Updated last 12 months</option></select>
+    <select id="sort" aria-label="Sort"><option value="">Sort: level</option><option value="new">Sort: newest</option><option value="az">Sort: A to Z</option></select>
     <button id="reset" type="button">Clear</button>
     <span id="count" aria-live="polite">Loading rules…</span>
   </div>
 </div></div>
 
 <main><div class="wrap">
+  <p id="shared" class="shared" hidden>Showing a shared rule. <button type="button" id="showall">Show all rules</button></p>
   <div id="list"></div>
-  <button id="more" type="button" hidden>Show more</button>
+  <div id="pager" class="pager" hidden>
+    <span id="pagecount"></span>
+    <button id="more" type="button">Show more</button>
+    <button id="allbtn" type="button">Show all</button>
+  </div>
 </div></main>
 
 <footer><div class="wrap">
-  Built 2026-11-02 16:07 UTC from <a href="https://github.com/SigmaHQ/sigma">SigmaHQ</a> with pySigma and the Kusto backend. Each rule keeps its original author and Sigma ID.
+  Rules by the <a href="https://github.com/SigmaHQ/sigma">SigmaHQ</a> community and their original authors; each keeps its author and Sigma ID. Built 2026-11-03 05:21 UTC with pySigma and the Kusto backend. Not affiliated with SigmaHQ or Microsoft.
 </div></footer>
 
 <script>
 (() => {
   const PAGE = 50;
-  let all = [], shown = [], limit = PAGE;
+  let all = [], shown = [], limit = PAGE, shared = null;
+  const SITE = location.origin + location.pathname;
+  const keyOf = r => r.stg === 'Pending' ? 'p:' + (r.pr.split(' ')[0] || '').replace('#', '') + ':' + (r.id || r.kp) : (r.id || r.kp);
   const $ = id => document.getElementById(id);
   const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const F = { lv: $('f-lv'), pf: $('f-pf'), ta: $('f-ta'), tb: $('f-tb'), src: $('f-src'), stg: $('f-stg') };
+  const F = { lv: $('f-lv'), pf: $('f-pf'), ta: $('f-ta'), tb: $('f-tb'), src: $('f-src'), stg: $('f-stg'), dt: $('f-dt') };
   const LV = ['critical', 'high', 'medium', 'low', 'informational'];
 
   function fill(sel, values) {
@@ -105,73 +129,120 @@ footer .wrap { padding-top: 14px; padding-bottom: 28px; }
     const p = new URLSearchParams(location.hash.slice(1));
     $('q').value = p.get('q') || '';
     for (const k in F) F[k].value = p.get(k) || '';
+    $('sort').value = p.get('sort') || '';
+    shared = p.get('rule');
   }
   function writeHash() {
     const p = new URLSearchParams();
     if ($('q').value.trim()) p.set('q', $('q').value.trim());
     for (const k in F) if (F[k].value) p.set(k, F[k].value);
+    if ($('sort').value) p.set('sort', $('sort').value);
+    if (shared) p.set('rule', shared);
     const h = p.toString();
     history.replaceState(null, '', h ? '#' + h : location.pathname);
   }
 
+  // Date filter: rule last modified (or created, if never modified) within the last N days.
+  const since = days => new Date(Date.now() - days * 864e5).toISOString().slice(0, 10);
+
   function apply() {
     const terms = $('q').value.toLowerCase().split(/\s+/).filter(Boolean);
-    shown = all.filter(r =>
+    // A shared pending rule that has since been merged falls back to the published rule with the same Sigma ID.
+    if (shared && !all.some(r => keyOf(r) === shared) && shared.startsWith('p:')) {
+      const id = shared.split(':').slice(2).join(':');
+      if (all.some(r => keyOf(r) === id)) shared = id;
+    }
+    shown = shared ? all.filter(r => keyOf(r) === shared) : all.filter(r =>
       (!F.lv.value || r.lv === F.lv.value) &&
       (!F.pf.value || r.pf === F.pf.value) &&
       (!F.ta.value || r.ta.includes(F.ta.value)) &&
       (!F.tb.value || r.tb === F.tb.value) &&
       (!F.src.value || r.src === F.src.value) &&
       (!F.stg.value || r.stg === F.stg.value) &&
+      (!F.dt.value || r._d >= since(F.dt.value)) &&
       terms.every(t => r._s.includes(t)));
+    const s = $('sort').value;
+    if (s === 'new') shown = [...shown].sort((a, b) => b._d.localeCompare(a._d) || a.t.localeCompare(b.t));
+    else if (s === 'az') shown = [...shown].sort((a, b) => a.t.localeCompare(b.t));
+    $('shared').hidden = !shared;
     limit = PAGE;
     writeHash();
     render();
   }
 
   function card(r) {
+    const when = [r.dt, r.md && r.md !== r.dt ? 'updated ' + r.md : ''].filter(Boolean).join(', ');
     const fp = r.fp.length ? `<h4>False positives</h4><ul>${r.fp.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
-    return `<details class="rule"><summary>
+    return `<details class="rule"${shared ? ' open' : ''}><summary>
         <span class="lv ${esc(r.lv)}">${esc(r.lv)}</span>
         <span class="title">${esc(r.t)}${r.stg === 'Pending' ? ' <span class="pv">Pending</span>' : ''}</span>
         <span class="meta"><span>${esc(r.tb)}</span><span>${esc(r.pf)}</span>${r.te.length ? `<span>${esc(r.te.join(', '))}</span>` : ''}${r.ta.length ? `<span>${esc(r.ta.join(', '))}</span>` : ''}</span>
+        <span class="chev" aria-hidden="true"><span class="hint">Show query</span></span>
       </summary><div class="body">
         ${r.stg === 'Pending' ? `<p class="pvnote">From an <strong>open SigmaHQ pull request</strong> (${esc(r.ch)}). Not reviewed or merged yet, so it may change or be rejected. <a href="${esc(r.pru)}">Pull request ${esc(r.pr.split(' ')[0])}</a></p>` : ''}
         ${r.de ? `<p>${esc(r.de)}</p>` : ''}
         ${fp}
-        <div class="qhead"><h4 style="margin:0">KQL</h4><button class="copy" type="button">Copy query</button></div>
+        <div class="qhead"><h4 style="margin:0">KQL</h4><span class="btns"><button class="link" type="button">Copy link</button><button class="copy" type="button">Copy query</button></span></div>
         <pre>${esc(r.q)}</pre>
         <div class="links">
           ${r.sg ? `<a href="${esc(r.sg)}">Sigma rule</a>` : ''}
           <a href="https://github.com/Tenbite/sigma2kql/blob/main/${esc(r.kp)}">KQL file</a>
-          <span style="color:var(--muted)">by ${esc(r.au || 'unknown')}${r.dt ? ', ' + esc(r.dt) : ''}</span>
+          <span style="color:var(--muted)">by ${esc(r.au || 'unknown')}${when ? ', ' + esc(when) : ''}</span>
         </div>
       </div></details>`;
   }
 
+  // Comment header added to copied queries, so a pasted query still says where it came from.
+  function withHeader(r) {
+    const h = [`// ${r.t}`];
+    if (r.stg === 'Pending') h.push(`// PENDING: from an open SigmaHQ pull request, not reviewed or merged yet: ${r.pru}`);
+    h.push(`// Level: ${r.lv || 'n/a'} | Status: ${r.st || 'n/a'}${r.id ? ' | Sigma ID: ' + r.id : ''}`);
+    if (r.sg) h.push(`// Sigma rule: ${r.sg}`);
+    h.push('// Converted by sigma2kql (https://github.com/Tenbite/sigma2kql). Machine-generated, tune before use.');
+    return h.join('\n') + '\n' + r.q;
+  }
+
   function render() {
     const slice = shown.slice(0, limit);
-    $('list').innerHTML = slice.length ? slice.map(card).join('') : '<p class="empty">No rules match. Try fewer words or clear a filter.</p>';
-    $('count').textContent = `${shown.length.toLocaleString()} of ${all.length.toLocaleString()} rules`;
-    $('more').hidden = shown.length <= limit;
-    $('more').textContent = `Show ${Math.min(PAGE, shown.length - limit)} more`;
-    $('list').querySelectorAll('.copy').forEach((b, i) => b.addEventListener('click', async e => {
-      e.preventDefault();
-      try { await navigator.clipboard.writeText(slice[i].q); b.textContent = 'Copied'; }
+    $('list').innerHTML = slice.length ? slice.map(card).join('') : shared
+      ? '<p class="empty">This rule is no longer in the library. It may have been renamed, removed, or its pull request closed.</p>'
+      : '<p class="empty">No rules match. Try fewer words or clear a filter.</p>';
+    const n = v => v.toLocaleString();
+    const filtered = shown.length !== all.length ? ` (filtered from ${n(all.length)})` : '';
+    $('count').textContent = shown.length > slice.length
+      ? `Showing ${n(slice.length)} of ${n(shown.length)} rules${filtered}. More below.`
+      : `${n(shown.length)} rules${filtered}`;
+    $('pager').hidden = shown.length <= limit;
+    $('pagecount').textContent = `Showing ${n(slice.length)} of ${n(shown.length)} rules`;
+    $('more').textContent = `Show next ${Math.min(PAGE, shown.length - limit)}`;
+    $('allbtn').textContent = `Show all ${n(shown.length)}`;
+    const copy = async (b, text, label) => {
+      try { await navigator.clipboard.writeText(text); b.textContent = 'Copied'; }
       catch { b.textContent = 'Select and copy'; }
-      setTimeout(() => (b.textContent = 'Copy query'), 1500);
+      setTimeout(() => (b.textContent = label), 1500);
+    };
+    $('list').querySelectorAll('.copy').forEach((b, i) => b.addEventListener('click', e => { e.preventDefault(); copy(b, withHeader(slice[i]), 'Copy query'); }));
+    $('list').querySelectorAll('.link').forEach((b, i) => b.addEventListener('click', e => {
+      e.preventDefault();
+      copy(b, SITE + '#rule=' + encodeURIComponent(keyOf(slice[i])), 'Copy link');
     }));
   }
 
   let timer;
-  $('q').addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(apply, 150); });
-  Object.values(F).forEach(s => s.addEventListener('change', apply));
-  $('reset').addEventListener('click', () => { $('q').value = ''; Object.values(F).forEach(s => (s.value = '')); apply(); });
+  const user = () => { shared = null; apply(); };
+  $('q').addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(user, 150); });
+  Object.values(F).forEach(s => s.addEventListener('change', user));
+  $('sort').addEventListener('change', user);
+  const clearAll = () => { $('q').value = ''; Object.values(F).forEach(s => (s.value = '')); $('sort').value = ''; user(); };
+  $('reset').addEventListener('click', clearAll);
+  $('showall').addEventListener('click', clearAll);
+  window.addEventListener('hashchange', () => { readHash(); apply(); });
   $('more').addEventListener('click', () => { limit += PAGE; render(); });
+  $('allbtn').addEventListener('click', () => { limit = shown.length; render(); });
 
   fetch('rules.json').then(r => r.json()).then(data => {
     all = data;
-    all.forEach(r => { r._s = [r.t, r.de, r.id, r.tb, r.pf, r.au, r.te.join(' '), r.ta.join(' '), r.pr, r.stg, r.q].join(' ').toLowerCase(); });
+    all.forEach(r => { r._d = r.md || r.dt || ''; r._s = [r.t, r.de, r.id, r.tb, r.pf, r.au, r.te.join(' '), r.ta.join(' '), r.pr, r.stg, r.q].join(' ').toLowerCase(); });
     fill(F.lv, LV.filter(l => all.some(r => r.lv === l)));
     fill(F.pf, uniq(r => r.pf).sort());
     fill(F.ta, uniq(r => r.ta).sort());

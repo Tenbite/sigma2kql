@@ -12,7 +12,7 @@
 // References:
 //   - https://www.microsoft.com/security/blog/2021/12/09/a-closer-look-at-qakbots-latest-building-blocks-and-how-to-knock-them-down/
 //   - https://www.fortinet.com/content/dam/fortinet/assets/analyst-reports/ar-qakbot.pdf
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ccbb0369507f796db0b0ae6854c8a2be471b9d84/rules/windows/process_creation/proc_creation_win_msra_process_injection.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/adf5a626c4a776f3f023056f0f398b9523a2f09e/rules/windows/process_creation/proc_creation_win_msra_process_injection.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)

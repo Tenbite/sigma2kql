@@ -14,7 +14,7 @@
 //   - https://github.com/redcanaryco/atomic-red-team/blob/a8e3cf63e97b973a25903d3df9fd55da6252e564/atomics/T1112/T1112.md
 //   - https://social.technet.microsoft.com/wiki/contents/articles/32905.remote-desktop-services-enable-restricted-admin-mode.aspx
 //   - https://thedfirreport.com/2022/05/09/seo-poisoning-a-gootloader-story/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ccbb0369507f796db0b0ae6854c8a2be471b9d84/rules/windows/process_creation/proc_creation_win_reg_lsa_disable_restricted_admin.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/adf5a626c4a776f3f023056f0f398b9523a2f09e/rules/windows/process_creation/proc_creation_win_reg_lsa_disable_restricted_admin.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)

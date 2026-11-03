@@ -17,7 +17,7 @@
 //   - Legitimate add-ins or automation scripts that use Office applications to manage scheduled tasks (rare in most environments)
 // References:
 //   - https://github.com/saksham-17/detection-lab/blob/cbc25dfe1e5eda0c4e5a7d66b6d3bbd27829e158/T1053.005-scheduled-task/tests/test5-task-scheduler-via-VBA/report.md
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/820c1333588ea6ceb92564d45e5d4e647e218528/rules/windows/image_load/image_load_office_taskschd_dll_load.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/020a9227e9e1f5964830850dc80d67827e7dea26/rules/windows/image_load/image_load_office_taskschd_dll_load.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

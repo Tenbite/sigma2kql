@@ -3,20 +3,21 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-02 16:07 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-03 05:21 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+
+## [#6557](https://github.com/SigmaHQ/sigma/pull/6557) Add Entroprism AIP self-built detection rules (6 rules)
+
+| Rule | Change | Level |
+|---|---|---|
+| [AMSI Bypass (patch amsi.dll AmsiScanBuffer / reflection unload)](pr-6557/rules/windows/process_creation/amsi_bypass_patch_amsi.dll_amsiscanbuffer__reflection_unload.kql) | new rule | high |
+| [ETW Tampering (disable event tracing / unhook ntdll)](pr-6557/rules/windows/process_creation/etw_tampering_disable_event_tracing__unhook_ntdll.kql) | new rule | high |
+| [Sandbox / Virtualization Environment Detection](pr-6557/rules/windows/process_creation/sandbox__virtualization_environment_detection.kql) | new rule | medium |
 
 ## [#6555](https://github.com/SigmaHQ/sigma/pull/6555) fix: nsswitch FPs on Ubuntu and Centos
 
 | Rule | Change | Level |
 |---|---|---|
 | [Non-Standard Nsswitch.Conf Creation - Potential CVE-2025-32463 Exploitation](pr-6555/rules-emerging-threats/2025/Exploits/CVE-2025-32463/file_event_lnx_exploit_cve_2025_32463.kql) | update to existing rule | high |
-
-## [#6554](https://github.com/SigmaHQ/sigma/pull/6554) fix: three conditions that can never match
-
-| Rule | Change | Level |
-|---|---|---|
-| [ClickOnce Deployment Execution - Dfsvc.EXE Child Process](pr-6554/rules-threat-hunting/windows/process_creation/proc_creation_win_dfsvc_child_processes.kql) | update to existing rule | medium |
-| [Potential SentinelOne Shell Context Menu Scan Command Tampering](pr-6554/rules/windows/registry/registry_set/registry_set_sentinelone_shell_context_tampering.kql) | update to existing rule | medium |
 
 ## [#6549](https://github.com/SigmaHQ/sigma/pull/6549) Fix OriginalFileName with an incorrect leading backslash across Windows process creation rules
 
@@ -1438,11 +1439,4 @@ Rebuilt 2026-11-02 16:07 UTC from 300 open pull requests. When a pull request is
 | [Suspicious SC.EXE Config Change for Services Vulnerable to Phantom DLL Hijacking](pr-5643/rules/windows/process_creation/proc_creation_win_sc_service_config_change_for_phantom_dll_hijacking.kql) | new rule | high |
 | [Suspicious Service Privilege Addition](pr-5643/rules/windows/process_creation/proc_creation_win_susp_service_privilege_addition.kql) | new rule | medium |
 | [Potential Tampering of Service Privileges in Registry](pr-5643/rules/windows/registry/registry_set/registry_set_potential_tampering_of_service_privileges.kql) | new rule | medium |
-
-## [#5548](https://github.com/SigmaHQ/sigma/pull/5548) update: windowsInstaller com object related rules
-
-| Rule | Change | Level |
-|---|---|---|
-| [Obfuscated PowerShell MSI Install via WindowsInstaller COM](pr-5548/rules/windows/process_creation/proc_creation_win_powershell_comobject_msi_obfuscated_install.kql) | new rule | high |
-| [PowerShell MSI Install via WindowsInstaller COM From Remote Location](pr-5548/rules/windows/process_creation/proc_creation_win_powershell_comobject_msi_remote_install.kql) | new rule | medium |
 

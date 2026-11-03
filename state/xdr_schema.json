@@ -4457,6 +4457,38 @@
   "Title": "string",
   "Type": "string"
  },
+ "DeviceCustomVulnerabilities": {
+  "CustomVulnerabilityId": "string",
+  "DeviceId": "string",
+  "DeviceName": "string",
+  "FirstSeenTime": "datetime",
+  "FullImagePath": "dynamic",
+  "IsDeleted": "bool",
+  "LastCorrelatedTime": "datetime",
+  "MachineGroup": "string",
+  "OrgId": "string",
+  "SourceSystem": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Timestamp": "datetime",
+  "Type": "string"
+ },
+ "DeviceCustomVulnerabilitiesKB": {
+  "CustomVulnerabilityId": "string",
+  "IsDeleted": "bool",
+  "LastModifiedTime": "datetime",
+  "OrgId": "string",
+  "ProductName": "string",
+  "Scope": "string",
+  "SourceSystem": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Timestamp": "datetime",
+  "Title": "string",
+  "Type": "string",
+  "VulnerabilityDescription": "string",
+  "VulnerabilityTags": "dynamic"
+ },
  "DeviceEvents": {
   "AccountDomain": "string",
   "AccountName": "string",

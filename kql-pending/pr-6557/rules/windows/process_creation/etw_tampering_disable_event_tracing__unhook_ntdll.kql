@@ -1,0 +1,25 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6557 Add Entroprism AIP self-built detection rules (6 rules)
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6557
+// Pull request author: ckcto
+// Change: new rule
+// Title: ETW Tampering (disable event tracing / unhook ntdll)
+// Sigma ID: 47e406ef-d07a-5647-eade-0748afecd7b6
+// Status: experimental | Level: high
+// Author: Entroprism (Beijing Yijun Foreign Trade Co., Ltd.)
+// Date: 2026-11-03 | Modified: -
+// ATT&CK: T1562
+// Tags: detection.threat_hunting
+// Description: Detects attempts to tamper with ETW or unhook ntdll to impair event tracing defenses.
+// False positives:
+//   - legitimate debugging or instrumentation tools
+// References:
+//   - https://entroprism.net
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/02019c7f616fa2b4879138907ad45880092bf5b9/rules/windows/process_creation/etw_tampering_disable_event_tracing__unhook_ntdll.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "EtwEventWrite" or ProcessCommandLine contains "ntdll!Etw") or (ProcessCommandLine contains "NtProtectVirtualMemory" or ProcessCommandLine contains "ntdll.dll")
