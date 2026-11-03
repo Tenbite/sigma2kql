@@ -1,15 +1,15 @@
 # Pending rules run
 
-- Run: 2026-11-03 05:21 UTC
+- Run: 2026-11-03 14:28 UTC
 - Open pull requests checked: 300 (drafts skipped: 5)
-- Pull requests with converted rules: 182
+- Pull requests with converted rules: 183
 
 | Result | Rule files |
 |---|---|
-| Converted and valid | 525 |
+| Converted and valid | 527 |
 | Failed validation | 6 |
-| Failed conversion | 327 |
-| Skipped (filters) | 58 |
+| Failed conversion | 329 |
+| Skipped (filters) | 56 |
 
 ## Not converted
 
@@ -85,7 +85,6 @@
 - #6416 `rules/windows/powershell/powershell_module/posh_pm_clear_powershell_history.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6416 `rules/windows/powershell/powershell_script/posh_ps_clear_powershell_history.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6414 `rules-emerging-threats/2026/Malware/EvilAI/proc_creation_win_nightscreenshot_updater.yml`: SigmaReferencesError: Sigma rule references must be a list
-- #6353 `rules-emerging-threats/2024/Exploits/CVE-2024-49113/win_application_error_exploit_cve_2024_49113_ldap_nightmare.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6352 `rules-emerging-threats/2026/Exploits/CVE-2026-88771/web_exploit_cve_2026_88771_netscaler_auth_cmd_injection.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6333 `rules/windows/powershell/powershell_script/posh_ps_httpclient_download_execute.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6332 `rules/windows/powershell/powershell_script/posh_ps_wmi_hidden_process_creation.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
@@ -346,3 +345,6 @@
 - #5739 `rules/linux/auditd/lnx_auditd_api_hooking.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #5643 `rules/windows/builtin/system/service_control_manager/win_system_service_starttype_change_for_phantom_dll_abuse.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #5643 `rules/windows/image_load/image_load_side_load_non_existent_dlls.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name 
+- #5548 `rules/windows/powershell/powershell_script/posh_ps_powershell_comobject_msi_obfuscated_install.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #5548 `rules/windows/powershell/powershell_script/posh_ps_powershell_comobject_msi_remote_install.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #5470 `rules/linux/auditd/lnx_auditd_masquerading_process_name.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:

@@ -3,7 +3,7 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-03 05:21 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-03 14:28 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
 
 ## [#6557](https://github.com/SigmaHQ/sigma/pull/6557) Add Entroprism AIP self-built detection rules (6 rules)
 
@@ -1439,4 +1439,11 @@ Rebuilt 2026-11-03 05:21 UTC from 300 open pull requests. When a pull request is
 | [Suspicious SC.EXE Config Change for Services Vulnerable to Phantom DLL Hijacking](pr-5643/rules/windows/process_creation/proc_creation_win_sc_service_config_change_for_phantom_dll_hijacking.kql) | new rule | high |
 | [Suspicious Service Privilege Addition](pr-5643/rules/windows/process_creation/proc_creation_win_susp_service_privilege_addition.kql) | new rule | medium |
 | [Potential Tampering of Service Privileges in Registry](pr-5643/rules/windows/registry/registry_set/registry_set_potential_tampering_of_service_privileges.kql) | new rule | medium |
+
+## [#5548](https://github.com/SigmaHQ/sigma/pull/5548) update: windowsInstaller com object related rules
+
+| Rule | Change | Level |
+|---|---|---|
+| [Obfuscated PowerShell MSI Install via WindowsInstaller COM](pr-5548/rules/windows/process_creation/proc_creation_win_powershell_comobject_msi_obfuscated_install.kql) | new rule | high |
+| [PowerShell MSI Install via WindowsInstaller COM From Remote Location](pr-5548/rules/windows/process_creation/proc_creation_win_powershell_comobject_msi_remote_install.kql) | new rule | medium |
 

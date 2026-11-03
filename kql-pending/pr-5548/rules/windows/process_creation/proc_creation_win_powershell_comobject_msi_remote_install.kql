@@ -1,0 +1,30 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5548 update: windowsInstaller com object related rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5548
+// Pull request author: swachchhanda000
+// Change: new rule
+// Title: PowerShell MSI Install via WindowsInstaller COM From Remote Location
+// Sigma ID: 222720a7-047f-4054-baa5-bab9be757db0
+// Status: experimental | Level: medium
+// Author: Meroujan Antonyan (vx3r)
+// Date: 2025-06-05 | Modified: 2025-07-28
+// ATT&CK: execution, stealth, T1059.001, T1218, command-and-control, T1105
+// Description: Detects the execution of PowerShell commands that attempt to install MSI packages via the
+//   Windows Installer COM object (`WindowsInstaller.Installer`) hosted remotely. This could be an
+//   indication of malicious software deployment or lateral movement attempts using Windows Installer
+//   functionality. The usage of WindowsInstaller COM object rather than msiexec could be an attempt
+//   to bypass the detection.
+// False positives:
+//   - Unknown
+// References:
+//   - https://informationsecuritybuzz.com/the-real-danger-behind-a-simple-windows-shortcut/
+//   - https://redcanary.com/blog/threat-intelligence/intelligence-insights-may-2025/
+//   - https://www.virustotal.com/gui/file/f9710b0ba4de5fa0e7ec27da462d4d2fc6838eba83a19f23f6617a466bbad457
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/444a7d19c4e5be471aa81f4e62c2336034611932/rules/windows/process_creation/proc_creation_win_powershell_comobject_msi_remote_install.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (((FolderPath endswith "\\powershell_ise.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe") or (ProcessVersionInfoOriginalFileName in~ ("PowerShell_ISE.EXE", "PowerShell.EXE", "pwsh.dll"))) and (ProcessCommandLine contains "-ComObject" and ProcessCommandLine contains "InstallProduct(") and (ProcessCommandLine contains "http" or ProcessCommandLine contains "\\\\")) and (not((ProcessCommandLine contains "://127.0.0.1" or ProcessCommandLine contains "://localhost")))
