@@ -3,8 +3,9 @@
 Build the searchable rule browser for GitHub Pages.
 
 Reads every .kql file the converter wrote and produces:
-  docs/rules.json   one record per rule (metadata + query)
+  docs/rules.json   one record per rule (compact, for the page itself)
   docs/index.html   a single-page browser with search and filters
+  docs/api/         the public JSON API (see build_api.py)
 
 Usage: python scripts/build_site.py [--config config.yml]
 """
@@ -18,6 +19,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml
+
+import build_api
 
 ROOT = Path(__file__).resolve().parent.parent
 SOURCES = {"rules": "Core", "rules-emerging-threats": "Emerging threats", "rules-threat-hunting": "Threat hunting"}
@@ -75,7 +78,8 @@ def build(cfg: dict) -> int:
     out_dir.mkdir(exist_ok=True)
     pending_dir = (cfg.get("pending") or {}).get("output_dir", "kql-pending")
     roots = [(ROOT / cfg["output_dir"], cfg["output_dir"], "Published"), (ROOT / pending_dir, pending_dir, "Pending")]
-    records = []
+    records, api_records = [], []
+    _, repo_url = build_api.site_urls(cfg)
     skipped = []
     for kql_root, out_name, stage, path in ((r, n, st, p) for r, n, st in roots if r.exists() for p in sorted(r.rglob("*.kql"))):
       try:
@@ -112,6 +116,9 @@ def build(cfg: dict) -> int:
             "pru": first.get("Pull request URL", ""),
             "ch": first.get("Change", ""),
         })
+        api_records.append(build_api.to_record(
+            first, queries, rel=rel, kql_path=f"{out_name}/{full_rel}", stage=stage,
+            platform=records[-1]["pf"], source=records[-1]["src"], repo_url=repo_url))
       except Exception as exc:  # one odd file must never take the whole page down
         skipped.append(f"{path}: {exc}")
     for line in skipped:
@@ -122,6 +129,10 @@ def build(cfg: dict) -> int:
     page = PAGE.replace("__BUILT__", now.strftime("%Y-%m-%d %H:%M UTC")).replace("__UPDATED__", f"{now:%b} {now.day}, {now.year}")
     (out_dir / "index.html").write_text(page, encoding="utf-8")
     (out_dir / ".nojekyll").write_text("")
+    try:  # an API problem must never block the search page or the nightly commit
+        build_api.write(api_records, cfg, ROOT)
+    except Exception as exc:
+        print(f"::warning title=JSON API not updated::{exc}")
     return len(records)
 
 
@@ -202,7 +213,7 @@ footer .wrap { padding-top: 14px; padding-bottom: 28px; }
 <body>
 <header><div class="wrap">
   <h1>Sigma to Defender KQL</h1>
-  <p class="sub">Detection and hunting rules written by the <a href="https://github.com/SigmaHQ/sigma">SigmaHQ</a> community, converted to Microsoft Defender XDR Advanced Hunting queries. Includes pending rules from open SigmaHQ pull requests (labeled). Rebuilt nightly, last updated __UPDATED__. <a href="https://github.com/Tenbite/sigma2kql">Source on GitHub</a></p>
+  <p class="sub">Detection and hunting rules written by the <a href="https://github.com/SigmaHQ/sigma">SigmaHQ</a> community, converted to Microsoft Defender XDR Advanced Hunting queries. Includes pending rules from open SigmaHQ pull requests (labeled). Rebuilt nightly, last updated __UPDATED__. <a href="https://github.com/Tenbite/sigma2kql">Source on GitHub</a> · <a href="api/">JSON API</a></p>
   <p class="warn"><strong>How it's made:</strong> converted with pySigma and its Kusto backend, then every query is validated with Microsoft's KQL parser and checked against the latest Defender schema from XDRInternals. <strong>Not tested against real telemetry.</strong> Run as a hunt and tune before using as a detection. Provided as is. Rules are under the <a href="https://github.com/SigmaHQ/Detection-Rule-License">Detection Rule License 1.1</a>.</p>
 </div></header>
 
@@ -233,7 +244,7 @@ footer .wrap { padding-top: 14px; padding-bottom: 28px; }
 </div></main>
 
 <footer><div class="wrap">
-  Rules by the <a href="https://github.com/SigmaHQ/sigma">SigmaHQ</a> community and their original authors; each keeps its author and Sigma ID. Built __BUILT__ with pySigma and the Kusto backend. Not affiliated with SigmaHQ or Microsoft.
+  Rules by the <a href="https://github.com/SigmaHQ/sigma">SigmaHQ</a> community and their original authors; each keeps its author and Sigma ID. Built __BUILT__ with pySigma and the Kusto backend. Data also available as a free <a href="api/">JSON API</a>. Not affiliated with SigmaHQ or Microsoft.
 </div></footer>
 
 <script>
