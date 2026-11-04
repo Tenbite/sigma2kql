@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tenbite.github.io/sigma2kql/api/v1/schema.json",
+  "title": "sigma2kql rules (API v1)",
+  "type": "object",
+  "required": [
+    "meta",
+    "rules"
+  ],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "description": "Run metadata; same fields as index.json."
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "uid",
+          "sigma_id",
+          "title",
+          "stage",
+          "level",
+          "kql",
+          "validation",
+          "license"
+        ],
+        "properties": {
+          "uid": {
+            "type": "string",
+            "description": "Unique key. The Sigma ID for published rules; 'pr-<number>/<Sigma ID>' for pending rules."
+          },
+          "sigma_id": {
+            "type": "string",
+            "description": "Sigma rule ID (UUID). A rule can appear as published and as pending (an update in an open pull request)."
+          },
+          "title": {
+            "type": "string"
+          },
+          "stage": {
+            "enum": [
+              "published",
+              "pending"
+            ],
+            "description": "pending = from an open, unmerged SigmaHQ pull request."
+          },
+          "status": {
+            "type": "string",
+            "description": "Sigma status: stable, test, experimental."
+          },
+          "level": {
+            "type": "string",
+            "description": "Sigma level: medium, high, critical."
+          },
+          "author": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "description": "Rule creation date (YYYY-MM-DD)."
+          },
+          "modified": {
+            "type": "string",
+            "description": "Last modified date (YYYY-MM-DD), or empty."
+          },
+          "description": {
+            "type": "string"
+          },
+          "false_positives": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "references": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Non-ATT&CK Sigma tags, e.g. detection.threat-hunting."
+          },
+          "attack": {
+            "type": "object",
+            "properties": {
+              "tactics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "techniques": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "platform": {
+            "type": "string",
+            "description": "Windows, Linux, macOS or Other."
+          },
+          "source": {
+            "type": "string",
+            "description": "SigmaHQ folder: Core, Emerging threats, Threat hunting."
+          },
+          "sigma": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "description": "Exact Sigma rule version converted."
+              }
+            }
+          },
+          "kql": {
+            "type": "object",
+            "properties": {
+              "table": {
+                "type": "string",
+                "description": "Main Defender XDR table, e.g. DeviceProcessEvents."
+              },
+              "tables": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "queries": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "One query per Sigma rule in the file (usually one)."
+              },
+              "file": {
+                "type": "string",
+                "description": "Path of the .kql file in the repository."
+              },
+              "file_url": {
+                "type": "string"
+              },
+              "raw_url": {
+                "type": "string"
+              }
+            }
+          },
+          "validation": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "enum": [
+                  "passed",
+                  "syntax_only",
+                  "unknown"
+                ]
+              },
+              "detail": {
+                "type": "string"
+              }
+            }
+          },
+          "notes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Conversion notes, e.g. automatic fixes applied."
+          },
+          "pending": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "pr_number": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "pr_title": {
+                "type": "string"
+              },
+              "pr_url": {
+                "type": "string"
+              },
+              "pr_author": {
+                "type": "string"
+              },
+              "change": {
+                "type": "string",
+                "description": "new rule | update to existing rule"
+              }
+            }
+          },
+          "license": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

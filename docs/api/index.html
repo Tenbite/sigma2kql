@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>sigma2kql JSON API</title>
+<meta name="description" content="Free JSON API with every SigmaHQ rule converted to Microsoft Defender XDR KQL, with metadata. Updated nightly.">
+<style>
+:root { --bg: #0f1419; --panel: #161c23; --ink: #e6e9ee; --muted: #9aa5b1; --rule: #2a323c; --accent: #5ba8c9; --code: #11171d; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); }
+h1 { font-size: 1.7rem; margin: 0 0 6px; } h2 { font-size: 1.2rem; margin: 32px 0 8px; }
+.sub { color: var(--muted); margin: 0 0 12px; }
+.warn { padding: 10px 14px; border-left: 3px solid #d4a14a; background: var(--panel); color: var(--muted); font-size: .92rem; }
+table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; }
+code { font: .88em ui-monospace, SFMono-Regular, Consolas, monospace; background: var(--code); padding: 1px 5px; border-radius: 4px; }
+pre { background: var(--code); border: 1px solid var(--rule); border-radius: 8px; padding: 12px 14px; overflow-x: auto; font: .85rem/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; }
+pre code { background: none; padding: 0; }
+.nav { margin: 0 0 20px; font-size: .92rem; }
+footer { margin-top: 40px; color: var(--muted); font-size: .85rem; }
+</style>
+</head>
+<body>
+<main>
+<p class="nav"><a href="https://tenbite.github.io/sigma2kql/">&larr; Search the rules</a> · <a href="https://github.com/Tenbite/sigma2kql">Source on GitHub</a></p>
+<h1>sigma2kql JSON API</h1>
+<p class="sub">Every converted rule (2,430 today: 1,910 published, 520 pending), with its metadata and Defender XDR KQL, as static JSON. Free, no key, rebuilt nightly. Rules were written by the <a href="https://github.com/SigmaHQ/sigma">SigmaHQ</a> community.</p>
+<p class="warn">Machine-generated and not tested against real telemetry. Queries pass Microsoft's KQL parser against the live Defender schema, which proves they are valid KQL, not that they detect what the rule describes. Rules are under the <a href="https://github.com/SigmaHQ/Detection-Rule-License">DRL 1.1</a>: keep each rule's author and Sigma ID if you redistribute.</p>
+
+<h2>Endpoints</h2>
+<table>
+<tr><th>URL</th><th>What it is</th></tr>
+<tr><td><a href="https://tenbite.github.io/sigma2kql/api/v1/index.json"><code>/api/v1/index.json</code></a></td><td>Small manifest: when it was built, SigmaHQ commit, tool versions, counts, endpoint URLs. Check this first to see if anything changed.</td></tr>
+<tr><td><a href="https://tenbite.github.io/sigma2kql/api/v1/rules.json"><code>/api/v1/rules.json</code></a></td><td>All rules with metadata and KQL (about 6.3 MB, compressed in transit).</td></tr>
+<tr><td><a href="https://tenbite.github.io/sigma2kql/api/v1/schema.json"><code>/api/v1/schema.json</code></a></td><td>JSON Schema for <code>rules.json</code>.</td></tr>
+</table>
+<p>It is a static file, so there's no server-side filtering: download once, then filter locally. Fields are stable within <code>v1</code>; new fields may be added, nothing is renamed or removed without a <code>/v2/</code>.</p>
+
+<h2>Examples</h2>
+<p><strong>curl + jq:</strong> high and critical published rules on DeviceProcessEvents</p>
+<pre><code>curl -s https://tenbite.github.io/sigma2kql/api/v1/rules.json | jq '.rules[]
+  | select(.stage=="published" and (.level=="high" or .level=="critical") and .kql.table=="DeviceProcessEvents")
+  | {title, sigma_id, query: .kql.queries[0]}'</code></pre>
+<p><strong>PowerShell:</strong> rules for one ATT&amp;CK technique</p>
+<pre><code>$api = Invoke-RestMethod https://tenbite.github.io/sigma2kql/api/v1/rules.json
+$api.rules | Where-Object { $_.attack.techniques -contains 'T1105' } | Select-Object title, level, sigma_id</code></pre>
+<p><strong>Python:</strong> rules changed in the last 30 days</p>
+<pre><code>import datetime, requests
+data = requests.get("https://tenbite.github.io/sigma2kql/api/v1/rules.json", timeout=60).json()
+since = (datetime.date.today() - datetime.timedelta(days=30)).isoformat()
+for r in data["rules"]:
+    if (r["modified"] or r["date"]) &gt;= since:
+        print(r["level"], r["title"], r["kql"]["file_url"])</code></pre>
+
+<h2>Rule fields</h2>
+<table>
+<tr><th>Field</th><th>Meaning</th></tr>
+<tr><td><code>uid</code></td><td>Unique key: the Sigma ID, or <code>pr-&lt;number&gt;/&lt;Sigma ID&gt;</code> for pending rules.</td></tr>
+<tr><td><code>sigma_id</code>, <code>title</code>, <code>status</code>, <code>level</code>, <code>author</code>, <code>date</code>, <code>modified</code>, <code>description</code></td><td>From the Sigma rule.</td></tr>
+<tr><td><code>false_positives</code>, <code>references</code>, <code>tags</code></td><td>Lists from the Sigma rule.</td></tr>
+<tr><td><code>attack.tactics</code>, <code>attack.techniques</code></td><td>MITRE ATT&amp;CK mapping.</td></tr>
+<tr><td><code>stage</code></td><td><code>published</code>, or <code>pending</code> for rules from open SigmaHQ pull requests (not reviewed or merged yet).</td></tr>
+<tr><td><code>platform</code>, <code>source</code></td><td>Windows / Linux / macOS / Other; SigmaHQ folder (Core, Emerging threats, Threat hunting).</td></tr>
+<tr><td><code>sigma.path</code>, <code>sigma.url</code></td><td>The exact Sigma rule version that was converted.</td></tr>
+<tr><td><code>kql.table</code>, <code>kql.tables</code>, <code>kql.queries</code></td><td>Defender XDR table(s) and the query text.</td></tr>
+<tr><td><code>kql.file</code>, <code>kql.file_url</code>, <code>kql.raw_url</code></td><td>Where the <code>.kql</code> file lives in the repo.</td></tr>
+<tr><td><code>validation.status</code></td><td><code>passed</code> (parser + live schema) or <code>syntax_only</code> (too deeply nested for full analysis).</td></tr>
+<tr><td><code>notes</code></td><td>Automatic fixes applied during conversion, if any.</td></tr>
+<tr><td><code>pending</code></td><td>For pending rules: <code>pr_number</code>, <code>pr_title</code>, <code>pr_url</code>, <code>pr_author</code>, <code>change</code>. Otherwise <code>null</code>.</td></tr>
+<tr><td><code>license</code></td><td>The rule's license (DRL 1.1).</td></tr>
+</table>
+
+<h2>Good to know</h2>
+<ul>
+<li>Updated nightly. Pending rules come and go as pull requests open, merge, or close.</li>
+<li>Be kind to GitHub Pages: fetch once a day at most, or check <code>index.json</code>'s <code>generated_at</code> first.</li>
+<li>Prefer git? The same data is in the repo as one <code>.kql</code> file per rule.</li>
+<li>Found a bad rule? <a href="https://github.com/Tenbite/sigma2kql/issues/new?template=bad-rule.md">Open an issue</a>.</li>
+</ul>
+<footer>Rules by the SigmaHQ community and their original authors, under the DRL 1.1. Code MIT. Not affiliated with SigmaHQ or Microsoft.</footer>
+</main>
+</body>
+</html>

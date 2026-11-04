@@ -2,7 +2,7 @@
 // Sigma ID: 84f52741-8834-4a8c-a413-2eb2269aa6c8
 // Status: test | Level: medium
 // Author: frack113
-// Date: 2022-04-24 | Modified: 2026-10-19
+// Date: 2022-04-24 | Modified: 2026-10-31
 // ATT&CK: stealth, T1218.007
 // Description: Detects MsiExec loading a DLL and calling its DllUnregisterServer function
 // False positives:
@@ -11,11 +11,11 @@
 //   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.007/T1218.007.md
 //   - https://lolbas-project.github.io/lolbas/Binaries/Msiexec/
 //   - https://twitter.com/_st0pp3r_/status/1583914515996897281
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/adf5a626c4a776f3f023056f0f398b9523a2f09e/rules/windows/process_creation/proc_creation_win_msiexec_dll.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/483b91bb583250faca0aa87415d4187a3ea2c957/rules/windows/process_creation/proc_creation_win_msiexec_dll.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)
 // Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceProcessEvents
-| where ((FolderPath endswith "\\msiexec.exe" or ProcessVersionInfoOriginalFileName =~ "\\msiexec.exe") and ((ProcessCommandLine contains " -z " or ProcessCommandLine contains " /z " or ProcessCommandLine contains " –z " or ProcessCommandLine contains " —z " or ProcessCommandLine contains " ―z ") and ProcessCommandLine contains ".dll")) and (not(ProcessCommandLine endswith "\\MsiExec.exe\" /Z \"C:\\Windows\\CCM\\MsiHandler.dll\""))
+| where ((FolderPath endswith "\\msiexec.exe" or ProcessVersionInfoOriginalFileName =~ "msiexec.exe") and ((ProcessCommandLine contains " -z " or ProcessCommandLine contains " /z " or ProcessCommandLine contains " –z " or ProcessCommandLine contains " —z " or ProcessCommandLine contains " ―z ") and ProcessCommandLine contains ".dll")) and (not(ProcessCommandLine endswith "\\MsiExec.exe\" /Z \"C:\\Windows\\CCM\\MsiHandler.dll\""))

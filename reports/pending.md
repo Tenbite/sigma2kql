@@ -1,18 +1,20 @@
 # Pending rules run
 
-- Run: 2026-11-03 14:28 UTC
+- Run: 2026-11-04 04:26 UTC
 - Open pull requests checked: 300 (drafts skipped: 5)
-- Pull requests with converted rules: 183
+- Pull requests with converted rules: 181
 
 | Result | Rule files |
 |---|---|
-| Converted and valid | 527 |
+| Converted and valid | 520 |
 | Failed validation | 6 |
-| Failed conversion | 329 |
-| Skipped (filters) | 56 |
+| Failed conversion | 332 |
+| Skipped (filters) | 55 |
 
 ## Not converted
 
+- #6559 `rules/windows/builtin/security/account_management/win_security_successful_external_remote_rdp_login.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: IpAddress
+- #6559 `rules/windows/builtin/security/account_management/win_security_successful_external_remote_smb_login.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: IpAddress. Invalid SigmaDetectionItem field name encountered: IpAddress
 - #6558 `rules/windows/builtin/security/win_security_lsa_uncommon_authentication_package_loaded.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6558 `rules/windows/builtin/security/win_security_lsa_uncommon_security_package_loaded.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6558 `rules/windows/builtin/security/win_security_sam_uncommon_notification_package_loaded.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
@@ -126,9 +128,9 @@
 - #6279 `rules-threat-hunting/windows/process_access/proc_access_win_lsass_uncommon_access_flag.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6279 `rules-threat-hunting/windows/process_access/proc_access_win_susp_potential_shellcode_injection.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6279 `rules-threat-hunting/windows/process_creation/proc_creation_win_susp_elevated_system_shell.yml`: The operator '=~' is not defined for the operand types long and string. (at 380)
-- #6279 `rules/windows/builtin/security/account_management/win_security_overpass_the_hash.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: LogonProcessName
-- #6279 `rules/windows/builtin/security/account_management/win_security_pass_the_hash_2.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: SubjectUserSid. Invalid SigmaDetectionItem field name encountered: LogonProcessName
-- #6279 `rules/windows/builtin/security/account_management/win_security_rdp_localhost_login.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: IpAddress. Invalid SigmaDetectionItem field name encountered: SubjectUserSid. Invalid SigmaDetectionItem field name encountered: LogonProcessName
+- #6279 `rules/windows/builtin/security/account_management/win_security_overpass_the_hash.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: LogonProcessName. Invalid SigmaDetectionItem field name encountered: IpAddress. Invalid SigmaDetectionItem field name encountered: IpAddress
+- #6279 `rules/windows/builtin/security/account_management/win_security_pass_the_hash_2.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: SubjectUserSid. Invalid SigmaDetectionItem field name encountered: LogonProcessName. Invalid SigmaDetectionItem field name encountered: IpAddress. Invalid SigmaDetectionItem field name encountered: IpAddress
+- #6279 `rules/windows/builtin/security/account_management/win_security_rdp_localhost_login.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: IpAddress. Invalid SigmaDetectionItem field name encountered: SubjectUserSid. Invalid SigmaDetectionItem field name encountered: LogonProcessName. Invalid SigmaDetectionItem field name encountered: IpAddress. Invalid SigmaD
 - #6279 `rules/windows/builtin/security/account_management/win_security_susp_privesc_kerberos_relay_over_ldap.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: AuthenticationPackageName. Invalid SigmaDetectionItem field name encountered: IpAddress. Invalid SigmaDetectionItem field name encountered: SubjectUserSid. Invalid SigmaDetectionItem field name encountered: LogonProcessName
 - #6279 `rules/windows/builtin/security/account_management/win_security_susp_rottenpotato.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: TargetUserName. Invalid SigmaDetectionItem field name encountered: AuthenticationPackageName. Invalid SigmaDetectionItem field name encountered: IpAddress. Invalid SigmaDetectionItem field name encountered: SubjectUserSid. 
 - #6279 `rules/windows/builtin/security/win_security_account_backdoor_dcsync_rights.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
@@ -348,3 +350,4 @@
 - #5548 `rules/windows/powershell/powershell_script/posh_ps_powershell_comobject_msi_obfuscated_install.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #5548 `rules/windows/powershell/powershell_script/posh_ps_powershell_comobject_msi_remote_install.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #5470 `rules/linux/auditd/lnx_auditd_masquerading_process_name.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #5255 `rules/linux/builtin/lnx_networkmanager_hotspot_activation.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:

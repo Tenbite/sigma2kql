@@ -3,7 +3,13 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-03 14:28 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-04 04:26 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+
+## [#6560](https://github.com/SigmaHQ/sigma/pull/6560) fix: Disable Exploit Guard Network Protection on Windows Defender - add the 0x prefix to the DWORD value
+
+| Rule | Change | Level |
+|---|---|---|
+| [Disable Exploit Guard Network Protection on Windows Defender](pr-6560/rules/windows/registry/registry_set/registry_set_disabled_exploit_guard_net_protection_on_ms_defender.kql) | update to existing rule | medium |
 
 ## [#6557](https://github.com/SigmaHQ/sigma/pull/6557) Add Entroprism AIP self-built detection rules (6 rules)
 
@@ -12,29 +18,6 @@ Rebuilt 2026-11-03 14:28 UTC from 300 open pull requests. When a pull request is
 | [AMSI Bypass (patch amsi.dll AmsiScanBuffer / reflection unload)](pr-6557/rules/windows/process_creation/amsi_bypass_patch_amsi.dll_amsiscanbuffer__reflection_unload.kql) | new rule | high |
 | [ETW Tampering (disable event tracing / unhook ntdll)](pr-6557/rules/windows/process_creation/etw_tampering_disable_event_tracing__unhook_ntdll.kql) | new rule | high |
 | [Sandbox / Virtualization Environment Detection](pr-6557/rules/windows/process_creation/sandbox__virtualization_environment_detection.kql) | new rule | medium |
-
-## [#6555](https://github.com/SigmaHQ/sigma/pull/6555) fix: nsswitch FPs on Ubuntu and Centos
-
-| Rule | Change | Level |
-|---|---|---|
-| [Non-Standard Nsswitch.Conf Creation - Potential CVE-2025-32463 Exploitation](pr-6555/rules-emerging-threats/2025/Exploits/CVE-2025-32463/file_event_lnx_exploit_cve_2025_32463.kql) | update to existing rule | high |
-
-## [#6549](https://github.com/SigmaHQ/sigma/pull/6549) Fix OriginalFileName with an incorrect leading backslash across Windows process creation rules
-
-| Rule | Change | Level |
-|---|---|---|
-| [Copying Sensitive Files with Credential Data](pr-6549/rules/windows/process_creation/proc_creation_win_esentutl_sensitive_file_copy.kql) | update to existing rule | high |
-| [HackTool - Inveigh Execution](pr-6549/rules/windows/process_creation/proc_creation_win_hktl_inveigh.kql) | update to existing rule | critical |
-| [DllUnregisterServer Function Call Via Msiexec.EXE](pr-6549/rules/windows/process_creation/proc_creation_win_msiexec_dll.kql) | update to existing rule | medium |
-| [Potential MsiExec Masquerading](pr-6549/rules/windows/process_creation/proc_creation_win_msiexec_masquerading.kql) | update to existing rule | high |
-| [SQL Client Tools PowerShell Session Detection](pr-6549/rules/windows/process_creation/proc_creation_win_mssql_sqltoolsps_susp_execution.kql) | update to existing rule | medium |
-| [Capture Credentials with Rpcping.exe](pr-6549/rules/windows/process_creation/proc_creation_win_rpcping_credential_capture.kql) | update to existing rule | medium |
-
-## [#6546](https://github.com/SigmaHQ/sigma/pull/6546) fix: COM Object Execution via Xwizard.EXE - match RunWizard with contains
-
-| Rule | Change | Level |
-|---|---|---|
-| [COM Object Execution via Xwizard.EXE](pr-6546/rules/windows/process_creation/proc_creation_win_xwizard_runwizard_com_object_exec.kql) | update to existing rule | medium |
 
 ## [#6543](https://github.com/SigmaHQ/sigma/pull/6543) Update macOS launchctl rule to cover the bootstrap verb
 
