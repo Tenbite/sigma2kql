@@ -3,7 +3,7 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-04 04:26 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-04 14:43 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
 
 ## [#6560](https://github.com/SigmaHQ/sigma/pull/6560) fix: Disable Exploit Guard Network Protection on Windows Defender - add the 0x prefix to the DWORD value
 
@@ -421,12 +421,6 @@ Rebuilt 2026-11-04 04:26 UTC from 300 open pull requests. When a pull request is
 | Rule | Change | Level |
 |---|---|---|
 | [Binary Proxy Execution Via Dotnet-Counters.EXE](pr-6329/rules/windows/process_creation/proc_creation_win_dotnet_counters_lolbin_execution.kql) | new rule | medium |
-
-## [#6328](https://github.com/SigmaHQ/sigma/pull/6328) Microsoft Office Application Loading Task Scheduler DLL
-
-| Rule | Change | Level |
-|---|---|---|
-| [Microsoft Office Application Loading Task Scheduler DLL](pr-6328/rules/windows/image_load/image_load_office_taskschd_dll_load.kql) | new rule | medium |
 
 ## [#6326](https://github.com/SigmaHQ/sigma/pull/6326) feat(macos): detect MacSync Stealer chunked upload
 

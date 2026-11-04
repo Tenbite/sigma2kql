@@ -1,6 +1,6 @@
 # Sigma rules in KQL (microsoft_xdr)
 
-1910 rules converted from SigmaHQ commit [`483b91bb58`](https://github.com/SigmaHQ/sigma/commit/483b91bb583250faca0aa87415d4187a3ea2c957). Last run: 2026-11-04 04:22 UTC.
+1910 rules converted from SigmaHQ commit [`c68bb91abb`](https://github.com/SigmaHQ/sigma/commit/c68bb91abb1146b8a6a65caf6819b1836d97f09d). Last run: 2026-11-04 14:38 UTC.
 
 Rules are licensed under the Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License. Each file keeps the original author and Sigma ID.
 

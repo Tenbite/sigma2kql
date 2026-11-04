@@ -17523,6 +17523,12 @@
   "validation": "passed",
   "wildcard_rewrites": 0
  },
+ "rules/windows/image_load/image_load_office_taskschd_dll_load.yml": {
+  "logsource": "windows/image_load",
+  "reason": "filtered (status=experimental, level=medium)",
+  "result": "skipped",
+  "title": ""
+ },
  "rules/windows/image_load/image_load_office_vbadll_load.yml": {
   "attack": [
    "execution",

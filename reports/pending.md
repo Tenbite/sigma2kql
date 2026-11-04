@@ -1,14 +1,14 @@
 # Pending rules run
 
-- Run: 2026-11-04 04:26 UTC
-- Open pull requests checked: 300 (drafts skipped: 5)
-- Pull requests with converted rules: 181
+- Run: 2026-11-04 14:43 UTC
+- Open pull requests checked: 300 (drafts skipped: 4)
+- Pull requests with converted rules: 180
 
 | Result | Rule files |
 |---|---|
-| Converted and valid | 520 |
+| Converted and valid | 519 |
 | Failed validation | 6 |
-| Failed conversion | 332 |
+| Failed conversion | 333 |
 | Skipped (filters) | 55 |
 
 ## Not converted
@@ -25,6 +25,7 @@
 - #6547 `rules/cloud/azure/audit_logs/azure_ad_application_created.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6544 `rules/windows/builtin/security/win_security_ad_replication_machine_account.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: Properties
 - #6544 `rules/windows/builtin/security/win_security_ad_replication_non_machine_account.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDetectionItem field name encountered: Properties
+- #6541 `rules/cloud/aws/cloudtrail/aws_cloudtrail_ssm_malicious_usage.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6539 `rules/identity/okta/okta_identity_provider_lifecycle_changed.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6536 `rules/network/cisco/aaa/cisco_cli_net_sniff.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6534 `rules/cloud/aws/cloudtrail/aws_root_account_usage.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
