@@ -8,9 +8,10 @@
 ![Rules](https://img.shields.io/badge/rules-1%2C900%2B-1f6f8b)
 ![Target](https://img.shields.io/badge/target-Defender%20XDR%20Advanced%20Hunting-1f6f8b)
 [![Rule license](https://img.shields.io/badge/rules-DRL%201.1-555)](https://github.com/SigmaHQ/Detection-Rule-License)
+[![JSON API](https://img.shields.io/badge/JSON%20API-v1-1f6f8b)](https://tenbite.github.io/sigma2kql/api/)
 [![Code license](https://img.shields.io/badge/code-MIT-555)](LICENSE)
 
-### [Search the rules](https://tenbite.github.io/sigma2kql/) · [Rule index](kql/INDEX.md) · [Pending rules](kql-pending/INDEX.md) · [Latest run report](reports/summary.md)
+### [Search the rules](https://tenbite.github.io/sigma2kql/) · [JSON API](https://tenbite.github.io/sigma2kql/api/) · [Rule index](kql/INDEX.md) · [Pending rules](kql-pending/INDEX.md) · [Latest run report](reports/summary.md)
 
 </div>
 
@@ -21,7 +22,8 @@
 
 1. **A ready-to-use KQL library.** About 1,900 SigmaHQ rules as Defender XDR Advanced Hunting queries, one `.kql` file per rule. [Search and filter them](https://tenbite.github.io/sigma2kql/) by level, platform, ATT&CK tactic, technique, or table, and copy any query in one click.
 2. **Pending rules.** Rules from **open SigmaHQ pull requests**, converted before they're merged, in [`kql-pending/`](kql-pending/INDEX.md). Clearly labeled on the [search page](https://tenbite.github.io/sigma2kql/#stg=Pending) and filterable. See [Pending rules](#pending-rules).
-3. **A reusable pipeline.** A free GitHub Actions workflow you can fork to keep your own copy current, or point at your own Sigma rules.
+3. **A free JSON API.** Every rule, its metadata, and its KQL in one structured file, rebuilt nightly. No key needed. Use it in your own tools, dashboards, or pipelines. See [JSON API](#json-api).
+4. **A reusable pipeline.** A free GitHub Actions workflow you can fork to keep your own copy current, or point at your own Sigma rules.
 
 ## How conversions are checked
 
@@ -51,6 +53,25 @@ New detections often sit in SigmaHQ pull requests for days or weeks before they'
 
 Results of each pending run are in [`reports/pending.md`](reports/pending.md). Turn pending rules off with `pending: enabled: false` in `config.yml`.
 
+## JSON API
+
+All converted rules, published and pending, are available as static JSON on GitHub Pages. It's free, needs no key, and is rebuilt nightly. Full docs, field reference, and examples: **[tenbite.github.io/sigma2kql/api](https://tenbite.github.io/sigma2kql/api/)**.
+
+| Endpoint | Contents |
+|---|---|
+| [`/api/v1/index.json`](https://tenbite.github.io/sigma2kql/api/v1/index.json) | Manifest: build time, SigmaHQ commit, tool versions, counts. Check this first to see if anything changed. |
+| [`/api/v1/rules.json`](https://tenbite.github.io/sigma2kql/api/v1/rules.json) | Every rule: title, Sigma ID, level, status, author, dates, description, false positives, references, ATT&CK, table, KQL, validation result, and pull request details for pending rules. |
+| [`/api/v1/schema.json`](https://tenbite.github.io/sigma2kql/api/v1/schema.json) | JSON Schema for `rules.json`. |
+
+```bash
+# High and critical published rules for DeviceProcessEvents
+curl -s https://tenbite.github.io/sigma2kql/api/v1/rules.json | jq '.rules[]
+  | select(.stage=="published" and (.level=="high" or .level=="critical") and .kql.table=="DeviceProcessEvents")
+  | {title, sigma_id, query: .kql.queries[0]}'
+```
+
+Field names are stable within `v1`. New fields may be added, but nothing is renamed or removed without a new `/v2/` path. Pending rules have `"stage": "pending"`, so filter on that if you only want merged rules. The same disclaimer and the DRL 1.1 apply: keep each rule's author and Sigma ID if you redistribute.
+
 ## Using a query
 
 1. Find a rule on the [search page](https://tenbite.github.io/sigma2kql/) or in the [rule index](kql/INDEX.md).
@@ -64,7 +85,7 @@ Each `.kql` file starts with a header: title, Sigma ID, author, level, ATT&CK, d
 1. **Fork** this repo.
 2. **Settings → Actions → General → Workflow permissions →** Read and write.
 3. Open the **Actions** tab and enable workflows (forks start with them off), then run **Convert Sigma to KQL**.
-4. Optional: **Settings → Pages →** deploy from `main` / `docs` for your own search page.
+4. Optional: **Settings → Pages →** deploy from `main` / `docs` for your own search page and JSON API. Links adjust to your fork automatically.
 
 It then updates itself nightly. Public repos get unlimited free Actions minutes.
 
@@ -87,9 +108,9 @@ Any change to `config.yml`, a custom pipeline, the scripts, the tool versions, o
 |---|---|
 | `kql/` | One `.kql` file per rule, mirroring SigmaHQ's folders, plus `INDEX.md` |
 | `kql-pending/` | Rules from open SigmaHQ pull requests, one folder per pull request, plus `INDEX.md` |
-| `docs/` | The search page (GitHub Pages) |
+| `docs/` | The search page (GitHub Pages) and the JSON API (`docs/api/`) |
 | `reports/` | Run summary, failures, validation rejections, wildcard rewrites, schema drift |
-| `scripts/` | `convert.py` (pipeline), `pending.py` (pending rules from pull requests), and `build_site.py` (search page) |
+| `scripts/` | `convert.py` (pipeline), `pending.py` (pending rules from pull requests), `build_site.py` (search page), and `build_api.py` (JSON API) |
 | `validator/` | The KQL validator (Node, Kusto.Language) |
 | `pipelines/custom.yml` | Extra field mappings and fixes |
 | `state/` | Last processed commit and cached Defender schema |
@@ -112,7 +133,7 @@ Any change to `config.yml`, a custom pipeline, the scripts, the tool versions, o
 
 ## License
 
-- **Rules** (`kql/`, `kql-pending/`, `docs/rules.json`) are derived from SigmaHQ and remain under the [Detection Rule License (DRL) 1.1](https://github.com/SigmaHQ/Detection-Rule-License). Each file keeps the original author and Sigma ID; keep them if you redistribute.
+- **Rules** (`kql/`, `kql-pending/`, `docs/rules.json`, `docs/api/`) are derived from SigmaHQ and remain under the [Detection Rule License (DRL) 1.1](https://github.com/SigmaHQ/Detection-Rule-License). Each file keeps the original author and Sigma ID; keep them if you redistribute.
 - **Code** (scripts, workflow, validator, search page) is under the [MIT License](LICENSE).
 
 Not affiliated with SigmaHQ, Microsoft, AttackIQ, XDRInternals, or Anthropic.
