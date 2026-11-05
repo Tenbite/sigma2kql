@@ -15,7 +15,7 @@
 //   - Web Browsers and third party application might generate similar activity. An initial baseline is required.
 // References:
 //   - https://github.com/GhostPack/Rubeus
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/3bb8093b07ba3661d236e725784ac751038bc928/rules/windows/network_connection/net_connection_win_susp_outbound_kerberos_connection.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/99613bbc339d8c5698dea1458d4ec42f5aca30c8/rules/windows/network_connection/net_connection_win_susp_outbound_kerberos_connection.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6564 New rules for AI coding agent CLI abuse (Claude Code, Codex CLI)
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6564
+// Pull request author: yug3009p
+// Change: new rule
+// Title: AI Coding Agent Settings File Created By Uncommon Process
+// Sigma ID: 721dc312-582d-4b2f-96e3-e0e35027da6e
+// Status: experimental | Level: medium
+// Author: Yug Patel
+// Date: 2026-11-04 | Modified: -
+// ATT&CK: defense-impairment, T1685
+// Description: Detects a process other than the agent itself creating the Claude Code settings file or the
+//   Codex configuration file of a user. These files can disable approval prompts and the sandbox for
+//   every future session (for example "defaultMode" set to "bypassPermissions", or "approval_policy"
+//   set to "never" with "sandbox_mode" set to "danger-full-access"). A script or installer creating
+//   them is suspicious.
+// False positives:
+//   - A user creating the file in a text editor or IDE
+//   - Configuration management or dotfile tools
+// References:
+//   - https://code.claude.com/docs/en/settings
+//   - https://developers.openai.com/codex/config-reference
+//   - https://github.com/yug3009p/agent-attack-samples
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e5a36558875aad6521daf9b6b582960eab46629f/rules/windows/file/file_event/file_event_win_ai_agent_config_created_by_uncommon_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where (FolderPath endswith "\\.claude\\settings.json" or FolderPath endswith "\\.claude\\settings.local.json" or FolderPath endswith "\\.codex\\config.toml") and (not((InitiatingProcessFolderPath endswith "\\claude.exe" or InitiatingProcessFolderPath endswith "\\codex.exe")))

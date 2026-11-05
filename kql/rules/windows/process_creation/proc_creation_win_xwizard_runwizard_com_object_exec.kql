@@ -2,7 +2,7 @@
 // Sigma ID: 53d4bb30-3f36-4e8a-b078-69d36c4a79ff
 // Status: test | Level: medium
 // Author: Ensar Şamil, @sblmsrsn, @oscd_initiative, Nasreddine Bencherchali (Nextron Systems)
-// Date: 2020-10-07 | Modified: 2026-11-04
+// Date: 2020-10-07 | Modified: 2026-11-05
 // ATT&CK: stealth, T1218
 // Description: Detects the execution of Xwizard tool with the "RunWizard" flag and a GUID like argument. This
 //   utility can be abused in order to run custom COM object created in the registry.
@@ -12,11 +12,11 @@
 //   - https://lolbas-project.github.io/lolbas/Binaries/Xwizard/
 //   - https://www.elastic.co/guide/en/security/current/execution-of-com-object-via-xwizard.html
 //   - https://www.hexacorn.com/blog/2017/07/31/the-wizard-of-x-oppa-plugx-style/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/483b91bb583250faca0aa87415d4187a3ea2c957/rules/windows/process_creation/proc_creation_win_xwizard_runwizard_com_object_exec.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/52f81d60d5ea122e49a34b2289ea0c2a7bb0b113/rules/windows/process_creation/proc_creation_win_xwizard_runwizard_com_object_exec.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)
 // Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceProcessEvents
-| where (FolderPath endswith "/xwizard.exe" or ProcessVersionInfoOriginalFileName =~ "xwizard.exe") and (ProcessCommandLine contains "RunWizard" and ProcessCommandLine matches regex "\\{[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\}")
+| where (FolderPath endswith "\\xwizard.exe" or ProcessVersionInfoOriginalFileName =~ "xwizard.exe") and (ProcessCommandLine contains "RunWizard" and ProcessCommandLine matches regex "\\{[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\}")

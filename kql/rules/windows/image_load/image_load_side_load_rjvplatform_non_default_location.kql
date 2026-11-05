@@ -2,7 +2,7 @@
 // Sigma ID: 0e0bc253-07ed-43f1-816d-e1b220fe8971
 // Status: test | Level: high
 // Author: X__Junior (Nextron Systems)
-// Date: 2023-06-09 | Modified: -
+// Date: 2023-06-09 | Modified: 2026-11-05
 // ATT&CK: persistence, privilege-escalation, execution, stealth, T1574.001
 // Description: Detects potential DLL sideloading of "RjvPlatform.dll" by "SystemResetPlatform.exe" located in a
 //   non-default location.
@@ -10,11 +10,11 @@
 //   - Unlikely
 // References:
 //   - https://twitter.com/0gtweet/status/1666716511988330499
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/adf5a626c4a776f3f023056f0f398b9523a2f09e/rules/windows/image_load/image_load_side_load_rjvplatform_non_default_location.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/52f81d60d5ea122e49a34b2289ea0c2a7bb0b113/rules/windows/image_load/image_load_side_load_rjvplatform_non_default_location.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)
 // Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceImageLoadEvents
-| where (FolderPath endswith "\\RjvPlatform.dll" and InitiatingProcessFolderPath =~ "\\SystemResetPlatform.exe") and (not(InitiatingProcessFolderPath startswith "C:\\Windows\\System32\\SystemResetPlatform\\"))
+| where (FolderPath endswith "\\RjvPlatform.dll" and InitiatingProcessFolderPath endswith "\\SystemResetPlatform.exe") and (not(InitiatingProcessFolderPath startswith "C:\\Windows\\System32\\SystemResetPlatform\\"))

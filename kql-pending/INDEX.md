@@ -3,13 +3,27 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-04 14:43 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-05 14:49 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
 
-## [#6560](https://github.com/SigmaHQ/sigma/pull/6560) fix: Disable Exploit Guard Network Protection on Windows Defender - add the 0x prefix to the DWORD value
+## [#6566](https://github.com/SigmaHQ/sigma/pull/6566) fix: office installation false positives
 
 | Rule | Change | Level |
 |---|---|---|
-| [Disable Exploit Guard Network Protection on Windows Defender](pr-6560/rules/windows/registry/registry_set/registry_set_disabled_exploit_guard_net_protection_on_ms_defender.kql) | update to existing rule | medium |
+| [Wow6432Node CurrentVersion Autorun Keys Modification](pr-6566/rules/windows/registry/registry_set/registry_set_asep_reg_keys_modification_wow6432node.kql) | update to existing rule | medium |
+
+## [#6564](https://github.com/SigmaHQ/sigma/pull/6564) New rules for AI coding agent CLI abuse (Claude Code, Codex CLI)
+
+| Rule | Change | Level |
+|---|---|---|
+| [AI Coding Agent Settings File Created By Uncommon Process](pr-6564/rules/windows/file/file_event/file_event_win_ai_agent_config_created_by_uncommon_process.kql) | new rule | medium |
+| [AI Coding Agent CLI Execution With Permission or Sandbox Bypass](pr-6564/rules/windows/process_creation/proc_creation_win_ai_agent_cli_permission_bypass.kql) | new rule | medium |
+| [Scheduled Task Creation Running AI Coding Agent CLI](pr-6564/rules/windows/process_creation/proc_creation_win_schtasks_create_ai_agent_cli.kql) | new rule | medium |
+
+## [#6563](https://github.com/SigmaHQ/sigma/pull/6563) fix: Potentially Suspicious Powershell Script Execution From Temp Folder - filter legitimate `$LASTEXITCODE` command line
+
+| Rule | Change | Level |
+|---|---|---|
+| [Potentially Suspicious Powershell Script Execution From Temp Folder](pr-6563/rules/windows/process_creation/proc_creation_win_powershell_script_exec_from_temp_folder.kql) | update to existing rule | medium |
 
 ## [#6557](https://github.com/SigmaHQ/sigma/pull/6557) Add Entroprism AIP self-built detection rules (6 rules)
 

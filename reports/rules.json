@@ -11756,6 +11756,12 @@
   "result": "failed",
   "title": "Wannacry Killswitch Domain"
  },
+ "rules/network/dns/net_dns_wildcard_dns_service.yml": {
+  "logsource": "dns",
+  "reason": "filtered (status=experimental, level=medium)",
+  "result": "skipped",
+  "title": ""
+ },
  "rules/network/firewall/net_firewall_cleartext_protocols.yml": {
   "logsource": "firewall",
   "reason": "filtered (status=stable, level=low)",
@@ -12808,13 +12814,13 @@
  },
  "rules/windows/builtin/security/account_management/win_security_successful_external_remote_rdp_login.yml": {
   "logsource": "windows/security",
-  "reason": "SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: IpAddress. Invalid SigmaDetectionItem field name encountered: IpAddress. Invalid SigmaDetectionItem field name encountered: SubjectUserSid. Invalid SigmaDetectionItem field name encountered: LogonProcessName. Invalid SigmaD",
+  "reason": "SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: IpAddress",
   "result": "failed",
   "title": "External Remote RDP Logon from Public IP"
  },
  "rules/windows/builtin/security/account_management/win_security_successful_external_remote_smb_login.yml": {
   "logsource": "windows/security",
-  "reason": "SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: IpAddress. Invalid SigmaDetectionItem field name encountered: IpAddress. Invalid SigmaDetectionItem field name encountered: IpAddress. Invalid SigmaDetectionItem field name encountered: SubjectUserSid. Invalid SigmaDetectio",
+  "reason": "SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: IpAddress. Invalid SigmaDetectionItem field name encountered: IpAddress",
   "result": "failed",
   "title": "External Remote SMB Logon from Public IP"
  },
@@ -14531,6 +14537,12 @@
   "reason": "SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:",
   "result": "failed",
   "title": "DNS Query To Visual Studio Code Tunnels Domain"
+ },
+ "rules/windows/dns_query/dns_query_win_wildcard_dns_service.yml": {
+  "logsource": "windows/dns_query",
+  "reason": "filtered (status=experimental, level=medium)",
+  "result": "skipped",
+  "title": ""
  },
  "rules/windows/driver_load/driver_load_win_mal_drivers.yml": {
   "logsource": "windows/driver_load",
