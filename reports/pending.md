@@ -1,18 +1,19 @@
 # Pending rules run
 
-- Run: 2026-11-05 14:49 UTC
+- Run: 2026-11-06 14:26 UTC
 - Open pull requests checked: 300 (drafts skipped: 4)
-- Pull requests with converted rules: 182
+- Pull requests with converted rules: 183
 
 | Result | Rule files |
 |---|---|
-| Converted and valid | 523 |
+| Converted and valid | 525 |
 | Failed validation | 6 |
 | Failed conversion | 333 |
-| Skipped (filters) | 56 |
+| Skipped (filters) | 58 |
 
 ## Not converted
 
+- #6567 `rules/windows/registry/registry_event/registry_event_new_dll_added_to_appcertdlls_registry_key.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: NewName
 - #6566 `rules/windows/builtin/appxdeployment_server/win_appxdeployment_server_full_trust_package_installation.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6566 `rules/windows/create_remote_thread/create_remote_thread_win_susp_uncommon_source_image.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6564 `rules/windows/process_creation/proc_creation_win_ai_agent_cli_launched_from_npm_package_directory.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: CurrentDirectory
@@ -26,8 +27,8 @@
 - #6557 `rules/windows/process_access/apc_injection_queueuserapc__ntqueueapcthread.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6548 `rules/network/net_mikrotik_mikrotrick_ssh_exploitation.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6547 `rules/cloud/azure/audit_logs/azure_ad_application_created.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #6544 `rules/windows/builtin/security/win_security_ad_replication_machine_account.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: Properties
-- #6544 `rules/windows/builtin/security/win_security_ad_replication_non_machine_account.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDetectionItem field name encountered: Properties
+- #6544 `rules/windows/builtin/security/win_security_ad_replication_machine_account.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDetectionItem field name encountered: NewName
+- #6544 `rules/windows/builtin/security/win_security_ad_replication_non_machine_account.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDetectionItem field name encountered: NewName
 - #6541 `rules/cloud/aws/cloudtrail/aws_cloudtrail_ssm_malicious_usage.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6539 `rules/identity/okta/okta_identity_provider_lifecycle_changed.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6536 `rules/network/cisco/aaa/cisco_cli_net_sniff.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
@@ -138,13 +139,13 @@
 - #6279 `rules/windows/builtin/security/account_management/win_security_susp_privesc_kerberos_relay_over_ldap.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: AuthenticationPackageName. Invalid SigmaDetectionItem field name encountered: IpAddress. Invalid SigmaDetectionItem field name encountered: SubjectUserSid. Invalid SigmaDetectionItem field name encountered: LogonProcessName
 - #6279 `rules/windows/builtin/security/account_management/win_security_susp_rottenpotato.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: TargetUserName. Invalid SigmaDetectionItem field name encountered: AuthenticationPackageName. Invalid SigmaDetectionItem field name encountered: IpAddress. Invalid SigmaDetectionItem field name encountered: SubjectUserSid. 
 - #6279 `rules/windows/builtin/security/win_security_account_backdoor_dcsync_rights.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #6279 `rules/windows/builtin/security/win_security_ad_replication_non_machine_account.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDetectionItem field name encountered: Properties
+- #6279 `rules/windows/builtin/security/win_security_ad_replication_non_machine_account.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDetectionItem field name encountered: NewName
 - #6279 `rules/windows/builtin/security/win_security_audit_log_cleared.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6279 `rules/windows/builtin/security/win_security_dce_rpc_smb_spoolss_named_pipe.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: ShareName. Invalid SigmaDetectionItem field name encountered: ResponseBytes
 - #6279 `rules/windows/builtin/security/win_security_default_domain_gpo_modification.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6279 `rules/windows/builtin/security/win_security_hidden_user_creation.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6279 `rules/windows/builtin/security/win_security_lm_namedpipe.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: ShareName. Invalid SigmaDetectionItem field name encountered: ShareName. Invalid SigmaDetectionItem field name encountered: ResponseBytes
-- #6279 `rules/windows/builtin/security/win_security_lsass_access_non_system_account.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: AccessMask. Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDetectionItem field name encountered: Properties
+- #6279 `rules/windows/builtin/security/win_security_lsass_access_non_system_account.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: AccessMask. Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDetection
 - #6279 `rules/windows/builtin/security/win_security_new_or_renamed_user_account_with_dollar_sign.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6279 `rules/windows/builtin/security/win_security_possible_dc_shadow.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6279 `rules/windows/builtin/security/win_security_protected_storage_service_access.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: ShareName. Invalid SigmaDetectionItem field name encountered: ShareName. Invalid SigmaDetectionItem field name encountered: ShareName. Invalid SigmaDetectionItem field name encountered: ResponseBytes
@@ -351,4 +352,3 @@
 - #5643 `rules/windows/image_load/image_load_side_load_non_existent_dlls.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name 
 - #5548 `rules/windows/powershell/powershell_script/posh_ps_powershell_comobject_msi_obfuscated_install.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #5548 `rules/windows/powershell/powershell_script/posh_ps_powershell_comobject_msi_remote_install.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #5470 `rules/linux/auditd/lnx_auditd_masquerading_process_name.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:

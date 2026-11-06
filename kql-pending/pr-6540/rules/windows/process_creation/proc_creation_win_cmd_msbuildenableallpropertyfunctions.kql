@@ -3,24 +3,24 @@
 // Pull request URL: https://github.com/SigmaHQ/sigma/pull/6540
 // Pull request author: fotedev
 // Change: new rule
-// Title: cmd.exe Setting MSBUILDENABLEALLPROPERTYFUNCTIONS Before MSBuild
+// Title: cmd.exe Command Line Referencing the MSBuild Property-Function Escape Variable
 // Sigma ID: 51df8698-b5d5-47dc-a203-663aaf752cce
 // Status: experimental | Level: high
 // Author: fotedev
 // Date: 2026-10-29 | Modified: -
 // ATT&CK: execution, defense-impairment, T1127.001
-// Description: Detects cmd.exe invoked with the environment gate MSBUILDENABLEALLPROPERTYFUNCTIONS=1 on its
-//   command line. Setting this variable unlocks MSBuild property functions such as
-//   $([System.IO.File]::ReadAllText(...)) and $([System.AppDomain]::CurrentDomain.Load(...)), which
-//   PavinLoader (fake solution "CatalogIngestor", build.cmd) abuses to read an encoded payload from
-//   Resources.resx and load it as an in-memory assembly. This gate is rarely set outside abuse of
-//   MSBuild property functions.
+// Description: Detects command lines referencing MSBUILDENABLEALLPROPERTYFUNCTIONS=1 - an environment gate that
+//   unlocks MSBuild property functions such as $([System.IO.File]::ReadAllText(...)) and
+//   $([System.AppDomain]::CurrentDomain.Load(...)), which PavinLoader (fake solution
+//   "CatalogIngestor") abuses to read an encoded payload from Resources.resx and load it as an in-
+//   memory assembly. The observed incident set the variable inside build.cmd (not visible on the
+//   command line), so this rule targets variants that set it inline.
 // False positives:
-//   - Rare legitimate build scripts that deliberately enable all MSBuild property functions; review the script before dismissing
+//   - Legitimate build systems that enable all MSBuild property functions inline (rare; review the invoking script)
 // References:
-//   - Verified internal incident report, Trojan.PavinLoader (Malwarebytes family naming), 2026-10-29
+//   - https://github.com/fotedev/pavinloader-easeus-campaign
 //   - https://attack.mitre.org/techniques/T1127/001/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/a477302bc4d0372ca2d1b32b2981597468776c0c/rules/windows/process_creation/proc_creation_win_cmd_msbuildenableallpropertyfunctions.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/6ead36c4ad43fd558f6614e9debb235df9de2d40/rules/windows/process_creation/proc_creation_win_cmd_msbuildenableallpropertyfunctions.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

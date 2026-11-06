@@ -3,7 +3,14 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-05 14:49 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-06 14:26 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+
+## [#6567](https://github.com/SigmaHQ/sigma/pull/6567) fix: five Windows rules with conditions that can never match
+
+| Rule | Change | Level |
+|---|---|---|
+| [AgentExecutor PowerShell Execution](pr-6567/rules/windows/process_creation/proc_creation_win_agentexecutor_potential_abuse.kql) | update to existing rule | medium |
+| [HackTool - Quarks PwDump Execution](pr-6567/rules/windows/process_creation/proc_creation_win_hktl_quarks_pwdump.kql) | update to existing rule | high |
 
 ## [#6566](https://github.com/SigmaHQ/sigma/pull/6566) fix: office installation false positives
 
@@ -49,9 +56,9 @@ Rebuilt 2026-11-05 14:49 UTC from 300 open pull requests. When a pull request is
 
 | Rule | Change | Level |
 |---|---|---|
-| [Scheduled Task Files Named dllhost or taskhostw Written Outside schtasks.exe](pr-6540/rules/windows/file_event/file_event_win_schtask_files_dllhost_taskhostw.kql) | new rule | high |
-| [cmd.exe Setting MSBUILDENABLEALLPROPERTYFUNCTIONS Before MSBuild](pr-6540/rules/windows/process_creation/proc_creation_win_cmd_msbuildenableallpropertyfunctions.kql) | new rule | high |
-| [Potential PavinLoader MSBuild Execution from User-Writable Path via cmd.exe](pr-6540/rules/windows/process_creation/proc_creation_win_msbuild_user_writable_path_cmd_parent.kql) | new rule | medium |
+| [Scheduled Task Files Masquerading as System Binaries (dllhost/taskhostw)](pr-6540/rules/windows/file_event/file_event_win_schtask_files_dllhost_taskhostw.kql) | new rule | high |
+| [cmd.exe Command Line Referencing the MSBuild Property-Function Escape Variable](pr-6540/rules/windows/process_creation/proc_creation_win_cmd_msbuildenableallpropertyfunctions.kql) | new rule | high |
+| [MSBuild.exe Execution from User-Writable Directory via cmd.exe](pr-6540/rules/windows/process_creation/proc_creation_win_msbuild_user_writable_path_cmd_parent.kql) | new rule | medium |
 | [msiexec.exe Spawning cmd.exe to Start an LNK File](pr-6540/rules/windows/process_creation/proc_creation_win_msiexec_spawns_cmd_start_lnk.kql) | new rule | high |
 
 ## [#6538](https://github.com/SigmaHQ/sigma/pull/6538) New Rule: Potential Ingress Tool Transfer Via ECMangen.EXE

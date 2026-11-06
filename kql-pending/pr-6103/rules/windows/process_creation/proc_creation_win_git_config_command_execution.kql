@@ -9,15 +9,13 @@
 // Author: Ashish Pulivarthy (ashish-cybersec)
 // Date: 2026-07-02 | Modified: -
 // ATT&CK: execution, stealth, T1202
-// Description: Detects execution of "git.exe" with an inline configuration override ("-c") that points a code-
-//   execution configuration directive (such as "core.sshCommand", "core.fsmonitor", "core.pager",
-//   "core.editor" or "diff.external") at a command interpreter, as well as the use of the "ext::"
-//   transport. Git executes the value of several configuration directives as external programs. This
-//   allows a threat actor to abuse the trusted "git.exe" binary as a proxy to run arbitrary commands
-//   and evade detection (indirect command execution). Note that the closely related abuse where the
-//   payload is stored inside a repository's ".git/config" file (e.g. "core.fsmonitor") and triggered
-//   when an editor or IDE automatically runs "git status" is not observable on the "git.exe" command
-//   line and is therefore out of scope for this command-line based rule.
+// Description: Detects execution of "git.exe" with an inline configuration override ("-c"). The override points
+//   a code-execution directive at a command interpreter. Covered directives include
+//   "core.sshCommand", "core.fsmonitor" and "core.pager". Git runs the value of these directives as
+//   an external program. A threat actor can therefore use the trusted "git.exe" binary as a proxy.
+//   This achieves arbitrary command execution while evading detection. The rule also covers the
+//   "ext::" transport. A related abuse stores the payload in a repository's ".git/config" file. It
+//   is triggered when an editor or IDE runs "git status" and stays off the command line.
 // False positives:
 //   - Rare legitimate use of a git configuration directive that points to a scripting interpreter (e.g. a custom pager or editor wrapper). Baseline before enabling.
 // References:
@@ -25,7 +23,8 @@
 //   - https://www.cobalt.io/blog/red-team-technique-exploiting-git-fsmonitor-for-initial-access
 //   - https://github.com/RootUp/git-fsmonitor
 //   - https://gtfobins.github.io/gtfobins/git/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cc4498225b5663532d833aabd3f19205cbd3c4c8/rules/windows/process_creation/proc_creation_win_git_config_command_execution.yml
+//   - https://git-scm.com/docs/git-remote-ext
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/f21de9dccfd7c01ac4d0de3961b934e913b6c261/rules/windows/process_creation/proc_creation_win_git_config_command_execution.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)
