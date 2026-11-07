@@ -2,7 +2,7 @@
 // Sigma ID: e54979bd-c5f9-4d6c-967b-a04b19ac4c74
 // Status: test | Level: medium
 // Author: Ilyas Ochkov, oscd.community
-// Date: 2019-10-24 | Modified: 2024-03-15
+// Date: 2019-10-24 | Modified: 2026-11-06
 // ATT&CK: credential-access, T1558, lateral-movement, T1550.003
 // Description: Detects uncommon outbound network activity via Kerberos default port indicating possible lateral
 //   movement or first stage PrivEsc via delegation.
@@ -10,11 +10,11 @@
 //   - Web Browsers and third party application might generate similar activity. An initial baseline is required.
 // References:
 //   - https://github.com/GhostPack/Rubeus
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/adf5a626c4a776f3f023056f0f398b9523a2f09e/rules/windows/network_connection/net_connection_win_susp_outbound_kerberos_connection.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/53b90df66c5b6d1b9be6ba9289c56fe49dd74a73/rules/windows/network_connection/net_connection_win_susp_outbound_kerberos_connection.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)
 // Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceNetworkEvents
-| where RemotePort == 88 and (not(InitiatingProcessFolderPath =~ "C:\\Windows\\System32\\lsass.exe")) and (not(((InitiatingProcessFolderPath in~ ("C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe", "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe")) or (InitiatingProcessFolderPath in~ ("C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe", "C:\\Program Files\\Mozilla Firefox\\firefox.exe")) or InitiatingProcessFolderPath endswith "\\tomcat\\bin\\tomcat8.exe")))
+| where RemotePort == 88 and (not(InitiatingProcessFolderPath =~ "C:\\Windows\\System32\\lsass.exe")) and (not(((InitiatingProcessFolderPath in~ ("C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe", "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe")) or (InitiatingProcessFolderPath in~ ("C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe", "C:\\Program Files\\Mozilla Firefox\\firefox.exe")) or InitiatingProcessFolderPath endswith "\\tomcat\\bin\\tomcat8.exe" or (InitiatingProcessFolderPath in~ ("C:\\Program Files\\Zscaler\\ZSATunnel\\ZSATunnel.exe", "C:\\Program Files (x86)\\Zscaler\\ZSATunnel\\ZSATunnel.exe")))))

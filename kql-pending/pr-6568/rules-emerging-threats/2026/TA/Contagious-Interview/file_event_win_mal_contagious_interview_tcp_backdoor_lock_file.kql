@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6568 Add Contagious Interview TCP Backdoor Rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6568
+// Pull request author: n4uu
+// Change: new rule
+// Title: Contagious Interview TCP Backdoor Lock File Creation
+// Sigma ID: 11cecd50-bf2f-46cb-93a5-1369d6ab5624
+// Status: experimental | Level: high
+// Author: n4uu
+// Date: 2026-11-05 | Modified: -
+// ATT&CK: execution, T1059.007, stealth, T1480.002
+// Tags: detection.emerging-threats
+// Description: Detects node.exe creating the file "vscode-ext.lock" in a temp directory. The Node.js backdoor
+//   delivered through the Contagious Interview git hook lure, which talks to its C2 over plain TCP
+//   using newline-delimited JSON, uses this file as a single-instance lock and rewrites it every ten
+//   minutes. VS Code itself does not create a file with this name.
+// False positives:
+//   - Unknown
+// References:
+//   - https://n4uu.github.io/2026/raw-tcp-backdoor-cleverstack/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/6ae3b6e26c5bb2f18a96f7990c374aa3e0cd040a/rules-emerging-threats/2026/TA/Contagious-Interview/file_event_win_mal_contagious_interview_tcp_backdoor_lock_file.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where InitiatingProcessFolderPath endswith "\\node.exe" and FolderPath endswith "\\Temp\\vscode-ext.lock"

@@ -22,7 +22,7 @@
 //   - https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/pnputil-command-syntax
 //   - https://redcanary.com/blog/threat-hunting-driver-tampering/
 //   - https://www.microsoft.com/en-us/security/blog/2022/12/12/investigating-impairment-of-defenses/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/73b8543c3791de422d86e67f0be4e8b05f61d6f1/rules/windows/process_creation/proc_creation_win_pnputil_driver_device_removal.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/00d8718dfd8cda4b8ff3692b91110f1682410413/rules/windows/process_creation/proc_creation_win_pnputil_driver_device_removal.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

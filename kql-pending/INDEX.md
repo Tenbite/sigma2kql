@@ -3,14 +3,28 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-06 14:26 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-07 13:12 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
 
-## [#6567](https://github.com/SigmaHQ/sigma/pull/6567) fix: five Windows rules with conditions that can never match
+## [#6577](https://github.com/SigmaHQ/sigma/pull/6577) Fix three rules with conditions that can never match
 
 | Rule | Change | Level |
 |---|---|---|
-| [AgentExecutor PowerShell Execution](pr-6567/rules/windows/process_creation/proc_creation_win_agentexecutor_potential_abuse.kql) | update to existing rule | medium |
-| [HackTool - Quarks PwDump Execution](pr-6567/rules/windows/process_creation/proc_creation_win_hktl_quarks_pwdump.kql) | update to existing rule | high |
+| [Apache Spark Shell Command Injection - ProcessCreation](pr-6577/rules-emerging-threats/2022/Exploits/CVE-2022-33891/proc_creation_lnx_exploit_cve_2022_33891_spark_shell_command_injection.kql) | update to existing rule | high |
+| [Suspicious Regsvr32 Execution From Remote Share](pr-6577/rules/windows/process_creation/proc_creation_win_regsvr32_remote_share.kql) | update to existing rule | high |
+| [Removal of Potential COM Hijacking Registry Keys](pr-6577/rules/windows/registry/registry_delete/registry_delete_removal_com_hijacking_registry_key.kql) | update to existing rule | medium |
+
+## [#6574](https://github.com/SigmaHQ/sigma/pull/6574) chore: add regression test for Suspicious Eventlog Clearing or Configuration Change Activity
+
+| Rule | Change | Level |
+|---|---|---|
+| [Suspicious Eventlog Clearing or Configuration Change Activity](pr-6574/rules/windows/process_creation/proc_creation_win_susp_eventlog_clear.kql) | update to existing rule | high |
+
+## [#6568](https://github.com/SigmaHQ/sigma/pull/6568) Add Contagious Interview TCP Backdoor Rules
+
+| Rule | Change | Level |
+|---|---|---|
+| [Contagious Interview TCP Backdoor Lock File Creation](pr-6568/rules-emerging-threats/2026/TA/Contagious-Interview/file_event_win_mal_contagious_interview_tcp_backdoor_lock_file.kql) | new rule | high |
+| [Contagious Interview TCP Backdoor Detached Command Execution](pr-6568/rules-emerging-threats/2026/TA/Contagious-Interview/proc_creation_win_mal_contagious_interview_tcp_backdoor_exec.kql) | new rule | medium |
 
 ## [#6566](https://github.com/SigmaHQ/sigma/pull/6566) fix: office installation false positives
 
@@ -25,12 +39,6 @@ Rebuilt 2026-11-06 14:26 UTC from 300 open pull requests. When a pull request is
 | [AI Coding Agent Settings File Created By Uncommon Process](pr-6564/rules/windows/file/file_event/file_event_win_ai_agent_config_created_by_uncommon_process.kql) | new rule | medium |
 | [AI Coding Agent CLI Execution With Permission or Sandbox Bypass](pr-6564/rules/windows/process_creation/proc_creation_win_ai_agent_cli_permission_bypass.kql) | new rule | medium |
 | [Scheduled Task Creation Running AI Coding Agent CLI](pr-6564/rules/windows/process_creation/proc_creation_win_schtasks_create_ai_agent_cli.kql) | new rule | medium |
-
-## [#6563](https://github.com/SigmaHQ/sigma/pull/6563) fix: Potentially Suspicious Powershell Script Execution From Temp Folder - filter legitimate `$LASTEXITCODE` command line
-
-| Rule | Change | Level |
-|---|---|---|
-| [Potentially Suspicious Powershell Script Execution From Temp Folder](pr-6563/rules/windows/process_creation/proc_creation_win_powershell_script_exec_from_temp_folder.kql) | update to existing rule | medium |
 
 ## [#6557](https://github.com/SigmaHQ/sigma/pull/6557) Add Entroprism AIP self-built detection rules (6 rules)
 
@@ -102,12 +110,6 @@ Rebuilt 2026-11-06 14:26 UTC from 300 open pull requests. When a pull request is
 |---|---|---|
 | [Chmod Recursive World-Writable Mode on System Directories](pr-6529/rules/linux/process_creation/proc_creation_lnx_chmod_recursive_world_writable_system_dirs.kql) | new rule | high |
 
-## [#6528](https://github.com/SigmaHQ/sigma/pull/6528) fix: Uncommon Outbound Kerberos Connection - filter the Zscaler Client Connector tunnel (ZSATunnel.exe)
-
-| Rule | Change | Level |
-|---|---|---|
-| [Uncommon Outbound Kerberos Connection](pr-6528/rules/windows/network_connection/net_connection_win_susp_outbound_kerberos_connection.kql) | update to existing rule | medium |
-
 ## [#6527](https://github.com/SigmaHQ/sigma/pull/6527) fix: Windows Binaries Write Suspicious Extensions - filter AppX deployment and Windows Update writing into WindowsApps / SoftwareDistributio
 
 | Rule | Change | Level |
@@ -126,18 +128,6 @@ Rebuilt 2026-11-06 14:26 UTC from 300 open pull requests. When a pull request is
 |---|---|---|
 | [Suspicious LiteLLM Python Startup Hook File Creation](pr-6525/rules/windows/file/file_event/file_event_win_litellm_cook_pth_creation.kql) | new rule | high |
 | [Python Process Spawning Windows Discovery Utilities](pr-6525/rules/windows/process_creation/proc_creation_win_litellm_python_discovery_utils.kql) | new rule | medium |
-
-## [#6523](https://github.com/SigmaHQ/sigma/pull/6523) fix: Disable Windows Event Logging Via Registry - filter DrvInst.exe registering driver event channels
-
-| Rule | Change | Level |
-|---|---|---|
-| [Disable Windows Event Logging Via Registry](pr-6523/rules/windows/registry/registry_set/registry_set_disable_winevt_logging.kql) | update to existing rule | high |
-
-## [#6522](https://github.com/SigmaHQ/sigma/pull/6522) fix: Legitimate Application Writing Files In Uncommon Location - filter expand.exe $dpx$ scratch files and certutil RootCAs.sst written as S
-
-| Rule | Change | Level |
-|---|---|---|
-| [Legitimate Application Writing Files In Uncommon Location](pr-6522/rules/windows/file/file_event/file_event_win_susp_legitimate_app_dropping_in_uncommon_location.kql) | update to existing rule | high |
 
 ## [#6521](https://github.com/SigmaHQ/sigma/pull/6521) fix: Suspicious Run Key from Download - filter installers registering their Program Files app, and key create/delete events
 
@@ -1416,32 +1406,4 @@ Rebuilt 2026-11-06 14:26 UTC from 300 open pull requests. When a pull request is
 | Rule | Change | Level |
 |---|---|---|
 | [SSH Tunneling via SSH Client on Windows](pr-5747/rules/windows/process_creation/proc_creation_win_ssh_tunneling.kql) | new rule | medium |
-
-## [#5700](https://github.com/SigmaHQ/sigma/pull/5700) macOS process create detections related to Bluenoroff macOS intrusion
-
-| Rule | Change | Level |
-|---|---|---|
-| [Potential Hidden Executable Run From Shared](pr-5700/rules/macos/process_creation/proc_creation_macos_hidden_exec_shared.kql) | new rule | medium |
-| [Suspicious Remoted Spawning Shell](pr-5700/rules/macos/process_creation/proc_creation_macos_remoted_spawning_shell.kql) | new rule | high |
-
-## [#5676](https://github.com/SigmaHQ/sigma/pull/5676) add detection rule for suspicious use of BrowserCore.exe in PRT extra…
-
-| Rule | Change | Level |
-|---|---|---|
-| [Potential Use of BrowserCore.exe for PRT Extraction](pr-5676/rules/windows/process_creation/proc_creation_win_prt_attack_browsercore.kql) | new rule | medium |
-
-## [#5643](https://github.com/SigmaHQ/sigma/pull/5643) feat: susp service priv esc and phantom hijack rules
-
-| Rule | Change | Level |
-|---|---|---|
-| [Suspicious SC.EXE Config Change for Services Vulnerable to Phantom DLL Hijacking](pr-5643/rules/windows/process_creation/proc_creation_win_sc_service_config_change_for_phantom_dll_hijacking.kql) | new rule | high |
-| [Suspicious Service Privilege Addition](pr-5643/rules/windows/process_creation/proc_creation_win_susp_service_privilege_addition.kql) | new rule | medium |
-| [Potential Tampering of Service Privileges in Registry](pr-5643/rules/windows/registry/registry_set/registry_set_potential_tampering_of_service_privileges.kql) | new rule | medium |
-
-## [#5548](https://github.com/SigmaHQ/sigma/pull/5548) update: windowsInstaller com object related rules
-
-| Rule | Change | Level |
-|---|---|---|
-| [Obfuscated PowerShell MSI Install via WindowsInstaller COM](pr-5548/rules/windows/process_creation/proc_creation_win_powershell_comobject_msi_obfuscated_install.kql) | new rule | high |
-| [PowerShell MSI Install via WindowsInstaller COM From Remote Location](pr-5548/rules/windows/process_creation/proc_creation_win_powershell_comobject_msi_remote_install.kql) | new rule | medium |
 

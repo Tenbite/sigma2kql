@@ -38242,7 +38242,7 @@
  },
  "rules/windows/registry/registry_event/registry_event_new_dll_added_to_appcertdlls_registry_key.yml": {
   "logsource": "windows/registry_event",
-  "reason": "SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: NewName. Invalid SigmaDetectionItem field name encountered: NewName. Invalid SigmaDetectionItem field name encountered: AccessList. Invalid SigmaDetectionItem field name encountered: ObjectValueName. Invalid SigmaDetectionI",
+  "reason": "SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: NewName",
   "result": "failed",
   "title": "New DLL Added to AppCertDlls Registry Key"
  },

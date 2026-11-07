@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6568 Add Contagious Interview TCP Backdoor Rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6568
+// Pull request author: n4uu
+// Change: new rule
+// Title: Contagious Interview TCP Backdoor Detached Command Execution
+// Sigma ID: dfe0a3c9-c250-45f7-9c1f-34a6ea329da1
+// Status: experimental | Level: medium
+// Author: n4uu
+// Date: 2026-11-05 | Modified: -
+// ATT&CK: execution, T1059.003, T1059.007
+// Tags: detection.emerging-threats
+// Description: Detects the command line built by the Contagious Interview Node.js TCP backdoor for its
+//   "ss_exec" tasking. Node.js child_process.exec on Windows wraps the command as "cmd.exe /d /s
+//   /c", and the implant prepends 'start /b cmd /c "cd /d "<dir>" && <command>"' so that the
+//   operator command runs detached in the requested working directory.
+// False positives:
+//   - Node.js tooling that starts background shells in a specific working directory this way. Rare in practice; baseline before alerting.
+// References:
+//   - https://n4uu.github.io/2026/raw-tcp-backdoor-cleverstack/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/6ae3b6e26c5bb2f18a96f7990c374aa3e0cd040a/rules-emerging-threats/2026/TA/Contagious-Interview/proc_creation_win_mal_contagious_interview_tcp_backdoor_exec.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\node.exe" and (FolderPath endswith "\\cmd.exe" or ProcessVersionInfoOriginalFileName =~ "Cmd.Exe") and (ProcessCommandLine contains " /d /s /c " and ProcessCommandLine contains "start /b cmd /c " and ProcessCommandLine contains "cd /d ")

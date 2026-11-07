@@ -2,18 +2,18 @@
 // Sigma ID: a6a39bdb-935c-4f0a-ab77-35f4bbf44d33
 // Status: test | Level: medium
 // Author: Florian Roth (Nextron Systems), Max Altgelt (Nextron Systems), Tim Shelton
-// Date: 2021-07-14 | Modified: 2026-02-17
+// Date: 2021-07-14 | Modified: 2026-11-04
 // ATT&CK: execution, T1059.001
 // Description: Detects a potentially suspicious powershell script executions from temporary folder
 // False positives:
 //   - Administrative scripts
 // References:
 //   - https://www.microsoft.com/security/blog/2021/07/13/microsoft-discovers-threat-actor-targeting-solarwinds-serv-u-software-with-0-day-exploit/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/adf5a626c4a776f3f023056f0f398b9523a2f09e/rules/windows/process_creation/proc_creation_win_powershell_script_exec_from_temp_folder.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/53b90df66c5b6d1b9be6ba9289c56fe49dd74a73/rules/windows/process_creation/proc_creation_win_powershell_script_exec_from_temp_folder.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)
 // Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceProcessEvents
-| where ((FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe") and (ProcessCommandLine contains "\\Windows\\Temp" or ProcessCommandLine contains "\\Temporary Internet" or ProcessCommandLine contains "\\AppData\\Local\\Temp" or ProcessCommandLine contains "\\AppData\\Roaming\\Temp" or ProcessCommandLine contains "%TEMP%" or ProcessCommandLine contains "%TMP%" or ProcessCommandLine contains "%LocalAppData%\\Temp")) and (not((ProcessCommandLine contains "-WindowStyle hidden -Verb runAs" or ProcessCommandLine contains "\\Windows\\system32\\config\\systemprofile\\AppData\\Local\\Temp\\Amazon\\EC2-Windows\\" or (ProcessCommandLine contains " >" or ProcessCommandLine contains "Out-File" or ProcessCommandLine contains "ConvertTo-Json") or ((InitiatingProcessFolderPath in~ ("C:\\Windows\\System32\\Msiexec.exe", "C:\\Windows\\SysWOW64\\Msiexec.exe")) and FolderPath endswith "\\powershell.exe" and (ProcessCommandLine contains "-NoProfile -ExecutionPolicy Bypass -Command" and ProcessCommandLine contains "AppData\\Local\\Temp\\" and ProcessCommandLine contains "Install-Chocolatey.ps1")))))
+| where ((FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe") and (ProcessCommandLine contains "\\Windows\\Temp" or ProcessCommandLine contains "\\Temporary Internet" or ProcessCommandLine contains "\\AppData\\Local\\Temp" or ProcessCommandLine contains "\\AppData\\Roaming\\Temp" or ProcessCommandLine contains "%TEMP%" or ProcessCommandLine contains "%TMP%" or ProcessCommandLine contains "%LocalAppData%\\Temp")) and (not((ProcessCommandLine contains "-WindowStyle hidden -Verb runAs" or ProcessCommandLine contains "\\Windows\\system32\\config\\systemprofile\\AppData\\Local\\Temp\\Amazon\\EC2-Windows\\" or (ProcessCommandLine contains " >" or ProcessCommandLine contains "Out-File" or ProcessCommandLine contains "ConvertTo-Json") or ((InitiatingProcessFolderPath in~ ("C:\\Windows\\System32\\Msiexec.exe", "C:\\Windows\\SysWOW64\\Msiexec.exe")) and FolderPath endswith "\\powershell.exe" and (ProcessCommandLine contains "-NoProfile -ExecutionPolicy Bypass -Command" and ProcessCommandLine contains "AppData\\Local\\Temp\\" and ProcessCommandLine contains "Install-Chocolatey.ps1")) or (InitiatingProcessFolderPath endswith "\\Amazon\\EC2Launch\\EC2Launch.exe" and (ProcessCommandLine contains "\\config\\systemprofile\\AppData\\Local\\Temp\\EC2Launch" and ProcessCommandLine contains "\\UserScript.ps1")))))
