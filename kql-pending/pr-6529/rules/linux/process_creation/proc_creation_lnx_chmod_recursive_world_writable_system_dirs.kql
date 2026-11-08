@@ -5,7 +5,7 @@
 // Change: new rule
 // Title: Chmod Recursive World-Writable Mode on System Directories
 // Sigma ID: e5152b6e-804b-47f5-9ccf-991e5af84dae
-// Status: test | Level: high
+// Status: experimental | Level: high
 // Author: PHM-Audit
 // Date: 2026-10-27 | Modified: -
 // ATT&CK: defense-impairment, privilege-escalation, T1222.002
@@ -20,9 +20,8 @@
 // False positives:
 //   - Rare administrative recursion over system paths, e.g. restoring permissions from a backup script. Apply additional filters as needed before pushing to production.
 // References:
-//   - https://attack.mitre.org/techniques/T1222/002/
 //   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1222.002/T1222.002.md
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/11a2f78067366b0fb471c65d0b283cedb86baf47/rules/linux/process_creation/proc_creation_lnx_chmod_recursive_world_writable_system_dirs.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e3d9877cc4cab491d83220ff90d5cf197bb80545/rules/linux/process_creation/proc_creation_lnx_chmod_recursive_world_writable_system_dirs.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

@@ -17,7 +17,7 @@
 // References:
 //   - https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-environment-variables#dotnet_startup_hooks
 //   - https://persistence-info.github.io/Data/dotnetstartuphooks.html
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/f402a60afc4bd910c876351e5f5b3fa84590362e/rules/windows/registry/registry_set/registry_set_dotnet_startup_hooks.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/dbf1325c93b98449a11d7eee64254da52dfdec2e/rules/windows/registry/registry_set/registry_set_dotnet_startup_hooks.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

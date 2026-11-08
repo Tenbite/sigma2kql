@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6580 Replace dead reference links in 8 existing rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6580
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: Browser Started with Remote Debugging
+// Sigma ID: b3d34dc5-2efd-4ae3-845f-8ec14921f449
+// Status: test | Level: medium
+// Author: pH-T (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+// Date: 2022-07-27 | Modified: 2022-12-23
+// ATT&CK: credential-access, collection, T1185
+// Description: Detects browsers starting with the remote debugging flags. Which is a technique often used to
+//   perform browser injection attacks
+// False positives:
+//   - Unknown
+// References:
+//   - https://web.archive.org/web/20230420012250/https://yoroi.company/wp-content/uploads/2022/05/EternityGroup_report_compressed.pdf
+//   - https://www.mdsec.co.uk/2022/10/analysing-lastpass-part-1/
+//   - https://github.com/defaultnamehere/cookie_crimes/
+//   - https://github.com/wunderwuzzi23/firefox-cookiemonster
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/03f5200b4cc909d074354889a71e917ab40ec911/rules/windows/process_creation/proc_creation_win_browsers_remote_debugging.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ProcessCommandLine contains " --remote-debugging-" or (FolderPath endswith "\\firefox.exe" and ProcessCommandLine contains " -start-debugger-server")

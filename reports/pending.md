@@ -1,18 +1,32 @@
 # Pending rules run
 
-- Run: 2026-11-07 13:12 UTC
+- Run: 2026-11-08 13:32 UTC
 - Open pull requests checked: 300 (drafts skipped: 4)
-- Pull requests with converted rules: 177
+- Pull requests with converted rules: 176
 
 | Result | Rule files |
 |---|---|
-| Converted and valid | 517 |
-| Failed validation | 6 |
-| Failed conversion | 330 |
+| Converted and valid | 523 |
+| Failed validation | 7 |
+| Failed conversion | 342 |
 | Skipped (filters) | 61 |
 
 ## Not converted
 
+- #6581 `rules/web/webserver_generic/web_adcs_web_enrollment_machine_account.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6581 `rules/windows/builtin/security/win_security_ad_altsecurityidentities_modified.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6581 `rules/windows/builtin/security/win_security_ad_altsecurityidentities_weak_mapping_added.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6581 `rules/windows/builtin/security/win_security_adcs_ca_security_permissions_changed.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6581 `rules/windows/builtin/security/win_security_adcs_cert_request_with_san_attribute.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6581 `rules/windows/builtin/security/win_security_adcs_issuance_policy_group_link.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6581 `rules/windows/builtin/security/win_security_adcs_pki_container_modification.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6581 `rules/windows/builtin/security/win_security_adcs_template_any_purpose_eku.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6581 `rules/windows/builtin/security/win_security_adcs_template_enrollment_agent_eku.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6581 `rules/windows/builtin/security/win_security_adcs_template_no_security_extension_flag.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6581 `rules/windows/builtin/security/win_security_adcs_template_object_modified.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6580 `rules/linux/network_connection/net_connection_lnx_susp_malware_callback_port.yml`: A value of type string or dynamic expected. (at 29)
+- #6580 `rules/windows/builtin/system/microsoft_windows_Iphlpsvc/win_system_isatap_router_address_set.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6579 `rules/windows/builtin/security/win_security_kerberoasting_activity.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6577 `rules-emerging-threats/2022/Exploits/CVE-2022-33891/web_cve_2022_33891_spark_shell_command_injection.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6576 `rules/windows/builtin/security/win_security_audit_log_cleared.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6575 `rules/windows/builtin/system/microsoft_windows_eventlog/win_system_eventlog_cleared.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
@@ -348,4 +362,3 @@
 - #5849 `rules/cloud/m365/audit/microsoft365_malicious_url_override.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #5849 `rules/cloud/m365/audit/microsoft365_suspicious_lateral_email.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #5810 `rules/windows/builtin/security/win_security_pua_nssm_service_installation.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #5747 `rules/windows/builtin/security/win_security_susp_kerb_ticket_request_s4u2proxy.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:

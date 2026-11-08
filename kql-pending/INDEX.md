@@ -3,7 +3,26 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-07 13:12 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-08 13:32 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+
+## [#6581](https://github.com/SigmaHQ/sigma/pull/6581) Add AD CS / ESC coverage-gap detections (14 rules)
+
+| Rule | Change | Level |
+|---|---|---|
+| [Suspicious ADCS CA Configuration Weakened Via Certutil.EXE](pr-6581/rules/windows/process_creation/proc_creation_win_certutil_adcs_insecure_ca_config.kql) | new rule | high |
+| [Potential ADCS CA Security Configuration Tampering](pr-6581/rules/windows/registry/registry_set/registry_set_adcs_ca_policy_flags_modified.kql) | new rule | medium |
+| [Suspicious Weak Certificate Mapping Enabled On Domain Controller](pr-6581/rules/windows/registry/registry_set/registry_set_dc_weak_certificate_mapping.kql) | new rule | high |
+
+## [#6580](https://github.com/SigmaHQ/sigma/pull/6580) Replace dead reference links in 8 existing rules
+
+| Rule | Change | Level |
+|---|---|---|
+| [Suspicious RazerInstaller Explorer Subprocess](pr-6580/rules-emerging-threats/2021/Exploits/RazerInstaller-LPE-Exploit/proc_creation_win_exploit_other_razorinstaller_lpe.kql) | update to existing rule | high |
+| [Pingback Backdoor File Indicators](pr-6580/rules-emerging-threats/2021/Malware/Pingback/file_event_win_malware_pingback_backdoor.kql) | update to existing rule | high |
+| [Pingback Backdoor DLL Loading Activity](pr-6580/rules-emerging-threats/2021/Malware/Pingback/image_load_malware_pingback_backdoor.kql) | update to existing rule | high |
+| [Pingback Backdoor Activity](pr-6580/rules-emerging-threats/2021/Malware/Pingback/proc_creation_win_malware_pingback_backdoor.kql) | update to existing rule | high |
+| [Browser Started with Remote Debugging](pr-6580/rules/windows/process_creation/proc_creation_win_browsers_remote_debugging.kql) | update to existing rule | medium |
+| [Uncommon Child Process Of Defaultpack.EXE](pr-6580/rules/windows/process_creation/proc_creation_win_defaultpack_uncommon_child_process.kql) | update to existing rule | medium |
 
 ## [#6577](https://github.com/SigmaHQ/sigma/pull/6577) Fix three rules with conditions that can never match
 
@@ -1388,22 +1407,4 @@ Rebuilt 2026-11-07 13:12 UTC from 300 open pull requests. When a pull request is
 | Rule | Change | Level |
 |---|---|---|
 | [PUA - NSSM Execution](pr-5810/rules/windows/process_creation/proc_creation_win_pua_nssm.kql) | new rule | medium |
-
-## [#5800](https://github.com/SigmaHQ/sigma/pull/5800) add: Linux Security Capability Set Via Setfattr Utility
-
-| Rule | Change | Level |
-|---|---|---|
-| [Linux Security Capability Set via Setfattr Utility](pr-5800/rules/linux/process_creation/proc_creation_lnx_setfattr_sec_cap.kql) | new rule | medium |
-
-## [#5796](https://github.com/SigmaHQ/sigma/pull/5796) cve-2025-49666 detection rule
-
-| Rule | Change | Level |
-|---|---|---|
-| [CVE-2025-49666 Windows SBEC Service Exploitation Detection](pr-5796/rules-emerging-threats/2025/Exploits/CVE-2025-49666/cve_2025_49666_detection.kql) | new rule | high |
-
-## [#5747](https://github.com/SigmaHQ/sigma/pull/5747) 3 New rules
-
-| Rule | Change | Level |
-|---|---|---|
-| [SSH Tunneling via SSH Client on Windows](pr-5747/rules/windows/process_creation/proc_creation_win_ssh_tunneling.kql) | new rule | medium |
 

@@ -1,0 +1,33 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6581 Add AD CS / ESC coverage-gap detections (14 rules)
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6581
+// Pull request author: elhoim
+// Change: new rule
+// Title: Suspicious ADCS CA Configuration Weakened Via Certutil.EXE
+// Sigma ID: 32a1966a-c4cb-4d86-a667-365256a1be60
+// Status: experimental | Level: high
+// Author: elhoim
+// Date: 2026-10-15 | Modified: -
+// ATT&CK: privilege-escalation, credential-access, defense-impairment, T1649
+// Description: Detects the use of "certutil.exe -setreg" to apply an insecure configuration to an Active
+//   Directory Certificate Services (ADCS) Certification Authority: - Enabling the
+//   "EDITF_ATTRIBUTESUBJECTALTNAME2" policy flag, which allows any requester to specify an arbitrary
+//   Subject Alternative Name (ESC6). - Removing the "IF_ENFORCEENCRYPTICERTREQUEST" interface flag,
+//   which allows unencrypted ICertPassage RPC enrollment and NTLM relay to the CA (ESC11). - Adding
+//   the szOID_NTDS_CA_SECURITY_EXT OID (1.3.6.1.4.1.311.25.2) to "DisableExtensionList", which
+//   globally removes the SID security extension from issued certificates (ESC16).
+// False positives:
+//   - Administrators intentionally applying these settings, which is strongly discouraged
+// References:
+//   - https://www.specterops.io/assets/resources/Certified_Pre-Owned.pdf
+//   - https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation
+//   - https://blog.compass-security.com/2022/11/relaying-to-ad-certificate-services-over-rpc/
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/certutil
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/f669b19474f70bf0caf3142411b7509cf48c96b5/rules/windows/process_creation/proc_creation_win_certutil_adcs_insecure_ca_config.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\certutil.exe" or ProcessVersionInfoOriginalFileName =~ "CertUtil.exe") and (ProcessCommandLine contains "-setreg" or ProcessCommandLine contains "/setreg" or ProcessCommandLine contains "–setreg" or ProcessCommandLine contains "—setreg" or ProcessCommandLine contains "―setreg") and (((ProcessCommandLine contains "+EDITF_ATTRIBUTESUBJECTALTNAME2" or ProcessCommandLine contains " EDITF_ATTRIBUTESUBJECTALTNAME2") or ProcessCommandLine contains "-IF_ENFORCEENCRYPTICERTREQUEST") or ((ProcessCommandLine contains "DisableExtensionList" and ProcessCommandLine contains "1.3.6.1.4.1.311.25.2") and (not(ProcessCommandLine contains "-1.3.6.1.4.1.311.25.2"))))
