@@ -1,0 +1,30 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6592 New rule: Potential Data Exfiltration To Chat Service Webhook Via CommandLine
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6592
+// Pull request author: elhoim
+// Change: new rule
+// Title: Potential Data Exfiltration To Chat Service Webhook Via CommandLine
+// Sigma ID: 6293e711-ebf5-4dd8-a1c0-4414679d75a8
+// Status: experimental | Level: medium
+// Author: elhoim
+// Date: 2026-10-01 | Modified: -
+// ATT&CK: exfiltration, T1567.004
+// Description: Detects command lines that reference a Discord, Slack or Microsoft Teams incoming webhook URL or
+//   the Telegram Bot API, e.g. "curl.exe -F file=@..." or "Invoke-RestMethod -Method Post".
+//   Infostealers and adversaries abuse these webhooks as an easy, authenticated-by-URL exfiltration
+//   channel to reputable domains that are rarely blocked.
+// False positives:
+//   - Legitimate automation, monitoring or CI/CD scripts that post notifications to Slack, Microsoft Teams, Discord or Telegram channels
+// References:
+//   - https://discord.com/developers/docs/resources/webhook
+//   - https://api.slack.com/messaging/webhooks
+//   - https://core.telegram.org/bots/api
+//   - https://github.com/redcanaryco/atomic-red-team/blob/388942adbd9641f4dfdcf079d7efe9a75ec0ac43/atomics/T1567.004/T1567.004.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/573709020e1e27abc25818e6f1bb800a6975a121/rules/windows/process_creation/proc_creation_win_susp_chat_webhook_exfiltration.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "api.telegram.org/bot" or ProcessCommandLine contains "discord.com/api/webhooks/" or ProcessCommandLine contains "discordapp.com/api/webhooks/" or ProcessCommandLine contains "hooks.slack.com/" or ProcessCommandLine contains ".webhook.office.com/"

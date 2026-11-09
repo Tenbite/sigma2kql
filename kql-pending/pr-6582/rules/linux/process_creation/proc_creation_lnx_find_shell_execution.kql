@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6582 Replace dead reference links in 193 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6582
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: Shell Execution via Find - Linux
+// Sigma ID: 6adfbf8f-52be-4444-9bac-81b539624146
+// Status: test | Level: high
+// Author: Li Ling, Andy Parkidomo, Robert Rakowski, Blake Hartstein (Bloomberg L.P.)
+// Date: 2024-09-02 | Modified: -
+// ATT&CK: discovery, T1083
+// Description: Detects the use of the find command to execute a shell. Such behavior may be associated with
+//   privilege escalation, unauthorized command execution, or exploitation attempt.
+// False positives:
+//   - Unknown
+// References:
+//   - https://gtfobins.github.io/gtfobins/find/#shell
+//   - https://github.com/elastic/detection-rules/blob/0aacc5e19292f764a002ea2093b2a076db35b589/rules/_deprecated/execution_shell_evasion_linux_binary.toml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cb982537eb7397f93785ec066cce7b017050a43f/rules/linux/process_creation/proc_creation_lnx_find_shell_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "/find" and (ProcessCommandLine contains " . " and ProcessCommandLine contains "-exec")) and (ProcessCommandLine contains "/bin/bash" or ProcessCommandLine contains "/bin/dash" or ProcessCommandLine contains "/bin/fish" or ProcessCommandLine contains "/bin/sh" or ProcessCommandLine contains "/bin/zsh")

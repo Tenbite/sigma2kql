@@ -1,0 +1,30 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6587 New rule: Potential Print Processor DLL Registration Via Registry
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6587
+// Pull request author: elhoim
+// Change: new rule
+// Title: Potential Print Processor DLL Registration Via Registry
+// Sigma ID: 2bb55c17-b769-4ae7-9f74-908ec7e510cf
+// Status: experimental | Level: medium
+// Author: elhoim
+// Date: 2026-10-01 | Modified: -
+// ATT&CK: persistence, privilege-escalation, T1547.012
+// Description: Detects the registration of a print processor DLL other than the default "winprint.dll" via the
+//   "Driver" value of a print processor key. Print processors are DLLs loaded by the print spooler
+//   service (spoolsv.exe) running as SYSTEM at service start. Adversaries such as Earth Lusca or the
+//   Winnti Group (PipeMon) registered malicious print processors to gain persistence and privilege
+//   escalation.
+// False positives:
+//   - Installation of printer drivers that ship a vendor specific print processor. Such installations are performed by the spooler service (spoolsv.exe) and should be baselined per environment.
+// References:
+//   - https://www.welivesecurity.com/2020/05/21/no-game-over-winnti-group/
+//   - https://github.com/redcanaryco/atomic-red-team/blob/388942adbd9641f4dfdcf079d7efe9a75ec0ac43/atomics/T1547.012/T1547.012.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/a7d493226e6b3693a3a861a29d5670ef717515da/rules/windows/registry/registry_set/registry_set_persistence_print_processor.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+// Note: 2 wildcard comparison(s) rewritten to 'matches regex' (KQL treats * in contains/endswith/== as a literal character)
+
+DeviceRegistryEvents
+| where ((RegistryKey matches regex @"(?i)\\Control\\Print\\Environments.*$" and RegistryKey matches regex @"(?i)\\Print Processors.*$") and RegistryKey endswith "\\Driver") and (not(RegistryValueData =~ "winprint.dll"))

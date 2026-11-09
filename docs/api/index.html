@@ -28,14 +28,14 @@ footer { margin-top: 40px; color: var(--muted); font-size: .85rem; }
 <main>
 <p class="nav"><a href="https://tenbite.github.io/sigma2kql/">&larr; Search the rules</a> · <a href="https://github.com/Tenbite/sigma2kql">Source on GitHub</a></p>
 <h1>sigma2kql JSON API</h1>
-<p class="sub">Every converted rule (2,433 today: 1,910 published, 523 pending), with its metadata and Defender XDR KQL, as static JSON. Free, no key, rebuilt nightly. Rules were written by the <a href="https://github.com/SigmaHQ/sigma">SigmaHQ</a> community.</p>
+<p class="sub">Every converted rule (2,554 today: 1,910 published, 644 pending), with its metadata and Defender XDR KQL, as static JSON. Free, no key, rebuilt nightly. Rules were written by the <a href="https://github.com/SigmaHQ/sigma">SigmaHQ</a> community.</p>
 <p class="warn">Machine-generated and not tested against real telemetry. Queries pass Microsoft's KQL parser against the live Defender schema, which proves they are valid KQL, not that they detect what the rule describes. Rules are under the <a href="https://github.com/SigmaHQ/Detection-Rule-License">DRL 1.1</a>: keep each rule's author and Sigma ID if you redistribute.</p>
 
 <h2>Endpoints</h2>
 <table>
 <tr><th>URL</th><th>What it is</th></tr>
 <tr><td><a href="https://tenbite.github.io/sigma2kql/api/v1/index.json"><code>/api/v1/index.json</code></a></td><td>Small manifest: when it was built, SigmaHQ commit, tool versions, counts, endpoint URLs. Check this first to see if anything changed.</td></tr>
-<tr><td><a href="https://tenbite.github.io/sigma2kql/api/v1/rules.json"><code>/api/v1/rules.json</code></a></td><td>All rules with metadata and KQL (about 6.4 MB, compressed in transit).</td></tr>
+<tr><td><a href="https://tenbite.github.io/sigma2kql/api/v1/rules.json"><code>/api/v1/rules.json</code></a></td><td>All rules with metadata and KQL (about 6.7 MB, compressed in transit).</td></tr>
 <tr><td><a href="https://tenbite.github.io/sigma2kql/api/v1/schema.json"><code>/api/v1/schema.json</code></a></td><td>JSON Schema for <code>rules.json</code>.</td></tr>
 </table>
 <p>It is a static file, so there's no server-side filtering: download once, then filter locally. Fields are stable within <code>v1</code>; new fields may be added, nothing is renamed or removed without a <code>/v2/</code>.</p>

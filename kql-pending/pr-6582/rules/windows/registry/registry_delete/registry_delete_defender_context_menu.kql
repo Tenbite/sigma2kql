@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6582 Replace dead reference links in 193 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6582
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: Delete Defender Scan ShellEx Context Menu Registry Key
+// Sigma ID: 72a0369a-2576-4aaf-bfc9-6bb24a574ac6
+// Status: experimental | Level: medium
+// Author: Matt Anderson (Huntress)
+// Date: 2025-07-11 | Modified: 2025-10-07
+// ATT&CK: defense-impairment
+// Description: Detects deletion of registry key that adds 'Scan with Defender' option in context menu.
+//   Attackers may use this to make it harder for users to scan files that are suspicious.
+// False positives:
+//   - Unlikely as this weakens defenses and normally would not be done even if using another AV.
+// References:
+//   - https://research.splunk.com/endpoint/395ed5fe-ad13-4366-9405-a228427bdd91/
+//   - https://winaero.com/how-to-delete-scan-with-windows-defender-from-context-menu-in-windows-10/
+//   - https://thedfirreport.com/2021/10/18/icedid-to-xinglocker-ransomware-in-24-hours/
+//   - https://www.threatdown.com/blog/lazyscripter-from-empire-to-double-rat/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cb982537eb7397f93785ec066cce7b017050a43f/rules/windows/registry/registry_delete/registry_delete_defender_context_menu.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceRegistryEvents
+| where (ActionType in~ ("RegistryKeyDeleted", "RegistryValueDeleted")) and (RegistryKey contains "shellex\\ContextMenuHandlers\\EPP" and (not(((InitiatingProcessFolderPath startswith "C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\" or InitiatingProcessFolderPath startswith "C:\\Program Files\\Windows Defender\\" or InitiatingProcessFolderPath startswith "C:\\Program Files (x86)\\Windows Defender\\") and InitiatingProcessFolderPath endswith "\\MsMpEng.exe"))))

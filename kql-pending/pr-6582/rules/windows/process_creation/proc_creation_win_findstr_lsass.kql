@@ -1,0 +1,25 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6582 Replace dead reference links in 193 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6582
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: LSASS Process Reconnaissance Via Findstr.EXE
+// Sigma ID: fe63010f-8823-4864-a96b-a7b4a0f7b929
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-08-12 | Modified: 2024-06-04
+// ATT&CK: credential-access, T1552.006
+// Description: Detects findstring commands that include the keyword lsass, which indicates recon actviity for
+//   the LSASS process PID
+// False positives:
+//   - Unknown
+// References:
+//   - https://blog.talosintelligence.com/recent-cyber-attack/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cb982537eb7397f93785ec066cce7b017050a43f/rules/windows/process_creation/proc_creation_win_findstr_lsass.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (((FolderPath endswith "\\find.exe" or FolderPath endswith "\\findstr.exe") or (ProcessVersionInfoOriginalFileName in~ ("FIND.EXE", "FINDSTR.EXE"))) and ProcessCommandLine contains "lsass") or (ProcessCommandLine contains " -i \"lsass" or ProcessCommandLine contains " /i \"lsass" or ProcessCommandLine contains " –i \"lsass" or ProcessCommandLine contains " —i \"lsass" or ProcessCommandLine contains " ―i \"lsass" or ProcessCommandLine contains " -i lsass.exe" or ProcessCommandLine contains " /i lsass.exe" or ProcessCommandLine contains " –i lsass.exe" or ProcessCommandLine contains " —i lsass.exe" or ProcessCommandLine contains " ―i lsass.exe" or ProcessCommandLine contains "findstr \"lsass" or ProcessCommandLine contains "findstr lsass" or ProcessCommandLine contains "findstr.exe \"lsass" or ProcessCommandLine contains "findstr.exe lsass")

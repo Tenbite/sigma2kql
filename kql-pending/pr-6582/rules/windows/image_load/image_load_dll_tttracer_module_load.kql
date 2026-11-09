@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6582 Replace dead reference links in 193 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6582
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: Time Travel Debugging Utility Usage - Image
+// Sigma ID: e76c8240-d68f-4773-8880-5c6f63595aaf
+// Status: test | Level: high
+// Author: Ensar Şamil, @sblmsrsn, @oscd_initiative
+// Date: 2020-10-06 | Modified: 2022-12-02
+// ATT&CK: credential-access, stealth, T1218, T1003.001
+// Description: Detects usage of Time Travel Debugging Utility. Adversaries can execute malicious processes and
+//   dump processes, such as lsass.exe, via tttracer.exe.
+// False positives:
+//   - Legitimate usage by software developers/testers
+// References:
+//   - https://lolbas-project.github.io/lolbas/Binaries/Tttracer/
+//   - https://web.archive.org/web/20191118131013/https://twitter.com/mattifestation/status/1196390321783025666
+//   - https://twitter.com/oulusoyum/status/1191329746069655553
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cb982537eb7397f93785ec066cce7b017050a43f/rules/windows/image_load/image_load_dll_tttracer_module_load.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceImageLoadEvents
+| where FolderPath endswith "\\ttdrecord.dll" or FolderPath endswith "\\ttdwriter.dll" or FolderPath endswith "\\ttdloader.dll"

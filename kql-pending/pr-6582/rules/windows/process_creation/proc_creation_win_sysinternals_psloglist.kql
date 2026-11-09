@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6582 Replace dead reference links in 193 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6582
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: Suspicious Use of PsLogList
+// Sigma ID: aae1243f-d8af-40d8-ab20-33fc6d0c55bc
+// Status: test | Level: medium
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2021-12-18 | Modified: 2026-06-29
+// ATT&CK: discovery, T1087, T1087.001, T1087.002
+// Description: Detects usage of the PsLogList utility to dump event log in order to extract admin accounts and
+//   perform account discovery or delete events logs
+// False positives:
+//   - Another tool that uses the command line switches of PsLogList
+//   - Legitimate use of PsLogList by an administrator
+// References:
+//   - https://research.nccgroup.com/2021/01/12/abusing-cloud-services-to-fly-under-the-radar/
+//   - https://web.archive.org/web/20220322171203/https://www.cybereason.com/blog/deadringer-exposing-chinese-threat-actors-targeting-major-telcos
+//   - https://github.com/3CORESec/MAL-CL/tree/master/Descriptors/Sysinternals/PsLogList
+//   - https://twitter.com/EricaZelic/status/1614075109827874817
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cb982537eb7397f93785ec066cce7b017050a43f/rules/windows/process_creation/proc_creation_win_sysinternals_psloglist.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (ProcessVersionInfoOriginalFileName =~ "psloglist.exe" or (FolderPath endswith "\\psloglist.exe" or FolderPath endswith "\\psloglist64.exe" or FolderPath endswith "\\psloglist64a.exe")) and (ProcessCommandLine contains " security" or ProcessCommandLine contains " application" or ProcessCommandLine contains " system") and (ProcessCommandLine contains " -d" or ProcessCommandLine contains " /d" or ProcessCommandLine contains " –d" or ProcessCommandLine contains " —d" or ProcessCommandLine contains " ―d" or ProcessCommandLine contains " -x" or ProcessCommandLine contains " /x" or ProcessCommandLine contains " –x" or ProcessCommandLine contains " —x" or ProcessCommandLine contains " ―x" or ProcessCommandLine contains " -s" or ProcessCommandLine contains " /s" or ProcessCommandLine contains " –s" or ProcessCommandLine contains " —s" or ProcessCommandLine contains " ―s" or ProcessCommandLine contains " -c" or ProcessCommandLine contains " /c" or ProcessCommandLine contains " –c" or ProcessCommandLine contains " —c" or ProcessCommandLine contains " ―c" or ProcessCommandLine contains " -g" or ProcessCommandLine contains " /g" or ProcessCommandLine contains " –g" or ProcessCommandLine contains " —g" or ProcessCommandLine contains " ―g")

@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6586 new: Ntprint.EXE Execution From Non-Default Location
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6586
+// Pull request author: mechanicb0y
+// Change: new rule
+// Title: Ntprint.EXE Execution From Non-Default Location
+// Sigma ID: 872a0ee5-2885-45be-bff1-c28f8b291f71
+// Status: experimental | Level: high
+// Author: mechanicb0y
+// Date: 2026-11-09 | Modified: -
+// ATT&CK: execution, stealth, T1574.001
+// Description: Detects the execution of the Windows printer driver installation binary "ntprint.exe" from a
+//   non-default directory. Attackers can copy the Microsoft-signed binary to a folder they control
+//   next to a malicious "ntprint.dll" and run it, for example with the
+//   "PSetupElevatedLegacyPrintDriverInstallW" method on the command line, so that the signed process
+//   loads the attacker's DLL from its own folder (DLL sideloading).
+// False positives:
+//   - Windows installed on a drive other than C
+// References:
+//   - https://www.hexacorn.com/blog/2025/10/06/ntprint-exe-lolbin/
+//   - https://github.com/redcanaryco/atomic-red-team/blob/91da6949984b21380dad0ccd7a49d44c5e8ff3bb/atomics/T1574.001/T1574.001.yaml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/54f5d2dac2757cbcc301d2fa91d22bea0d3aaf97/rules/windows/process_creation/proc_creation_win_ntprint_execution_non_default_location.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\ntprint.exe" or ProcessVersionInfoOriginalFileName =~ "ntprint.exe") and (not(((FolderPath in~ ("C:\\Windows\\System32\\ntprint.exe", "C:\\Windows\\SysWOW64\\ntprint.exe")) or FolderPath startswith "C:\\Windows\\WinSxS\\")))

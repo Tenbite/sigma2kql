@@ -1,0 +1,30 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6582 Replace dead reference links in 193 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6582
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: LSASS Dump Keyword In CommandLine
+// Sigma ID: ffa6861c-4461-4f59-8a41-578c39f3f23e
+// Status: test | Level: high
+// Author: E.M. Anhaus, Tony Lambert, oscd.community, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2019-10-24 | Modified: 2023-08-29
+// ATT&CK: credential-access, T1003.001
+// Description: Detects the presence of the keywords "lsass" and ".dmp" in the commandline, which could indicate
+//   a potential attempt to dump or create a dump of the lsass process.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://github.com/Hackndo/lsassy
+//   - https://medium.com/@markmotig/some-ways-to-dump-lsass-exe-c4a75fdc49bf
+//   - https://github.com/elastic/detection-rules/blob/c76a39796972ecde44cb1da6df47f1b6562c9770/rules/windows/credential_access_lsass_memdump_file_created.toml
+//   - https://web.archive.org/web/20240825073514/https://www.whiteoaksecurity.com/blog/attacks-defenses-dumping-lsass-no-mimikatz/
+//   - https://github.com/helpsystems/nanodump
+//   - https://github.com/CCob/MirrorDump
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cb982537eb7397f93785ec066cce7b017050a43f/rules/windows/process_creation/proc_creation_win_susp_lsass_dmp_cli_keywords.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "lsass.dmp" or ProcessCommandLine contains "lsass.zip" or ProcessCommandLine contains "lsass.rar" or ProcessCommandLine contains "Andrew.dmp" or ProcessCommandLine contains "Coredump.dmp" or ProcessCommandLine contains "NotLSASS.zip" or ProcessCommandLine contains "lsass_2" or ProcessCommandLine contains "lsassdump" or ProcessCommandLine contains "lsassdmp") or (ProcessCommandLine contains "lsass" and ProcessCommandLine contains ".dmp") or (ProcessCommandLine contains "SQLDmpr" and ProcessCommandLine contains ".mdmp") or (ProcessCommandLine contains "nanodump" and ProcessCommandLine contains ".dmp")

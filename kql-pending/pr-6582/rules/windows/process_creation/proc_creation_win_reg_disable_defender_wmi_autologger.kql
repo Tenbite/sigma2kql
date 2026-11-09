@@ -1,0 +1,32 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6582 Replace dead reference links in 193 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6582
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: Disabling Windows Defender WMI Autologger Session via Reg.exe
+// Sigma ID: a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6
+// Status: experimental | Level: high
+// Author: Matt Anderson (Huntress)
+// Date: 2025-07-09 | Modified: -
+// ATT&CK: defense-impairment, T1685
+// Description: Detects the use of reg.exe to disable the Event Tracing for Windows (ETW) Autologger session for
+//   Windows Defender API and Audit events. By setting the 'Start' value to '0' for the
+//   'DefenderApiLogger' or 'DefenderAuditLogger' session, an attacker can prevent these critical
+//   security events from being logged, effectively blinding monitoring tools that rely on this data.
+//   This is a powerful defense evasion technique.
+// False positives:
+//   - Highly unlikely
+// References:
+//   - https://research.splunk.com/endpoint/76406a0f-f5e0-4167-8e1f-337fdc0f1b0c/
+//   - https://docs.microsoft.com/en-us/windows/win32/etw/configuring-and-starting-an-autologger-session
+//   - https://thedfirreport.com/2021/10/18/icedid-to-xinglocker-ransomware-in-24-hours/
+//   - https://www.threatdown.com/blog/lazyscripter-from-empire-to-double-rat/
+//   - https://www.binarly.io/blog/design-issues-of-modern-edrs-bypassing-etw-based-solutions
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cb982537eb7397f93785ec066cce7b017050a43f/rules/windows/process_creation/proc_creation_win_reg_disable_defender_wmi_autologger.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\reg.exe" or ProcessVersionInfoOriginalFileName =~ "reg.exe") and (ProcessCommandLine contains "\\Control\\WMI\\Autologger\\DefenderApiLogger\\Start" or ProcessCommandLine contains "\\Control\\WMI\\Autologger\\DefenderAuditLogger\\Start") and (ProcessCommandLine contains "add" and ProcessCommandLine contains "0")) and (not(ProcessCommandLine contains "0x00000001"))

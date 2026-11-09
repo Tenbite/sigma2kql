@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6588 New rule: Potential Driver Signature Enforcement Weakening Via Bcdedit.EXE
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6588
+// Pull request author: elhoim
+// Change: new rule
+// Title: Potential Driver Signature Enforcement Weakening Via Bcdedit.EXE
+// Sigma ID: 7f3dbed6-2952-43d0-9d64-0b7c407f109b
+// Status: experimental | Level: medium
+// Author: elhoim
+// Date: 2026-10-01 | Modified: -
+// ATT&CK: defense-impairment, T1553.006
+// Description: Detects usage of "bcdedit.exe" to enable test signing mode or to disable kernel code integrity
+//   checks ("testsigning", "nointegritychecks", "DISABLE_INTEGRITY_CHECKS"). Both settings allow
+//   unsigned or self-signed kernel drivers to be loaded after the next reboot. Test signing mode has
+//   been enabled by malware such as BlackEnergy to load a driver component.
+// False positives:
+//   - Driver developers and hardware/driver test labs (e.g. HLK) enabling test signing on development machines
+// References:
+//   - https://learn.microsoft.com/en-us/windows-hardware/drivers/install/the-testsigning-boot-configuration-option
+//   - https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/bcdedit--set
+//   - https://github.com/redcanaryco/atomic-red-team/blob/388942adbd9641f4dfdcf079d7efe9a75ec0ac43/atomics/T1553.006/T1553.006.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/97b1ace05e90f37f54caee17898064def2e18219/rules/windows/process_creation/proc_creation_win_bcdedit_disable_driver_signature_enforcement.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\bcdedit.exe" or ProcessVersionInfoOriginalFileName =~ "bcdedit.exe") and (ProcessCommandLine contains "-set" or ProcessCommandLine contains "/set" or ProcessCommandLine contains "–set" or ProcessCommandLine contains "—set" or ProcessCommandLine contains "―set") and (ProcessCommandLine contains "DISABLE_INTEGRITY_CHECKS" or ((ProcessCommandLine contains "testsigning" or ProcessCommandLine contains "nointegritychecks") and (ProcessCommandLine endswith " on" or ProcessCommandLine endswith " yes" or ProcessCommandLine endswith " true" or ProcessCommandLine endswith " 1")))

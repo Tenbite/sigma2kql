@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6582 Replace dead reference links in 193 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6582
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: Operation Wocao Activity
+// Sigma ID: 1cfac73c-be78-4f9a-9b08-5bde0c3953ab
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems), frack113
+// Date: 2019-12-20 | Modified: 2022-10-09
+// ATT&CK: privilege-escalation, persistence, discovery, stealth, T1012, T1036.004, T1027, execution, T1053.005, T1059.001
+// Tags: detection.emerging-threats
+// Description: Detects activity mentioned in Operation Wocao report
+// False positives:
+//   - Administrators that use checkadmin.exe tool to enumerate local administrators
+// References:
+//   - https://www.fox-it.com/nl/operation-wocao-shining-a-light-on-one-of-china-s-hidden-hacking-groups/
+//   - https://twitter.com/SBousseaden/status/1207671369963646976
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cb982537eb7397f93785ec066cce7b017050a43f/rules-emerging-threats/2019/TA/Operation-Wocao/proc_creation_win_apt_wocao.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "checkadmin.exe 127.0.0.1 -all" or ProcessCommandLine contains "netsh advfirewall firewall add rule name=powershell dir=in" or ProcessCommandLine contains "cmd /c powershell.exe -ep bypass -file c:\\s.ps1" or ProcessCommandLine contains "/tn win32times /f" or ProcessCommandLine contains "create win32times binPath=" or ProcessCommandLine contains "\\c$\\windows\\system32\\devmgr.dll" or ProcessCommandLine contains " -exec bypass -enc JgAg" or (ProcessCommandLine contains "type " and ProcessCommandLine contains "keepass\\KeePass.config.xml") or ProcessCommandLine contains "iie.exe iie.txt" or (ProcessCommandLine contains "reg query HKEY_CURRENT_USER\\Software\\" and ProcessCommandLine contains "\\PuTTY\\Sessions\\")

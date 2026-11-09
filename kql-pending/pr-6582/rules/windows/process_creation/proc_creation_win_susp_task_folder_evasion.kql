@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6582 Replace dead reference links in 193 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6582
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: Tasks Folder Evasion
+// Sigma ID: cc4e02ba-9c06-48e2-b09e-2500cace9ae0
+// Status: test | Level: high
+// Author: Sreeman
+// Date: 2020-01-13 | Modified: 2022-12-25
+// ATT&CK: privilege-escalation, persistence, execution, stealth, T1574.001
+// Description: The Tasks folder in system32 and syswow64 are globally writable paths. Adversaries can take
+//   advantage of this and load or influence any script hosts or ANY .NET Application in Tasks to
+//   load and execute a custom assembly into cscript, wscript, regsvr32, mshta, eventvwr
+// False positives:
+//   - Unknown
+// References:
+//   - https://web.archive.org/web/20200116124158/https://twitter.com/subTee/status/1216465628946563073
+//   - https://gist.github.com/am0nsec/8378da08f848424e4ab0cc5b317fdd26
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cb982537eb7397f93785ec066cce7b017050a43f/rules/windows/process_creation/proc_creation_win_susp_task_folder_evasion.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "echo " or ProcessCommandLine contains "copy " or ProcessCommandLine contains "type " or ProcessCommandLine contains "file createnew") and (ProcessCommandLine contains " C:\\Windows\\System32\\Tasks\\" or ProcessCommandLine contains " C:\\Windows\\SysWow64\\Tasks\\")

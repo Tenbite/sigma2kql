@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6582 Replace dead reference links in 193 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6582
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: Security Service Disabled Via Reg.EXE
+// Sigma ID: 5e95028c-5229-4214-afae-d653d573d0ec
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems), John Lambert (idea), elhoim
+// Date: 2021-07-14 | Modified: 2023-06-05
+// ATT&CK: defense-impairment, T1685
+// Description: Detects execution of "reg.exe" to disable security services such as Windows Defender.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://twitter.com/JohnLaTwC/status/1415295021041979392
+//   - https://github.com/gordonbay/Windows-On-Reins/blob/e587ac7a0407847865926d575e3c46f68cf7c68d/wor.ps1
+//   - https://vms.drweb.fr/virus/?i=24144899
+//   - https://web.archive.org/web/20221222070510/https://bidouillesecurity.com/disable-windows-defender-in-powershell/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cb982537eb7397f93785ec066cce7b017050a43f/rules/windows/process_creation/proc_creation_win_reg_disable_sec_services.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "reg" and ProcessCommandLine contains "add") and ((ProcessCommandLine contains "d 4" and ProcessCommandLine contains "v Start") and (ProcessCommandLine contains "\\AppIDSvc" or ProcessCommandLine contains "\\MsMpSvc" or ProcessCommandLine contains "\\NisSrv" or ProcessCommandLine contains "\\SecurityHealthService" or ProcessCommandLine contains "\\Sense" or ProcessCommandLine contains "\\UsoSvc" or ProcessCommandLine contains "\\WdBoot" or ProcessCommandLine contains "\\WdFilter" or ProcessCommandLine contains "\\WdNisDrv" or ProcessCommandLine contains "\\WdNisSvc" or ProcessCommandLine contains "\\WinDefend" or ProcessCommandLine contains "\\wscsvc" or ProcessCommandLine contains "\\wuauserv"))

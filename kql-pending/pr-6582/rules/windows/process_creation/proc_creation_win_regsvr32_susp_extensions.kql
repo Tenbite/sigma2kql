@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6582 Replace dead reference links in 193 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6582
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: Regsvr32 DLL Execution With Suspicious File Extension
+// Sigma ID: 089fc3d2-71e8-4763-a8a5-c97fbb0a403e
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems), frack113
+// Date: 2021-11-29 | Modified: 2025-08-27
+// ATT&CK: stealth, T1218.010
+// Description: Detects the execution of REGSVR32.exe with DLL files masquerading as other files
+// False positives:
+//   - Unlikely
+// References:
+//   - https://thedfirreport.com/2021/11/29/continuing-the-bazar-ransomware-story/
+//   - https://blog.talosintelligence.com/2021/10/threat-hunting-in-large-datasets-by.html
+//   - https://web.archive.org/web/20260714051731/https://guides.lib.umich.edu/c.php?g=282942&p=1885348
+//   - https://harfanglab.io/insidethelab/uac-0057-pressure-ukraine-poland/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cb982537eb7397f93785ec066cce7b017050a43f/rules/windows/process_creation/proc_creation_win_regsvr32_susp_extensions.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\regsvr32.exe" or ProcessVersionInfoOriginalFileName =~ "REGSVR32.EXE") and (ProcessCommandLine endswith ".bin" or ProcessCommandLine endswith ".bmp" or ProcessCommandLine endswith ".cr2" or ProcessCommandLine endswith ".dat" or ProcessCommandLine endswith ".eps" or ProcessCommandLine endswith ".gif" or ProcessCommandLine endswith ".ico" or ProcessCommandLine endswith ".jpeg" or ProcessCommandLine endswith ".jpg" or ProcessCommandLine endswith ".log" or ProcessCommandLine endswith ".nef" or ProcessCommandLine endswith ".orf" or ProcessCommandLine endswith ".png" or ProcessCommandLine endswith ".raw" or ProcessCommandLine endswith ".rtf" or ProcessCommandLine endswith ".sr2" or ProcessCommandLine endswith ".temp" or ProcessCommandLine endswith ".tif" or ProcessCommandLine endswith ".tiff" or ProcessCommandLine endswith ".tmp" or ProcessCommandLine endswith ".txt")

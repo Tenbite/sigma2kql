@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6582 Replace dead reference links in 193 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6582
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: Suspicious Command Patterns In Scheduled Task Creation
+// Sigma ID: f2c64357-b1d2-41b7-849f-34d2682c0fad
+// Status: test | Level: high
+// Author: Florian Roth (Nextron Systems)
+// Date: 2022-02-23 | Modified: 2024-03-19
+// ATT&CK: privilege-escalation, persistence, execution, T1053.005
+// Description: Detects scheduled task creation using "schtasks" that contain potentially suspicious or uncommon
+//   commands
+// False positives:
+//   - Software installers that run from temporary folders and also install scheduled tasks are expected to generate some false positives
+// References:
+//   - https://app.any.run/tasks/512c1352-6380-4436-b27d-bb62f0c020d6/
+//   - https://twitter.com/RedDrip7/status/1506480588827467785
+//   - https://www.ncsc.gov.uk/files/NCSC-MAR-Devil-Bait.pdf
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cb982537eb7397f93785ec066cce7b017050a43f/rules/windows/process_creation/proc_creation_win_schtasks_susp_pattern.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\schtasks.exe" and ProcessCommandLine contains "/Create ") and (((ProcessCommandLine contains "/sc minute " or ProcessCommandLine contains "/ru system ") and (ProcessCommandLine contains "cmd /c" or ProcessCommandLine contains "cmd /k" or ProcessCommandLine contains "cmd /r" or ProcessCommandLine contains "cmd.exe /c " or ProcessCommandLine contains "cmd.exe /k " or ProcessCommandLine contains "cmd.exe /r ")) or (ProcessCommandLine contains " -decode " or ProcessCommandLine contains " -enc " or ProcessCommandLine contains " -w hidden " or ProcessCommandLine contains " bypass " or ProcessCommandLine contains " IEX" or ProcessCommandLine contains ".DownloadData" or ProcessCommandLine contains ".DownloadFile" or ProcessCommandLine contains ".DownloadString" or ProcessCommandLine contains "/c start /min " or ProcessCommandLine contains "FromBase64String" or ProcessCommandLine contains "mshta http" or ProcessCommandLine contains "mshta.exe http") or ((ProcessCommandLine contains ":\\ProgramData\\" or ProcessCommandLine contains ":\\Temp\\" or ProcessCommandLine contains ":\\Tmp\\" or ProcessCommandLine contains ":\\Users\\Public\\" or ProcessCommandLine contains ":\\Windows\\Temp\\" or ProcessCommandLine contains "\\AppData\\" or ProcessCommandLine contains "%AppData%" or ProcessCommandLine contains "%Temp%" or ProcessCommandLine contains "%tmp%") and (ProcessCommandLine contains "cscript" or ProcessCommandLine contains "curl" or ProcessCommandLine contains "wscript")))

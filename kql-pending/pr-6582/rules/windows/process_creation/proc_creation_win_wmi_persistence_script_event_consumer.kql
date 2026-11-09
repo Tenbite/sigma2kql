@@ -1,0 +1,32 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6582 Replace dead reference links in 193 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6582
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: WMI Persistence - Script Event Consumer
+// Sigma ID: ec1d5e28-8f3b-4188-a6f8-6e8df81dc28e
+// Status: test | Level: medium
+// Author: Thomas Patzke
+// Date: 2018-03-07 | Modified: 2022-10-11
+// ATT&CK: persistence, privilege-escalation, T1546.003
+// Description: Detects the execution of a script event consumer. When scrcons.exe launches, it does so in
+//   response to the creation of an ActiveScriptEventConsumer instance and will execute registered
+//   JScript or VBScript code as a result. Script event consumers are a built-in Windows Management
+//   Instrumentation (WMI) class that automatically executes a predefined script (in VBScript or
+//   JScript) whenever a specific system event occurs. Adversaries often abuse script event consumers
+//   to maintain persistence on a compromised host by executing a malicious script whenever a
+//   specific event occurs.
+// False positives:
+//   - Legitimate event consumers
+//   - Dell computers on some versions register an event consumer that is known to cause false positives when brightness is changed by the corresponding keyboard button
+// References:
+//   - https://redcanary.com/blog/threat-detection/child-processes/
+//   - https://web.archive.org/web/20250427230247/https://www.eideon.com/2018-03-02-THL03-WMIBackdoors/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cb982537eb7397f93785ec066cce7b017050a43f/rules/windows/process_creation/proc_creation_win_wmi_persistence_script_event_consumer.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath =~ "C:\\WINDOWS\\system32\\wbem\\scrcons.exe" and InitiatingProcessFolderPath =~ "C:\\Windows\\System32\\svchost.exe"

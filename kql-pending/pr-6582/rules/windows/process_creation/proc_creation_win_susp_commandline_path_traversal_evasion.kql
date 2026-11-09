@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6582 Replace dead reference links in 193 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6582
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: Potential Command Line Path Traversal Evasion Attempt
+// Sigma ID: 1327381e-6ab0-4f38-b583-4c1b8346a56b
+// Status: test | Level: medium
+// Author: Christian Burkard (Nextron Systems)
+// Date: 2021-10-26 | Modified: 2023-03-29
+// ATT&CK: stealth, T1036
+// Description: Detects potential evasion or obfuscation attempts using bogus path traversal via the commandline
+// False positives:
+//   - Google Drive
+//   - Citrix
+// References:
+//   - https://web.archive.org/web/20211012220242/https://twitter.com/Hexacorn/status/1448037865435320323
+//   - https://twitter.com/Gal_B1t/status/1062971006078345217
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cb982537eb7397f93785ec066cce7b017050a43f/rules/windows/process_creation/proc_creation_win_susp_commandline_path_traversal_evasion.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath contains "\\Windows\\" and (ProcessCommandLine contains "\\..\\Windows\\" or ProcessCommandLine contains "\\..\\System32\\" or ProcessCommandLine contains "\\..\\..\\")) or ProcessCommandLine contains ".exe\\..\\") and (not((ProcessCommandLine contains "\\Google\\Drive\\googledrivesync.exe\\..\\" or ProcessCommandLine contains "\\Citrix\\Virtual Smart Card\\Citrix.Authentication.VirtualSmartcard.Launcher.exe\\..\\")))

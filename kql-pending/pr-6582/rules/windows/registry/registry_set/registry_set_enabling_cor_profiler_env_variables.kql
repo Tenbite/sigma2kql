@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6582 Replace dead reference links in 193 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6582
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: Enabling COR Profiler Environment Variables
+// Sigma ID: ad89044a-8f49-4673-9a55-cbd88a1b374f
+// Status: test | Level: medium
+// Author: Jose Rodriguez (@Cyb3rPandaH), OTR (Open Threat Research), Jimmy Bayne (@bohops)
+// Date: 2020-09-10 | Modified: 2023-11-24
+// ATT&CK: persistence, privilege-escalation, execution, stealth, T1574.012
+// Description: Detects .NET Framework CLR and .NET Core CLR "cor_enable_profiling" and "cor_profiler" variables
+//   being set and configured.
+// References:
+//   - https://web.archive.org/web/20200911204247/https://twitter.com/jamieantisocial/status/1304520651248668673
+//   - https://www.slideshare.net/JamieWilliams130/started-from-the-bottom-exploiting-data-sources-to-uncover-attck-behaviors
+//   - https://www.sans.org/cyber-security-summit/archives
+//   - https://learn.microsoft.com/en-us/dotnet/core/runtime-config/debugging-profiling
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cb982537eb7397f93785ec066cce7b017050a43f/rules/windows/registry/registry_set/registry_set_enabling_cor_profiler_env_variables.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceRegistryEvents
+| where (RegistryKey endswith "\\COR_ENABLE_PROFILING" or RegistryKey endswith "\\COR_PROFILER" or RegistryKey endswith "\\CORECLR_ENABLE_PROFILING") or RegistryKey contains "\\CORECLR_PROFILER_PATH"

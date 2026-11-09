@@ -1,0 +1,33 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6582 Replace dead reference links in 193 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6582
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: Attempts of Kerberos Coercion Via DNS SPN Spoofing
+// Sigma ID: 0ed99dda-6a35-11ef-8c99-0242ac120002
+// Status: experimental | Level: high
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2025-06-20 | Modified: -
+// ATT&CK: collection, credential-access, persistence, privilege-escalation, T1557.001, T1187
+// Description: Detects the presence of "UWhRC....AAYBAAAA" pattern in command line. The pattern
+//   "1UWhRCAAAAA..BAAAA" is a base64-encoded signature that corresponds to a marshaled
+//   CREDENTIAL_TARGET_INFORMATION structure. Attackers can use this technique to coerce
+//   authentication from victim systems to attacker-controlled hosts. It is one of the strong
+//   indicators of a Kerberos coercion attack, where adversaries manipulate DNS records to spoof
+//   Service Principal Names (SPNs) and redirect authentication requests like in CVE-2025-33073. If
+//   you see this pattern in the command line, it is likely an attempt to add spoofed Service
+//   Principal Names (SPNs) to DNS records, or checking for the presence of such records through the
+//   `nslookup` command.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.synacktiv.com/en/publications/ntlm-reflection-is-dead-long-live-ntlm-reflection-an-in-depth-analysis-of-cve-2025
+//   - https://googleprojectzero.blogspot.com/2021/10/using-kerberos-for-authentication-relay.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cb982537eb7397f93785ec066cce7b017050a43f/rules/windows/process_creation/proc_creation_win_kerberos_coercion_via_dns_spn_spoofing.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "UWhRCA" and ProcessCommandLine contains "BAAAA"

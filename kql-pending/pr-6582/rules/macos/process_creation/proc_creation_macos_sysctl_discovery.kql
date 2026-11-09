@@ -1,0 +1,32 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6582 Replace dead reference links in 193 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6582
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: System Information Discovery Via Sysctl - MacOS
+// Sigma ID: 6ff08e55-ea53-4f27-94a1-eff92e6d9d5c
+// Status: test | Level: medium
+// Author: Pratinav Chandra
+// Date: 2024-05-27 | Modified: -
+// ATT&CK: stealth, T1497.001, discovery, T1082
+// Description: Detects the execution of "sysctl" with specific arguments that have been used by threat actors
+//   and malware. It provides system hardware information. This process is primarily used to detect
+//   and avoid virtualization and analysis environments.
+// False positives:
+//   - Legitimate administrative activities
+// References:
+//   - https://www.loobins.io/binaries/sysctl/#
+//   - https://web.archive.org/web/20240309235614/https://evasions.checkpoint.com/techniques/macos.html
+//   - https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/
+//   - https://www.sentinelone.com/labs/20-common-tools-techniques-used-by-macos-threat-actors-malware/
+//   - https://objective-see.org/blog/blog_0x1E.html
+//   - https://www.virustotal.com/gui/file/1c547a064494a35d6b5e6b459de183ab2720a22725e082bed6f6629211f7abc1/behavior
+//   - https://www.virustotal.com/gui/file/b4b1fc65f87b3dcfa35e2dbe8e0a34ad9d8a400bec332025c0a2e200671038aa/behavior
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cb982537eb7397f93785ec066cce7b017050a43f/rules/macos/process_creation/proc_creation_macos_sysctl_discovery.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "/sysctl" or ProcessCommandLine contains "sysctl") and (ProcessCommandLine contains "hw." or ProcessCommandLine contains "kern." or ProcessCommandLine contains "machdep.")

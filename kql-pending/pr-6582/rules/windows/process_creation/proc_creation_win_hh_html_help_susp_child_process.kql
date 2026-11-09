@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6582 Replace dead reference links in 193 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6582
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: HTML Help HH.EXE Suspicious Child Process
+// Sigma ID: 52cad028-0ff0-4854-8f67-d25dfcbc78b4
+// Status: test | Level: high
+// Author: Maxim Pavlunin, Nasreddine Bencherchali (Nextron Systems)
+// Date: 2020-04-01 | Modified: 2023-04-12
+// ATT&CK: execution, initial-access, stealth, T1047, T1059.001, T1059.003, T1059.005, T1059.007, T1218, T1218.001, T1218.010, T1218.011, T1566, T1566.001
+// Description: Detects a suspicious child process of a Microsoft HTML Help (HH.exe)
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.levelblue.com/blogs/spiderlabs-blog/chm-badness-delivers-a-banking-trojan
+//   - https://github.com/elastic/protections-artifacts/commit/746086721fd385d9f5c6647cada1788db4aea95f#diff-27939090904026cc396b0b629c8e4314acd6f5dac40a676edbc87f4567b47eb7
+//   - https://www.ptsecurity.com/ww-en/analytics/pt-esc-threat-intelligence/higaisa-or-winnti-apt-41-backdoors-old-and-new/
+//   - https://www.zscaler.com/blogs/security-research/unintentional-leak-glimpse-attack-vectors-apt37
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cb982537eb7397f93785ec066cce7b017050a43f/rules/windows/process_creation/proc_creation_win_hh_html_help_susp_child_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\hh.exe" and (FolderPath endswith "\\CertReq.exe" or FolderPath endswith "\\CertUtil.exe" or FolderPath endswith "\\cmd.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\installutil.exe" or FolderPath endswith "\\MSbuild.exe" or FolderPath endswith "\\MSHTA.EXE" or FolderPath endswith "\\msiexec.exe" or FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe" or FolderPath endswith "\\regsvr32.exe" or FolderPath endswith "\\rundll32.exe" or FolderPath endswith "\\schtasks.exe" or FolderPath endswith "\\wmic.exe" or FolderPath endswith "\\wscript.exe")

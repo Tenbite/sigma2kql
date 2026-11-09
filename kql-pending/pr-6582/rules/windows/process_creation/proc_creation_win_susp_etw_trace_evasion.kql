@@ -1,0 +1,32 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6582 Replace dead reference links in 193 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6582
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: ETW Trace Evasion Activity
+// Sigma ID: a238b5d0-ce2d-4414-a676-7a531b3d13d6
+// Status: test | Level: high
+// Author: @neu5ron, Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community
+// Date: 2019-03-22 | Modified: 2026-10-12
+// ATT&CK: stealth, defense-impairment, T1070, T1685
+// Tags: car.2016-04-002
+// Description: Detects command line activity that attempts to tamper with Event Tracing for Windows (ETW) by
+//   clearing or disabling trace logs or providers. Adversaries may target ETW to blind security
+//   tooling and evade detection by removing visibility into process activity, network connections,
+//   and other telemetry sources. Techniques include clearing logs via wevtutil, disabling trace
+//   sessions via logman, and removing or modifying ETW providers using PowerShell cmdlets such as
+//   Remove-EtwTraceProvider and Set-EtwTraceProvider.
+// False positives:
+//   - Unknown
+// References:
+//   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wevtutil
+//   - https://web.archive.org/web/20251017165652/https://www.abuse.io/lockergoga.txt
+//   - https://medium.com/palantir/tampering-with-windows-event-tracing-background-offense-and-defense-4be7ac62ac63
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cb982537eb7397f93785ec066cce7b017050a43f/rules/windows/process_creation/proc_creation_win_susp_etw_trace_evasion.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\wevtutil.exe" or ProcessVersionInfoOriginalFileName =~ "wevtutil.exe") and (((ProcessCommandLine contains " cl " or ProcessCommandLine contains "clear-log") and (ProcessCommandLine contains "-Trace" or ProcessCommandLine contains "/Trace" or ProcessCommandLine contains "–Trace" or ProcessCommandLine contains "—Trace" or ProcessCommandLine contains "―Trace")) or ((ProcessCommandLine contains " sl " or ProcessCommandLine contains "set-log") and (ProcessCommandLine contains "-e:false" or ProcessCommandLine contains "/e:false" or ProcessCommandLine contains "–e:false" or ProcessCommandLine contains "—e:false" or ProcessCommandLine contains "―e:false")))) or ((FolderPath endswith "\\logman.exe" or ProcessVersionInfoOriginalFileName =~ "Logman.exe") and (ProcessCommandLine contains "update" and ProcessCommandLine contains "trace" and ProcessCommandLine contains "--p" and ProcessCommandLine contains "-ets")) or (((FolderPath endswith "\\powershell.exe" or FolderPath endswith "\\pwsh.exe") or (ProcessVersionInfoOriginalFileName in~ ("powershell.exe", "pwsh.dll"))) and (ProcessCommandLine contains "Remove-EtwTraceProvider" or (ProcessCommandLine contains "Set-EtwTraceProvider" and ProcessCommandLine contains "0x11") or (ProcessCommandLine contains "Set-EtwTraceProvider" and ProcessCommandLine contains " 17") or (ProcessCommandLine contains "Set-EtwTraceProvider" and ProcessCommandLine contains "'17'") or (ProcessCommandLine contains "Set-EtwTraceProvider" and ProcessCommandLine contains "\"17\"")))
