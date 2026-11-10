@@ -12,10 +12,10 @@
 //   - Results are not inherently suspicious, but should be investigated during threat hunting for potential cloud C2.
 //   - Organization-specific Azure Front Door endpoints
 // References:
-//   - https://lots-project.com/site/2a2e617a75726566642e6e6574
+//   - https://web.archive.org/web/20260521103727/https://lots-project.com/site/2a2e617a75726566642e6e6574
 //   - https://medium.com/r3d-buck3t/red-teaming-in-cloud-leverage-azure-frontdoor-cdn-for-c2-redirectors-79dd9ca98178
-//   - https://www.fortalicesolutions.com/posts/hiding-behind-the-front-door-with-azure-domain-fronting
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/adf5a626c4a776f3f023056f0f398b9523a2f09e/rules-threat-hunting/windows/network_connection/net_connection_win_susp_azurefd_connection.yml
+//   - https://web.archive.org/web/20250710044406/https://www.fortalicesolutions.com/posts/hiding-behind-the-front-door-with-azure-domain-fronting
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/d7c9da10c170a6988d68ebdf2c9f7bd8782b7c55/rules-threat-hunting/windows/network_connection/net_connection_win_susp_azurefd_connection.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)

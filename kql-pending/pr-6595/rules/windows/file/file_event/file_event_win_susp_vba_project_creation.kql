@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6595 Add detection rules for T1564.007 VBA Stomping
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6595
+// Pull request author: ali-vrd
+// Change: new rule
+// Title: Suspicious VbaProject.Bin File Creation
+// Sigma ID: dd187074-7e0f-4e40-8af9-994a62e96a3b
+// Status: experimental | Level: medium
+// Author: ali-vrd
+// Date: 2026-11-10 | Modified: -
+// ATT&CK: stealth, T1564.007
+// Description: Detects the creation of a "vbaProject.bin" file by an uncommon process. This file contains the
+//   VBA macro code embedded in MS Office documents. Attackers can manipulate this file directly
+//   outside of the Office applications in order to hide the malicious VBA source code while keeping
+//   the compiled p-code. A technique known as VBA stomping.
+// False positives:
+//   - Legitimate macro analysis activities on a host
+// References:
+//   - https://github.com/outflanknl/EvilClippy
+//   - https://medium.com/@fsx30/vba-stomping-ba6ff790057b
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/192637bd45d53e584c3f8c6d3be83b9cf90d90fa/rules/windows/file/file_event/file_event_win_susp_vba_project_creation.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where FolderPath endswith "\\vbaProject.bin" and (not(((InitiatingProcessFolderPath endswith "\\excel.exe" or InitiatingProcessFolderPath endswith "\\winword.exe" or InitiatingProcessFolderPath endswith "\\powerpnt.exe" or InitiatingProcessFolderPath endswith "\\outlook.exe" or InitiatingProcessFolderPath endswith "\\msaccess.exe" or InitiatingProcessFolderPath endswith "\\mspub.exe") or (InitiatingProcessFolderPath endswith "\\7z.exe" or InitiatingProcessFolderPath endswith "\\7zFM.exe" or InitiatingProcessFolderPath endswith "\\winrar.exe" or InitiatingProcessFolderPath endswith "\\bandizip.exe"))))

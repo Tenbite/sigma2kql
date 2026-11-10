@@ -3,7 +3,20 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-09 16:32 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-10 15:03 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+
+## [#6597](https://github.com/SigmaHQ/sigma/pull/6597) fix: Potentially Suspicious PowerShell Child Processes - remove dead wmic filter value
+
+| Rule | Change | Level |
+|---|---|---|
+| [Potentially Suspicious PowerShell Child Processes](pr-6597/rules-threat-hunting/windows/process_creation/proc_creation_win_powershell_susp_child_processes.kql) | update to existing rule | medium |
+
+## [#6595](https://github.com/SigmaHQ/sigma/pull/6595) Add detection rules for T1564.007 VBA Stomping
+
+| Rule | Change | Level |
+|---|---|---|
+| [Suspicious VbaProject.Bin File Creation](pr-6595/rules/windows/file/file_event/file_event_win_susp_vba_project_creation.kql) | new rule | medium |
+| [HackTool - EvilClippy Execution](pr-6595/rules/windows/process_creation/proc_creation_win_hktl_evilclippy.kql) | new rule | high |
 
 ## [#6592](https://github.com/SigmaHQ/sigma/pull/6592) New rule: Potential Data Exfiltration To Chat Service Webhook Via CommandLine
 
@@ -48,133 +61,6 @@ Rebuilt 2026-11-09 16:32 UTC from 300 open pull requests. When a pull request is
 | [Fake Plugin Catalogue - Value System Set Under HKCU EventSystem Key](pr-6584/rules-emerging-threats/2026/Malware/Fake-Plugin-Catalogues/registry_set_malware_fake_plugin_eventsystem_system_value.kql) | new rule | medium |
 | [Fake Plugin Catalogue - Run Key Value Launching Deno Eval](pr-6584/rules-emerging-threats/2026/Malware/Fake-Plugin-Catalogues/registry_set_malware_fake_plugin_run_key_deno_eval.kql) | new rule | high |
 
-## [#6582](https://github.com/SigmaHQ/sigma/pull/6582) Replace dead reference links in 193 rules
-
-| Rule | Change | Level |
-|---|---|---|
-| [Exploit for CVE-2017-8759](pr-6582/rules-emerging-threats/2017/Exploits/CVE-2017-8759/proc_creation_win_exploit_cve_2017_8759.kql) | update to existing rule | critical |
-| [Operation Wocao Activity](pr-6582/rules-emerging-threats/2019/TA/Operation-Wocao/proc_creation_win_apt_wocao.kql) | update to existing rule | high |
-| [Potential CVE-2021-44228 Exploitation Attempt - VMware Horizon](pr-6582/rules-emerging-threats/2021/Exploits/CVE-2021-44228/proc_creation_win_exploit_cve_2021_44228_vmware_horizon_log4j.kql) | update to existing rule | high |
-| [Potential Devil Bait Related Indicator](pr-6582/rules-emerging-threats/2021/Malware/Devil-Bait/file_event_win_malware_devil_bait_script_drop.kql) | update to existing rule | high |
-| [Potential Devil Bait Malware Reconnaissance](pr-6582/rules-emerging-threats/2021/Malware/Devil-Bait/proc_creation_win_malware_devil_bait_output_redirect.kql) | update to existing rule | high |
-| [Goofy Guineapig Backdoor IOC](pr-6582/rules-emerging-threats/2021/Malware/Goofy-Guineapig/file_event_win_malware_goofy_guineapig_file_indicators.kql) | update to existing rule | high |
-| [Potential Goofy Guineapig Backdoor Activity](pr-6582/rules-emerging-threats/2021/Malware/Goofy-Guineapig/proc_creation_win_malware_goofy_guineapig_broken_cmd.kql) | update to existing rule | high |
-| [Potential Goofy Guineapig GoolgeUpdate Process Anomaly](pr-6582/rules-emerging-threats/2021/Malware/Goofy-Guineapig/proc_creation_win_malware_goofy_guineapig_googleupdate_uncommon_child_instance.kql) | update to existing rule | high |
-| [Small Sieve Malware File Indicator Creation](pr-6582/rules-emerging-threats/2021/Malware/Small-Sieve/file_event_win_malware_small_sieve_evasion_typo.kql) | update to existing rule | high |
-| [Small Sieve Malware CommandLine Indicator](pr-6582/rules-emerging-threats/2021/Malware/Small-Sieve/proc_creation_win_malware_small_sieve_cli_arg.kql) | update to existing rule | high |
-| [Small Sieve Malware Registry Persistence](pr-6582/rules-emerging-threats/2021/Malware/Small-Sieve/registry_set_malware_small_sieve_evasion_typo.kql) | update to existing rule | high |
-| [Apache Spark Shell Command Injection - ProcessCreation](pr-6582/rules-emerging-threats/2022/Exploits/CVE-2022-33891/proc_creation_lnx_exploit_cve_2022_33891_spark_shell_command_injection.kql) | update to existing rule | high |
-| [Potential CVE-2023-36884 Exploitation Dropped File](pr-6582/rules-emerging-threats/2023/Exploits/CVE-2023-36884/file_event_win_exploit_cve_2023_36884_office_windows_html_rce_file_patterns.kql) | update to existing rule | medium |
-| [Potential COLDSTEEL RAT File Indicators](pr-6582/rules-emerging-threats/2023/Malware/COLDSTEEL/file_event_win_malware_coldsteel_renamed_cmd.kql) | update to existing rule | high |
-| [Potential COLDSTEEL Persistence Service DLL Creation](pr-6582/rules-emerging-threats/2023/Malware/COLDSTEEL/file_event_win_malware_coldsteel_service_dll_creation.kql) | update to existing rule | high |
-| [Potential COLDSTEEL Persistence Service DLL Load](pr-6582/rules-emerging-threats/2023/Malware/COLDSTEEL/image_load_malware_coldsteel_persistence_service_dll.kql) | update to existing rule | high |
-| [COLDSTEEL RAT Anonymous User Process Execution](pr-6582/rules-emerging-threats/2023/Malware/COLDSTEEL/proc_creation_win_malware_coldsteel_anonymous_process.kql) | update to existing rule | high |
-| [COLDSTEEL RAT Cleanup Command Execution](pr-6582/rules-emerging-threats/2023/Malware/COLDSTEEL/proc_creation_win_malware_coldsteel_cleanup.kql) | update to existing rule | critical |
-| [COLDSTEEL RAT Service Persistence Execution](pr-6582/rules-emerging-threats/2023/Malware/COLDSTEEL/proc_creation_win_malware_coldsteel_service_persistence.kql) | update to existing rule | critical |
-| [Potential COLDSTEEL RAT Windows User Creation](pr-6582/rules-emerging-threats/2023/Malware/COLDSTEEL/registry_set_malware_coldsteel_created_users.kql) | update to existing rule | high |
-| [Potential CVE-2024-35250 Exploitation Activity](pr-6582/rules-emerging-threats/2024/Exploits/CVE-2024-35250/image_load_exploit_cve_2024_35250_privilege_escalation.kql) | update to existing rule | medium |
-| [Suspicious Process Spawned by CentreStack Portal AppPool](pr-6582/rules-emerging-threats/2025/Exploits/CVE-2025-30406/proc_creation_win_exploit_cve_2025_30406_centrestack_portal_child_process.kql) | update to existing rule | high |
-| [Linux Suspicious Child Process from Node.js - React2Shell](pr-6582/rules-emerging-threats/2025/Exploits/CVE-2025-55182/proc_creation_lnx_exploit_cve_2025_55182_susp_nodejs_server_child_process.kql) | update to existing rule | high |
-| [Windows Suspicious Child Process from Node.js - React2Shell](pr-6582/rules-emerging-threats/2025/Exploits/CVE-2025-55182/proc_creation_win_exploit_cve_2025_55182_susp_nodejs_server_child_process.kql) | update to existing rule | high |
-| [RedSun - TieringEngineService.exe Staged in RS-Prefixed Temp Dir](pr-6582/rules-emerging-threats/2026/Exploits/RedSun/file_event_win_exploit_redsun_indicators.kql) | update to existing rule | critical |
-| [Potentially Suspicious Azure Front Door Connection](pr-6582/rules-threat-hunting/windows/network_connection/net_connection_win_susp_azurefd_connection.kql) | update to existing rule | medium |
-| [File or Folder Permissions Modifications](pr-6582/rules-threat-hunting/windows/process_creation/proc_creation_win_susp_file_permission_modifications.kql) | update to existing rule | medium |
-| [Linux Doas Conf File Creation](pr-6582/rules/linux/file_event/file_event_lnx_doas_conf_creation.kql) | update to existing rule | medium |
-| [Communication To Ngrok Tunneling Service - Linux](pr-6582/rules/linux/network_connection/net_connection_lnx_ngrok_tunnel.kql) | update to existing rule | high |
-| [Capsh Shell Invocation - Linux](pr-6582/rules/linux/process_creation/proc_creation_lnx_capsh_shell_invocation.kql) | update to existing rule | high |
-| [Shell Invocation via Env Command - Linux](pr-6582/rules/linux/process_creation/proc_creation_lnx_env_shell_invocation.kql) | update to existing rule | high |
-| [Shell Execution via Find - Linux](pr-6582/rules/linux/process_creation/proc_creation_lnx_find_shell_execution.kql) | update to existing rule | high |
-| [Shell Execution via Flock - Linux](pr-6582/rules/linux/process_creation/proc_creation_lnx_flock_shell_execution.kql) | update to existing rule | high |
-| [Shell Execution GCC  - Linux](pr-6582/rules/linux/process_creation/proc_creation_lnx_gcc_shell_execution.kql) | update to existing rule | high |
-| [Shell Execution via Nice - Linux](pr-6582/rules/linux/process_creation/proc_creation_lnx_nice_shell_execution.kql) | update to existing rule | high |
-| [Pnscan Binary Data Transmission Activity](pr-6582/rules/linux/process_creation/proc_creation_lnx_pnscan_binary_cli_pattern.kql) | update to existing rule | medium |
-| [Shell Invocation Via Ssh - Linux](pr-6582/rules/linux/process_creation/proc_creation_lnx_ssh_shell_execution.kql) | update to existing rule | high |
-| [Script Interpreter Spawning Credential Scanner - Linux](pr-6582/rules/linux/process_creation/proc_creation_lnx_susp_script_interpretor_spawn_credential_scanner.kql) | update to existing rule | high |
-| [System Information Discovery Via Sysctl - MacOS](pr-6582/rules/macos/process_creation/proc_creation_macos_sysctl_discovery.kql) | update to existing rule | medium |
-| [System Information Discovery Using System_Profiler](pr-6582/rules/macos/process_creation/proc_creation_macos_system_profiler_discovery.kql) | update to existing rule | medium |
-| [WMI Persistence - Security](pr-6582/rules/windows/builtin/security/win_security_wmi_persistence.kql) | update to existing rule | medium |
-| [LSASS Process Memory Dump Files](pr-6582/rules/windows/file/file_event/file_event_win_lsass_default_dump_file_names.kql) | update to existing rule | high |
-| [Uncommon File Creation By Mysql Daemon Process](pr-6582/rules/windows/file/file_event/file_event_win_mysqld_uncommon_file_creation.kql) | update to existing rule | high |
-| [Potential Winnti Dropper Activity](pr-6582/rules/windows/file/file_event/file_event_win_redmimicry_winnti_filedrop.kql) | update to existing rule | high |
-| [WMI Persistence - Script Event Consumer File Write](pr-6582/rules/windows/file/file_event/file_event_win_wmi_persistence_script_event_consumer_write.kql) | update to existing rule | high |
-| [Time Travel Debugging Utility Usage - Image](pr-6582/rules/windows/image_load/image_load_dll_tttracer_module_load.kql) | update to existing rule | high |
-| [Potential Goopdate.DLL Sideloading](pr-6582/rules/windows/image_load/image_load_side_load_goopdate.kql) | update to existing rule | medium |
-| [UAC Bypass Using Iscsicpl - ImageLoad](pr-6582/rules/windows/image_load/image_load_uac_bypass_iscsicpl.kql) | update to existing rule | high |
-| [WMI Persistence - Command Line Event Consumer](pr-6582/rules/windows/image_load/image_load_wmi_persistence_commandline_event_consumer.kql) | update to existing rule | high |
-| [Communication To Ngrok Tunneling Service Initiated](pr-6582/rules/windows/network_connection/net_connection_win_domain_ngrok_tunnel.kql) | update to existing rule | high |
-| [Suspicious Non-Browser Network Communication With Telegram API](pr-6582/rules/windows/network_connection/net_connection_win_domain_telegram_api_non_browser_access.kql) | update to existing rule | medium |
-| [Tor Client/Browser Execution](pr-6582/rules/windows/process_creation/proc_creation_win_browsers_tor_execution.kql) | update to existing rule | high |
-| [Unusual Parent Process For Cmd.EXE](pr-6582/rules/windows/process_creation/proc_creation_win_cmd_unusual_parent.kql) | update to existing rule | medium |
-| [NTLM Hash Leak Via Curl NTLM Authentication](pr-6582/rules/windows/process_creation/proc_creation_win_curl_ntlm_hash_leak_attempt.kql) | update to existing rule | high |
-| [Windows Defender Context Menu Removed](pr-6582/rules/windows/process_creation/proc_creation_win_defender_remove_context_menu.kql) | update to existing rule | high |
-| [Dllhost.EXE Execution Anomaly](pr-6582/rules/windows/process_creation/proc_creation_win_dllhost_no_cli_execution.kql) | update to existing rule | high |
-| [LSASS Process Reconnaissance Via Findstr.EXE](pr-6582/rules/windows/process_creation/proc_creation_win_findstr_lsass.kql) | update to existing rule | high |
-| [Uncommon FileSystem Load Attempt By Format.com](pr-6582/rules/windows/process_creation/proc_creation_win_format_uncommon_filesystem_load.kql) | update to existing rule | high |
-| [Arbitrary File Download Via GfxDownloadWrapper.EXE](pr-6582/rules/windows/process_creation/proc_creation_win_gfxdownloadwrapper_arbitrary_file_download.kql) | update to existing rule | medium |
-| [Potentially Suspicious GoogleUpdate Child Process](pr-6582/rules/windows/process_creation/proc_creation_win_googleupdate_susp_child_process.kql) | update to existing rule | high |
-| [HTML Help HH.EXE Suspicious Child Process](pr-6582/rules/windows/process_creation/proc_creation_win_hh_html_help_susp_child_process.kql) | update to existing rule | high |
-| [Suspicious HH.EXE Execution](pr-6582/rules/windows/process_creation/proc_creation_win_hh_susp_execution.kql) | update to existing rule | high |
-| [HackTool - CrackMapExec Execution](pr-6582/rules/windows/process_creation/proc_creation_win_hktl_crackmapexec_execution.kql) | update to existing rule | high |
-| [HackTool - CrackMapExec Process Patterns](pr-6582/rules/windows/process_creation/proc_creation_win_hktl_crackmapexec_patterns.kql) | update to existing rule | high |
-| [HackTool - Default PowerSploit/Empire Scheduled Task Creation](pr-6582/rules/windows/process_creation/proc_creation_win_hktl_powersploit_empire_default_schtasks.kql) | update to existing rule | high |
-| [HackTool - RedMimicry Winnti Playbook Execution](pr-6582/rules/windows/process_creation/proc_creation_win_hktl_redmimicry_winnti_playbook.kql) | update to existing rule | high |
-| [HackTool - WinPwn Execution](pr-6582/rules/windows/process_creation/proc_creation_win_hktl_winpwn.kql) | update to existing rule | high |
-| [Microsoft IIS Service Account Password Dumped](pr-6582/rules/windows/process_creation/proc_creation_win_iis_appcmd_service_account_password_dumped.kql) | update to existing rule | high |
-| [Attempts of Kerberos Coercion Via DNS SPN Spoofing](pr-6582/rules/windows/process_creation/proc_creation_win_kerberos_coercion_via_dns_spn_spoofing.kql) | update to existing rule | high |
-| [Use of Remote.exe](pr-6582/rules/windows/process_creation/proc_creation_win_lolbin_remote.kql) | update to existing rule | medium |
-| [Time Travel Debugging Utility Usage](pr-6582/rules/windows/process_creation/proc_creation_win_lolbin_tttracer_mod_load.kql) | update to existing rule | high |
-| [Potential Credential Dumping Via LSASS Process Clone](pr-6582/rules/windows/process_creation/proc_creation_win_lsass_process_clone.kql) | update to existing rule | critical |
-| [Suspicious MSHTA Child Process](pr-6582/rules/windows/process_creation/proc_creation_win_mshta_susp_child_processes.kql) | update to existing rule | high |
-| [MSHTA Execution with Suspicious File Extensions](pr-6582/rules/windows/process_creation/proc_creation_win_mshta_susp_execution.kql) | update to existing rule | high |
-| [Potential MsiExec Masquerading](pr-6582/rules/windows/process_creation/proc_creation_win_msiexec_masquerading.kql) | update to existing rule | high |
-| [Node Process Executions](pr-6582/rules/windows/process_creation/proc_creation_win_node_adobe_creative_cloud_abuse.kql) | update to existing rule | medium |
-| [Malicious PowerShell Commandlets - ProcessCreation](pr-6582/rules/windows/process_creation/proc_creation_win_powershell_malicious_cmdlets.kql) | update to existing rule | high |
-| [Suspicious XOR Encoded PowerShell Command](pr-6582/rules/windows/process_creation/proc_creation_win_powershell_xor_commandline.kql) | update to existing rule | medium |
-| [PUA - PingCastle Execution](pr-6582/rules/windows/process_creation/proc_creation_win_pua_pingcastle.kql) | update to existing rule | medium |
-| [PUA - PingCastle Execution From Potentially Suspicious Parent](pr-6582/rules/windows/process_creation/proc_creation_win_pua_pingcastle_script_parent.kql) | update to existing rule | high |
-| [PUA - Seatbelt Execution](pr-6582/rules/windows/process_creation/proc_creation_win_pua_seatbelt.kql) | update to existing rule | high |
-| [Disabling Windows Defender WMI Autologger Session via Reg.exe](pr-6582/rules/windows/process_creation/proc_creation_win_reg_disable_defender_wmi_autologger.kql) | update to existing rule | high |
-| [Security Service Disabled Via Reg.EXE](pr-6582/rules/windows/process_creation/proc_creation_win_reg_disable_sec_services.kql) | update to existing rule | high |
-| [Suspicious Windows Defender Registry Key Tampering Via Reg.EXE](pr-6582/rules/windows/process_creation/proc_creation_win_reg_windows_defender_tamper.kql) | update to existing rule | high |
-| [Regsvr32 DLL Execution With Suspicious File Extension](pr-6582/rules/windows/process_creation/proc_creation_win_regsvr32_susp_extensions.kql) | update to existing rule | high |
-| [Suspicious Advpack Call Via Rundll32.EXE](pr-6582/rules/windows/process_creation/proc_creation_win_rundll32_advpack_obfuscated_ordinal_call.kql) | update to existing rule | high |
-| [Process Memory Dump Via Comsvcs.DLL](pr-6582/rules/windows/process_creation/proc_creation_win_rundll32_process_dump_via_comsvcs.kql) | update to existing rule | high |
-| [Suspicious Command Patterns In Scheduled Task Creation](pr-6582/rules/windows/process_creation/proc_creation_win_schtasks_susp_pattern.kql) | update to existing rule | high |
-| [Uncommon Extension Shim Database Installation Via Sdbinst.EXE](pr-6582/rules/windows/process_creation/proc_creation_win_sdbinst_susp_extension.kql) | update to existing rule | medium |
-| [User Added to Local Administrators Group](pr-6582/rules/windows/process_creation/proc_creation_win_susp_add_user_local_admin_group.kql) | update to existing rule | medium |
-| [Bad Opsec Defaults Sacrificial Processes With Improper Arguments](pr-6582/rules/windows/process_creation/proc_creation_win_susp_bad_opsec_sacrificial_processes.kql) | update to existing rule | high |
-| [Potential Command Line Path Traversal Evasion Attempt](pr-6582/rules/windows/process_creation/proc_creation_win_susp_commandline_path_traversal_evasion.kql) | update to existing rule | medium |
-| [Suspicious Electron Application Child Processes](pr-6582/rules/windows/process_creation/proc_creation_win_susp_electron_app_children.kql) | update to existing rule | medium |
-| [Potentially Suspicious Electron Application CommandLine](pr-6582/rules/windows/process_creation/proc_creation_win_susp_electron_execution_proxy.kql) | update to existing rule | medium |
-| [ETW Logging Tamper In .NET Processes Via CommandLine](pr-6582/rules/windows/process_creation/proc_creation_win_susp_etw_modification_cmdline.kql) | update to existing rule | high |
-| [ETW Trace Evasion Activity](pr-6582/rules/windows/process_creation/proc_creation_win_susp_etw_trace_evasion.kql) | update to existing rule | high |
-| [LSASS Dump Keyword In CommandLine](pr-6582/rules/windows/process_creation/proc_creation_win_susp_lsass_dmp_cli_keywords.kql) | update to existing rule | high |
-| [Suspicious Process Patterns NTDS.DIT Exfil](pr-6582/rules/windows/process_creation/proc_creation_win_susp_ntds.kql) | update to existing rule | high |
-| [Suspicious Process Parents](pr-6582/rules/windows/process_creation/proc_creation_win_susp_parents.kql) | update to existing rule | high |
-| [Script Interpreter Spawning Credential Scanner - Windows](pr-6582/rules/windows/process_creation/proc_creation_win_susp_script_interpretor_spawn_credential_scanner.kql) | update to existing rule | high |
-| [Shadow Copies Creation Using Operating Systems Utilities](pr-6582/rules/windows/process_creation/proc_creation_win_susp_shadow_copies_creation.kql) | update to existing rule | medium |
-| [Tasks Folder Evasion](pr-6582/rules/windows/process_creation/proc_creation_win_susp_task_folder_evasion.kql) | update to existing rule | high |
-| [Suspicious Use of PsLogList](pr-6582/rules/windows/process_creation/proc_creation_win_sysinternals_psloglist.kql) | update to existing rule | medium |
-| [Bypass UAC via WSReset.exe](pr-6582/rules/windows/process_creation/proc_creation_win_uac_bypass_wsreset.kql) | update to existing rule | high |
-| [Suspicious UltraVNC Execution](pr-6582/rules/windows/process_creation/proc_creation_win_ultravnc_susp_execution.kql) | update to existing rule | high |
-| [Add New Download Source To Winget](pr-6582/rules/windows/process_creation/proc_creation_win_winget_add_custom_source.kql) | update to existing rule | medium |
-| [Add Insecure Download Source To Winget](pr-6582/rules/windows/process_creation/proc_creation_win_winget_add_insecure_custom_source.kql) | update to existing rule | high |
-| [Add Potential Suspicious New Download Source To Winget](pr-6582/rules/windows/process_creation/proc_creation_win_winget_add_susp_custom_source.kql) | update to existing rule | medium |
-| [Install New Package Via Winget Local Manifest](pr-6582/rules/windows/process_creation/proc_creation_win_winget_local_install_via_manifest.kql) | update to existing rule | medium |
-| [WMI Persistence - Script Event Consumer](pr-6582/rules/windows/process_creation/proc_creation_win_wmi_persistence_script_event_consumer.kql) | update to existing rule | medium |
-| [Process Creation Attempt via Wmic.EXE](pr-6582/rules/windows/process_creation/proc_creation_win_wmic_process_creation.kql) | update to existing rule | medium |
-| [Delete Defender Scan ShellEx Context Menu Registry Key](pr-6582/rules/windows/registry/registry_delete/registry_delete_defender_context_menu.kql) | update to existing rule | medium |
-| [Windows Credential Guard Related Registry Value Deleted - Registry](pr-6582/rules/windows/registry/registry_delete/registry_delete_disable_credential_guard.kql) | update to existing rule | high |
-| [ETW Logging Disabled In .NET Processes - Sysmon Registry](pr-6582/rules/windows/registry/registry_set/registry_set_dot_net_etw_tamper.kql) | update to existing rule | high |
-| [Enabling COR Profiler Environment Variables](pr-6582/rules/windows/registry/registry_set/registry_set_enabling_cor_profiler_env_variables.kql) | update to existing rule | medium |
-| [Scripted Diagnostics Turn Off Check Enabled - Registry](pr-6582/rules/windows/registry/registry_set/registry_set_enabling_turnoffcheck.kql) | update to existing rule | medium |
-| [Internet Explorer DisableFirstRunCustomize Enabled](pr-6582/rules/windows/registry/registry_set/registry_set_internet_explorer_disable_first_run_customize.kql) | update to existing rule | medium |
-| [Microsoft Office Protected View Disabled](pr-6582/rules/windows/registry/registry_set/registry_set_office_disable_protected_view_features.kql) | update to existing rule | high |
-| [Potential Persistence Via AppCompat RegisterAppRestart Layer](pr-6582/rules/windows/registry/registry_set/registry_set_persistence_app_cpmpat_layer_registerapprestart.kql) | update to existing rule | medium |
-| [COM Object Hijacking Via Modification Of Default System CLSID Default Value](pr-6582/rules/windows/registry/registry_set/registry_set_persistence_com_hijacking_builtin.kql) | update to existing rule | high |
-| [Suspicious Shim Database Patching Activity](pr-6582/rules/windows/registry/registry_set/registry_set_persistence_shim_database_susp_application.kql) | update to existing rule | high |
-| [Enable Local Manifest Installation With Winget](pr-6582/rules/windows/registry/registry_set/registry_set_winget_enable_local_manifest.kql) | update to existing rule | medium |
-
 ## [#6581](https://github.com/SigmaHQ/sigma/pull/6581) Add AD CS / ESC coverage-gap detections (14 rules)
 
 | Rule | Change | Level |
@@ -183,16 +69,38 @@ Rebuilt 2026-11-09 16:32 UTC from 300 open pull requests. When a pull request is
 | [Potential ADCS CA Security Configuration Tampering](pr-6581/rules/windows/registry/registry_set/registry_set_adcs_ca_policy_flags_modified.kql) | new rule | medium |
 | [Suspicious Weak Certificate Mapping Enabled On Domain Controller](pr-6581/rules/windows/registry/registry_set/registry_set_dc_weak_certificate_mapping.kql) | new rule | high |
 
-## [#6580](https://github.com/SigmaHQ/sigma/pull/6580) Replace dead reference links in 8 existing rules
+## [#6578](https://github.com/SigmaHQ/sigma/pull/6578) chore: workflow - update pySigma-validators-sigmahq to 0.30
 
 | Rule | Change | Level |
 |---|---|---|
-| [Suspicious RazerInstaller Explorer Subprocess](pr-6580/rules-emerging-threats/2021/Exploits/RazerInstaller-LPE-Exploit/proc_creation_win_exploit_other_razorinstaller_lpe.kql) | update to existing rule | high |
-| [Pingback Backdoor File Indicators](pr-6580/rules-emerging-threats/2021/Malware/Pingback/file_event_win_malware_pingback_backdoor.kql) | update to existing rule | high |
-| [Pingback Backdoor DLL Loading Activity](pr-6580/rules-emerging-threats/2021/Malware/Pingback/image_load_malware_pingback_backdoor.kql) | update to existing rule | high |
-| [Pingback Backdoor Activity](pr-6580/rules-emerging-threats/2021/Malware/Pingback/proc_creation_win_malware_pingback_backdoor.kql) | update to existing rule | high |
-| [Browser Started with Remote Debugging](pr-6580/rules/windows/process_creation/proc_creation_win_browsers_remote_debugging.kql) | update to existing rule | medium |
-| [Uncommon Child Process Of Defaultpack.EXE](pr-6580/rules/windows/process_creation/proc_creation_win_defaultpack_uncommon_child_process.kql) | update to existing rule | medium |
+| [TanStack Supply-Chain Attack Execution Indicators - Linux](pr-6578/rules-emerging-threats/2026/Malware/TanStack-Supply-Chain/proc_creation_lnx_malware_tanstack_supply_chain.kql) | update to existing rule | high |
+| [TanStack Supply-Chain Attack Execution Indicators - Windows](pr-6578/rules-emerging-threats/2026/Malware/TanStack-Supply-Chain/proc_creation_win_malware_tanstack_supply_chain.kql) | update to existing rule | high |
+| [Terminate Linux Process Via Kill](pr-6578/rules-threat-hunting/linux/process_creation/proc_creation_lnx_susp_process_termination_via_kill.kql) | update to existing rule | medium |
+| [Group Has Been Deleted Via Groupdel](pr-6578/rules/linux/process_creation/proc_creation_lnx_groupdel.kql) | update to existing rule | medium |
+| [HackTool - Mimikatz Kirbi File Creation](pr-6578/rules/windows/file/file_event/file_event_win_hktl_mimikatz_files.kql) | update to existing rule | critical |
+| [Suspicious Non-Browser Network Communication With Google API](pr-6578/rules/windows/network_connection/net_connection_win_domain_google_api_non_browser_access.kql) | update to existing rule | medium |
+| [Uncommon  Assistive Technology Applications Execution Via AtBroker.EXE](pr-6578/rules/windows/process_creation/proc_creation_win_atbroker_uncommon_ats_execution.kql) | update to existing rule | medium |
+| [Audit Policy Tampering Via NT Resource Kit Auditpol](pr-6578/rules/windows/process_creation/proc_creation_win_auditpol_nt_resource_kit_usage.kql) | update to existing rule | high |
+| [Audit Policy Tampering Via Auditpol](pr-6578/rules/windows/process_creation/proc_creation_win_auditpol_susp_execution.kql) | update to existing rule | high |
+| [Cmd Launched with Hidden Start Flags to Suspicious Targets](pr-6578/rules/windows/process_creation/proc_creation_win_cmd_launched_with_hidden_start_flag.kql) | update to existing rule | medium |
+| [Suspicious Ping/Del Command Combination](pr-6578/rules/windows/process_creation/proc_creation_win_cmd_ping_del_combined_execution.kql) | update to existing rule | high |
+| [HackTool - Hydra Password Bruteforce Execution](pr-6578/rules/windows/process_creation/proc_creation_win_hktl_hydra.kql) | update to existing rule | high |
+| [Invoke-Obfuscation CLIP+ Launcher](pr-6578/rules/windows/process_creation/proc_creation_win_hktl_invoke_obfuscation_clip.kql) | update to existing rule | high |
+| [Invoke-Obfuscation STDIN+ Launcher](pr-6578/rules/windows/process_creation/proc_creation_win_hktl_invoke_obfuscation_stdin.kql) | update to existing rule | high |
+| [Attempts of Kerberos Coercion Via DNS SPN Spoofing](pr-6578/rules/windows/process_creation/proc_creation_win_kerberos_coercion_via_dns_spn_spoofing.kql) | update to existing rule | high |
+| [Obfuscated PowerShell MSI Install via WindowsInstaller COM](pr-6578/rules/windows/process_creation/proc_creation_win_powershell_comobject_msi.kql) | update to existing rule | high |
+| [Disable Windows Defender AV Security Monitoring](pr-6578/rules/windows/process_creation/proc_creation_win_powershell_disable_defender_av_security_monitoring.kql) | update to existing rule | high |
+| [PUA - Suspicious ActiveDirectory Enumeration Via AdFind.EXE](pr-6578/rules/windows/process_creation/proc_creation_win_pua_adfind_enumeration.kql) | update to existing rule | high |
+| [PUA - AdFind Suspicious Execution](pr-6578/rules/windows/process_creation/proc_creation_win_pua_adfind_susp_usage.kql) | update to existing rule | high |
+| [PUA - Memory Dump Mount Via MemProcFS](pr-6578/rules/windows/process_creation/proc_creation_win_pua_memprocfs.kql) | update to existing rule | high |
+| [Disabling Windows Defender WMI Autologger Session via Reg.exe](pr-6578/rules/windows/process_creation/proc_creation_win_reg_disable_defender_wmi_autologger.kql) | update to existing rule | high |
+| [Bad Opsec Defaults Sacrificial Processes With Improper Arguments](pr-6578/rules/windows/process_creation/proc_creation_win_susp_bad_opsec_sacrificial_processes.kql) | update to existing rule | high |
+| [Suspicious Explorer Process with Whitespace Padding - ClickFix/FileFix](pr-6578/rules/windows/process_creation/proc_creation_win_susp_clickfix_filefix_whitespace_padding.kql) | update to existing rule | high |
+| [Taskkill Symantec Endpoint Protection](pr-6578/rules/windows/process_creation/proc_creation_win_taskkill_sep.kql) | update to existing rule | high |
+| [Suspicious Vsls-Agent Command With AgentExtensionPath Load](pr-6578/rules/windows/process_creation/proc_creation_win_vslsagent_agentextensionpath_load.kql) | update to existing rule | medium |
+| [Suspicious Space Characters in RunMRU Registry Path - ClickFix](pr-6578/rules/windows/registry/registry_set/registry_set_susp_runmru_space_character.kql) | update to existing rule | high |
+| [Suspicious Shell Open Command Registry Modification](pr-6578/rules/windows/registry/registry_set/registry_set_susp_shell_open_keys_modification_patterns.kql) | update to existing rule | medium |
+| [Suspicious Space Characters in TypedPaths Registry Path - FileFix](pr-6578/rules/windows/registry/registry_set/registry_set_susp_typedpaths_space_characters.kql) | update to existing rule | high |
 
 ## [#6577](https://github.com/SigmaHQ/sigma/pull/6577) Fix three rules with conditions that can never match
 
@@ -1172,12 +1080,6 @@ Rebuilt 2026-11-09 16:32 UTC from 300 open pull requests. When a pull request is
 | [Hidden Local User Account Creation Attempt Via Net.EXE](pr-6129/rules/windows/process_creation/proc_creation_win_net_user_hidden_creation.kql) | new rule | high |
 | [Creation of a Local Hidden User Account by Registry](pr-6129/rules/windows/registry/registry_event/registry_event_add_local_hidden_user.kql) | update to existing rule | high |
 
-## [#6124](https://github.com/SigmaHQ/sigma/pull/6124) Add rule: HackTool - PrintSpoofer Execution
-
-| Rule | Change | Level |
-|---|---|---|
-| [HackTool - PrintSpoofer Execution](pr-6124/rules/windows/process_creation/proc_creation_win_hktl_printspoofer.kql) | new rule | high |
-
 ## [#6122](https://github.com/SigmaHQ/sigma/pull/6122) update: Regsvr32 detection rules tuning and expansion
 
 | Rule | Change | Level |
@@ -1528,4 +1430,19 @@ Rebuilt 2026-11-09 16:32 UTC from 300 open pull requests. When a pull request is
 |---|---|---|
 | [Suspicious Deletion of AppLocker Policy Files](pr-5892/rules/windows/file/file_delete/file_delete_win_susp_applocker_policy_deletion.kql) | new rule | high |
 | [Suspicious Creation of AppLocker Policy Files](pr-5892/rules/windows/file/file_event/file_event_win_susp_applocker_policy_modification.kql) | new rule | high |
+
+## [#5891](https://github.com/SigmaHQ/sigma/pull/5891) new: renamed system binaries execution for dll hijacking attack
+
+| Rule | Change | Level |
+|---|---|---|
+| [Files With System Process Name In Unsuspected Locations](pr-5891/rules/windows/file/file_event/file_event_win_creation_system_file.kql) | update to existing rule | medium |
+| [Potential DLL Sideloading of SPPC.dll](pr-5891/rules/windows/image_load/image_load_side_load_sppc.kql) | new rule | medium |
+| [Suspicious Renamed System Binaries Execution](pr-5891/rules/windows/process_creation/proc_creation_win_renamed_susp_system_binaries.kql) | new rule | high |
+| [System File Execution Location Anomaly](pr-5891/rules/windows/process_creation/proc_creation_win_susp_system_exe_anomaly.kql) | update to existing rule | high |
+
+## [#5886](https://github.com/SigmaHQ/sigma/pull/5886) Add Socat Reverse Shell Detection Rule for Linux Process Creation
+
+| Rule | Change | Level |
+|---|---|---|
+| [Potential Socat Reverse Shell Execution](pr-5886/rules/linux/process_creation/proc_creation_lnx_socat_reverse_shell.kql) | new rule | high |
 

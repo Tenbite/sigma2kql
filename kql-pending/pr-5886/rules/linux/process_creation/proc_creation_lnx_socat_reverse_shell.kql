@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #5886 Add Socat Reverse Shell Detection Rule for Linux Process Creation
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/5886
+// Pull request author: nedelcubianca
+// Change: new rule
+// Title: Potential Socat Reverse Shell Execution
+// Sigma ID: 004985ba-4624-41ce-8d59-52b0fa8f9518
+// Status: experimental | Level: high
+// Author: nedelcubianca
+// Date: 2026-02-27 | Modified: -
+// ATT&CK: execution, T1059
+// Description: Detects execution of socat with parameters commonly associated with establishing a reverse
+//   shell. Socat is a multipurpose relay tool that can be abused to create encrypted or unencrypted
+//   reverse shells. This rule covers both plain TCP and SSL/TLS encrypted variants.
+// False positives:
+//   - Legitimate use of socat for system administration or debugging purposes
+// References:
+//   - https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
+//   - https://www.revshells.com/
+//   - https://linux.die.net/man/1/socat
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/52069bed37a36f02d289f934c212b5afa13de712/rules/linux/process_creation/proc_creation_lnx_socat_reverse_shell.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "/socat" and (ProcessCommandLine contains "exec:" or ProcessCommandLine contains "system:") and (ProcessCommandLine contains "bash" or ProcessCommandLine contains "/bin/sh" or ProcessCommandLine contains "/bin/bash" or ProcessCommandLine contains "/bin/zsh" or ProcessCommandLine contains "/bin/ash" or ProcessCommandLine contains "/bin/csh" or ProcessCommandLine contains "/bin/ksh") and (ProcessCommandLine contains "tcp:" or ProcessCommandLine contains "tcp-connect:" or ProcessCommandLine contains "tcp4:" or ProcessCommandLine contains "tcp6:" or ProcessCommandLine contains "ssl:" or ProcessCommandLine contains "ssl-connect:" or ProcessCommandLine contains "openssl:" or ProcessCommandLine contains "openssl-connect:")

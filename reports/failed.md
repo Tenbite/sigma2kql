@@ -88,10 +88,8 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 | No table for log source `windows/dns-server-analytic` | 1 |
 | No table for log source `windows/printservice-admin` | 1 |
 | No table for log source `windows/printservice-operational` | 1 |
-| No table for log source `linux/auth` | 1 |
 | No table for log source `fortios/sslvpnd` | 1 |
 | No table for log source `cisco/syslog` | 1 |
-| No table for log source `windows/smbclient-connectivity` | 1 |
 | Unmapped field `CreationUtcTime` | 1 |
 | No table for log source `paloalto/appliance/globalprotect` | 1 |
 | Unmapped field `TargetLogonId` | 1 |
@@ -103,7 +101,6 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 | No table for log source `sql/application` | 1 |
 | No table for log source `velocity/application` | 1 |
 | No table for log source `database` | 1 |
-| No table for log source `m365/exchange` | 1 |
 | No table for log source `m365/threat_detection` | 1 |
 | No table for log source `cisco/duo` | 1 |
 | No table for log source `linux/clamav` | 1 |
@@ -123,7 +120,6 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 | No table for log source `windows/lsa-server` | 1 |
 | No table for log source `windows/openssh` | 1 |
 | Unmapped field `TargetOutboundUserName` | 1 |
-| Unmapped field `SubjectUserSid` | 1 |
 | Unmapped field `Application` | 1 |
 | Unmapped field `SubjectUserName` | 1 |
 | Unmapped field `Workstation` | 1 |
@@ -148,6 +144,10 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 | No table for log source `windows/sysmon` | 1 |
 | No table for log source `windows/sysmon_error` | 1 |
 | No table for log source `windows/sysmon_status` | 1 |
+| No table for log source `linux/auth` | 1 |
+| No table for log source `windows/smbclient-connectivity` | 1 |
+| No table for log source `m365/exchange` | 1 |
+| Unmapped field `SubjectUserSid` | 1 |
 
 ## By rule
 
@@ -808,7 +808,7 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 - `rules/windows/builtin/security/account_management/win_security_access_token_abuse.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: LogonProcessName. Invalid SigmaDetectionItem field name encountered: TargetLogonId. Invalid SigmaDetectionItem field name encountered: TargetUserName
 - `rules/windows/builtin/security/account_management/win_security_diagtrack_eop_default_login_username.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: TargetOutboundUserName. Invalid SigmaDetectionItem field name encountered: LogonProcessName. Invalid SigmaDetectionItem field name encountered: TargetLogonId. Invalid SigmaDetectionItem field name encountered: TargetUserNam
 - `rules/windows/builtin/security/account_management/win_security_overpass_the_hash.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: LogonProcessName. Invalid SigmaDetectionItem field name encountered: TargetOutboundUserName. Invalid SigmaDetectionItem field name encountered: LogonProcessName. Invalid SigmaDetectionItem field name encountered: TargetLogo
-- `rules/windows/builtin/security/account_management/win_security_pass_the_hash_2.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: SubjectUserSid. Invalid SigmaDetectionItem field name encountered: LogonProcessName. Invalid SigmaDetectionItem field name encountered: TargetOutboundUserName. Invalid SigmaDetectionItem field name encountered: LogonProcess
+- `rules/windows/builtin/security/account_management/win_security_pass_the_hash_2.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: SubjectUserSid
 - `rules/windows/builtin/security/account_management/win_security_rdp_localhost_login.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: IpAddress. Invalid SigmaDetectionItem field name encountered: SubjectUserSid. Invalid SigmaDetectionItem field name encountered: LogonProcessName. Invalid SigmaDetectionItem field name encountered: TargetOutboundUserName. I
 - `rules/windows/builtin/security/account_management/win_security_successful_external_remote_rdp_login.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: IpAddress
 - `rules/windows/builtin/security/account_management/win_security_successful_external_remote_smb_login.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: IpAddress. Invalid SigmaDetectionItem field name encountered: IpAddress
@@ -834,7 +834,7 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 - `rules/windows/builtin/security/win_security_dcom_iertutil_dll_hijack.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: RelativeTargetName. Invalid SigmaDetectionItem field name encountered: ShareName. Invalid SigmaDetectionItem field name encountered: ShareName. Invalid SigmaDetectionItem field name encountered: Application. Invalid SigmaDe
 - `rules/windows/builtin/security/win_security_device_installation_blocked.yml` — SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - `rules/windows/builtin/security/win_security_disable_event_auditing_critical.yml` — SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- `rules/windows/builtin/security/win_security_dot_net_etw_tamper.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: ObjectValueName. Invalid SigmaDetectionItem field name encountered: AccessMask. Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDete
+- `rules/windows/builtin/security/win_security_dot_net_etw_tamper.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: ObjectValueName
 - `rules/windows/builtin/security/win_security_dpapi_domain_backupkey_extraction.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: AccessMask. Invalid SigmaDetectionItem field name encountered: ObjectValueName. Invalid SigmaDetectionItem field name encountered: AccessMask. Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDete
 - `rules/windows/builtin/security/win_security_dpapi_domain_masterkey_backup_attempt.yml` — SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - `rules/windows/builtin/security/win_security_gpo_scheduledtasks.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: AttributeLDAPDisplayName. Invalid SigmaDetectionItem field name encountered: RelativeTargetName. Invalid SigmaDetectionItem field name encountered: ShareName. Invalid SigmaDetectionItem field name encountered: ShareName. In
@@ -1303,7 +1303,7 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 - `rules/windows/process_creation/proc_creation_win_renamed_paexec.yml` — InvalidHashAlgorithmError: No valid hash algo found in Hashes field. Please use one of the following: MD5, SHA1, SHA256 (while applying processing pipeline on rule None)
 - `rules/windows/process_creation/proc_creation_win_ssh_proxy_execution.yml` — InvalidHashAlgorithmError: No valid hash algo found in Hashes field. Please use one of the following: MD5, SHA1, SHA256 (while applying processing pipeline on rule None)
 - `rules/windows/process_creation/proc_creation_win_susp_elevated_system_shell_uncommon_parent.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory
-- `rules/windows/process_creation/proc_creation_win_susp_lolbin_exec_from_non_c_drive.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory
+- `rules/windows/process_creation/proc_creation_win_susp_lolbin_exec_from_non_c_drive.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: CurrentDirectory
 - `rules/windows/process_creation/proc_creation_win_susp_shell_spawn_susp_program.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory
 - `rules/windows/process_creation/proc_creation_win_wmic_squiblytwo_bypass.yml` — InvalidHashAlgorithmError: No valid hash algo found in Hashes field. Please use one of the following: MD5, SHA1, SHA256 (while applying processing pipeline on rule None)
 - `rules/windows/process_creation/proc_creation_win_wmic_xsl_script_processing.yml` — InvalidHashAlgorithmError: No valid hash algo found in Hashes field. Please use one of the following: MD5, SHA1, SHA256 (while applying processing pipeline on rule None)

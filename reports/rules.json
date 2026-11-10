@@ -12796,7 +12796,7 @@
  },
  "rules/windows/builtin/security/account_management/win_security_pass_the_hash_2.yml": {
   "logsource": "windows/security",
-  "reason": "SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: SubjectUserSid. Invalid SigmaDetectionItem field name encountered: LogonProcessName. Invalid SigmaDetectionItem field name encountered: TargetOutboundUserName. Invalid SigmaDetectionItem field name encountered: LogonProcess",
+  "reason": "SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: SubjectUserSid",
   "result": "failed",
   "title": "Pass the Hash Activity 2"
  },
@@ -13051,7 +13051,7 @@
  },
  "rules/windows/builtin/security/win_security_dot_net_etw_tamper.yml": {
   "logsource": "windows/security",
-  "reason": "SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: ObjectValueName. Invalid SigmaDetectionItem field name encountered: AccessMask. Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDetectionItem field name encountered: Properties. Invalid SigmaDete",
+  "reason": "SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: ObjectValueName",
   "result": "failed",
   "title": "ETW Logging Disabled In .NET Processes - Registry"
  },
@@ -34602,7 +34602,7 @@
  },
  "rules/windows/process_creation/proc_creation_win_susp_lolbin_exec_from_non_c_drive.yml": {
   "logsource": "windows/process_creation",
-  "reason": "SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory",
+  "reason": "SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: CurrentDirectory",
   "result": "failed",
   "title": "LOLBIN Execution From Abnormal Drive"
  },

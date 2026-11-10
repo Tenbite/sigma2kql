@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6595 Add detection rules for T1564.007 VBA Stomping
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6595
+// Pull request author: ali-vrd
+// Change: new rule
+// Title: HackTool - EvilClippy Execution
+// Sigma ID: 28e3ab6a-6384-4d80-aefe-0db47f739748
+// Status: experimental | Level: high
+// Author: ali-vrd
+// Date: 2026-11-10 | Modified: -
+// ATT&CK: stealth, T1564.007
+// Description: Detects the execution of EvilClippy. A dual use tool that assists in hiding malicious VBA macro
+//   code inside MS Office documents. Attackers can use it to stomp the VBA source code of a macro
+//   enabled document while keeping the compiled p-code, in order to evade static analysis tools.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://github.com/outflanknl/EvilClippy
+//   - https://www.outflank.nl/blog/2019/05/05/evil-clippy-ms-office-maldoc-assistant/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/192637bd45d53e584c3f8c6d3be83b9cf90d90fa/rules/windows/process_creation/proc_creation_win_hktl_evilclippy.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "\\EvilClippy.exe" or ProcessVersionInfoOriginalFileName =~ "EvilClippy.exe"

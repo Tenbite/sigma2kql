@@ -12,10 +12,10 @@
 //   - Unknown
 // References:
 //   - https://www.cadosecurity.com/blog/spinning-yarn-a-new-linux-malware-campaign-targets-docker-apache-hadoop-redis-and-confluence
-//   - https://intezer.com/wp-content/uploads/2021/09/TeamTNT-Cryptomining-Explosion.pdf
+//   - https://web.archive.org/web/20250319000946/https://intezer.com/wp-content/uploads/2021/09/TeamTNT-Cryptomining-Explosion.pdf
 //   - https://regex101.com/r/RugQYK/1
 //   - https://www.virustotal.com/gui/file/beddf70a7bab805f0c0b69ac0989db6755949f9f68525c08cb874988353f78a9/content
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/adf5a626c4a776f3f023056f0f398b9523a2f09e/rules/linux/process_creation/proc_creation_lnx_pnscan_binary_cli_pattern.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/d7c9da10c170a6988d68ebdf2c9f7bd8782b7c55/rules/linux/process_creation/proc_creation_lnx_pnscan_binary_cli_pattern.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)

@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6578 chore: workflow - update pySigma-validators-sigmahq to 0.30
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6578
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Suspicious Space Characters in RunMRU Registry Path - ClickFix
+// Sigma ID: 2d942aed-882b-45fd-9e23-60d2411d28e0
+// Status: experimental | Level: high
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2025-11-04 | Modified: 2026-11-06
+// ATT&CK: execution, stealth, T1204.004, T1027.010
+// Description: Detects the occurrence of numerous space characters in RunMRU registry paths, which may indicate
+//   execution via phishing lures using clickfix techniques to hide malicious commands in the Windows
+//   Run dialog box from naked eyes.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://expel.com/blog/cache-smuggling-when-a-picture-isnt-a-thousand-words/
+//   - https://github.com/JohnHammond/recaptcha-phish
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/7490edb4783550895f8ac7b1ff297eaa8fda0d2a/rules/windows/registry/registry_set/registry_set_susp_runmru_space_character.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+// Note: 1 wildcard comparison(s) rewritten to 'matches regex' (KQL treats * in contains/endswith/== as a literal character)
+
+DeviceRegistryEvents
+| where (RegistryKey matches regex @"(?i)\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\RunMRU.*$" and RegistryValueData contains "#") and (RegistryValueData contains "            " or RegistryValueData contains "            " or RegistryValueData contains "            " or RegistryValueData contains "            " or RegistryValueData contains "            " or RegistryValueData contains "            " or RegistryValueData contains "            " or RegistryValueData contains "            " or RegistryValueData contains "            " or RegistryValueData contains "            " or RegistryValueData contains "            " or RegistryValueData contains "            " or RegistryValueData contains "            ")

@@ -1,0 +1,32 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6578 chore: workflow - update pySigma-validators-sigmahq to 0.30
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6578
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Suspicious Explorer Process with Whitespace Padding - ClickFix/FileFix
+// Sigma ID: 74a7aea5-0076-4f4a-b2ba-c9e26adbaca5
+// Status: experimental | Level: high
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2025-11-04 | Modified: 2026-11-06
+// ATT&CK: execution, stealth, T1204.004, T1027.010
+// Description: Detects process creation with suspicious whitespace padding followed by a '#' character, which
+//   may indicate ClickFix or FileFix techniques used to conceal malicious commands from visual
+//   inspection. ClickFix and FileFix are social engineering attack techniques where adversaries
+//   distribute phishing documents or malicious links that deceive users into opening the Windows Run
+//   dialog box or File Explorer search bar. The victims are then instructed to paste commands from
+//   their clipboard, which contain extensive whitespace padding using various Unicode space
+//   characters to push the actual malicious command far to the right, effectively hiding it from
+//   immediate view.
+// False positives:
+//   - Unknown
+// References:
+//   - https://expel.com/blog/cache-smuggling-when-a-picture-isnt-a-thousand-words/
+//   - https://mrd0x.com/filefix-clickfix-alternative/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/7490edb4783550895f8ac7b1ff297eaa8fda0d2a/rules/windows/process_creation/proc_creation_win_susp_clickfix_filefix_whitespace_padding.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (InitiatingProcessFolderPath endswith "\\explorer.exe" and ProcessCommandLine contains "#") and (ProcessCommandLine contains "            " or ProcessCommandLine contains "            " or ProcessCommandLine contains "            " or ProcessCommandLine contains "            " or ProcessCommandLine contains "            " or ProcessCommandLine contains "            " or ProcessCommandLine contains "            " or ProcessCommandLine contains "            " or ProcessCommandLine contains "            " or ProcessCommandLine contains "            " or ProcessCommandLine contains "            " or ProcessCommandLine contains "            " or ProcessCommandLine contains "            ")

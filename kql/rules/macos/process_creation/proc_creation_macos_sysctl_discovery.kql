@@ -11,13 +11,13 @@
 //   - Legitimate administrative activities
 // References:
 //   - https://www.loobins.io/binaries/sysctl/#
-//   - https://evasions.checkpoint.com/techniques/macos.html
+//   - https://web.archive.org/web/20240309235614/https://evasions.checkpoint.com/techniques/macos.html
 //   - https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/
 //   - https://www.sentinelone.com/labs/20-common-tools-techniques-used-by-macos-threat-actors-malware/
 //   - https://objective-see.org/blog/blog_0x1E.html
 //   - https://www.virustotal.com/gui/file/1c547a064494a35d6b5e6b459de183ab2720a22725e082bed6f6629211f7abc1/behavior
 //   - https://www.virustotal.com/gui/file/b4b1fc65f87b3dcfa35e2dbe8e0a34ad9d8a400bec332025c0a2e200671038aa/behavior
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/adf5a626c4a776f3f023056f0f398b9523a2f09e/rules/macos/process_creation/proc_creation_macos_sysctl_discovery.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/d7c9da10c170a6988d68ebdf2c9f7bd8782b7c55/rules/macos/process_creation/proc_creation_macos_sysctl_discovery.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)

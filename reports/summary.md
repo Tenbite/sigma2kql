@@ -1,8 +1,8 @@
 # sigma2kql run summary
 
 - Target: `microsoft_xdr`
-- SigmaHQ commit: `53b90df66c5b6d1b9be6ba9289c56fe49dd74a73`
-- Last run: 2026-11-07 13:09 UTC (incremental)
+- SigmaHQ commit: `d7c9da10c170a6988d68ebdf2c9f7bd8782b7c55`
+- Last run: 2026-11-10 14:57 UTC (incremental)
 - Tools: pySigma 1.5.1, pySigma-backend-kusto 1.0.1, kusto-language 12.4.1
 - Validation schema: downloaded from https://xdrinternals.com/FullSchema-latest.json (209 tables) (see schema_drift.md)
 

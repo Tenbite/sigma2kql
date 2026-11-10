@@ -11,10 +11,10 @@
 //   - Legitimate use of PsLogList by an administrator
 // References:
 //   - https://research.nccgroup.com/2021/01/12/abusing-cloud-services-to-fly-under-the-radar/
-//   - https://www.cybereason.com/blog/deadringer-exposing-chinese-threat-actors-targeting-major-telcos
+//   - https://web.archive.org/web/20220322171203/https://www.cybereason.com/blog/deadringer-exposing-chinese-threat-actors-targeting-major-telcos
 //   - https://github.com/3CORESec/MAL-CL/tree/master/Descriptors/Sysinternals/PsLogList
 //   - https://twitter.com/EricaZelic/status/1614075109827874817
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/adf5a626c4a776f3f023056f0f398b9523a2f09e/rules/windows/process_creation/proc_creation_win_sysinternals_psloglist.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/d7c9da10c170a6988d68ebdf2c9f7bd8782b7c55/rules/windows/process_creation/proc_creation_win_sysinternals_psloglist.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)

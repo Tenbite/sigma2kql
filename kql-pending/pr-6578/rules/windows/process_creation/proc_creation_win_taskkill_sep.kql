@@ -1,0 +1,30 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6578 chore: workflow - update pySigma-validators-sigmahq to 0.30
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6578
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Taskkill Symantec Endpoint Protection
+// Sigma ID: 35bd2ff5-4d47-42e0-b11b-778e9d439e93
+// Status: test | Level: high
+// Author: Ilya Krestinichev, Florian Roth (Nextron Systems)
+// Date: 2022-09-13 | Modified: 2026-11-06
+// ATT&CK: defense-impairment, T1685
+// Description: Detects one of the possible scenarios for disabling Symantec Endpoint Protection. Symantec
+//   Endpoint Protection antivirus software services incorrectly implement the protected service
+//   mechanism. As a result, the NT AUTHORITY/SYSTEM user can execute the taskkill /im command
+//   several times ccSvcHst.exe /f, thereby killing the process belonging to the service, and thus
+//   shutting down the service.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.exploit-db.com/exploits/37525
+//   - https://community.spiceworks.com/topic/2195015-batch-script-to-uninstall-symantec-endpoint-protection
+//   - https://community.broadcom.com/symantecenterprise/communities/community-home/digestviewer/viewthread?MessageKey=6ce94b67-74e1-4333-b16f-000b7fd874f0&CommunityKey=1ecf5f55-9545-44d6-b0f4-4e4a7f5f5e68&tab=digestviewer
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/7490edb4783550895f8ac7b1ff297eaa8fda0d2a/rules/windows/process_creation/proc_creation_win_taskkill_sep.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "taskkill" and ProcessCommandLine contains " /F " and ProcessCommandLine contains " /IM " and ProcessCommandLine contains "ccSvcHst.exe"

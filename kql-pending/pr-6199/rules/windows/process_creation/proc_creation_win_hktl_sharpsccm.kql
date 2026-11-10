@@ -12,8 +12,8 @@
 // Description: Detects the execution of SharpSCCM, a post-exploitation tool that abuses Microsoft Endpoint
 //   Configuration Manager (SCCM/ConfigMgr) for credential gathering and lateral movement without
 //   requiring access to the SCCM administration console. The tool extracts DPAPI-protected policy
-//   secrets-such as Network Access Account (NAA) credentials, task sequence variables, and
-//   collection variables-from the local WMI repository or CIM store. It can also coerce NTLM
+//   secrets, such as Network Access Account (NAA) credentials, task sequence variables and
+//   collection variables, from the local WMI repository or CIM store. It can also coerce NTLM
 //   authentication from SCCM servers in sites where automatic site-wide client push installation is
 //   enabled, potentially leading to site takeover. Because SCCM service accounts are frequently
 //   highly privileged, successful use of this tool often results in the disclosure of domain-level
@@ -24,7 +24,7 @@
 //   - https://github.com/Mayyhem/SharpSCCM
 //   - https://docs.specterops.io/sharpsccm-docs/resources/Command-Line-Usage
 //   - https://blog.xpnsec.com/unobfuscating-network-access-accounts/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/57ac2bdde60ddfeb109364b9fbca9c44d3b011d5/rules/windows/process_creation/proc_creation_win_hktl_sharpsccm.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/5eff00e4ed15f0ddbc86f49acd5b27bc0e1b3b35/rules/windows/process_creation/proc_creation_win_hktl_sharpsccm.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

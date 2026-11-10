@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6578 chore: workflow - update pySigma-validators-sigmahq to 0.30
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6578
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: Suspicious Non-Browser Network Communication With Google API
+// Sigma ID: b17c066f-98ec-4e55-9f13-9f48def2ff85
+// Status: experimental | Level: medium
+// Author: Gavin Knapp
+// Date: 2023-05-01 | Modified: 2026-11-06
+// ATT&CK: command-and-control, T1102
+// Description: Detects a non-browser process interacting with the Google API which could indicate the use of a
+//   covert C2 such as Google Sheet C2 (GC2-sheet)
+// False positives:
+//   - Legitimate applications communicating with the "googleapis.com" endpoints that are not already in the exclusion list. This is environmental dependent and requires further testing and tuning.
+// References:
+//   - https://github.com/looCiprian/GC2-sheet
+//   - https://youtu.be/n2dFlSaBBKo
+//   - https://services.google.com/fh/files/blogs/gcat_threathorizons_full_apr2023.pdf
+//   - https://www.tanium.com/blog/apt41-deploys-google-gc2-for-attacks-cyber-threat-intelligence-roundup/
+//   - https://www.bleepingcomputer.com/news/security/hackers-abuse-google-command-and-control-red-team-tool-in-attacks/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/7490edb4783550895f8ac7b1ff297eaa8fda0d2a/rules/windows/network_connection/net_connection_win_domain_google_api_non_browser_access.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceNetworkEvents
+| where (RemoteUrl contains "drive.googleapis.com" or RemoteUrl contains "oauth2.googleapis.com" or RemoteUrl contains "sheets.googleapis.com" or RemoteUrl contains "www.googleapis.com") and (not((isnull(InitiatingProcessFolderPath) or InitiatingProcessFolderPath =~ ""))) and (not((InitiatingProcessFolderPath endswith "\\brave.exe" or (InitiatingProcessFolderPath endswith ":\\Program Files\\Google\\Chrome\\Application\\chrome.exe" or InitiatingProcessFolderPath endswith ":\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe") or (InitiatingProcessFolderPath contains ":\\Program Files\\Google\\Drive File Stream\\" and InitiatingProcessFolderPath endswith "\\GoogleDriveFS.exe") or (InitiatingProcessFolderPath endswith ":\\Program Files\\Mozilla Firefox\\firefox.exe" or InitiatingProcessFolderPath endswith ":\\Program Files (x86)\\Mozilla Firefox\\firefox.exe") or (InitiatingProcessFolderPath endswith ":\\Program Files (x86)\\Internet Explorer\\iexplore.exe" or InitiatingProcessFolderPath endswith ":\\Program Files\\Internet Explorer\\iexplore.exe") or InitiatingProcessFolderPath endswith "\\maxthon.exe" or (InitiatingProcessFolderPath contains ":\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\" or (InitiatingProcessFolderPath endswith ":\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe" or InitiatingProcessFolderPath endswith ":\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe" or InitiatingProcessFolderPath endswith "\\WindowsApps\\MicrosoftEdge.exe")) or ((InitiatingProcessFolderPath contains ":\\Program Files (x86)\\Microsoft\\EdgeCore\\" or InitiatingProcessFolderPath contains ":\\Program Files\\Microsoft\\EdgeCore\\") and (InitiatingProcessFolderPath endswith "\\msedge.exe" or InitiatingProcessFolderPath endswith "\\msedgewebview2.exe")) or InitiatingProcessFolderPath endswith "\\opera.exe" or InitiatingProcessFolderPath endswith "\\safari.exe" or InitiatingProcessFolderPath endswith "\\seamonkey.exe" or InitiatingProcessFolderPath endswith "\\vivaldi.exe" or InitiatingProcessFolderPath endswith "\\whale.exe" or InitiatingProcessFolderPath endswith "\\GoogleUpdate.exe" or InitiatingProcessFolderPath endswith "\\outlook.exe")))

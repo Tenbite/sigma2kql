@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6597 fix: Potentially Suspicious PowerShell Child Processes - remove dead wmic filter value
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6597
+// Pull request author: aditya226-sharma
+// Change: update to existing rule
+// Title: Potentially Suspicious PowerShell Child Processes
+// Sigma ID: e4b6d2a7-d8a4-4f19-acbd-943c16d90647
+// Status: test | Level: medium
+// Author: Florian Roth (Nextron Systems), Tim Shelton
+// Date: 2022-04-26 | Modified: 2026-11-10
+// ATT&CK: execution, T1059.001
+// Tags: detection.threat-hunting
+// Description: Detects potentially suspicious child processes spawned by PowerShell. Use this rule to hunt for
+//   potential anomalies initiating from PowerShell scripts and commands.
+// False positives:
+//   - False positives are to be expected from PowerShell scripts that might make use of additional binaries such as "mshta", "bitsadmin", etc. Apply additional filters for those scripts.
+// References:
+//   - https://twitter.com/ankit_anubhav/status/1518835408502620162
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/2004fde740e01216c153aec10bb6a7626c02c838/rules-threat-hunting/windows/process_creation/proc_creation_win_powershell_susp_child_processes.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((InitiatingProcessFolderPath endswith "\\powershell_ise.exe" or InitiatingProcessFolderPath endswith "\\powershell.exe" or InitiatingProcessFolderPath endswith "\\pwsh.exe") and (FolderPath endswith "\\bash.exe" or FolderPath endswith "\\bitsadmin.exe" or FolderPath endswith "\\certutil.exe" or FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\forfiles.exe" or FolderPath endswith "\\hh.exe" or FolderPath endswith "\\mshta.exe" or FolderPath endswith "\\regsvr32.exe" or FolderPath endswith "\\rundll32.exe" or FolderPath endswith "\\schtasks.exe" or FolderPath endswith "\\scrcons.exe" or FolderPath endswith "\\scriptrunner.exe" or FolderPath endswith "\\sh.exe" or FolderPath endswith "\\wmic.exe" or FolderPath endswith "\\wscript.exe")) and (not(((FolderPath endswith "\\certutil.exe" and ProcessCommandLine contains "-verifystore ") or (FolderPath endswith "\\wmic.exe" and (ProcessCommandLine contains "qfe list" or ProcessCommandLine contains "diskdrive " or ProcessCommandLine contains "csproduct " or ProcessCommandLine contains "computersystem " or ProcessCommandLine contains " os "))))) and (not((InitiatingProcessCommandLine contains "\\Program Files\\Amazon\\WorkspacesConfig\\Scripts\\" and ProcessCommandLine contains "\\Program Files\\Amazon\\WorkspacesConfig\\Scripts\\")))

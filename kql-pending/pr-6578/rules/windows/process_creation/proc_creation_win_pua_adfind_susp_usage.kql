@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6578 chore: workflow - update pySigma-validators-sigmahq to 0.30
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6578
+// Pull request author: frack113
+// Change: update to existing rule
+// Title: PUA - AdFind Suspicious Execution
+// Sigma ID: 659a3290-3f60-49d4-9012-cb5e7c0c46fd
+// Status: test | Level: high
+// Author: Janantha Marasinghe (https://github.com/blueteam0ps), FPT.EagleEye Team, omkar72, oscd.community
+// Date: 2021-02-02 | Modified: 2026-11-06
+// ATT&CK: discovery, T1018, T1087.002, T1482, T1069.002
+// Tags: stp.1u
+// Description: Detects AdFind execution with common flags seen used during attacks
+// False positives:
+//   - Legitimate admin activity
+// References:
+//   - https://www.joeware.net/freetools/tools/adfind/
+//   - https://thedfirreport.com/2020/05/08/adfind-recon/
+//   - https://thedfirreport.com/2021/01/11/trickbot-still-alive-and-well/
+//   - https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/
+//   - https://social.technet.microsoft.com/wiki/contents/articles/7535.adfind-command-examples.aspx
+//   - https://github.com/center-for-threat-informed-defense/adversary_emulation_library/blob/bf62ece1c679b07b5fb49c4bae947fe24c81811f/fin6/Emulation_Plan/Phase1.md
+//   - https://github.com/redcanaryco/atomic-red-team/blob/0f229c0e42bfe7ca736a14023836d65baa941ed2/atomics/T1087.002/T1087.002.md#atomic-test-7---adfind---enumerate-active-directory-user-objects
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/7490edb4783550895f8ac7b1ff297eaa8fda0d2a/rules/windows/process_creation/proc_creation_win_pua_adfind_susp_usage.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ProcessCommandLine contains "domainlist" or ProcessCommandLine contains "trustdmp" or ProcessCommandLine contains "dcmodes" or ProcessCommandLine contains "adinfo" or ProcessCommandLine contains "-sc dclist" or ProcessCommandLine contains "computer_pwdnotreqd" or ProcessCommandLine contains "objectcategory=" or ProcessCommandLine contains "-subnets -f" or ProcessCommandLine contains "name=\"Domain Admins\"" or ProcessCommandLine contains "-sc u:" or ProcessCommandLine contains "domainncs" or ProcessCommandLine contains "dompol" or ProcessCommandLine contains " oudmp " or ProcessCommandLine contains "subnetdmp" or ProcessCommandLine contains "gpodmp" or ProcessCommandLine contains "fspdmp" or ProcessCommandLine contains "users_noexpire" or ProcessCommandLine contains "computers_active" or ProcessCommandLine contains "computers_pwdnotreqd"
