@@ -15,9 +15,9 @@
 //   - Unknown
 // References:
 //   - https://www.matteomalvica.com/blog/2019/12/02/win-defender-atp-cred-bypass/
-//   - https://twitter.com/Hexacorn/status/1420053502554951689
+//   - https://web.archive.org/web/20211128075033/https://twitter.com/Hexacorn/status/1420053502554951689
 //   - https://twitter.com/SBousseaden/status/1464566846594691073?s=20
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_lsass_process_clone.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ad147b5514596e70f2782769d9833046b7c8e12b/rules/windows/process_creation/proc_creation_win_lsass_process_clone.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

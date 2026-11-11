@@ -18,7 +18,7 @@
 //   - https://twitter.com/inversecos/status/1494174785621819397
 //   - https://www.mcafee.com/blogs/other-blogs/mcafee-labs/zloader-with-a-new-infection-technique/
 //   - https://securelist.com/scarcruft-surveilling-north-korean-defectors-and-human-rights-activists/105074/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/registry/registry_set/registry_set_office_access_vbom_tamper.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ad147b5514596e70f2782769d9833046b7c8e12b/rules/windows/registry/registry_set/registry_set_office_access_vbom_tamper.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

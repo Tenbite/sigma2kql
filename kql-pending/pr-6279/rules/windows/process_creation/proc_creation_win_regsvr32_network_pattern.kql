@@ -17,7 +17,7 @@
 //   - https://twitter.com/mrd0x/status/1461041276514623491
 //   - https://twitter.com/tccontre18/status/1480950986650832903
 //   - https://lolbas-project.github.io/lolbas/Binaries/Regsvr32/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_regsvr32_network_pattern.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ad147b5514596e70f2782769d9833046b7c8e12b/rules/windows/process_creation/proc_creation_win_regsvr32_network_pattern.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

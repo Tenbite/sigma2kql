@@ -3,7 +3,22 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-10 15:03 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-11 14:32 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+
+## [#6600](https://github.com/SigmaHQ/sigma/pull/6600) fix: dead values in LiveKD, dead drop resolver and malicious cmdlet rules
+
+| Rule | Change | Level |
+|---|---|---|
+| [LiveKD Driver Creation](pr-6600/rules/windows/file/file_event/file_event_win_sysinternals_livekd_driver.kql) | update to existing rule | medium |
+| [LiveKD Driver Creation By Uncommon Process](pr-6600/rules/windows/file/file_event/file_event_win_sysinternals_livekd_driver_susp_creation.kql) | update to existing rule | high |
+| [New Connection Initiated To Potential Dead Drop Resolver Domain](pr-6600/rules/windows/network_connection/net_connection_win_domain_dead_drop_resolvers.kql) | update to existing rule | high |
+| [Malicious PowerShell Commandlets - ProcessCreation](pr-6600/rules/windows/process_creation/proc_creation_win_powershell_malicious_cmdlets.kql) | update to existing rule | high |
+
+## [#6598](https://github.com/SigmaHQ/sigma/pull/6598) fix: use CommandLine for shell flag in CVE-2025-55182 Linux rule
+
+| Rule | Change | Level |
+|---|---|---|
+| [Linux Suspicious Child Process from Node.js - React2Shell](pr-6598/rules-emerging-threats/2025/Exploits/CVE-2025-55182/proc_creation_lnx_exploit_cve_2025_55182_susp_nodejs_server_child_process.kql) | update to existing rule | high |
 
 ## [#6597](https://github.com/SigmaHQ/sigma/pull/6597) fix: Potentially Suspicious PowerShell Child Processes - remove dead wmic filter value
 
@@ -1409,40 +1424,4 @@ Rebuilt 2026-11-10 15:03 UTC from 300 open pull requests. When a pull request is
 | Rule | Change | Level |
 |---|---|---|
 | [Suspicious File Characteristics Due to Missing Fields](pr-5912/rules/windows/process_creation/proc_creation_win_susp_file_characteristics.kql) | update to existing rule | medium |
-
-## [#5897](https://github.com/SigmaHQ/sigma/pull/5897) fix: Split Service Binary in Suspicious Folder into two distinct rules
-
-| Rule | Change | Level |
-|---|---|---|
-| [Suspicious Service Binary Location](pr-5897/rules/windows/registry/registry_set/registry_set_service_susp_service_binary_location.kql) | new rule | high |
-| [Service StartType Modification by Process Running from Suspicious Directory](pr-5897/rules/windows/registry/registry_set/registry_set_susp_service_startup_modification.kql) | new rule | high |
-
-## [#5895](https://github.com/SigmaHQ/sigma/pull/5895) feat: addition of EDR disabling through mitigation options
-
-| Rule | Change | Level |
-|---|---|---|
-| [EDR Disabling through Image File Execution Options](pr-5895/rules/windows/registry/registry_set/registry_set_edr_disabling_with_ifeo.kql) | new rule | high |
-| [EDR Disabling With Mitigation Options Modification](pr-5895/rules/windows/registry/registry_set/registry_set_edr_disabling_with_mitigation_options.kql) | new rule | high |
-
-## [#5892](https://github.com/SigmaHQ/sigma/pull/5892) Add New AppLocker Policy File Tampering Detection Rules
-
-| Rule | Change | Level |
-|---|---|---|
-| [Suspicious Deletion of AppLocker Policy Files](pr-5892/rules/windows/file/file_delete/file_delete_win_susp_applocker_policy_deletion.kql) | new rule | high |
-| [Suspicious Creation of AppLocker Policy Files](pr-5892/rules/windows/file/file_event/file_event_win_susp_applocker_policy_modification.kql) | new rule | high |
-
-## [#5891](https://github.com/SigmaHQ/sigma/pull/5891) new: renamed system binaries execution for dll hijacking attack
-
-| Rule | Change | Level |
-|---|---|---|
-| [Files With System Process Name In Unsuspected Locations](pr-5891/rules/windows/file/file_event/file_event_win_creation_system_file.kql) | update to existing rule | medium |
-| [Potential DLL Sideloading of SPPC.dll](pr-5891/rules/windows/image_load/image_load_side_load_sppc.kql) | new rule | medium |
-| [Suspicious Renamed System Binaries Execution](pr-5891/rules/windows/process_creation/proc_creation_win_renamed_susp_system_binaries.kql) | new rule | high |
-| [System File Execution Location Anomaly](pr-5891/rules/windows/process_creation/proc_creation_win_susp_system_exe_anomaly.kql) | update to existing rule | high |
-
-## [#5886](https://github.com/SigmaHQ/sigma/pull/5886) Add Socat Reverse Shell Detection Rule for Linux Process Creation
-
-| Rule | Change | Level |
-|---|---|---|
-| [Potential Socat Reverse Shell Execution](pr-5886/rules/linux/process_creation/proc_creation_lnx_socat_reverse_shell.kql) | new rule | high |
 

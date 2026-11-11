@@ -15,7 +15,7 @@
 // References:
 //   - https://blog.xpnsec.com/exploring-mimikatz-part-1/
 //   - https://twitter.com/SBousseaden/status/1183745981189427200
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/registry/registry_event/registry_event_susp_lsass_dll_load.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ad147b5514596e70f2782769d9833046b7c8e12b/rules/windows/registry/registry_event/registry_event_susp_lsass_dll_load.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

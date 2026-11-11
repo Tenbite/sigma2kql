@@ -1,0 +1,24 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6600 fix: dead values in LiveKD, dead drop resolver and malicious cmdlet rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6600
+// Pull request author: skyquaz
+// Change: update to existing rule
+// Title: LiveKD Driver Creation By Uncommon Process
+// Sigma ID: 059c5af9-5131-4d8d-92b2-de4ad6146712
+// Status: test | Level: high
+// Author: Nasreddine Bencherchali (Nextron Systems)
+// Date: 2023-05-16 | Modified: 2026-11-11
+// ATT&CK: privilege-escalation, stealth
+// Description: Detects the creation of the LiveKD driver by a process image other than "livekd.exe".
+// False positives:
+//   - Administrators might rename LiveKD before its usage which could trigger this. Add additional names you use to the filter
+// References:
+//   - Internal Research
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/a493c320d560f387b4782c209780a7c928267300/rules/windows/file/file_event/file_event_win_sysinternals_livekd_driver_susp_creation.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where FolderPath =~ "C:\\Windows\\System32\\drivers\\LiveKdD.SYS" and (not((InitiatingProcessFolderPath endswith "\\livekd.exe" or InitiatingProcessFolderPath endswith "\\livekd64.exe")))

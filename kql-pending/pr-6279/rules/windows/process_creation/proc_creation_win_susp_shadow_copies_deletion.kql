@@ -23,7 +23,7 @@
 //   - https://github.com/Neo23x0/Raccine/blob/20a569fa21625086433dcce8bb2765d0ea08dcb6/yara/gen_ransomware_command_lines.yar
 //   - https://redcanary.com/blog/intelligence-insights-october-2021/
 //   - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/blackbyte-exbyte-ransomware
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_susp_shadow_copies_deletion.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ad147b5514596e70f2782769d9833046b7c8e12b/rules/windows/process_creation/proc_creation_win_susp_shadow_copies_deletion.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

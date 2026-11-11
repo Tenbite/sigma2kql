@@ -17,14 +17,14 @@
 // False positives:
 //   - Unlikely
 // References:
-//   - https://blog.malwarebytes.com/malwarebytes-news/2020/10/kraken-attack-abuses-wer-service/
+//   - https://www.threatdown.com/blog/kraken-attack-abuses-wer-service/
 //   - https://www.cobaltstrike.com/help-opsec
 //   - https://twitter.com/CyberRaiju/status/1251492025678983169
 //   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/regsvr32
 //   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/rundll32
 //   - https://learn.microsoft.com/en-us/dotnet/framework/tools/regasm-exe-assembly-registration-tool
 //   - https://learn.microsoft.com/en-us/dotnet/framework/tools/regsvcs-exe-net-services-installation-tool
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ed4273b30b6bba81f525a9ba136c2bcdb6d8ca95/rules/windows/process_creation/proc_creation_win_susp_bad_opsec_sacrificial_processes.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ad147b5514596e70f2782769d9833046b7c8e12b/rules/windows/process_creation/proc_creation_win_susp_bad_opsec_sacrificial_processes.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

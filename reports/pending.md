@@ -1,18 +1,27 @@
 # Pending rules run
 
-- Run: 2026-11-10 15:03 UTC
-- Open pull requests checked: 300 (drafts skipped: 4)
-- Pull requests with converted rules: 178
+- Run: 2026-11-11 14:32 UTC
+- Open pull requests checked: 300 (drafts skipped: 5)
+- Pull requests with converted rules: 175
 
 | Result | Rule files |
 |---|---|
-| Converted and valid | 551 |
+| Converted and valid | 545 |
 | Failed validation | 5 |
-| Failed conversion | 364 |
+| Failed conversion | 365 |
 | Skipped (filters) | 63 |
 
 ## Not converted
 
+- #6606 `rules/windows/process_tampering/proc_tampering_susp_process_hollowing.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6604 `rules/windows/builtin/security/win_security_petitpotam_susp_tgt_request.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6603 `rules/cloud/azure/activity_logs/azure_granting_permission_detection.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6603 `rules/cloud/azure/activity_logs/azure_rare_operations.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6602 `rules/cloud/azure/activity_logs/azure_rare_operations.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6601 `rules/cloud/azure/activity_logs/azure_resource_diagnostic_setting_deleted.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6600 `rules/windows/powershell/powershell_module/posh_pm_malicious_commandlets.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6600 `rules/windows/powershell/powershell_script/posh_ps_malicious_commandlets.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6599 `rules/cloud/m365/audit/microsoft365_suspicious_inbox_rule_created.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6591 `rules/windows/powershell/powershell_script/posh_ps_installutil_inprocess_installer_execution.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6585 `rules/windows/process_creation/proc_creation_win_ssh_proxy_execution.yml`: InvalidHashAlgorithmError: No valid hash algo found in Hashes field. Please use one of the following: MD5, SHA1, SHA256 (while applying processing pipeline on rule None)
 - #6581 `rules/web/webserver_generic/web_adcs_web_enrollment_machine_account.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
@@ -374,11 +383,3 @@
 - #5936 `rules/web/webserver_generic/web_xxe_injection_in_access_logs.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #5933 `rules/network/dns/net_dns_external_service_interaction_domains.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #5918 `rules/windows/powershell/powershell_script/posh_ps_clearing_windows_console_history.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #5903 `rules/cloud/aws/cloudtrail/aws_cloudtrail_bedrock_model_recon.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #5903 `rules/cloud/aws/cloudtrail/aws_cloudtrail_bedrock_uncommon_api_calls_from_lla.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #5902 `rules/web/proxy_generic/evilginx_linkedin_cookie_exfiltration.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #5902 `rules/web/proxy_generic/evilginx_microsoft_cookie_exfiltration.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #5902 `rules/web/proxy_generic/evilginx_microsoft_kmsi_manipulation.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #5902 `rules/web/webserver_generic/evilginx_js_injection_pattern.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #5897 `rules/windows/builtin/system/service_control_manager/win_system_susp_service_startup_modification.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #5884 `rules/windows/dns_query/dns_query_win_susp_process_abuse_web_services.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
