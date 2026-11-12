@@ -18,7 +18,7 @@
 //   - https://www.trendmicro.com/en_us/research/23/c/iron-tiger-sysupdate-adds-linux-targeting.html
 //   - https://www.cyberciti.biz/faq/how-force-kill-process-linux/
 //   - https://www.geeksforgeeks.org/how-to-kill-processes-on-the-linux-desktop-with-xkill/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/7490edb4783550895f8ac7b1ff297eaa8fda0d2a/rules-threat-hunting/linux/process_creation/proc_creation_lnx_susp_process_termination_via_kill.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ebd26c2d9cd57dc9489faa1f1346577be9947747/rules-threat-hunting/linux/process_creation/proc_creation_lnx_susp_process_termination_via_kill.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

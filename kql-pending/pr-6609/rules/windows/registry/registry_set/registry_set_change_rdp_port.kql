@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6609 fix: expand FP filters and fix detection logic in 8 registry rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6609
+// Pull request author: swachchhanda000
+// Change: update to existing rule
+// Title: Default RDP Port Changed to Non Standard Port
+// Sigma ID: 509e84b9-a71a-40e0-834f-05470369bd1e
+// Status: test | Level: high
+// Author: frack113
+// Date: 2022-01-01 | Modified: 2026-11-12
+// ATT&CK: privilege-escalation, persistence, T1547.010
+// Description: Detects changes to the default RDP port. Remote desktop is a common feature in operating
+//   systems. It allows a user to log into a remote system using an interactive session with a
+//   graphical user interface. Microsoft refers to its implementation of the Remote Desktop Protocol
+//   (RDP) as Remote Desktop Services (RDS).
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1021.001/T1021.001.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/23e9c73742bad8c640fa459e2731b003b6f37175/rules/windows/registry/registry_set/registry_set_change_rdp_port.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceRegistryEvents
+| where RegistryKey endswith "\\Control\\Terminal Server\\WinStations\\RDP-Tcp\\PortNumber" and (not((RegistryValueData in~ ("DWORD (0x00000d3d)", "3389"))))

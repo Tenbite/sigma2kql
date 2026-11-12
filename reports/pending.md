@@ -1,18 +1,20 @@
 # Pending rules run
 
-- Run: 2026-11-11 14:32 UTC
-- Open pull requests checked: 300 (drafts skipped: 5)
-- Pull requests with converted rules: 175
+- Run: 2026-11-12 15:27 UTC
+- Open pull requests checked: 300 (drafts skipped: 4)
+- Pull requests with converted rules: 176
 
 | Result | Rule files |
 |---|---|
-| Converted and valid | 545 |
+| Converted and valid | 551 |
 | Failed validation | 5 |
 | Failed conversion | 365 |
 | Skipped (filters) | 63 |
 
 ## Not converted
 
+- #6607 `rules/cloud/azure/audit_logs/azure_pim_global_admin_permanent_assignment.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6607 `rules/cloud/azure/audit_logs/azure_priviledged_role_assignment_add.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6606 `rules/windows/process_tampering/proc_tampering_susp_process_hollowing.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6604 `rules/windows/builtin/security/win_security_petitpotam_susp_tgt_request.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6603 `rules/cloud/azure/activity_logs/azure_granting_permission_detection.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
@@ -381,5 +383,3 @@
 - #5950 `rules-emerging-threats/2026/Exploits/CVE-2026-41651/lnx_exploit_cve_2026_41651_indicators.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #5944 `rules/windows/network_connection/net_connection_win_configurationremotingserver.yml`: A value of type string or dynamic expected. (at 112)
 - #5936 `rules/web/webserver_generic/web_xxe_injection_in_access_logs.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #5933 `rules/network/dns/net_dns_external_service_interaction_domains.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #5918 `rules/windows/powershell/powershell_script/posh_ps_clearing_windows_console_history.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:

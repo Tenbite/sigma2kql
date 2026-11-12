@@ -23,11 +23,11 @@
 //   - https://github.com/RedTeamPentesting/wspcoerce
 //   - https://github.com/p0dalirius/Coercer
 //   - https://blog.redteam-pentesting.de/2025/windows-coercion/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/fb0662b671f455c7109aa7191ec6b22cf862d942/rules/windows/process_creation/proc_creation_win_hktl_ntlm_coercion_tools.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/d1ca98b84f59e42b7749477ea0cb2ffa791d26f2/rules/windows/process_creation/proc_creation_win_hktl_ntlm_coercion_tools.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)
 // Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceProcessEvents
-| where (FolderPath contains "DFSCoerce" or FolderPath contains "ShadowCoerce" or FolderPath contains "WSPCoerce") or (ProcessCommandLine contains "dfscoerce.py" or ProcessCommandLine contains "shadowcoerce.py") or (ProcessCommandLine contains "coercer coerce " or ProcessCommandLine contains "coercer scan " or ProcessCommandLine contains "coercer fuzz " or ProcessCommandLine contains "coercer.py coerce " or ProcessCommandLine contains "coercer.py scan " or ProcessCommandLine contains "coercer.py fuzz ")
+| where (FolderPath contains "DFSCoerce" or FolderPath contains "ShadowCoerce" or FolderPath contains "WSPCoerce") or (ProcessCommandLine contains "dfscoerce.py" or ProcessCommandLine contains "shadowcoerce.py") or (ProcessCommandLine contains "coercer coerce " or ProcessCommandLine contains "coercer fuzz " or ProcessCommandLine contains "coercer scan " or ProcessCommandLine contains "coercer.py coerce " or ProcessCommandLine contains "coercer.py fuzz " or ProcessCommandLine contains "coercer.py scan ")

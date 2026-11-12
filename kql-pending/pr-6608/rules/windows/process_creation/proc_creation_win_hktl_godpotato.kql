@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6608 new: HackTool - GodPotato Execution
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6608
+// Pull request author: ashish-cybersec
+// Change: new rule
+// Title: HackTool - GodPotato Execution
+// Sigma ID: 2a5a2f2c-9936-41e7-948c-13f96936c7a2
+// Status: experimental | Level: high
+// Author: Ashish Pulivarthy (ashish-cybersec)
+// Date: 2026-11-11 | Modified: -
+// ATT&CK: privilege-escalation, stealth, T1134.001
+// Description: Detects the execution of GodPotato, a privilege escalation tool that abuses a flaw in how the
+//   RPCSS service handles OXID resolution over DCOM. It escalates from an account that holds the
+//   SeImpersonatePrivilege token privilege, such as a web or database service account, to SYSTEM. It
+//   affects Windows 8 through Windows 11 and Windows Server 2012 through Windows Server 2022. Threat
+//   actors have been observed running it under other file names, which the "OriginalFileName" field
+//   still identifies.
+// False positives:
+//   - Unknown
+// References:
+//   - https://github.com/BeichenDream/GodPotato
+//   - https://www.ic3.gov/CSA/2025/250219.pdf
+//   - https://unit42.paloaltonetworks.com/manic-menagerie-targets-web-hosting-and-it/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cd80a73def89abcbe64fbbb63245fcef9de000eb/rules/windows/process_creation/proc_creation_win_hktl_godpotato.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\GodPotato-NET2.exe" or FolderPath endswith "\\GodPotato-NET35.exe" or FolderPath endswith "\\GodPotato-NET4.exe" or FolderPath endswith "\\GodPotato.exe") or ProcessVersionInfoOriginalFileName =~ "GodPotato.exe"

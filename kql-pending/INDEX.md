@@ -3,7 +3,32 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-11 14:32 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-12 15:27 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+
+## [#6609](https://github.com/SigmaHQ/sigma/pull/6609) fix: expand FP filters and fix detection logic in 8 registry rules
+
+| Rule | Change | Level |
+|---|---|---|
+| [Shell Open Registry Keys Manipulation](pr-6609/rules/windows/registry/registry_event/registry_event_shell_open_keys_manipulation.kql) | update to existing rule | high |
+| [Potential AMSI COM Server Hijacking](pr-6609/rules/windows/registry/registry_set/registry_set_amsi_com_hijack.kql) | update to existing rule | high |
+| [Default RDP Port Changed to Non Standard Port](pr-6609/rules/windows/registry/registry_set/registry_set_change_rdp_port.kql) | update to existing rule | high |
+| [Persistence Via Hhctrl.ocx](pr-6609/rules/windows/registry/registry_set/registry_set_hhctrl_persistence.kql) | update to existing rule | high |
+| [Potential PSFactoryBuffer COM Hijacking](pr-6609/rules/windows/registry/registry_set/registry_set_persistence_comhijack_psfactorybuffer.kql) | update to existing rule | high |
+| [Scheduled TaskCache Change by Uncommon Program](pr-6609/rules/windows/registry/registry_set/registry_set_taskcache_entry.kql) | update to existing rule | high |
+| [RDP Sensitive Settings Changed](pr-6609/rules/windows/registry/registry_set/registry_set_terminal_server_tampering.kql) | update to existing rule | high |
+| [UAC Bypass via Sdclt](pr-6609/rules/windows/registry/registry_set/registry_set_uac_bypass_sdclt.kql) | update to existing rule | high |
+
+## [#6608](https://github.com/SigmaHQ/sigma/pull/6608) new: HackTool - GodPotato Execution
+
+| Rule | Change | Level |
+|---|---|---|
+| [HackTool - GodPotato Execution](pr-6608/rules/windows/process_creation/proc_creation_win_hktl_godpotato.kql) | new rule | high |
+
+## [#6605](https://github.com/SigmaHQ/sigma/pull/6605) New rule: Potential Systemd Credential Exposure Via Temporary Directory
+
+| Rule | Change | Level |
+|---|---|---|
+| [Potential Systemd Credential Exposure Via Temporary Directory](pr-6605/rules/linux/process_creation/proc_creation_lnx_systemd_creds_decrypt_tmp.kql) | new rule | medium |
 
 ## [#6600](https://github.com/SigmaHQ/sigma/pull/6600) fix: dead values in LiveKD, dead drop resolver and malicious cmdlet rules
 
@@ -1410,18 +1435,4 @@ Rebuilt 2026-11-11 14:32 UTC from 300 open pull requests. When a pull request is
 |---|---|---|
 | [Suspicious Child Process of ConfigurationRemotingServer](pr-5944/rules/windows/process_creation/proc_creation_win_configurationremotingserver_uncommon_child_process.kql) | new rule | high |
 | [Potential WinGet Proxy Execution via DSC Engine](pr-5944/rules/windows/process_creation/proc_creation_win_winget_proxy_execution_via_dsc.kql) | new rule | medium |
-
-## [#5919](https://github.com/SigmaHQ/sigma/pull/5919) new: RegPwn CVE-2026-24291 rules
-
-| Rule | Change | Level |
-|---|---|---|
-| [HackTool - Regpwn Exploit Execution](pr-5919/rules-emerging-threats/2026/Exploits/CVE-2026-24291/proc_creation_win_exploit_cve_2026_24291_regpwn.kql) | new rule | high |
-| [Osk.exe or ATBroker.exe Modifying Service ImagePath Registry Value](pr-5919/rules-emerging-threats/2026/Exploits/CVE-2026-24291/registry_set_win_exploit_cve_2026_24291_regpwn_osk_atbroker_modify_service.kql) | new rule | high |
-| [Registry Symbolic Link Creation/Modification in Accessibility Session ATConfig Osk Keys](pr-5919/rules-emerging-threats/2026/Exploits/CVE-2026-24291/registry_set_win_exploit_cve_2026_24291_regpwn_symbolic_redirection.kql) | new rule | high |
-
-## [#5912](https://github.com/SigmaHQ/sigma/pull/5912) Update rule Suspicious File Characteristics Due to Missing Fields to include additional values
-
-| Rule | Change | Level |
-|---|---|---|
-| [Suspicious File Characteristics Due to Missing Fields](pr-5912/rules/windows/process_creation/proc_creation_win_susp_file_characteristics.kql) | update to existing rule | medium |
 

@@ -19,7 +19,7 @@
 //   - https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2022/06/23093553/Common-TTPs-of-the-modern-ransomware_low-res.pdf
 //   - https://www.acronis.com/en-us/blog/posts/lockbit-ransomware/
 //   - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/blackbyte-exbyte-ransomware
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/7490edb4783550895f8ac7b1ff297eaa8fda0d2a/rules/windows/process_creation/proc_creation_win_cmd_ping_del_combined_execution.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/ebd26c2d9cd57dc9489faa1f1346577be9947747/rules/windows/process_creation/proc_creation_win_cmd_ping_del_combined_execution.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)
