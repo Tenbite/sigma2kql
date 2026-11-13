@@ -38367,7 +38367,7 @@
   "table": "DeviceRegistryEvents",
   "title": "Shell Open Registry Keys Manipulation",
   "validation": "passed",
-  "wildcard_rewrites": 0
+  "wildcard_rewrites": 1
  },
  "rules/windows/registry/registry_event/registry_event_silentprocessexit_lsass.yml": {
   "attack": [
@@ -41110,7 +41110,7 @@
   "table": "DeviceRegistryEvents",
   "title": "Scheduled TaskCache Change by Uncommon Program",
   "validation": "passed",
-  "wildcard_rewrites": 2
+  "wildcard_rewrites": 3
  },
  "rules/windows/registry/registry_set/registry_set_telemetry_persistence.yml": {
   "attack": [
@@ -41159,7 +41159,7 @@
   "table": "DeviceRegistryEvents",
   "title": "RDP Sensitive Settings Changed",
   "validation": "passed",
-  "wildcard_rewrites": 4
+  "wildcard_rewrites": 5
  },
  "rules/windows/registry/registry_set/registry_set_timeproviders_dllname.yml": {
   "attack": [
@@ -41249,7 +41249,7 @@
   "table": "DeviceRegistryEvents",
   "title": "UAC Bypass via Sdclt",
   "validation": "passed",
-  "wildcard_rewrites": 0
+  "wildcard_rewrites": 1
  },
  "rules/windows/registry/registry_set/registry_set_uac_bypass_winsat.yml": {
   "attack": [

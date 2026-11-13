@@ -3,20 +3,27 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-12 15:27 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-13 14:43 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
 
-## [#6609](https://github.com/SigmaHQ/sigma/pull/6609) fix: expand FP filters and fix detection logic in 8 registry rules
+## [#6614](https://github.com/SigmaHQ/sigma/pull/6614) new: MioLab macOS stealer rules (agent process, persistence files, C2 domains, C2 proxy URIs)
 
 | Rule | Change | Level |
 |---|---|---|
-| [Shell Open Registry Keys Manipulation](pr-6609/rules/windows/registry/registry_event/registry_event_shell_open_keys_manipulation.kql) | update to existing rule | high |
-| [Potential AMSI COM Server Hijacking](pr-6609/rules/windows/registry/registry_set/registry_set_amsi_com_hijack.kql) | update to existing rule | high |
-| [Default RDP Port Changed to Non Standard Port](pr-6609/rules/windows/registry/registry_set/registry_set_change_rdp_port.kql) | update to existing rule | high |
-| [Persistence Via Hhctrl.ocx](pr-6609/rules/windows/registry/registry_set/registry_set_hhctrl_persistence.kql) | update to existing rule | high |
-| [Potential PSFactoryBuffer COM Hijacking](pr-6609/rules/windows/registry/registry_set/registry_set_persistence_comhijack_psfactorybuffer.kql) | update to existing rule | high |
-| [Scheduled TaskCache Change by Uncommon Program](pr-6609/rules/windows/registry/registry_set/registry_set_taskcache_entry.kql) | update to existing rule | high |
-| [RDP Sensitive Settings Changed](pr-6609/rules/windows/registry/registry_set/registry_set_terminal_server_tampering.kql) | update to existing rule | high |
-| [UAC Bypass via Sdclt](pr-6609/rules/windows/registry/registry_set/registry_set_uac_bypass_sdclt.kql) | update to existing rule | high |
+| [Suspicious MioLab LaunchAgent Or Staging File Creation](pr-6614/rules-emerging-threats/2026/Malware/MioLab/file_event_macos_malware_miolab_persistence_indicators.kql) | new rule | high |
+| [Suspicious MioLab Agent Process Activity](pr-6614/rules-emerging-threats/2026/Malware/MioLab/proc_creation_macos_malware_miolab_agent_activity.kql) | new rule | high |
+
+## [#6613](https://github.com/SigmaHQ/sigma/pull/6613) new: RevStealer rules (C2 domain, gate URI, Telegraph and Polygon dead drops, renamed OneDrive host)
+
+| Rule | Change | Level |
+|---|---|---|
+| [Renamed OneDrive Client Execution](pr-6613/rules/windows/process_creation/proc_creation_win_renamed_onedrive.kql) | new rule | medium |
+
+## [#6611](https://github.com/SigmaHQ/sigma/pull/6611) fix: escaped wildcards in two rules that can never match
+
+| Rule | Change | Level |
+|---|---|---|
+| [Ursnif Redirection Of Discovery Commands](pr-6611/rules-emerging-threats/2023/Malware/Ursnif/proc_creation_win_malware_ursnif_cmd_redirection.kql) | update to existing rule | high |
+| [Manual Execution of Script Inside of a Compressed File](pr-6611/rules-threat-hunting/windows/process_creation/proc_creation_win_susp_script_exec_from_compressed_parent.kql) | update to existing rule | medium |
 
 ## [#6608](https://github.com/SigmaHQ/sigma/pull/6608) new: HackTool - GodPotato Execution
 
@@ -212,13 +219,6 @@ Rebuilt 2026-11-12 15:27 UTC from 300 open pull requests. When a pull request is
 |---|---|---|
 | [Potential Ingress Tool Transfer Via ECMangen.EXE](pr-6538/rules/windows/process_creation/proc_creation_win_ecmangen_ingress_tool_transfer.kql) | new rule | medium |
 
-## [#6537](https://github.com/SigmaHQ/sigma/pull/6537) new: Potential Child Process from Node.js or Bun - Node2Shell (CVE-2026-111497)
-
-| Rule | Change | Level |
-|---|---|---|
-| [Potential Child Process from Node.js or Bun - Node2Shell - Linux](pr-6537/rules-emerging-threats/2026/Exploits/CVE-2026-111497/proc_creation_lnx_exploit_cve_2026_111497_node2shell_child_process.kql) | new rule | medium |
-| [Potential Child Process from Node.js or Bun - Node2Shell - Windows](pr-6537/rules-emerging-threats/2026/Exploits/CVE-2026-111497/proc_creation_win_exploit_cve_2026_111497_node2shell_child_process.kql) | new rule | medium |
-
 ## [#6535](https://github.com/SigmaHQ/sigma/pull/6535) Add Fax service configuration detection and regression tests
 
 | Rule | Change | Level |
@@ -283,12 +283,6 @@ Rebuilt 2026-11-12 15:27 UTC from 300 open pull requests. When a pull request is
 | Rule | Change | Level |
 |---|---|---|
 | [DotNet Add-In Pipeline Host Execution](pr-6512/rules/windows/process_creation/proc_creation_win_lolbin_addinpipeline.kql) | new rule | medium |
-
-## [#6509](https://github.com/SigmaHQ/sigma/pull/6509) Fix Dumping of Sensitive Hives Via Reg.EXE - require the hive directly after the HKLM root
-
-| Rule | Change | Level |
-|---|---|---|
-| [Dumping of Sensitive Hives Via Reg.EXE](pr-6509/rules/windows/process_creation/proc_creation_win_reg_dumping_sensitive_hives.kql) | update to existing rule | high |
 
 ## [#6508](https://github.com/SigmaHQ/sigma/pull/6508) Add Windows rules for T1547.012 Print Processors persistence
 

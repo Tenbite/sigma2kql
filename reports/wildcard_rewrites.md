@@ -35,6 +35,7 @@ The backend left a Sigma `*` wildcard inside a `contains`/`endswith`/`==` compar
 | Registry Entries For Azorult Malware | critical | 1 | [registry_event_mal_azorult.kql](../kql/rules/windows/registry/registry_event/registry_event_mal_azorult.kql) |
 | NetNTLM Downgrade Attack - Registry | high | 1 | [registry_event_net_ntlm_downgrade.kql](../kql/rules/windows/registry/registry_event/registry_event_net_ntlm_downgrade.kql) |
 | New PortProxy Registry Entry Added | medium | 1 | [registry_event_portproxy_registry_key.kql](../kql/rules/windows/registry/registry_event/registry_event_portproxy_registry_key.kql) |
+| Shell Open Registry Keys Manipulation | high | 1 | [registry_event_shell_open_keys_manipulation.kql](../kql/rules/windows/registry/registry_event/registry_event_shell_open_keys_manipulation.kql) |
 | Suspicious Camera and Microphone Access | high | 1 | [registry_event_susp_mic_cam_access.kql](../kql/rules/windows/registry/registry_event/registry_event_susp_mic_cam_access.kql) |
 | Registry Persistence via Service in Safe Mode | high | 2 | [registry_set_add_load_service_in_safe_mode.kql](../kql/rules/windows/registry/registry_set/registry_set_add_load_service_in_safe_mode.kql) |
 | Add Port Monitor Persistence in Registry | medium | 3 | [registry_set_add_port_monitor.kql](../kql/rules/windows/registry/registry_set/registry_set_add_port_monitor.kql) |
@@ -97,10 +98,11 @@ The backend left a Sigma `*` wildcard inside a `contains`/`endswith`/`==` compar
 | Suspicious Keyboard Layout Load | medium | 2 | [registry_set_susp_keyboard_layout_load.kql](../kql/rules/windows/registry/registry_set/registry_set_susp_keyboard_layout_load.kql) |
 | Suspicious Printer Driver Empty Manufacturer | high | 4 | [registry_set_susp_printer_driver.kql](../kql/rules/windows/registry/registry_set/registry_set_susp_printer_driver.kql) |
 | Suspicious Environment Variable Has Been Registered | high | 1 | [registry_set_suspicious_env_variables.kql](../kql/rules/windows/registry/registry_set/registry_set_suspicious_env_variables.kql) |
-| Scheduled TaskCache Change by Uncommon Program | high | 2 | [registry_set_taskcache_entry.kql](../kql/rules/windows/registry/registry_set/registry_set_taskcache_entry.kql) |
+| Scheduled TaskCache Change by Uncommon Program | high | 3 | [registry_set_taskcache_entry.kql](../kql/rules/windows/registry/registry_set/registry_set_taskcache_entry.kql) |
 | Potential Registry Persistence Attempt Via Windows Telemetry | high | 1 | [registry_set_telemetry_persistence.kql](../kql/rules/windows/registry/registry_set/registry_set_telemetry_persistence.kql) |
-| RDP Sensitive Settings Changed | high | 4 | [registry_set_terminal_server_tampering.kql](../kql/rules/windows/registry/registry_set/registry_set_terminal_server_tampering.kql) |
+| RDP Sensitive Settings Changed | high | 5 | [registry_set_terminal_server_tampering.kql](../kql/rules/windows/registry/registry_set/registry_set_terminal_server_tampering.kql) |
 | Old TLS1.0/TLS1.1 Protocol Version Enabled | medium | 2 | [registry_set_tls_protocol_old_version_enabled.kql](../kql/rules/windows/registry/registry_set/registry_set_tls_protocol_old_version_enabled.kql) |
 | Potential Signing Bypass Via Windows Developer Features - Registry | high | 1 | [registry_set_turn_on_dev_features.kql](../kql/rules/windows/registry/registry_set/registry_set_turn_on_dev_features.kql) |
+| UAC Bypass via Sdclt | high | 1 | [registry_set_uac_bypass_sdclt.kql](../kql/rules/windows/registry/registry_set/registry_set_uac_bypass_sdclt.kql) |
 | VBScript Payload Stored in Registry | high | 1 | [registry_set_vbs_payload_stored.kql](../kql/rules/windows/registry/registry_set/registry_set_vbs_payload_stored.kql) |
 | Disable Windows Defender Functionalities Via Registry Keys | high | 3 | [registry_set_windows_defender_tamper.kql](../kql/rules/windows/registry/registry_set/registry_set_windows_defender_tamper.kql) |

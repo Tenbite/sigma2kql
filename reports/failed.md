@@ -88,8 +88,10 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 | No table for log source `windows/dns-server-analytic` | 1 |
 | No table for log source `windows/printservice-admin` | 1 |
 | No table for log source `windows/printservice-operational` | 1 |
+| No table for log source `linux/auth` | 1 |
 | No table for log source `fortios/sslvpnd` | 1 |
 | No table for log source `cisco/syslog` | 1 |
+| No table for log source `windows/smbclient-connectivity` | 1 |
 | Unmapped field `CreationUtcTime` | 1 |
 | No table for log source `paloalto/appliance/globalprotect` | 1 |
 | Unmapped field `TargetLogonId` | 1 |
@@ -101,6 +103,7 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 | No table for log source `sql/application` | 1 |
 | No table for log source `velocity/application` | 1 |
 | No table for log source `database` | 1 |
+| No table for log source `m365/exchange` | 1 |
 | No table for log source `m365/threat_detection` | 1 |
 | No table for log source `cisco/duo` | 1 |
 | No table for log source `linux/clamav` | 1 |
@@ -120,6 +123,7 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 | No table for log source `windows/lsa-server` | 1 |
 | No table for log source `windows/openssh` | 1 |
 | Unmapped field `TargetOutboundUserName` | 1 |
+| Unmapped field `SubjectUserSid` | 1 |
 | Unmapped field `Application` | 1 |
 | Unmapped field `SubjectUserName` | 1 |
 | Unmapped field `Workstation` | 1 |
@@ -144,10 +148,6 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 | No table for log source `windows/sysmon` | 1 |
 | No table for log source `windows/sysmon_error` | 1 |
 | No table for log source `windows/sysmon_status` | 1 |
-| No table for log source `linux/auth` | 1 |
-| No table for log source `windows/smbclient-connectivity` | 1 |
-| No table for log source `m365/exchange` | 1 |
-| Unmapped field `SubjectUserSid` | 1 |
 
 ## By rule
 

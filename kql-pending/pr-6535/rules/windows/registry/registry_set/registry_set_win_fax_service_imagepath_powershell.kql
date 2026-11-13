@@ -14,7 +14,7 @@
 //   - Authorized service configuration testing
 // References:
 //   - https://www.atomicredteam.io/docs/atomics/T1543.003
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/f47baf3393b0067b55ed44d5bd2c8641fc63447d/rules/windows/registry/registry_set/registry_set_win_fax_service_imagepath_powershell.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/661dc99f85b6578b8198d7b4d521d0e6bfa7f977/rules/windows/registry/registry_set/registry_set_win_fax_service_imagepath_powershell.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

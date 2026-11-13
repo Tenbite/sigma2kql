@@ -1,8 +1,8 @@
 # sigma2kql run summary
 
 - Target: `microsoft_xdr`
-- SigmaHQ commit: `d7c9da10c170a6988d68ebdf2c9f7bd8782b7c55`
-- Last run: 2026-11-10 14:57 UTC (incremental)
+- SigmaHQ commit: `54967d64e6dda2b4daa81f47f7a8bf1f591b68a0`
+- Last run: 2026-11-13 14:39 UTC (incremental)
 - Tools: pySigma 1.5.1, pySigma-backend-kusto 1.0.1, kusto-language 12.4.1
 - Validation schema: downloaded from https://xdrinternals.com/FullSchema-latest.json (209 tables) (see schema_drift.md)
 
@@ -13,7 +13,7 @@
 | Failed conversion | 1171 |
 | Skipped | 684 |
 
-Converted rules with wildcard comparisons rewritten to regex: 100 (see wildcard_rewrites.md)
+Converted rules with wildcard comparisons rewritten to regex: 102 (see wildcard_rewrites.md)
 
 Skipped breakdown: filtered: 684
 

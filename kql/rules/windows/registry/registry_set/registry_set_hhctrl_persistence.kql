@@ -2,7 +2,7 @@
 // Sigma ID: f10ed525-97fe-4fed-be7c-2feecca941b1
 // Status: test | Level: high
 // Author: Nasreddine Bencherchali (Nextron Systems)
-// Date: 2022-07-21 | Modified: 2023-08-17
+// Date: 2022-07-21 | Modified: 2026-11-12
 // ATT&CK: persistence
 // Description: Detects when an attacker modifies the registry value of the "hhctrl" to point to a custom binary
 // False positives:
@@ -10,11 +10,11 @@
 // References:
 //   - https://persistence-info.github.io/Data/hhctrl.html
 //   - https://www.hexacorn.com/blog/2018/04/23/beyond-good-ol-run-key-part-77/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/adf5a626c4a776f3f023056f0f398b9523a2f09e/rules/windows/registry/registry_set/registry_set_hhctrl_persistence.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/54967d64e6dda2b4daa81f47f7a8bf1f591b68a0/rules/windows/registry/registry_set/registry_set_hhctrl_persistence.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)
 // Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceRegistryEvents
-| where RegistryKey contains "\\CLSID\\{52A2AAAE-085D-4187-97EA-8C30DB990436}\\InprocServer32\\(Default)" and (not(RegistryValueData =~ "C:\\Windows\\System32\\hhctrl.ocx"))
+| where RegistryKey contains "\\CLSID\\{52A2AAAE-085D-4187-97EA-8C30DB990436}\\InprocServer32\\(Default)" and (not((RegistryValueData in~ ("%%SystemRoot%%\\System32\\hhctrl.ocx", "%%SystemRoot%%\\SysWOW64\\hhctrl.ocx", "%%windir%%\\System32\\hhctrl.ocx", "%%windir%%\\SysWOW64\\hhctrl.ocx", "%SystemRoot%\\System32\\hhctrl.ocx", "%SystemRoot%\\SysWOW64\\hhctrl.ocx", "%windir%\\System32\\hhctrl.ocx", "%windir%\\SysWOW64\\hhctrl.ocx", "C:\\Windows\\System32\\hhctrl.ocx", "C:\\Windows\\SysWOW64\\hhctrl.ocx"))))

@@ -23,7 +23,7 @@
 //   - Rare legitimate help/media viewer integrations that pass non-.dll files to rundll32
 // References:
 //   - https://attack.mitre.org/techniques/T1218/011/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/4c99ed8f3da19ef7f1a61ad067d629b480e35b17/rules/windows/process_creation/proc_creation_win_rundll32_susp_non_dll_file_execution.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/2a8176b310f5df604457630b8bd255a608481429/rules/windows/process_creation/proc_creation_win_rundll32_susp_non_dll_file_execution.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)
