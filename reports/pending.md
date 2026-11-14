@@ -1,18 +1,21 @@
 # Pending rules run
 
-- Run: 2026-11-13 14:43 UTC
+- Run: 2026-11-14 13:38 UTC
 - Open pull requests checked: 300 (drafts skipped: 4)
-- Pull requests with converted rules: 176
+- Pull requests with converted rules: 175
 
 | Result | Rule files |
 |---|---|
-| Converted and valid | 545 |
-| Failed validation | 5 |
-| Failed conversion | 369 |
+| Converted and valid | 526 |
+| Failed validation | 4 |
+| Failed conversion | 370 |
 | Skipped (filters) | 64 |
 
 ## Not converted
 
+- #6618 `rules/cloud/m365/audit/microsoft365_mailitemsaccessed_via_legacy_protocol.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6616 `rules/windows/builtin/security/win_security_invoke_obfuscation_via_use_clip_services_security.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6616 `rules/windows/builtin/system/service_control_manager/win_system_invoke_obfuscation_via_use_clip_services.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6614 `rules-emerging-threats/2026/Malware/MioLab/net_dns_miolab_stealer_c2_domains.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6614 `rules-emerging-threats/2026/Malware/MioLab/proxy_malware_miolab_c2_communication.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6613 `rules-emerging-threats/2026/Malware/RevStealer/dns_query_win_malware_revstealer_c2_domain.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
@@ -384,6 +387,3 @@
 - #5980 `rules/cloud/gcp/audit/gcp_log_sink_disabled_or_deleted.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #5975 `rules/cloud/azure/signin_logs/azure_app_device_code_auth_non_compliant.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #5968 `rules-emerging-threats/2026/Exploits/CVE-2026-31431/syslog_lnx_exploit_cve_2026_31431_copy_fail.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #5950 `rules-emerging-threats/2026/Exploits/CVE-2026-41651/lnx_dbus_exploit_cve_2026_41651_untrusted_installfiles.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #5950 `rules-emerging-threats/2026/Exploits/CVE-2026-41651/lnx_exploit_cve_2026_41651_indicators.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #5944 `rules/windows/network_connection/net_connection_win_configurationremotingserver.yml`: A value of type string or dynamic expected. (at 112)

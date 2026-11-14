@@ -14,13 +14,16 @@
 //   execute commands on the underlying host.
 // False positives:
 //   - Administrators using nsenter to debug or manage containers from the host
+//   - Node debugging tooling such as kubectl node-shell or similar privileged debug pods
 // References:
 //   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1611/T1611.md
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/258ad25218376be68f6342d7ce6c29a99f5f020a/rules/linux/process_creation/proc_creation_lnx_nsenter_container_escape.yml
+//   - https://man7.org/linux/man-pages/man1/nsenter.1.html
+//   - https://www.elastic.co/guide/en/security/current/potential-docker-escape-via-nsenter.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/2e68c1709cfd63700645cfc95c8b338690574449/rules/linux/process_creation/proc_creation_lnx_nsenter_container_escape.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)
 // Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceProcessEvents
-| where FolderPath endswith "/nsenter" and (ProcessCommandLine contains "--mount=/proc/1/ns/" or ProcessCommandLine contains "--net=/proc/1/ns/" or ProcessCommandLine contains "-t 1" or ProcessCommandLine contains "--target 1")
+| where FolderPath endswith "/nsenter" and (((ProcessCommandLine contains " -t 1 " or ProcessCommandLine contains " -t1 " or ProcessCommandLine contains " --target 1 " or ProcessCommandLine contains " --target=1 ") or (ProcessCommandLine endswith " -t 1" or ProcessCommandLine endswith " -t1" or ProcessCommandLine endswith " --target 1" or ProcessCommandLine endswith " --target=1")) or ProcessCommandLine contains "=/proc/1/ns/")

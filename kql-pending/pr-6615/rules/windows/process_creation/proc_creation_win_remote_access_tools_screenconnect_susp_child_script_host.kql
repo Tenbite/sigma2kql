@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6615 New: ScreenConnect Client Spawns Script Host / Run Key Set To Launch VBScript
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6615
+// Pull request author: Mohammedalkahala
+// Change: new rule
+// Title: Remote Access Tool - ScreenConnect Client Spawns Script Host
+// Sigma ID: 7d3fb316-ea7c-4010-85ac-93ef4d9db33d
+// Status: experimental | Level: high
+// Author: Mohammed Alkahala
+// Date: 2026-11-13 | Modified: -
+// ATT&CK: command-and-control, T1219, execution, T1059.005, T1218.005
+// Description: Detects the ScreenConnect client process directly spawning a Windows script host (wscript.exe,
+//   cscript.exe) or mshta.exe. Threat actors installing rogue ScreenConnect clients have been
+//   observed repeatedly spawning wscript.exe to run a staged chain of VBScript files from a
+//   temporary folder. This differs from ScreenConnect's legitimate "run command" feature, which
+//   executes through a run.cmd file in the ScreenConnect temp directory.
+// False positives:
+//   - Administrators deliberately launching VBScript or HTA files directly from a ScreenConnect session. Baseline per environment.
+// References:
+//   - https://www.huntress.com/blog/rogue-screenconnect-installations
+//   - https://github.com/Mohammedalkahala/purpleloop/tree/main/detections/huntress-rmm-wsh
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05c24c8969df151d53ffa681efdc812a61713ca7/rules/windows/process_creation/proc_creation_win_remote_access_tools_screenconnect_susp_child_script_host.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (InitiatingProcessFolderPath endswith "\\ScreenConnect.ClientService.exe" or InitiatingProcessFolderPath endswith "\\ScreenConnect.WindowsClient.exe") and ((FolderPath endswith "\\cscript.exe" or FolderPath endswith "\\mshta.exe" or FolderPath endswith "\\wscript.exe") or (ProcessVersionInfoOriginalFileName in~ ("cscript.exe", "MSHTA.EXE", "wscript.exe")))

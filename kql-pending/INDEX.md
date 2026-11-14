@@ -3,7 +3,20 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-13 14:43 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-14 13:38 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+
+## [#6617](https://github.com/SigmaHQ/sigma/pull/6617) fix: UAC Bypass via Sdclt - also match the user classes hive written as <SID>_Classes
+
+| Rule | Change | Level |
+|---|---|---|
+| [UAC Bypass via Sdclt](pr-6617/rules/windows/registry/registry_set/registry_set_uac_bypass_sdclt.kql) | update to existing rule | high |
+
+## [#6615](https://github.com/SigmaHQ/sigma/pull/6615) New: ScreenConnect Client Spawns Script Host / Run Key Set To Launch VBScript
+
+| Rule | Change | Level |
+|---|---|---|
+| [Remote Access Tool - ScreenConnect Client Spawns Script Host](pr-6615/rules/windows/process_creation/proc_creation_win_remote_access_tools_screenconnect_susp_child_script_host.kql) | new rule | high |
+| [Run Key Set To Launch VBScript Via Script Host](pr-6615/rules/windows/registry/registry_set/registry_set_persistence_run_key_vbscript.kql) | new rule | medium |
 
 ## [#6614](https://github.com/SigmaHQ/sigma/pull/6614) new: MioLab macOS stealer rules (agent process, persistence files, C2 domains, C2 proxy URIs)
 
@@ -1392,41 +1405,4 @@ Rebuilt 2026-11-13 14:43 UTC from 300 open pull requests. When a pull request is
 | [Potential Cookie Theft via Chromium Remote Debugging on Linux](pr-5955/rules/linux/process_creation/proc_creation_lnx_browsers_remote_debugging.kql) | new rule | medium |
 | [Potential Cookie Theft via Firefox Remote Debugging on macOS](pr-5955/rules/macos/process_creation/proc_creation_macos_browsers_firefox_remote_debugging.kql) | new rule | medium |
 | [Potential Cookie Theft via Chromium Remote Debugging on macOS](pr-5955/rules/macos/process_creation/proc_creation_macos_browsers_remote_debugging.kql) | new rule | medium |
-
-## [#5949](https://github.com/SigmaHQ/sigma/pull/5949) new: Chromium --load-extension Detection for Linux and macOS
-
-| Rule | Change | Level |
-|---|---|---|
-| [Potential Malicious Extension Loading via Chromium Flag on Linux](pr-5949/rules/linux/process_creation/proc_creation_lnx_browsers_chromium_load_extension.kql) | new rule | medium |
-| [Potential Malicious Extension Loading via Chromium Flag on macOS](pr-5949/rules/macos/process_creation/proc_creation_macos_browsers_chromium_load_extension.kql) | new rule | medium |
-
-## [#5945](https://github.com/SigmaHQ/sigma/pull/5945) new: add new rules for several AD related hacktools
-
-| Rule | Change | Level |
-|---|---|---|
-| [HackTool - AIOSMB Suite Execution - Linux](pr-5945/rules/linux/process_creation/proc_creation_lnx_hktl_aiosmb.kql) | new rule | high |
-| [HackTool - BloodyAD Execution - Linux](pr-5945/rules/linux/process_creation/proc_creation_lnx_hktl_bloodyad.kql) | new rule | high |
-| [HackTool - Certsync Execution - Linux](pr-5945/rules/linux/process_creation/proc_creation_lnx_hktl_certsync.kql) | new rule | high |
-| [HackTool - Coercer Tools Execution - Linux](pr-5945/rules/linux/process_creation/proc_creation_lnx_hktl_coerce_tools.kql) | new rule | high |
-| [HackTool - Impacket Attack Scripts Execution - Linux](pr-5945/rules/linux/process_creation/proc_creation_lnx_hktl_impacket_ad_tools.kql) | new rule | high |
-| [HackTool - Kerberos Manipulation Tool CLI Patterns - Linux](pr-5945/rules/linux/process_creation/proc_creation_lnx_hktl_kerberos_manipulation_tools.kql) | new rule | high |
-| [HackTool - Kerbrute Execution - Linux](pr-5945/rules/linux/process_creation/proc_creation_lnx_hktl_kerbrute.kql) | new rule | high |
-| [HackTool - Minikerberos AD Attack Tools Execution - Linux](pr-5945/rules/linux/process_creation/proc_creation_lnx_hktl_minikerberos.kql) | new rule | high |
-| [HackTool - PKINITtools Execution - Linux](pr-5945/rules/linux/process_creation/proc_creation_lnx_hktl_pkinittools.kql) | new rule | high |
-| [HackTool - AIOSMB Suite Execution](pr-5945/rules/windows/process_creation/proc_creation_win_hktl_aiosmb.kql) | new rule | high |
-| [HackTool - BloodyAD Execution](pr-5945/rules/windows/process_creation/proc_creation_win_hktl_bloodyad.kql) | new rule | high |
-| [HackTool - Certsync Execution](pr-5945/rules/windows/process_creation/proc_creation_win_hktl_certsync.kql) | new rule | high |
-| [HackTool - Coercer Tools Execution](pr-5945/rules/windows/process_creation/proc_creation_win_hktl_coerce_tools.kql) | new rule | high |
-| [HackTool - Impacket Attack Scripts Execution](pr-5945/rules/windows/process_creation/proc_creation_win_hktl_impacket_scripts.kql) | new rule | high |
-| [HackTool - Kerberos Manipulation Tool CLI Patterns](pr-5945/rules/windows/process_creation/proc_creation_win_hktl_kerberos_manipulation_tools.kql) | new rule | high |
-| [HackTool - Kerbrute Execution](pr-5945/rules/windows/process_creation/proc_creation_win_hktl_kerbrute.kql) | new rule | high |
-| [HackTool - Minikerberos AD Attack Tools Execution](pr-5945/rules/windows/process_creation/proc_creation_win_hktl_minikerberos.kql) | new rule | high |
-| [HackTool - PKINITtools Execution](pr-5945/rules/windows/process_creation/proc_creation_win_hktl_pkinittools.kql) | new rule | high |
-
-## [#5944](https://github.com/SigmaHQ/sigma/pull/5944) NEWRULE: ProxyExecution with ConfigurationRemotingServer (DSCourier)
-
-| Rule | Change | Level |
-|---|---|---|
-| [Suspicious Child Process of ConfigurationRemotingServer](pr-5944/rules/windows/process_creation/proc_creation_win_configurationremotingserver_uncommon_child_process.kql) | new rule | high |
-| [Potential WinGet Proxy Execution via DSC Engine](pr-5944/rules/windows/process_creation/proc_creation_win_winget_proxy_execution_via_dsc.kql) | new rule | medium |
 

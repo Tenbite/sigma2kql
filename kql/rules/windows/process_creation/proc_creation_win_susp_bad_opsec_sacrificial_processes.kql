@@ -19,7 +19,7 @@
 //   - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/rundll32
 //   - https://learn.microsoft.com/en-us/dotnet/framework/tools/regasm-exe-assembly-registration-tool
 //   - https://learn.microsoft.com/en-us/dotnet/framework/tools/regsvcs-exe-net-services-installation-tool
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/d7c9da10c170a6988d68ebdf2c9f7bd8782b7c55/rules/windows/process_creation/proc_creation_win_susp_bad_opsec_sacrificial_processes.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/54967d64e6dda2b4daa81f47f7a8bf1f591b68a0/rules/windows/process_creation/proc_creation_win_susp_bad_opsec_sacrificial_processes.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)
