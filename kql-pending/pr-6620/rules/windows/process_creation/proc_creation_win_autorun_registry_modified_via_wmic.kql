@@ -1,0 +1,26 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6620 fix: restore the missing ProgramData quote in two autorun rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6620
+// Pull request author: cor-b
+// Change: update to existing rule
+// Title: Suspicious Autorun Registry Modified via WMI
+// Sigma ID: c80e66d8-1780-48a9-b412-46663fd21ac0
+// Status: experimental | Level: high
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2025-02-17 | Modified: 2026-11-13
+// ATT&CK: privilege-escalation, execution, persistence, T1547.001, T1047
+// Description: Detects suspicious activity where the WMIC process is used to create an autorun registry entry
+//   via reg.exe, which is often indicative of persistence mechanisms employed by malware.
+// False positives:
+//   - Legitimate administrative activity or software installations
+// References:
+//   - Internal Research
+//   - https://github.com/HackTricks-wiki/hacktricks/blob/e4c7b21b8f36c97c35b7c622732b38a189ce18f7/src/windows-hardening/windows-local-privilege-escalation/privilege-escalation-with-autorun-binaries.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/fd974a26fe76805335b73be856f5c0035211171b/rules/windows/process_creation/proc_creation_win_autorun_registry_modified_via_wmic.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\wmic.exe" or ProcessVersionInfoOriginalFileName =~ "wmic.exe" or InitiatingProcessFolderPath endswith "\\wmiprvse.exe") and ((ProcessCommandLine contains "reg" and ProcessCommandLine contains " add ") and (ProcessCommandLine contains "\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" or ProcessCommandLine contains "\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Run" or ProcessCommandLine contains "\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer\\Run"))) and ((ProcessCommandLine contains ":\\Perflogs" or ProcessCommandLine contains ":\\ProgramData" or ProcessCommandLine contains ":\\Windows\\Temp" or ProcessCommandLine contains ":\\Temp" or ProcessCommandLine contains "\\AppData\\Local\\Temp" or ProcessCommandLine contains "\\AppData\\Roaming" or ProcessCommandLine contains ":\\$Recycle.bin" or ProcessCommandLine contains ":\\Users\\Default" or ProcessCommandLine contains ":\\Users\\public" or ProcessCommandLine contains "%temp%" or ProcessCommandLine contains "%tmp%" or ProcessCommandLine contains "%Public%" or ProcessCommandLine contains "%AppData%") or (ProcessCommandLine contains ":\\Users\\" and (ProcessCommandLine contains "\\Favorites" or ProcessCommandLine contains "\\Favourites" or ProcessCommandLine contains "\\Contacts" or ProcessCommandLine contains "\\Music" or ProcessCommandLine contains "\\Pictures" or ProcessCommandLine contains "\\Documents" or ProcessCommandLine contains "\\Photos")))

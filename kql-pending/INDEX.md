@@ -3,7 +3,26 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-14 13:38 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-15 14:03 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+
+## [#6621](https://github.com/SigmaHQ/sigma/pull/6621) new: Service Environment Variables Set Via Registry
+
+| Rule | Change | Level |
+|---|---|---|
+| [Service Environment Variables Set Via Registry](pr-6621/rules/windows/registry/registry_set/registry_set_service_environment_value_set.kql) | new rule | medium |
+
+## [#6620](https://github.com/SigmaHQ/sigma/pull/6620) fix: restore the missing ProgramData quote in two autorun rules
+
+| Rule | Change | Level |
+|---|---|---|
+| [Suspicious Autorun Registry Modified via WMI](pr-6620/rules/windows/process_creation/proc_creation_win_autorun_registry_modified_via_wmic.kql) | update to existing rule | high |
+| [New RUN Key Pointing to Suspicious Folder](pr-6620/rules/windows/registry/registry_set/registry_set_susp_run_key_img_folder.kql) | update to existing rule | high |
+
+## [#6619](https://github.com/SigmaHQ/sigma/pull/6619) Add `windash` to "Schtasks Creation Or Modification With SYSTEM Privileges"
+
+| Rule | Change | Level |
+|---|---|---|
+| [Schtasks Creation Or Modification With SYSTEM Privileges](pr-6619/rules/windows/process_creation/proc_creation_win_schtasks_system.kql) | update to existing rule | high |
 
 ## [#6617](https://github.com/SigmaHQ/sigma/pull/6617) fix: UAC Bypass via Sdclt - also match the user classes hive written as <SID>_Classes
 
@@ -1361,48 +1380,4 @@ Rebuilt 2026-11-14 13:38 UTC from 300 open pull requests. When a pull request is
 | [Sudo Spawning a Shell With No Arguments](pr-5968/rules/linux/process_creation/proc_creation_lnx_sudo_bare_shell_spawn.kql) | new rule | high |
 | [SUID Binary Spawning a Shell](pr-5968/rules/linux/process_creation/proc_creation_lnx_suid_binary_shell_spawn.kql) | new rule | high |
 | [SUID Binary Spawned as Child of Shell Invoked With Command Flag](pr-5968/rules/linux/process_creation/proc_creation_lnx_suid_binary_via_shell_c_flag.kql) | new rule | high |
-
-## [#5960](https://github.com/SigmaHQ/sigma/pull/5960) new: CVE-2026-41651 Pack2TheRoot detection rules and generic Linux LPE coverage
-
-| Rule | Change | Level |
-|---|---|---|
-| [Pack2TheRoot Exploit Artifacts Creation (CVE-2026-41651)](pr-5960/rules-emerging-threats/2026/Exploits/CVE-2026-41651/file_event_lnx_exploit_cve_2026_41651.kql) | new rule | high |
-| [CVE-2026-41651 Pack2TheRoot PackageKit TOCTOU LPE](pr-5960/rules-emerging-threats/2026/Exploits/CVE-2026-41651/proc_creation_lnx_exploit_cve_2026_41651.kql) | new rule | high |
-| [Shell Binary Created by Install Outside Standard Paths](pr-5960/rules/linux/file_event/file_event_lnx_install_create_shell_binary_outside_standard_path.kql) | new rule | high |
-| [Shell Binary Created Outside Standard Binary Paths](pr-5960/rules/linux/file_event/file_event_lnx_susp_shell_outside_standard_path.kql) | new rule | medium |
-| [Suspicious SUID Bit Set on Shell Binary via Install Command](pr-5960/rules/linux/process_creation/proc_creation_lnx_install_suid_bit_set_on_shell_binary.kql) | new rule | high |
-| [Shell Process Executed Outside Standard Binary Paths](pr-5960/rules/linux/process_creation/proc_creation_lnx_susp_shell_outside_standard_path.kql) | new rule | medium |
-
-## [#5958](https://github.com/SigmaHQ/sigma/pull/5958) new: Browser External Extensions Silent Install Detection (Windows, macOS, Linux)
-
-| Rule | Change | Level |
-|---|---|---|
-| [Potential Suspicious Browser External Extension File Creation on Linux](pr-5958/rules/linux/file_event/file_event_lnx_browser_external_extension.kql) | new rule | medium |
-| [Potential Suspicious Browser External Extension File Creation on macOS](pr-5958/rules/macos/file_event/file_event_macos_browser_external_extension.kql) | new rule | medium |
-| [Potential Suspicious Browser External Extension Registration on Windows](pr-5958/rules/windows/registry/registry_set/registry_set_win_browser_external_extension.kql) | new rule | medium |
-
-## [#5957](https://github.com/SigmaHQ/sigma/pull/5957) new: Browser Extension Force Install via Policy Detection (Windows, macOS, Linux)
-
-| Rule | Change | Level |
-|---|---|---|
-| [Potential Suspicious Browser Extension Force Install via Policy on Linux](pr-5957/rules/linux/file_event/file_event_lnx_browser_extension_force_install_policy.kql) | new rule | medium |
-| [Potential Suspicious Browser Extension Force Install via Policy Plist on macOS](pr-5957/rules/macos/file_event/file_event_macos_browser_extension_force_install_policy.kql) | new rule | medium |
-| [Potential Suspicious Browser Extension Force Install via Policy on Windows](pr-5957/rules/windows/registry/registry_set/registry_set_win_browser_extension_force_install_policy.kql) | new rule | medium |
-
-## [#5956](https://github.com/SigmaHQ/sigma/pull/5956) new: Native Messaging Host Registration Detection for Windows, macOS and Linux
-
-| Rule | Change | Level |
-|---|---|---|
-| [Potential Suspicious Browser Native Messaging Host File Creation on Linux](pr-5956/rules/linux/file_event/file_event_lnx_browser_native_messaging_host.kql) | new rule | medium |
-| [Potential Suspicious Browser Native Messaging Host File Creation on macOS](pr-5956/rules/macos/file_event/file_event_macos_browser_native_messaging_host.kql) | new rule | medium |
-| [Potential Suspicious Browser Native Messaging Host Registration](pr-5956/rules/windows/registry/registry_set/registry_set_win_browser_native_messaging_host.kql) | new rule | medium |
-
-## [#5955](https://github.com/SigmaHQ/sigma/pull/5955) new: Remote Debugging Detection for Linux and macOS (Chromium + Firefox)
-
-| Rule | Change | Level |
-|---|---|---|
-| [Potential Cookie Theft via Firefox Remote Debugging on Linux](pr-5955/rules/linux/process_creation/proc_creation_lnx_browsers_firefox_remote_debugging.kql) | new rule | medium |
-| [Potential Cookie Theft via Chromium Remote Debugging on Linux](pr-5955/rules/linux/process_creation/proc_creation_lnx_browsers_remote_debugging.kql) | new rule | medium |
-| [Potential Cookie Theft via Firefox Remote Debugging on macOS](pr-5955/rules/macos/process_creation/proc_creation_macos_browsers_firefox_remote_debugging.kql) | new rule | medium |
-| [Potential Cookie Theft via Chromium Remote Debugging on macOS](pr-5955/rules/macos/process_creation/proc_creation_macos_browsers_remote_debugging.kql) | new rule | medium |
 

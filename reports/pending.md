@@ -1,18 +1,19 @@
 # Pending rules run
 
-- Run: 2026-11-14 13:38 UTC
+- Run: 2026-11-15 14:03 UTC
 - Open pull requests checked: 300 (drafts skipped: 4)
-- Pull requests with converted rules: 175
+- Pull requests with converted rules: 173
 
 | Result | Rule files |
 |---|---|
-| Converted and valid | 526 |
+| Converted and valid | 511 |
 | Failed validation | 4 |
-| Failed conversion | 370 |
+| Failed conversion | 371 |
 | Skipped (filters) | 64 |
 
 ## Not converted
 
+- #6623 `rules/cloud/azure/audit_logs/azure_ad_device_created.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6618 `rules/cloud/m365/audit/microsoft365_mailitemsaccessed_via_legacy_protocol.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6616 `rules/windows/builtin/security/win_security_invoke_obfuscation_via_use_clip_services_security.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6616 `rules/windows/builtin/system/service_control_manager/win_system_invoke_obfuscation_via_use_clip_services.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
