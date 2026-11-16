@@ -7,21 +7,28 @@
 // Sigma ID: b120b587-a4c2-4b94-875d-99c9807d6955
 // Status: test | Level: medium
 // Author: Tim Ismilyaev, oscd.community, Florian Roth (Nextron Systems), Yana Ivanov
-// Date: 2020-10-19 | Modified: 2026-10-10
+// Date: 2020-10-19 | Modified: 2026-11-15
 // ATT&CK: credential-access, T1555.001
-// Description: Detects passwords dumps from Keychain
+// Description: Detects credential access against the macOS Keychain, covering three behaviours. Use of the
+//   security binary to dump, export or alter access control on keychain contents. Use of find-
+//   generic-password or find-internet-password together with the flags that print the secret itself,
+//   since reading an entry without -w or -g returns only item metadata and is routine in developer
+//   and CI tooling. Direct access to the keychain database files by copy, archive or transfer tools,
+//   which is how the files are exfiltrated rather than read through the API.
 // False positives:
 //   - Legitimate administration activities
+//   - Backup and synchronisation tools that copy the user home directory, which includes the keychain files
+//   - Developer and CI tooling that reads keychain secrets, where the -w or -g flag is expected
 // References:
 //   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1555.001/T1555.001.md
 //   - https://gist.github.com/Capybara/6228955
 //   - https://www.trendmicro.com/en_us/research/25/i/an-mdr-analysis-of-the-amos-stealer-campaign.html
 //   - https://securelist.com/macsync-new-version/121383/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/39553dadb67966ad2fcd7fd38519ffef01b288ae/rules/macos/process_creation/proc_creation_macos_creds_from_keychain.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/419fd0511f037763430187f4a779d35336482e02/rules/macos/process_creation/proc_creation_macos_creds_from_keychain.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)
 // Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceProcessEvents
-| where (FolderPath =~ "/usr/bin/security" and (ProcessCommandLine contains "find-certificate" or ProcessCommandLine contains " export " or ProcessCommandLine contains "find-generic-password" or ProcessCommandLine contains "find-internet-password" or ProcessCommandLine contains "set-generic-password-partition-list" or ProcessCommandLine contains "set-internet-password-partition-list")) or (ProcessCommandLine contains " dump-keychain " or ProcessCommandLine contains " login-keychain ") or (ProcessCommandLine contains "Library/Keychains/login.keychain" or ProcessCommandLine contains "Library/Keychains/System.keychain")
+| where (FolderPath =~ "/usr/bin/security" and (ProcessCommandLine contains "find-certificate" or ProcessCommandLine contains " export " or ProcessCommandLine contains "set-generic-password-partition-list" or ProcessCommandLine contains "set-internet-password-partition-list")) or (ProcessCommandLine contains " dump-keychain " or ProcessCommandLine contains " login-keychain ") or ((FolderPath endswith "/cp" or FolderPath endswith "/ditto" or FolderPath endswith "/rsync" or FolderPath endswith "/tar" or FolderPath endswith "/zip" or FolderPath endswith "/curl" or FolderPath endswith "/sqlite3") and (ProcessCommandLine contains "Library/Keychains/login.keychain" or ProcessCommandLine contains "Library/Keychains/System.keychain")) or ((FolderPath =~ "/usr/bin/security" and (ProcessCommandLine contains "find-generic-password" or ProcessCommandLine contains "find-internet-password")) and ProcessCommandLine matches regex "\\s-[wg](\\s|$)")

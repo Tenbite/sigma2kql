@@ -8,7 +8,7 @@
 // Status: experimental | Level: medium
 // Author: Mohammed Alkahala
 // Date: 2026-11-13 | Modified: -
-// ATT&CK: persistence, T1547.001, execution, T1059.005
+// ATT&CK: persistence, privilege-escalation, T1547.001, execution, T1059.005
 // Description: Detects a "Run" or "RunOnce" registry value being set to launch a VBScript file through a
 //   Windows script host. Threat actors use this for persistence, for example a "WindowsServiceHost"
 //   Run value pointing to a .vbs file in the user profile, as seen in rogue ScreenConnect
@@ -18,7 +18,7 @@
 // References:
 //   - https://www.huntress.com/blog/rogue-screenconnect-installations
 //   - https://github.com/Mohammedalkahala/purpleloop/tree/main/detections/huntress-rmm-wsh
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05c24c8969df151d53ffa681efdc812a61713ca7/rules/windows/registry/registry_set/registry_set_persistence_run_key_vbscript.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/6de7587cc7ce39b4dbdbbcfcf58ea29d677e9ab6/rules/windows/registry/registry_set/registry_set_persistence_run_key_vbscript.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

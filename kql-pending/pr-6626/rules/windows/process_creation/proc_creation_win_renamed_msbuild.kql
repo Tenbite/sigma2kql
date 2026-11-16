@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6626 new: Suspicious Renamed MSBuild Execution
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6626
+// Pull request author: elhoim
+// Change: new rule
+// Title: Suspicious Renamed MSBuild Execution
+// Sigma ID: 0df03709-f088-49fd-b668-3934e8b8b8e3
+// Status: experimental | Level: high
+// Author: elhoim
+// Date: 2026-11-09 | Modified: -
+// ATT&CK: execution, stealth, T1036.003, T1127.001
+// Description: Detects the execution of the Microsoft Build Engine ("MSBuild.exe" according to its
+//   OriginalFileName) from an image that does not carry the MSBuild file name. MSBuild compiles and
+//   runs inline C# or VB tasks from a project file and is a well-known application control bypass;
+//   renaming the binary is done to evade detections that key on the process name while keeping the
+//   trusted Microsoft signature.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://lolbas-project.github.io/lolbas/Binaries/Msbuild/
+//   - https://github.com/elastic/detection-rules/blob/f4ef34b1c996da53880053dd497ca546c1b0bbfa/rules/windows/defense_evasion_execution_msbuild_started_renamed.toml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/4a8f1c6fe7cc5e027ac2f07e2bae99969506dfa7/rules/windows/process_creation/proc_creation_win_renamed_msbuild.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ProcessVersionInfoOriginalFileName =~ "MSBuild.exe" and (not(FolderPath endswith "\\MSBuild.exe"))

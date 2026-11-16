@@ -1,0 +1,32 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6627 new: Suspicious Svchost Lookalike Process Name Execution
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6627
+// Pull request author: elhoim
+// Change: new rule
+// Title: Suspicious Svchost Lookalike Process Name Execution
+// Sigma ID: 3b0b5133-4729-492a-b529-4277307f55c5
+// Status: experimental | Level: high
+// Author: elhoim
+// Date: 2026-11-09 | Modified: -
+// ATT&CK: stealth, T1036.005
+// Description: Detects the execution of a process whose file name is a near-miss misspelling of "svchost.exe"
+//   (dropped, swapped, doubled or substituted characters such as "svhost.exe", "scvhost.exe",
+//   "svch0st.exe" or "svchostt.exe"). Malware commonly picks such names so that the process blends
+//   into the many legitimate Service Host entries in Task Manager while escaping exact-match
+//   detections on "svchost.exe". No legitimate Windows component uses these names. Limitation: the
+//   rule matches an explicit list of 37 file names, not an edit distance. Other single-character
+//   insertions or substitutions not in the list (e.g. "svc_host.exe"), names with two or more edits
+//   and Unicode homoglyph variants are not detected.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.zscaler.com/blogs/cybersecurity-best-practices/process-masquerading
+//   - https://github.com/elastic/detection-rules/blob/f4ef34b1c996da53880053dd497ca546c1b0bbfa/rules/windows/defense_evasion_masquerading_as_svchost.toml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/5105b0ab719b5c008ec7cad7fbe65e7e8aec3015/rules/windows/process_creation/proc_creation_win_susp_svchost_lookalike_name.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where FolderPath endswith "\\schost.exe" or FolderPath endswith "\\svchos.exe" or FolderPath endswith "\\svchot.exe" or FolderPath endswith "\\svchst.exe" or FolderPath endswith "\\svcost.exe" or FolderPath endswith "\\svhost.exe" or FolderPath endswith "\\vchost.exe" or FolderPath endswith "\\scvhost.exe" or FolderPath endswith "\\svchots.exe" or FolderPath endswith "\\svchsot.exe" or FolderPath endswith "\\svcohst.exe" or FolderPath endswith "\\svhcost.exe" or FolderPath endswith "\\vschost.exe" or FolderPath endswith "\\svch0st.exe" or FolderPath endswith "\\svcho5t.exe" or FolderPath endswith "\\svchos7.exe" or FolderPath endswith "\\svchast.exe" or FolderPath endswith "\\svchoat.exe" or FolderPath endswith "\\svshost.exe" or FolderPath endswith "\\swchost.exe" or FolderPath endswith "\\sychost.exe" or FolderPath endswith "\\ssvchost.exe" or FolderPath endswith "\\svcchost.exe" or FolderPath endswith "\\svchhost.exe" or FolderPath endswith "\\svchoost.exe" or FolderPath endswith "\\svchosst.exe" or FolderPath endswith "\\svchoste.exe" or FolderPath endswith "\\svchosts.exe" or FolderPath endswith "\\svchostt.exe" or FolderPath endswith "\\svchost1.exe" or FolderPath endswith "\\svchost2.exe" or FolderPath endswith "\\svchost_.exe" or FolderPath endswith "\\svchost-.exe" or FolderPath endswith "\\svvchost.exe" or FolderPath endswith "\\svchost32.exe" or FolderPath endswith "\\svchost64.exe" or FolderPath endswith "\\svchost.exe.exe"

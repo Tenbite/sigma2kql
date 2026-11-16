@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6624 new: Suspicious LSA Protection Downgrade Via RunAsPPL Registry Value
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6624
+// Pull request author: elhoim
+// Change: new rule
+// Title: Suspicious LSA Protection Downgrade Via RunAsPPL Registry Value
+// Sigma ID: 56df667a-5ac6-4483-8c2a-39f62b34efbc
+// Status: experimental | Level: high
+// Author: elhoim
+// Date: 2026-11-09 | Modified: -
+// ATT&CK: credential-access, defense-impairment, T1003.001, T1685
+// Description: Detects the "RunAsPPL" value of the LSA control key being set to anything other than 1 or 2,
+//   which disables or weakens the Protected Process Light protection of LSASS. Attackers disable LSA
+//   protection before dumping credentials from LSASS memory. The modification requires a reboot to
+//   take effect, and the process writing the value is not limited to the command line tools covered
+//   by the "LSA PPL Protection Setting Modification via CommandLine" rule.
+// False positives:
+//   - Administrators disabling LSA protection to troubleshoot an incompatible authentication plug-in or driver
+//   - Management agents or deployment scripts that enforce the setting by rewriting the value
+// References:
+//   - https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection
+//   - https://github.com/redcanaryco/atomic-red-team/blob/04a53f0150b6215b5b47d2c13a3f882942fd289d/atomics/T1685/T1685.md
+//   - https://github.com/elastic/detection-rules/blob/f4ef34b1c996da53880053dd497ca546c1b0bbfa/rules/windows/defense_evasion_lsass_ppl_disabled_registry.toml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e43a498ead3234e323f6c380c8534fa724d744ff/rules/windows/registry/registry_set/registry_set_lsa_ppl_protection_disabled.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceRegistryEvents
+| where RegistryKey endswith "\\Control\\Lsa\\RunAsPPL" and (not((RegistryValueData in~ ("DWORD (0x00000001)", "DWORD (0x00000002)")))) and (not(InitiatingProcessFolderPath endswith ":\\Windows\\System32\\SecurityHealthService.exe"))

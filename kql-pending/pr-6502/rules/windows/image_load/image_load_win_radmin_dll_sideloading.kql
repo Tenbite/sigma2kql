@@ -8,7 +8,7 @@
 // Status: experimental | Level: high
 // Author: brandolphj
 // Date: 2026-10-21 | Modified: -
-// ATT&CK: T1574.001
+// ATT&CK: execution, stealth, T1574.001
 // Description: Detects the Radmin executable FamItrfc.exe loading BlkScrDl.dll from a user's local AppData
 //   Radmin directory, as observed in a reported supply-chain compromise.
 // False positives:
@@ -17,7 +17,7 @@
 //   - https://cloud.google.com/blog/topics/threat-intelligence/investigating-ephemeral-supply-chain-tampering
 //   - https://www.manageengine.com/threat-analysis-lab/aomei-backupper-supply-chain-compromise.html
 //   - https://labs.cloudsecurityalliance.org/research/csa-research-note-aomei-backupper-update-server-tampering-20/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/0e1fa4c6be0be78a310ec310cb11f874488e5520/rules/windows/image_load/image_load_win_radmin_dll_sideloading.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/6ef7b583ea9f4f780b606cb5d0585e60b2fb9ef2/rules/windows/image_load/image_load_win_radmin_dll_sideloading.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

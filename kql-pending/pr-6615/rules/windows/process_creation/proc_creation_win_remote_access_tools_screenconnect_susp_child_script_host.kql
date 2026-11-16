@@ -8,7 +8,7 @@
 // Status: experimental | Level: high
 // Author: Mohammed Alkahala
 // Date: 2026-11-13 | Modified: -
-// ATT&CK: command-and-control, T1219, execution, T1059.005, T1218.005
+// ATT&CK: command-and-control, T1219, execution, T1059.005, stealth, T1218.005
 // Description: Detects the ScreenConnect client process directly spawning a Windows script host (wscript.exe,
 //   cscript.exe) or mshta.exe. Threat actors installing rogue ScreenConnect clients have been
 //   observed repeatedly spawning wscript.exe to run a staged chain of VBScript files from a
@@ -19,7 +19,7 @@
 // References:
 //   - https://www.huntress.com/blog/rogue-screenconnect-installations
 //   - https://github.com/Mohammedalkahala/purpleloop/tree/main/detections/huntress-rmm-wsh
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/05c24c8969df151d53ffa681efdc812a61713ca7/rules/windows/process_creation/proc_creation_win_remote_access_tools_screenconnect_susp_child_script_host.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/6de7587cc7ce39b4dbdbbcfcf58ea29d677e9ab6/rules/windows/process_creation/proc_creation_win_remote_access_tools_screenconnect_susp_child_script_host.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

@@ -3,7 +3,68 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-15 14:03 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-16 15:57 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+
+## [#6636](https://github.com/SigmaHQ/sigma/pull/6636) Fix false positives from default Windows registry value
+
+| Rule | Change | Level |
+|---|---|---|
+| [Sysmon Driver Altitude Change](pr-6636/rules/windows/registry/registry_set/registry_set_change_sysmon_driver_altitude.kql) | update to existing rule | high |
+| [New File Association Using Exefile](pr-6636/rules/windows/registry/registry_set/registry_set_file_association_exefile.kql) | update to existing rule | high |
+| [Potential Persistence Via AutodialDLL](pr-6636/rules/windows/registry/registry_set/registry_set_persistence_autodial_dll.kql) | update to existing rule | high |
+| [Potential Persistence Via MyComputer Registry Keys](pr-6636/rules/windows/registry/registry_set/registry_set_persistence_mycomputer.kql) | update to existing rule | high |
+
+## [#6633](https://github.com/SigmaHQ/sigma/pull/6633) chore: fix typos in rule descriptions, false positives and comments
+
+| Rule | Change | Level |
+|---|---|---|
+| [Potential Dridex Activity](pr-6633/rules-emerging-threats/2019/Malware/Dridex/proc_creation_win_malware_dridex.kql) | update to existing rule | critical |
+| [DarkGate - Autoit3.EXE File Creation By Uncommon Process](pr-6633/rules-emerging-threats/2023/Malware/DarkGate/file_event_win_malware_darkgate_autoit3_binary_creation.kql) | update to existing rule | medium |
+| [Dfsvc.EXE Network Connection To Non-Local IPs](pr-6633/rules-threat-hunting/windows/network_connection/net_connection_win_dfsvc_non_local_ip.kql) | update to existing rule | medium |
+| [ClickOnce Deployment Execution - Dfsvc.EXE Child Process](pr-6633/rules-threat-hunting/windows/process_creation/proc_creation_win_dfsvc_child_processes.kql) | update to existing rule | medium |
+| [Files With System DLL Name In Unsuspected Locations](pr-6633/rules/windows/file/file_event/file_event_win_creation_system_dll_files.kql) | update to existing rule | medium |
+| [Files With System Process Name In Unsuspected Locations](pr-6633/rules/windows/file/file_event/file_event_win_creation_system_file.kql) | update to existing rule | medium |
+| [Outbound Network Connection Initiated By Microsoft Dialer](pr-6633/rules/windows/network_connection/net_connection_win_dialer_initiated_connection.kql) | update to existing rule | high |
+| [RegAsm.EXE Initiating Network Connection To Public IP](pr-6633/rules/windows/network_connection/net_connection_win_regasm_network_activity.kql) | update to existing rule | medium |
+| [Phishing Pattern ISO in Archive](pr-6633/rules/windows/process_creation/proc_creation_win_susp_archiver_iso_phishing.kql) | update to existing rule | high |
+| [Potential File Download Via MS-AppInstaller Protocol Handler](pr-6633/rules/windows/process_creation/proc_creation_win_susp_ms_appinstaller_download.kql) | update to existing rule | medium |
+| [Bypass UAC Using SilentCleanup Task](pr-6633/rules/windows/registry/registry_set/registry_set_bypass_uac_using_silentcleanup_task.kql) | update to existing rule | high |
+
+## [#6632](https://github.com/SigmaHQ/sigma/pull/6632) new: Cloud Instance Metadata API Query for Credential Theft (T1552.005)
+
+| Rule | Change | Level |
+|---|---|---|
+| [Cloud Instance Metadata API Query for Credential Theft](pr-6632/rules/linux/process_creation/proc_creation_lnx_cloud_imds_credential_theft.kql) | new rule | medium |
+
+## [#6631](https://github.com/SigmaHQ/sigma/pull/6631) fix(rules): replace unreachable Lab52 reference URL in proc_creation_win_powershell_download_patterns.yml
+
+| Rule | Change | Level |
+|---|---|---|
+| [PowerShell Download Pattern](pr-6631/rules/windows/process_creation/proc_creation_win_powershell_download_patterns.kql) | update to existing rule | medium |
+
+## [#6629](https://github.com/SigmaHQ/sigma/pull/6629) new: Suspicious QoS Policy Throttling Security Product Network Traffic
+
+| Rule | Change | Level |
+|---|---|---|
+| [Suspicious QoS Policy Throttling Security Product Network Traffic](pr-6629/rules/windows/process_creation/proc_creation_win_powershell_netqospolicy_throttle_security_product.kql) | new rule | high |
+
+## [#6627](https://github.com/SigmaHQ/sigma/pull/6627) new: Suspicious Svchost Lookalike Process Name Execution
+
+| Rule | Change | Level |
+|---|---|---|
+| [Suspicious Svchost Lookalike Process Name Execution](pr-6627/rules/windows/process_creation/proc_creation_win_susp_svchost_lookalike_name.kql) | new rule | high |
+
+## [#6626](https://github.com/SigmaHQ/sigma/pull/6626) new: Suspicious Renamed MSBuild Execution
+
+| Rule | Change | Level |
+|---|---|---|
+| [Suspicious Renamed MSBuild Execution](pr-6626/rules/windows/process_creation/proc_creation_win_renamed_msbuild.kql) | new rule | high |
+
+## [#6624](https://github.com/SigmaHQ/sigma/pull/6624) new: Suspicious LSA Protection Downgrade Via RunAsPPL Registry Value
+
+| Rule | Change | Level |
+|---|---|---|
+| [Suspicious LSA Protection Downgrade Via RunAsPPL Registry Value](pr-6624/rules/windows/registry/registry_set/registry_set_lsa_ppl_protection_disabled.kql) | new rule | high |
 
 ## [#6621](https://github.com/SigmaHQ/sigma/pull/6621) new: Service Environment Variables Set Via Registry
 
@@ -375,11 +436,10 @@ Rebuilt 2026-11-15 14:03 UTC from 300 open pull requests. When a pull request is
 |---|---|---|
 | [ClickFix File Operation](pr-6484/rules/windows/registry/registry_set/registry_set_clickfix_op.kql) | new rule | medium |
 
-## [#6479](https://github.com/SigmaHQ/sigma/pull/6479) new: Cloud IMDS Credential Theft and Nsenter Container Escape detections
+## [#6479](https://github.com/SigmaHQ/sigma/pull/6479) new: Nsenter Escape to Host Namespace (T1611)
 
 | Rule | Change | Level |
 |---|---|---|
-| [Cloud Instance Metadata API Query for Credential Theft](pr-6479/rules/linux/process_creation/proc_creation_lnx_cloud_imds_credential_theft.kql) | new rule | high |
 | [Nsenter Escape to Host Namespace](pr-6479/rules/linux/process_creation/proc_creation_lnx_nsenter_container_escape.kql) | new rule | high |
 
 ## [#6476](https://github.com/SigmaHQ/sigma/pull/6476) Add SLAPSHOT/WHIPSHOT implant detection rules for CVE-2026-88771/88772
@@ -431,7 +491,7 @@ Rebuilt 2026-11-15 14:03 UTC from 300 open pull requests. When a pull request is
 
 | Rule | Change | Level |
 |---|---|---|
-| [Suspicious Encoded Payload Piped To Shell - macOS](pr-6451/rules/macos/process_creation/proc_creation_macos_susp_encoded_payload_piped_to_shell.kql) | new rule | high |
+| [Suspicious Encoded Payload Piped To Shell - macOS](pr-6451/rules/macos/process_creation/proc_creation_macos_susp_encoded_payload_piped_to_shell.kql) | new rule | medium |
 
 ## [#6450](https://github.com/SigmaHQ/sigma/pull/6450) Expand macOS keychain credential access coverage
 
@@ -1336,48 +1396,4 @@ Rebuilt 2026-11-15 14:03 UTC from 300 open pull requests. When a pull request is
 |---|---|---|
 | [CVE-2026-41940 cPanel Session File Written by Unexpected Process](pr-6006/rules/linux/file_event/file_event_lnx_cpanel_session_write_cve_2026_41940.kql) | new rule | high |
 | [CVE-2026-41940 cPanel Service Daemon Suspicious Child Process](pr-6006/rules/linux/process_creation/proc_creation_lnx_cpanel_cpsrvd_susp_child_cve_2026_41940.kql) | new rule | critical |
-
-## [#6001](https://github.com/SigmaHQ/sigma/pull/6001) new: 13 Linux detection rules
-
-| Rule | Change | Level |
-|---|---|---|
-| [Linux Network Connection to OAST Domain](pr-6001/rules/linux/network_connection/net_connection_lnx_oast_domain.kql) | new rule | high |
-| [Linux DNS Tunneling C2 via Dnscat](pr-6001/rules/linux/process_creation/proc_creation_lnx_dnscat_execution.kql) | new rule | high |
-| [Linux Privileged Docker Container Execution](pr-6001/rules/linux/process_creation/proc_creation_lnx_docker_privileged.kql) | new rule | high |
-| [Linux Privilege Escalation via GDB Debugger](pr-6001/rules/linux/process_creation/proc_creation_lnx_gdb_privilege_escalation.kql) | new rule | high |
-| [Linux Covert SSH Tunnel via GSocket](pr-6001/rules/linux/process_creation/proc_creation_lnx_gsocket_tunnel.kql) | new rule | high |
-| [Linux Privilege Escalation via Niche GTFOBins Binaries](pr-6001/rules/linux/process_creation/proc_creation_lnx_gtfobins_niche_privesc.kql) | new rule | high |
-| [Linux Fileless Execution via Memfd Create](pr-6001/rules/linux/process_creation/proc_creation_lnx_memfd_create_fileless_exec.kql) | new rule | high |
-| [Linux TLS Reverse Shell via OpenSSL](pr-6001/rules/linux/process_creation/proc_creation_lnx_openssl_tls_reverse_shell.kql) | new rule | high |
-| [Linux Ransomware File Artifact Indicators](pr-6001/rules/linux/process_creation/proc_creation_lnx_ransomware_artifacts.kql) | new rule | critical |
-| [Linux Reverse Shell or Code Execution via Rview Binary](pr-6001/rules/linux/process_creation/proc_creation_lnx_rview_shell_execution.kql) | new rule | high |
-| [Linux Dangerous Capability Set via Setcap](pr-6001/rules/linux/process_creation/proc_creation_lnx_setcap_dangerous_capabilities.kql) | new rule | high |
-| [Linux Reverse Shell via Socat or Cryptcat](pr-6001/rules/linux/process_creation/proc_creation_lnx_socat_reverse_shell.kql) | new rule | high |
-| [Linux Credential Dumping via Unshadow](pr-6001/rules/linux/process_creation/proc_creation_lnx_unshadow_credential_dump.kql) | new rule | high |
-
-## [#5995](https://github.com/SigmaHQ/sigma/pull/5995) Add 4 detection rules for LLM and MCP attack surface
-
-| Rule | Change | Level |
-|---|---|---|
-| [Modification Of MCP Or Claude Configuration File - Linux](pr-5995/rules-emerging-threats/2026/AI/file_event_lnx_mcp_config_file_modification.kql) | new rule | high |
-| [Anthropic API Key Pattern In Process Command Line - Linux](pr-5995/rules-emerging-threats/2026/AI/proc_creation_lnx_anthropic_api_key_in_cmdline.kql) | new rule | high |
-| [Claude Code Session Token Or Bearer Header In Command Line - Linux](pr-5995/rules-emerging-threats/2026/AI/proc_creation_lnx_claude_session_token_in_cmdline.kql) | new rule | high |
-| [MCP Server Installed From Non-Approved Registry - Linux](pr-5995/rules-emerging-threats/2026/AI/proc_creation_lnx_mcp_server_install_unapproved_registry.kql) | new rule | high |
-
-## [#5988](https://github.com/SigmaHQ/sigma/pull/5988) new: add DAEMON Tools Lite supply chain attack detection rules
-
-| Rule | Change | Level |
-|---|---|---|
-| [Compromised DAEMON Tools Binary Execution](pr-5988/rules-emerging-threats/2026/Malware/Daemon-Supply-Chain/proc_creation_win_daemon_compromised_binary_execution.kql) | new rule | high |
-| [DAEMON Tools Supply Chain Attack Indicators](pr-5988/rules-emerging-threats/2026/Malware/Daemon-Supply-Chain/proc_creation_win_daemon_supply_chain_stage_drop.kql) | new rule | high |
-
-## [#5968](https://github.com/SigmaHQ/sigma/pull/5968) new: CVE-2026-31431 Copy Fail Exploit Detection Rules
-
-| Rule | Change | Level |
-|---|---|---|
-| [CVE-2026-31431 Copy Fail Privilege Escalation](pr-5968/rules-emerging-threats/2026/Exploits/CVE-2026-31431/proc_creation_lnx_exploit_cve_2026_31431_copy_fail.kql) | new rule | high |
-| [Python Directly Spawning a SUID Binary](pr-5968/rules/linux/process_creation/proc_creation_lnx_python_suid_binary_exec.kql) | new rule | high |
-| [Sudo Spawning a Shell With No Arguments](pr-5968/rules/linux/process_creation/proc_creation_lnx_sudo_bare_shell_spawn.kql) | new rule | high |
-| [SUID Binary Spawning a Shell](pr-5968/rules/linux/process_creation/proc_creation_lnx_suid_binary_shell_spawn.kql) | new rule | high |
-| [SUID Binary Spawned as Child of Shell Invoked With Command Flag](pr-5968/rules/linux/process_creation/proc_creation_lnx_suid_binary_via_shell_c_flag.kql) | new rule | high |
 

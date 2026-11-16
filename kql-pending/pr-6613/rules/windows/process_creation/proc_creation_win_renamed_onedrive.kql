@@ -22,7 +22,7 @@
 //   - https://bazaar.abuse.ch/sample/2e3bdd68f85755b02caa42ec0228fb8a56c964479c4f085eae67569d67440e49/
 //   - https://bazaar.abuse.ch/sample/b371d2e01562fc0d29072ac1a56969628b6408f2368c056c3158f4fe0c609960/
 //   - https://github.com/harperjohnsai/detections/blob/d8423a700dadfffe1369e23462940bd3c9d91b36/iocs/2026-11-revstealer-setup-center/README.md
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/a93182fab1253978eef4eb2357ee4d42e8d1a2d0/rules/windows/process_creation/proc_creation_win_renamed_onedrive.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/603d9fb1674df1d34760b57e49f5ad9449989395/rules/windows/process_creation/proc_creation_win_renamed_onedrive.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)
