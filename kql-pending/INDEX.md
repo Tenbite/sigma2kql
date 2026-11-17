@@ -3,7 +3,19 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-16 15:57 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-17 16:12 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+
+## [#6638](https://github.com/SigmaHQ/sigma/pull/6638) New Rule: Uncommon Child Process Of WFMFormat.EXE
+
+| Rule | Change | Level |
+|---|---|---|
+| [Uncommon Child Process Of WFMFormat.EXE](pr-6638/rules/windows/process_creation/proc_creation_win_wfmformat_uncommon_child_process.kql) | new rule | medium |
+
+## [#6637](https://github.com/SigmaHQ/sigma/pull/6637) New Rule: Arbitrary File Copy Via Dtutil.EXE
+
+| Rule | Change | Level |
+|---|---|---|
+| [Arbitrary File Copy Via Dtutil.EXE](pr-6637/rules/windows/process_creation/proc_creation_win_dtutil_file_copy.kql) | new rule | medium |
 
 ## [#6636](https://github.com/SigmaHQ/sigma/pull/6636) Fix false positives from default Windows registry value
 
@@ -1389,11 +1401,4 @@ Rebuilt 2026-11-16 15:57 UTC from 300 open pull requests. When a pull request is
 |---|---|---|
 | [Potential Autonomous AI Agent Workspace File Creation](pr-6017/rules/windows/file/file_event/file_event_win_openclaw_agent_workspace_created.kql) | new rule | medium |
 | [Potential Autonomous AI Agent NPM Install](pr-6017/rules/windows/process_creation/proc_creation_win_openclaw_agent_npm_install.kql) | new rule | medium |
-
-## [#6006](https://github.com/SigmaHQ/sigma/pull/6006) CVE-2026-41940 - cPanel and WHM CRLF authentication bypass detection
-
-| Rule | Change | Level |
-|---|---|---|
-| [CVE-2026-41940 cPanel Session File Written by Unexpected Process](pr-6006/rules/linux/file_event/file_event_lnx_cpanel_session_write_cve_2026_41940.kql) | new rule | high |
-| [CVE-2026-41940 cPanel Service Daemon Suspicious Child Process](pr-6006/rules/linux/process_creation/proc_creation_lnx_cpanel_cpsrvd_susp_child_cve_2026_41940.kql) | new rule | critical |
 

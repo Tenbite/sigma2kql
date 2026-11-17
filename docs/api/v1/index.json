@@ -3,10 +3,10 @@
   "description": "SigmaHQ detection rules converted to Microsoft Defender XDR Advanced Hunting KQL, with metadata.",
   "api_version": "v1",
   "schema_version": "1.0.0",
-  "generated_at": "2026-11-16T15:57:56Z",
+  "generated_at": "2026-11-17T16:12:10Z",
   "update_schedule": "nightly, run starts 06:17 UTC",
   "target": "microsoft_xdr",
-  "sigmahq_commit": "54967d64e6dda2b4daa81f47f7a8bf1f591b68a0",
+  "sigmahq_commit": "088855f00b65a19e345b09c1619272b44f92fea4",
   "tools": {
     "kusto-language": "12.4.1",
     "pySigma": "1.5.1",
@@ -17,7 +17,7 @@
     "total": 2417,
     "published": 1910,
     "pending": 507,
-    "pending_pull_requests": 177
+    "pending_pull_requests": 178
   },
   "endpoints": {
     "manifest": "https://tenbite.github.io/sigma2kql/api/v1/index.json",
@@ -25,7 +25,7 @@
     "schema": "https://tenbite.github.io/sigma2kql/api/v1/schema.json",
     "docs": "https://tenbite.github.io/sigma2kql/api/"
   },
-  "rules_bytes": 6334381,
+  "rules_bytes": 6332758,
   "homepage": "https://tenbite.github.io/sigma2kql/",
   "repository": "https://github.com/Tenbite/sigma2kql",
   "license": {

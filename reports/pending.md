@@ -1,18 +1,19 @@
 # Pending rules run
 
-- Run: 2026-11-16 15:57 UTC
+- Run: 2026-11-17 16:12 UTC
 - Open pull requests checked: 300 (drafts skipped: 4)
-- Pull requests with converted rules: 177
+- Pull requests with converted rules: 178
 
 | Result | Rule files |
 |---|---|
 | Converted and valid | 507 |
 | Failed validation | 4 |
-| Failed conversion | 316 |
+| Failed conversion | 314 |
 | Skipped (filters) | 64 |
 
 ## Not converted
 
+- #6640 `rules/windows/powershell/powershell_script/posh_ps_powershell_web_access_installation.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6634 `rules/cloud/azure/activity_logs/azure_sentinel_analytics_rule_deleted.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6633 `rules-emerging-threats/2020/Exploits/CVE-2020-3452/web_cve_2020_3452_cisco_asa_ftd.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6633 `rules-emerging-threats/2023/Exploits/CVE-2023-23397/win_security_exploit_cve_2023_23397_outlook_remote_file_query.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: AccessList
@@ -330,6 +331,3 @@
 - #6018 `rules/cloud/aws/cloudtrail/aws_iam_privileged_inline_policy_creation.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6017 `rules/windows/process_creation/proc_creation_win_openclaw_agent_postinstall_execution.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory
 - #6017 `rules/windows/process_creation/proc_creation_win_openclaw_agent_workdir.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory
-- #6006 `rules/linux/auditd/syscall/lnx_auditd_cpanel_crlf_injection_cve_2026_41940.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #6006 `rules/web/webserver_generic/web_cpanel_crlf_login_cve_2026_41940.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #6005 `rules/windows/builtin/security/win_security_wifi_rogue_ap_bssid.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:

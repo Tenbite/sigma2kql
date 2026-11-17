@@ -16,11 +16,11 @@
 //   - Unlikely but if you experience FPs add specific processes and locations you would like to monitor for
 // References:
 //   - https://www.hexacorn.com/blog/2017/01/18/beyond-good-ol-run-key-part-55/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/7450e84bf4fd4980968034ff175230b60063676b/rules/windows/registry/registry_set/registry_set_persistence_mycomputer.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/598763b177bb7fbf533612e9a71ac72c873e0326/rules/windows/registry/registry_set/registry_set_persistence_mycomputer.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)
 // Machine-generated and not tested against real telemetry. Verify before use as a detection.
 
 DeviceRegistryEvents
-| where (RegistryKey contains "\\Microsoft\\Windows\\CurrentVersion\\Explorer\\MyComputer" and RegistryKey endswith "path\\(Default)") and (not((RegistryValueData startswith "%%SystemRoot%%\\System32\\" or RegistryValueData startswith "%%SystemRoot%%\\SysWOW64\\" or RegistryValueData startswith "%%Windir%%\\System32\\" or RegistryValueData startswith "%%Windir%%\\SysWOW64\\" or RegistryValueData startswith "%SystemRoot%\\System32\\" or RegistryValueData startswith "%SystemRoot%\\SysWOW64\\" or RegistryValueData startswith "%Windir%\\System32\\" or RegistryValueData startswith "%Windir%\\SysWOW64\\" or RegistryValueData startswith "C:\\Windows\\System32\\" or RegistryValueData startswith "C:\\Windows\\SysWOW64\\")))
+| where (RegistryKey contains "\\Microsoft\\Windows\\CurrentVersion\\Explorer\\MyComputer" and RegistryKey endswith "path\\(Default)") and (not(((RegistryValueData startswith "%%SystemRoot%%\\" or RegistryValueData startswith "%%Windir%%\\" or RegistryValueData startswith "%SystemRoot%\\" or RegistryValueData startswith "%Windir%\\" or RegistryValueData startswith "C:\\Windows\\") and ((RegistryKey endswith "\\MyComputer\\BackupPath\\(Default)" and (RegistryValueData endswith "\\System32\\sdclt.exe" or RegistryValueData endswith "\\SysWOW64\\sdclt.exe")) or (RegistryKey endswith "\\MyComputer\\cleanuppath\\(Default)" and (RegistryValueData endswith "\\System32\\cleanmgr.exe /D %c" or RegistryValueData endswith "\\SysWOW64\\cleanmgr.exe /D %c" or RegistryValueData endswith "\\System32\\cleanmgr.exe /D %%c" or RegistryValueData endswith "\\SysWOW64\\cleanmgr.exe /D %%c")) or (RegistryKey endswith "\\MyComputer\\DefragPath\\(Default)" and (RegistryValueData endswith "\\System32\\dfrgui.exe" or RegistryValueData endswith "\\SysWOW64\\dfrgui.exe"))))))

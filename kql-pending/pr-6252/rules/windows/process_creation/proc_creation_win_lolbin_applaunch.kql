@@ -17,7 +17,7 @@
 //   - https://lolbas-project.github.io/lolbas/Binaries/Applaunch/
 //   - https://nathan2.com/posts/clicktools
 //   - https://github.com/nasawyer7/clicktools/tree/240e1edcf9491cd565750758a6db59c553ef8e4b
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/44cd343745481643b181f4f18539db44618a44b4/rules/windows/process_creation/proc_creation_win_lolbin_applaunch.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/46e68f9ae862eafa3a091562ee2adee428e54c64/rules/windows/process_creation/proc_creation_win_lolbin_applaunch.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

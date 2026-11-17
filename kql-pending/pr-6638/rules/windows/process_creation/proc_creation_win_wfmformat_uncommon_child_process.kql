@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6638 New Rule: Uncommon Child Process Of WFMFormat.EXE
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6638
+// Pull request author: COMPUMAX-EC
+// Change: new rule
+// Title: Uncommon Child Process Of WFMFormat.EXE
+// Sigma ID: ece66131-245f-4dcc-a630-f3bdf79a4e7a
+// Status: experimental | Level: medium
+// Author: Geovanny Basantes
+// Date: 2026-11-06 | Modified: -
+// ATT&CK: execution, stealth, T1127
+// Description: Detects uncommon child processes of WFMFormat.EXE, a command-line tool shipped with the
+//   Microsoft Message Farm Analyzer used to pretty-print dump files. WFMFormat.EXE executes
+//   "tracerpt.exe" from its own folder, which allows attackers to drop an arbitrary binary named
+//   "tracerpt.exe" next to it and proxy its execution through a Microsoft signed binary.
+// False positives:
+//   - Unknown
+// References:
+//   - https://lolbas-project.github.io/lolbas/OtherMSBinaries/WFMFormat/
+//   - https://www.microsoft.com/en-us/download/details.aspx?id=103244
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/d7dce9f1289defddb3e8c26be0342331a4739d74/rules/windows/process_creation/proc_creation_win_wfmformat_uncommon_child_process.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "\\WFMFormat.exe" and (not(((FolderPath endswith ":\\Windows\\System32\\tracerpt.exe" or FolderPath endswith ":\\Windows\\SysWOW64\\tracerpt.exe") or (FolderPath endswith ":\\Windows\\System32\\conhost.exe" or FolderPath endswith ":\\Windows\\System32\\WerFault.exe" or FolderPath endswith ":\\Windows\\SysWOW64\\WerFault.exe"))))
