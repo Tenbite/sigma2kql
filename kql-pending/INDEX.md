@@ -3,7 +3,7 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-17 16:12 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-18 15:48 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
 
 ## [#6638](https://github.com/SigmaHQ/sigma/pull/6638) New Rule: Uncommon Child Process Of WFMFormat.EXE
 
@@ -16,31 +16,6 @@ Rebuilt 2026-11-17 16:12 UTC from 300 open pull requests. When a pull request is
 | Rule | Change | Level |
 |---|---|---|
 | [Arbitrary File Copy Via Dtutil.EXE](pr-6637/rules/windows/process_creation/proc_creation_win_dtutil_file_copy.kql) | new rule | medium |
-
-## [#6636](https://github.com/SigmaHQ/sigma/pull/6636) Fix false positives from default Windows registry value
-
-| Rule | Change | Level |
-|---|---|---|
-| [Sysmon Driver Altitude Change](pr-6636/rules/windows/registry/registry_set/registry_set_change_sysmon_driver_altitude.kql) | update to existing rule | high |
-| [New File Association Using Exefile](pr-6636/rules/windows/registry/registry_set/registry_set_file_association_exefile.kql) | update to existing rule | high |
-| [Potential Persistence Via AutodialDLL](pr-6636/rules/windows/registry/registry_set/registry_set_persistence_autodial_dll.kql) | update to existing rule | high |
-| [Potential Persistence Via MyComputer Registry Keys](pr-6636/rules/windows/registry/registry_set/registry_set_persistence_mycomputer.kql) | update to existing rule | high |
-
-## [#6633](https://github.com/SigmaHQ/sigma/pull/6633) chore: fix typos in rule descriptions, false positives and comments
-
-| Rule | Change | Level |
-|---|---|---|
-| [Potential Dridex Activity](pr-6633/rules-emerging-threats/2019/Malware/Dridex/proc_creation_win_malware_dridex.kql) | update to existing rule | critical |
-| [DarkGate - Autoit3.EXE File Creation By Uncommon Process](pr-6633/rules-emerging-threats/2023/Malware/DarkGate/file_event_win_malware_darkgate_autoit3_binary_creation.kql) | update to existing rule | medium |
-| [Dfsvc.EXE Network Connection To Non-Local IPs](pr-6633/rules-threat-hunting/windows/network_connection/net_connection_win_dfsvc_non_local_ip.kql) | update to existing rule | medium |
-| [ClickOnce Deployment Execution - Dfsvc.EXE Child Process](pr-6633/rules-threat-hunting/windows/process_creation/proc_creation_win_dfsvc_child_processes.kql) | update to existing rule | medium |
-| [Files With System DLL Name In Unsuspected Locations](pr-6633/rules/windows/file/file_event/file_event_win_creation_system_dll_files.kql) | update to existing rule | medium |
-| [Files With System Process Name In Unsuspected Locations](pr-6633/rules/windows/file/file_event/file_event_win_creation_system_file.kql) | update to existing rule | medium |
-| [Outbound Network Connection Initiated By Microsoft Dialer](pr-6633/rules/windows/network_connection/net_connection_win_dialer_initiated_connection.kql) | update to existing rule | high |
-| [RegAsm.EXE Initiating Network Connection To Public IP](pr-6633/rules/windows/network_connection/net_connection_win_regasm_network_activity.kql) | update to existing rule | medium |
-| [Phishing Pattern ISO in Archive](pr-6633/rules/windows/process_creation/proc_creation_win_susp_archiver_iso_phishing.kql) | update to existing rule | high |
-| [Potential File Download Via MS-AppInstaller Protocol Handler](pr-6633/rules/windows/process_creation/proc_creation_win_susp_ms_appinstaller_download.kql) | update to existing rule | medium |
-| [Bypass UAC Using SilentCleanup Task](pr-6633/rules/windows/registry/registry_set/registry_set_bypass_uac_using_silentcleanup_task.kql) | update to existing rule | high |
 
 ## [#6632](https://github.com/SigmaHQ/sigma/pull/6632) new: Cloud Instance Metadata API Query for Credential Theft (T1552.005)
 
@@ -418,7 +393,7 @@ Rebuilt 2026-11-17 16:12 UTC from 300 open pull requests. When a pull request is
 
 | Rule | Change | Level |
 |---|---|---|
-| [Potential Radmin DLL Sideloading From User AppData](pr-6502/rules/windows/image_load/image_load_win_radmin_dll_sideloading.kql) | new rule | high |
+| [Potential Radmin DLL Sideloading From User AppData](pr-6502/rules/windows/image_load/image_load_side_load_radmin_dll.kql) | new rule | high |
 
 ## [#6500](https://github.com/SigmaHQ/sigma/pull/6500) new: Contagious Interview (DPRK) EtherHiding Chain - Emerging Threat And Hunting Rules
 
@@ -1401,4 +1376,11 @@ Rebuilt 2026-11-17 16:12 UTC from 300 open pull requests. When a pull request is
 |---|---|---|
 | [Potential Autonomous AI Agent Workspace File Creation](pr-6017/rules/windows/file/file_event/file_event_win_openclaw_agent_workspace_created.kql) | new rule | medium |
 | [Potential Autonomous AI Agent NPM Install](pr-6017/rules/windows/process_creation/proc_creation_win_openclaw_agent_npm_install.kql) | new rule | medium |
+
+## [#6006](https://github.com/SigmaHQ/sigma/pull/6006) CVE-2026-41940 - cPanel and WHM CRLF authentication bypass detection
+
+| Rule | Change | Level |
+|---|---|---|
+| [CVE-2026-41940 cPanel Session File Written by Unexpected Process](pr-6006/rules/linux/file_event/file_event_lnx_cpanel_session_write_cve_2026_41940.kql) | new rule | high |
+| [CVE-2026-41940 cPanel Service Daemon Suspicious Child Process](pr-6006/rules/linux/process_creation/proc_creation_lnx_cpanel_cpsrvd_susp_child_cve_2026_41940.kql) | new rule | critical |
 

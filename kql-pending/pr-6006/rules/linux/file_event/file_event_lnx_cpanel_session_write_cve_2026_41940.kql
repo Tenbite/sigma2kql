@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6006 CVE-2026-41940 - cPanel and WHM CRLF authentication bypass detection
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6006
+// Pull request author: cocopollo
+// Change: new rule
+// Title: CVE-2026-41940 cPanel Session File Written by Unexpected Process
+// Sigma ID: 7aca0427-7e19-4859-af17-40157e2f1f7d
+// Status: experimental | Level: high
+// Author: MahmoudSwelam
+// Date: 2026-05-01 | Modified: 2026-05-10
+// ATT&CK: initial-access, T1190, lateral-movement, T1550.004
+// Description: Detects suspicious writes to cPanel session files by processes other than the legitimate cpsrvd
+//   daemon, or session files with malformed names containing URL-encoded CRLF characters as a direct
+//   artifact of CVE-2026-41940 exploitation. Requires auditd with session directory monitoring or
+//   Sysmon for Linux.
+// False positives:
+//   - Administrative backup or migration tools in cPanel that copy session directories
+//   - Development or testing environments with custom cPanel session handling
+//   - Legitimate session filenames may contain hex strings but never URL-encoded CR/LF
+// References:
+//   - https://support.cpanel.net/hc/en-us/articles/40073787579671
+//   - https://labs.watchtowr.com/the-internet-is-falling-down-falling-down-falling-down-cpanel-whm-authentication-bypass-cve-2026-41940/
+//   - https://nvd.nist.gov/vuln/detail/CVE-2026-41940
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/054ac9150b40dc6e99867b87fd4c6db40222c2d4/rules/linux/file_event/file_event_lnx_cpanel_session_write_cve_2026_41940.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where ((FolderPath startswith "/var/cpanel/sessions/" or FolderPath startswith "/usr/local/cpanel/sessions/") and (not((InitiatingProcessFolderPath endswith "/cpsrvd" or InitiatingProcessFolderPath endswith "/cpsrvd-ssl" or InitiatingProcessFolderPath endswith "/cpdavd" or InitiatingProcessFolderPath endswith "/cpdavd-ssl")))) or ((FolderPath startswith "/var/cpanel/sessions/" or FolderPath startswith "/usr/local/cpanel/sessions/") and (FolderPath contains "%0d" or FolderPath contains "%0a"))

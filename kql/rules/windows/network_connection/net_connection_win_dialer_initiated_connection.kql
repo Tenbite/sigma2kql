@@ -8,7 +8,7 @@
 //   known as Phone Dialer, is a built-in utility application included in various versions of the
 //   Microsoft Windows operating system. Its primary function is to provide users with a graphical
 //   interface for managing phone calls via a modem or a phone line connected to the computer. This
-//   is an outdated process in the current conext of it's usage and is a common target for info
+//   is an outdated process in the current context of it's usage and is a common target for info
 //   stealers for process injection, and is used to make C2 connections, common example is
 //   "Rhadamanthys"
 // False positives:
@@ -18,7 +18,7 @@
 //   - https://app.any.run/tasks/6720b85b-9c53-4a12-b1dc-73052a78477d
 //   - https://research.checkpoint.com/2023/rhadamanthys-v0-5-0-a-deep-dive-into-the-stealers-components/
 //   - https://strontic.github.io/xcyclopedia/library/dialer.exe-0B69655F912619756C704A0BF716B61F.html
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/54967d64e6dda2b4daa81f47f7a8bf1f591b68a0/rules/windows/network_connection/net_connection_win_dialer_initiated_connection.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/698f0912f571d5fac3bf8c51f5421139834a011c/rules/windows/network_connection/net_connection_win_dialer_initiated_connection.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)

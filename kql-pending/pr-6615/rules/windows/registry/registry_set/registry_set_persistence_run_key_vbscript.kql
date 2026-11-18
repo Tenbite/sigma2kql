@@ -18,7 +18,7 @@
 // References:
 //   - https://www.huntress.com/blog/rogue-screenconnect-installations
 //   - https://github.com/Mohammedalkahala/purpleloop/tree/main/detections/huntress-rmm-wsh
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/6de7587cc7ce39b4dbdbbcfcf58ea29d677e9ab6/rules/windows/registry/registry_set/registry_set_persistence_run_key_vbscript.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/8f3bfa9a2ea91b99a715f1b682276a038b971dbb/rules/windows/registry/registry_set/registry_set_persistence_run_key_vbscript.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

@@ -31,8 +31,8 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 | Unmapped field `ShareName` | 12 |
 | No table for log source `bitbucket/audit` | 12 |
 | No table for log source `m365/threat_management` | 12 |
-| Unmapped field `Signed` | 11 |
 | Unmapped field `CurrentDirectory` | 11 |
+| Unmapped field `Signed` | 11 |
 | Unmapped field `AccessMask` | 9 |
 | No table for log source `github/audit` | 9 |
 | No table for log source `cisco/aaa` | 9 |
@@ -60,11 +60,11 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 | Unmapped field `IpAddress` | 4 |
 | Unmapped field `NewName` | 4 |
 | No table for log source `linux/sshd` | 3 |
-| Unmapped field `AccessList` | 3 |
 | No table for log source `m365/audit` | 3 |
 | Unmapped field `Provider_Name` | 3 |
 | Unmapped field `Configuration` | 3 |
 | Unmapped field `ObjectValueName` | 3 |
+| Unmapped field `AccessList` | 3 |
 | No table for log source `windows/powershell-classic` | 3 |
 | ValueError: Empty query: nothing in the detection maps to the target | 3 |
 | No table for log source `windows/wmi_event` | 3 |
@@ -254,7 +254,7 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 - `rules-emerging-threats/2023/Exploits/CVE-2023-22518/proxy_exploit_cve_2023_22518_confluence_auth_bypass.yml` — SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - `rules-emerging-threats/2023/Exploits/CVE-2023-22518/web_exploit_cve_2023_22518_confluence_auth_bypass.yml` — SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - `rules-emerging-threats/2023/Exploits/CVE-2023-2283/lnx_sshd_exploit_cve_2023_2283_libssh_authentication_bypass.yml` — SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- `rules-emerging-threats/2023/Exploits/CVE-2023-23397/win_security_exploit_cve_2023_23397_outlook_remote_file_query.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: AccessList. Invalid SigmaDetectionItem field name encountered: RelativeTargetName
+- `rules-emerging-threats/2023/Exploits/CVE-2023-23397/win_security_exploit_cve_2023_23397_outlook_remote_file_query.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: AccessList
 - `rules-emerging-threats/2023/Exploits/CVE-2023-23397/win_smbclient_connectivity_exploit_cve_2023_23397_outlook_remote_file.yml` — SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - `rules-emerging-threats/2023/Exploits/CVE-2023-23752/web_cve_2023_23752_joomla_exploit_attempt.yml` — SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - `rules-emerging-threats/2023/Exploits/CVE-2023-25157/web_cve_2023_25157_geoserver_sql_injection.yml` — SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
