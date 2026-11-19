@@ -2880,7 +2880,7 @@
  },
  "rules-emerging-threats/2023/Exploits/CVE-2023-23397/win_security_exploit_cve_2023_23397_outlook_remote_file_query.yml": {
   "logsource": "windows/security",
-  "reason": "SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: AccessList",
+  "reason": "SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: AccessList. Invalid SigmaDetectionItem field name encountered: RelativeTargetName",
   "result": "failed",
   "title": "CVE-2023-23397 Exploitation Attempt"
  },

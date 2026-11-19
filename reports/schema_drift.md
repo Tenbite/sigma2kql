@@ -1,6 +1,6 @@
 # Schema drift
 
-Live schema: downloaded from https://xdrinternals.com/FullSchema-latest.json (210 tables)
+Live schema: downloaded from https://xdrinternals.com/FullSchema-latest.json (212 tables)
 
 Compares the schema bundled with pySigma-backend-kusto against the live Defender schema. Validation uses the live schema for every table it lists.
 
@@ -124,7 +124,7 @@ Compares the schema bundled with pySigma-backend-kusto against the live Defender
 ## EmailEvents
 
 - **Not in the live schema** (queries using these fail validation): LatestDeliveryAction`*, LatestDeliveryLocation`*
-- New columns the backend doesn't know about: Cc, Context, DistributionList, EmailSize, ExchangeTransportRule, ForwardingInformation, IsFirstContact, LatestDeliveryAction, LatestDeliveryLocation, OriginalConfidenceLevel, OriginalDetectionMethods, OriginalThreatTypes, RecipientDomain, SourceSystem, TenantId, ThreatClassification, TimeGenerated, To, Type
+- New columns the backend doesn't know about: Cc, Context, DistributionList, EmailSize, ExchangeTransportRule, ForwardingInformation, IsFirstContact, LatestDeliveryAction, LatestDeliveryLocation, OriginalConfidenceLevel, OriginalDetectionMethods, OriginalThreatTypes, RecipientDomain, ReplyTo, ReturnPath, ReturnPathDomain, SourceSystem, TenantId, ThreatClassification, TimeGenerated, To, Type
 
 ## EmailPostDeliveryEvents
 

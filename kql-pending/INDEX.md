@@ -3,7 +3,45 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-18 15:48 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-19 15:54 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+
+## [#6648](https://github.com/SigmaHQ/sigma/pull/6648) new: Potential Python Startup Hook Customize File Created - Linux
+
+| Rule | Change | Level |
+|---|---|---|
+| [Potential Python Startup Hook Customize File Created - Linux](pr-6648/rules/linux/file_event/file_event_lnx_python_startup_hook_customize_file.kql) | new rule | medium |
+
+## [#6647](https://github.com/SigmaHQ/sigma/pull/6647) new: Potential Cloud Access Token Or Secret Retrieval Via Cloud CLI
+
+| Rule | Change | Level |
+|---|---|---|
+| [Potential Cloud Access Token Or Secret Retrieval Via Cloud CLI](pr-6647/rules-threat-hunting/windows/process_creation/proc_creation_win_cloud_cli_token_and_secret_retrieval.kql) | new rule | medium |
+
+## [#6646](https://github.com/SigmaHQ/sigma/pull/6646) update: Python Path Configuration File Creation - Windows - match .pth in any site-packages directory
+
+| Rule | Change | Level |
+|---|---|---|
+| [Python Path Configuration File Creation - Windows](pr-6646/rules-threat-hunting/windows/file/file_event/file_event_win_python_path_configuration_files.kql) | update to existing rule | medium |
+
+## [#6643](https://github.com/SigmaHQ/sigma/pull/6643) new: Potential Cloud Instance Metadata Credential Or Token Request Via CLI - Linux
+
+| Rule | Change | Level |
+|---|---|---|
+| [Potential Cloud Instance Metadata Credential Or Token Request Via CLI - Linux](pr-6643/rules/linux/process_creation/proc_creation_lnx_cloud_imds_credential_request.kql) | new rule | medium |
+
+## [#6641](https://github.com/SigmaHQ/sigma/pull/6641) chore: use en-us Microsoft Learn links in rule references
+
+| Rule | Change | Level |
+|---|---|---|
+| [Potential Secure Deletion with SDelete](pr-6641/rules/windows/builtin/security/win_security_sdelete_potential_secure_deletion.kql) | update to existing rule | medium |
+| [ADExplorer Writing Complete AD Snapshot Into .dat File](pr-6641/rules/windows/file/file_event/file_event_win_sysinternals_adexplorer_dump_written.kql) | update to existing rule | medium |
+| [Potentially Suspicious NTFS Symlink Behavior Modification](pr-6641/rules/windows/process_creation/proc_creation_win_fsutil_symlinkevaluation.kql) | update to existing rule | medium |
+| [Computer Password Change Via Ksetup.EXE](pr-6641/rules/windows/process_creation/proc_creation_win_ksetup_password_change_computer.kql) | update to existing rule | medium |
+| [Logged-On User Password Change Via Ksetup.EXE](pr-6641/rules/windows/process_creation/proc_creation_win_ksetup_password_change_user.kql) | update to existing rule | medium |
+| [Suspicious Service DACL Modification Via Set-Service Cmdlet](pr-6641/rules/windows/process_creation/proc_creation_win_powershell_service_dacl_modification_set_service.kql) | update to existing rule | high |
+| [Potential PowerShell Execution Policy Tampering - ProcCreation](pr-6641/rules/windows/process_creation/proc_creation_win_registry_set_unsecure_powershell_policy.kql) | update to existing rule | high |
+| [Active Directory Database Snapshot Via ADExplorer](pr-6641/rules/windows/process_creation/proc_creation_win_sysinternals_adexplorer_execution.kql) | update to existing rule | medium |
+| [Suspicious Active Directory Database Snapshot Via ADExplorer](pr-6641/rules/windows/process_creation/proc_creation_win_sysinternals_adexplorer_susp_execution.kql) | update to existing rule | high |
 
 ## [#6638](https://github.com/SigmaHQ/sigma/pull/6638) New Rule: Uncommon Child Process Of WFMFormat.EXE
 
@@ -52,12 +90,6 @@ Rebuilt 2026-11-18 15:48 UTC from 300 open pull requests. When a pull request is
 | Rule | Change | Level |
 |---|---|---|
 | [Suspicious LSA Protection Downgrade Via RunAsPPL Registry Value](pr-6624/rules/windows/registry/registry_set/registry_set_lsa_ppl_protection_disabled.kql) | new rule | high |
-
-## [#6621](https://github.com/SigmaHQ/sigma/pull/6621) new: Service Environment Variables Set Via Registry
-
-| Rule | Change | Level |
-|---|---|---|
-| [Service Environment Variables Set Via Registry](pr-6621/rules/windows/registry/registry_set/registry_set_service_environment_value_set.kql) | new rule | medium |
 
 ## [#6620](https://github.com/SigmaHQ/sigma/pull/6620) fix: restore the missing ProgramData quote in two autorun rules
 
@@ -1369,18 +1401,4 @@ Rebuilt 2026-11-18 15:48 UTC from 300 open pull requests. When a pull request is
 |---|---|---|
 | [CVE-2020-17103 - Fake wermgr.exe Process Execution (AbortHydration EoP)](pr-6022/rules-emerging-threats/2026/Exploits/AbortHydration/proc_creation_win_aborthydration_eop_wermgr_spawn.kql) | new rule | high |
 | [CVE-2020-17103 - BlockedApps Symlink and Windir Registry Manipulation (AbortHydration EoP)](pr-6022/rules-emerging-threats/2026/Exploits/AbortHydration/registry_set_win_aborthydration_eop_blockedapps_windir.kql) | new rule | critical |
-
-## [#6017](https://github.com/SigmaHQ/sigma/pull/6017) new: OpenClaw AI agent family detection rules
-
-| Rule | Change | Level |
-|---|---|---|
-| [Potential Autonomous AI Agent Workspace File Creation](pr-6017/rules/windows/file/file_event/file_event_win_openclaw_agent_workspace_created.kql) | new rule | medium |
-| [Potential Autonomous AI Agent NPM Install](pr-6017/rules/windows/process_creation/proc_creation_win_openclaw_agent_npm_install.kql) | new rule | medium |
-
-## [#6006](https://github.com/SigmaHQ/sigma/pull/6006) CVE-2026-41940 - cPanel and WHM CRLF authentication bypass detection
-
-| Rule | Change | Level |
-|---|---|---|
-| [CVE-2026-41940 cPanel Session File Written by Unexpected Process](pr-6006/rules/linux/file_event/file_event_lnx_cpanel_session_write_cve_2026_41940.kql) | new rule | high |
-| [CVE-2026-41940 cPanel Service Daemon Suspicious Child Process](pr-6006/rules/linux/process_creation/proc_creation_lnx_cpanel_cpsrvd_susp_child_cve_2026_41940.kql) | new rule | critical |
 

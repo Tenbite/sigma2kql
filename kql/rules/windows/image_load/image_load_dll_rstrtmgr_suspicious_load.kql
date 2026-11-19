@@ -16,7 +16,7 @@
 //   - https://www.crowdstrike.com/blog/windows-restart-manager-part-2/
 //   - https://web.archive.org/web/20231221193106/https://www.swascan.com/cactus-ransomware-malware-analysis/
 //   - https://taiwan.postsen.com/business/88601/Hamas-hackers-use-data-destruction-software-BiBi-which-consumes-a-lot-of-processor-resources-to-wipe-Windows-computer-data--iThome.html
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/54967d64e6dda2b4daa81f47f7a8bf1f591b68a0/rules/windows/image_load/image_load_dll_rstrtmgr_suspicious_load.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/698f0912f571d5fac3bf8c51f5421139834a011c/rules/windows/image_load/image_load_dll_rstrtmgr_suspicious_load.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)

@@ -18,7 +18,7 @@
 // References:
 //   - https://cicada-8.medium.com/hijack-the-typelib-new-com-persistence-technique-32ae1d284661
 //   - https://reliaquest.com/blog/threat-spotlight-hijacked-and-hidden-new-backdoor-and-persistence-technique/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/16c482306186f8827fdb39c72ba5f76b1a521d55/rules/windows/image_load/image_load_explorer_script_runtime_load.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/4d1f37c73d533490919612989fc3a91127b08b38/rules/windows/image_load/image_load_explorer_script_runtime_load.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

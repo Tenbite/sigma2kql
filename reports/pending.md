@@ -1,18 +1,23 @@
 # Pending rules run
 
-- Run: 2026-11-18 15:48 UTC
+- Run: 2026-11-19 15:54 UTC
 - Open pull requests checked: 300 (drafts skipped: 4)
-- Pull requests with converted rules: 177
+- Pull requests with converted rules: 179
 
 | Result | Rule files |
 |---|---|
-| Converted and valid | 494 |
-| Failed validation | 4 |
-| Failed conversion | 311 |
+| Converted and valid | 502 |
+| Failed validation | 5 |
+| Failed conversion | 306 |
 | Skipped (filters) | 60 |
 
 ## Not converted
 
+- #6644 `rules/windows/powershell/powershell_script/posh_ps_susp_chat_webhook_exfiltration.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6641 `rules-threat-hunting/cloud/m365/audit/microsoft365_susp_inbox_rule_creation_or_update_activity.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6641 `rules-threat-hunting/windows/powershell/powershell_script/posh_ps_inbox_rule_creation_or_update_activity.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6641 `rules/cloud/azure/signin_logs/azure_legacy_authentication_protocols.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6641 `rules/windows/network_connection/net_connection_win_office_outbound_non_local_ip.yml`: A value of type string or dynamic expected. (at 3074)
 - #6640 `rules/windows/powershell/powershell_script/posh_ps_powershell_web_access_installation.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6634 `rules/cloud/azure/activity_logs/azure_sentinel_analytics_rule_deleted.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6630 `rules/network/dns/net_dns_susp_b64_queries.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
@@ -319,12 +324,3 @@
 - #6030 `rules/windows/pipe_created/pipe_created_win_codex_ipc_pipe_unexpected_process.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6030 `rules/windows/pipe_created/pipe_created_win_codex_runner_pipe_unexpected_user.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6022 `rules-emerging-threats/2026/Exploits/AbortHydration/pipe_created_win_aborthydration_eop_miniplasmawerpipe.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #6020 `rules-emerging-threats/2026/Malware/RondoDox/web_rondodox_user_agent.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #6018 `rules/cloud/aws/cloudtrail/aws_iam_attach_critical_managed_policy.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #6018 `rules/cloud/aws/cloudtrail/aws_iam_managed_policy_version_abuse.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #6018 `rules/cloud/aws/cloudtrail/aws_iam_privileged_inline_policy_creation.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #6017 `rules/windows/process_creation/proc_creation_win_openclaw_agent_postinstall_execution.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory
-- #6017 `rules/windows/process_creation/proc_creation_win_openclaw_agent_workdir.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory. Invalid SigmaDetectionItem field name encountered: CurrentDirectory
-- #6006 `rules/linux/auditd/syscall/lnx_auditd_cpanel_crlf_injection_cve_2026_41940.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #6006 `rules/web/webserver_generic/web_cpanel_crlf_login_cve_2026_41940.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #6005 `rules/windows/builtin/security/win_security_wifi_rogue_ap_bssid.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:

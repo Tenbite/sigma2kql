@@ -1,0 +1,33 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6646 update: Python Path Configuration File Creation - Windows - match .pth in any site-packages directory
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6646
+// Pull request author: elhoim
+// Change: update to existing rule
+// Title: Python Path Configuration File Creation - Windows
+// Sigma ID: e3652ba3-0ad8-4010-a957-b7ba369e7bac
+// Status: test | Level: medium
+// Author: Andreas Braathen (mnemonic.io), Nasreddine Bencherchali (Nextron Systems)
+// Date: 2024-04-25 | Modified: 2026-11-18
+// ATT&CK: execution, persistence, privilege-escalation, T1059.006, T1546.018
+// Tags: detection.threat-hunting
+// Description: Detects creation of a Python path configuration file (.pth) in Python library folders, which can
+//   be maliciously abused for code execution and persistence. Modules referenced by these files are
+//   run at every Python startup (v3.5+), regardless of whether the module is imported by the calling
+//   script. Default paths are '\lib\site-packages\*.pth' (Windows) and '/lib/pythonX.Y/site-
+//   packages/*.pth' (Unix and macOS). On Windows, this covers virtual environments regardless of
+//   their folder name (e.g. 'venv', '.venv', 'env', conda or Poetry environments) as well as the
+//   per-user site-packages directory '%APPDATA%\Python\PythonXY\site-packages'.
+// False positives:
+//   - Although .pth files are discouraged due to potential security implications, these are legitimate files by specification.
+// References:
+//   - https://www.volexity.com/blog/2024/04/12/zero-day-exploitation-of-unauthenticated-remote-code-execution-vulnerability-in-globalprotect-cve-2024-3400/
+//   - https://www.virustotal.com/gui/file/3de2a4392b8715bad070b2ae12243f166ead37830f7c6d24e778985927f9caac
+//   - https://docs.python.org/3/library/site.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/36e623a255fe80559ac3f0e0fdc8f83943ee5d98/rules-threat-hunting/windows/file/file_event/file_event_win_python_path_configuration_files.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where (FolderPath matches regex "(?i)\\\\site-packages\\\\[^\\\\]+\\.pth$" and FolderPath endswith ".pth") and (not((InitiatingProcessFolderPath endswith "\\python.exe" and (FolderPath endswith "\\pywin32.pth" or FolderPath endswith "\\distutils-precedence.pth"))))

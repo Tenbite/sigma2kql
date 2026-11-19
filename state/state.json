@@ -5,11 +5,11 @@
   "invalid": 14,
   "skipped": 684
  },
- "fingerprint": "09468cd96aaa7be0fcacf0f0921e49a80bffce0a8e10a42fb53b379a0182c853",
- "last_mode": "incremental",
- "last_run": "2026-11-18 15:44 UTC",
+ "fingerprint": "24af6eea0d1c0c117064f2ec9106bdf5c01622b7a8f48093c1d2131891912e4a",
+ "last_mode": "full",
+ "last_run": "2026-11-19 15:50 UTC",
  "schema_fail_streak": 0,
- "schema_source": "downloaded from https://xdrinternals.com/FullSchema-latest.json (210 tables)",
+ "schema_source": "downloaded from https://xdrinternals.com/FullSchema-latest.json (212 tables)",
  "sigma_sha": "698f0912f571d5fac3bf8c51f5421139834a011c",
  "target": "microsoft_xdr",
  "versions": {

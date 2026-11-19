@@ -12,7 +12,7 @@
 //   - WinRM
 // References:
 //   - https://any.run/report/68bc255f9b0db6a0d30a8f2dadfbee3256acfe12497bf93943bc1eab0735e45e/a2385d6f-34f7-403c-90d3-b1f9d2a90a5e
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/54967d64e6dda2b4daa81f47f7a8bf1f591b68a0/rules/windows/process_creation/proc_creation_win_wmiprvse_spawns_powershell.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/698f0912f571d5fac3bf8c51f5421139834a011c/rules/windows/process_creation/proc_creation_win_wmiprvse_spawns_powershell.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)
