@@ -1,18 +1,22 @@
 # Pending rules run
 
-- Run: 2026-11-19 15:54 UTC
+- Run: 2026-11-20 15:34 UTC
 - Open pull requests checked: 300 (drafts skipped: 4)
-- Pull requests with converted rules: 179
+- Pull requests with converted rules: 177
 
 | Result | Rule files |
 |---|---|
-| Converted and valid | 502 |
+| Converted and valid | 496 |
 | Failed validation | 5 |
-| Failed conversion | 306 |
-| Skipped (filters) | 60 |
+| Failed conversion | 307 |
+| Skipped (filters) | 61 |
 
 ## Not converted
 
+- #6652 `rules/cloud/aws/cloudtrail/aws_cloudtrail_agentcore_gateway_or_target_modified.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6652 `rules/cloud/aws/cloudtrail/aws_cloudtrail_bedrock_agent_action_group_modified.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6652 `rules/cloud/aws/cloudtrail/aws_cloudtrail_bedrock_agent_updated.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6652 `rules/cloud/aws/cloudtrail/aws_cloudtrail_bedrock_model_invocation_logging_modified.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6644 `rules/windows/powershell/powershell_script/posh_ps_susp_chat_webhook_exfiltration.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6641 `rules-threat-hunting/cloud/m365/audit/microsoft365_susp_inbox_rule_creation_or_update_activity.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6641 `rules-threat-hunting/windows/powershell/powershell_script/posh_ps_inbox_rule_creation_or_update_activity.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
@@ -321,6 +325,3 @@
 - #6052 `rules-emerging-threats/2026/Exploits/CVE-2026-31431/lnx_auditd_exploit_cve_2026_31431_splice_to_af_alg.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6043 `rules/cloud/aws/cloudtrail/aws_cloudtrail_ses_account_discovery.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6042 `rules/cloud/aws/cloudtrail/aws_backup_vault_or_recovery_point_deleted.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #6030 `rules/windows/pipe_created/pipe_created_win_codex_ipc_pipe_unexpected_process.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #6030 `rules/windows/pipe_created/pipe_created_win_codex_runner_pipe_unexpected_user.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #6022 `rules-emerging-threats/2026/Exploits/AbortHydration/pipe_created_win_aborthydration_eop_miniplasmawerpipe.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:

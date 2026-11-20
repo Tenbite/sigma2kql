@@ -3,7 +3,13 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-19 15:54 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-20 15:34 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+
+## [#6650](https://github.com/SigmaHQ/sigma/pull/6650) Real firas patch 2
+
+| Rule | Change | Level |
+|---|---|---|
+| [Potential Binary Proxy Execution Via DbgSrv.EXE](pr-6650/rules/windows/process_creation/proc_creation_win_lolbin_dbgsrv.kql) | new rule | medium |
 
 ## [#6648](https://github.com/SigmaHQ/sigma/pull/6648) new: Potential Python Startup Hook Customize File Created - Linux
 
@@ -1379,26 +1385,4 @@ Rebuilt 2026-11-19 15:54 UTC from 300 open pull requests. When a pull request is
 | Rule | Change | Level |
 |---|---|---|
 | [HackTool - Gogo Scanner Execution](pr-6035/rules/windows/process_creation/proc_creation_win_hktl_gogo_scanner.kql) | new rule | high |
-
-## [#6034](https://github.com/SigmaHQ/sigma/pull/6034) Add detection for Hyper-V VM forced shutdown (ransomware preparation)
-
-| Rule | Change | Level |
-|---|---|---|
-| [Hyper-V Virtual Machine Forced Shutdown](pr-6034/rules/windows/process_creation/proc_creation_win_hyperv_vm_forced_shutdown.kql) | new rule | high |
-
-## [#6030](https://github.com/SigmaHQ/sigma/pull/6030) new: OpenAI Codex sandbox abuse detection rules
-
-| Rule | Change | Level |
-|---|---|---|
-| [OpenAI Codex Sandbox Configuration Files Modified By Unexpected Process](pr-6030/rules/windows/file/file_event/file_event_win_codex_config_dir_tampering.kql) | new rule | medium |
-| [OpenAI Codex Command Runner Child Process Outside Expected Sandbox User Identity](pr-6030/rules/windows/process_creation/proc_creation_win_codex_command_runner_child_unexpected_user.kql) | new rule | high |
-| [OpenAI Codex Command Runner Spawned By Unexpected Parent Process](pr-6030/rules/windows/process_creation/proc_creation_win_codex_command_runner_unexpected_parent.kql) | new rule | medium |
-| [OpenAI Codex Command Runner Execution by Unexpected User](pr-6030/rules/windows/process_creation/proc_creation_win_codex_command_runner_unexpected_user.kql) | new rule | high |
-
-## [#6022](https://github.com/SigmaHQ/sigma/pull/6022) NEWRULE: AbortHydration MiniPlasma Behaviour (Nightmare Eclipse)
-
-| Rule | Change | Level |
-|---|---|---|
-| [CVE-2020-17103 - Fake wermgr.exe Process Execution (AbortHydration EoP)](pr-6022/rules-emerging-threats/2026/Exploits/AbortHydration/proc_creation_win_aborthydration_eop_wermgr_spawn.kql) | new rule | high |
-| [CVE-2020-17103 - BlockedApps Symlink and Windir Registry Manipulation (AbortHydration EoP)](pr-6022/rules-emerging-threats/2026/Exploits/AbortHydration/registry_set_win_aborthydration_eop_blockedapps_windir.kql) | new rule | critical |
 
