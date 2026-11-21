@@ -3,7 +3,7 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-20 15:34 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-21 14:46 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
 
 ## [#6650](https://github.com/SigmaHQ/sigma/pull/6650) Real firas patch 2
 
@@ -336,6 +336,13 @@ Rebuilt 2026-11-20 15:34 UTC from 300 open pull requests. When a pull request is
 | Rule | Change | Level |
 |---|---|---|
 | [Potential Ingress Tool Transfer Via ECMangen.EXE](pr-6538/rules/windows/process_creation/proc_creation_win_ecmangen_ingress_tool_transfer.kql) | new rule | medium |
+
+## [#6537](https://github.com/SigmaHQ/sigma/pull/6537) new: Potential Child Process from Node.js or Bun - Node2Shell (CVE-2026-111497)
+
+| Rule | Change | Level |
+|---|---|---|
+| [Potential Child Process from Node.js or Bun - Node2Shell - Linux](pr-6537/rules-emerging-threats/2026/Exploits/CVE-2026-111497/proc_creation_lnx_exploit_cve_2026_111497_node2shell_child_process.kql) | new rule | medium |
+| [Potential Child Process from Node.js or Bun - Node2Shell - Windows](pr-6537/rules-emerging-threats/2026/Exploits/CVE-2026-111497/proc_creation_win_exploit_cve_2026_111497_node2shell_child_process.kql) | new rule | medium |
 
 ## [#6535](https://github.com/SigmaHQ/sigma/pull/6535) Add Fax service configuration detection and regression tests
 
@@ -1379,10 +1386,4 @@ Rebuilt 2026-11-20 15:34 UTC from 300 open pull requests. When a pull request is
 | Rule | Change | Level |
 |---|---|---|
 | [Startup Items Enumeration Via CommandLine Utility](pr-6040/rules/windows/process_creation/proc_creation_win_susp_startup_enumeration.kql) | new rule | medium |
-
-## [#6035](https://github.com/SigmaHQ/sigma/pull/6035) Add HackTool - Gogo Scanner Execution Rule
-
-| Rule | Change | Level |
-|---|---|---|
-| [HackTool - Gogo Scanner Execution](pr-6035/rules/windows/process_creation/proc_creation_win_hktl_gogo_scanner.kql) | new rule | high |
 
