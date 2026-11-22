@@ -1,0 +1,27 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6653 chore: replace dead reference links in 85 rules
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6653
+// Pull request author: Sh4dow-BR
+// Change: update to existing rule
+// Title: Potentially Suspicious Command Targeting Teams Sensitive Files
+// Sigma ID: d2eb17db-1d39-41dc-b57f-301f6512fa75
+// Status: test | Level: medium
+// Author: @SerkinValery
+// Date: 2022-09-16 | Modified: 2026-11-21
+// ATT&CK: credential-access, T1528
+// Description: Detects a commandline containing references to the Microsoft Teams database or cookies files
+//   from a process other than Teams. The database might contain authentication tokens and other
+//   sensitive information about the logged in accounts.
+// False positives:
+//   - Unknown
+// References:
+//   - https://www.bleepingcomputer.com/news/security/microsoft-teams-stores-auth-tokens-as-cleartext-in-windows-linux-macs/
+//   - https://web.archive.org/web/20230726144455/https://www.vectra.ai/blogpost/undermining-microsoft-teams-security-by-mining-tokens
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/9493cf5c565d7a01b8f064e01a51e1b94057e4bb/rules/windows/process_creation/proc_creation_win_teams_suspicious_command_line_cred_access.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (ProcessCommandLine contains "\\Microsoft\\Teams\\Cookies" or ProcessCommandLine contains "\\Microsoft\\Teams\\Local Storage\\leveldb") and (not(FolderPath endswith "\\Microsoft\\Teams\\current\\Teams.exe"))

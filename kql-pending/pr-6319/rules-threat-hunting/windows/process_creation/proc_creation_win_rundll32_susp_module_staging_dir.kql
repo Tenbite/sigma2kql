@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6319 new: Rundll32 Execution of DLL Masquerading as Non-Executable File Type
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6319
+// Pull request author: PpT2211
+// Change: new rule
+// Title: Rundll32 Execution With Module In User-Writable Staging Directory
+// Sigma ID: a7e1d2c4-5b38-4f6a-9c0e-2d4b8f1a6e73
+// Status: experimental | Level: medium
+// Author: Pavan Pothamsetti (PpT2211)
+// Date: 2026-08-28 | Modified: -
+// ATT&CK: stealth, T1218.011
+// Tags: detection.threat-hunting
+// Description: Detects rundll32.exe where the module to be loaded (the argument before the first comma) is
+//   located in a user-writable staging directory such as Temp, AppData\Roaming, ProgramData,
+//   Users\Public or Downloads. Legitimate rundll32 targets normally live under System32 or Program
+//   Files. Paths that appear only as arguments to the export function (e.g. the file passed to
+//   shell32.dll,OpenAs_RunDLL) are intentionally not matched. Unlike the Qakbot-specific rule, this
+//   is not tied to specific parent processes, so it is broader and intended as a hunting/triage
+//   signal. Execution with a msiexec.exe parent is excluded.
+// False positives:
+//   - Browser components, printer/scanner utilities and some updaters load DLLs from AppData or ProgramData during normal operation. Baseline before alerting
+// References:
+//   - https://www.fortinet.com/blog/threat-research/infostealer-malware-formbook-spread-via-phishing-campaign-part-i
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/afa8c265b64cc6a4c53b6a09aae7a487029c90a0/rules-threat-hunting/windows/process_creation/proc_creation_win_rundll32_susp_module_staging_dir.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\rundll32.exe" or ProcessVersionInfoOriginalFileName =~ "RUNDLL32.EXE") and ProcessCommandLine matches regex "(?i)rundll32(\\.exe)?\"?\\s+\"?[^,]*\\\\(AppData\\\\Local\\\\Temp|AppData\\\\Roaming|ProgramData|Users\\\\Public|Downloads)\\\\[^,]*,") and (not(InitiatingProcessFolderPath endswith "\\msiexec.exe"))

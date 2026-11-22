@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6659 new: Transparent Tribe (APT36) PcDirvs loader, public core HTA and Crimson RAT runner
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6659
+// Pull request author: sohankanna
+// Change: new rule
+// Title: Transparent Tribe PcDirvs Loader File Creation
+// Sigma ID: 7735e9b5-8afd-4727-a0f0-eb1ba2c6be80
+// Status: experimental | Level: high
+// Author: @sohankanna
+// Date: 2026-11-22 | Modified: -
+// ATT&CK: execution, stealth, persistence, privilege-escalation, T1574.001, G0134
+// Tags: detection.emerging-threats
+// Description: Detects the creation of files used by the PcDirvs loader of Transparent Tribe (APT36), as
+//   reported by CYFIRMA in December 2025. In this campaign against Indian government entities, a LNK
+//   named "NCERT-Whatsapp-Advisory.pdf.lnk" installs a remote MSI. The MSI drops "pdf.dll" and a
+//   malicious "wininet.dll" into "C:\ProgramData\PcDirvs\", then drops and runs "PcDirvs.exe". A
+//   "PcDirvs.hta" script adds "PcDirvs.exe" to the Run key for persistence.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://www.cyfirma.com/research/apt36-lnk-based-malware-campaign-leveraging-msi-payload-delivery/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/0d96dbbaf239f29b10f0dea2f2a15c27dcbb3659/rules-emerging-threats/2025/TA/Transparent-Tribe/file_event_win_apt_transparent_tribe_pcdirvs_loader.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where (FolderPath contains "\\ProgramData\\PcDirvs\\" and (FolderPath endswith "\\pdf.dll" or FolderPath endswith "\\wininet.dll")) or (FolderPath contains "\\ProgramData\\" and (FolderPath endswith "\\PcDirvs.exe" or FolderPath endswith "\\PcDirvs.hta"))
