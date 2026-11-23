@@ -7,7 +7,7 @@
 // Sigma ID: 23c43900-e732-45a4-8354-63e4a6c187ce
 // Status: test | Level: medium
 // Author: Alejandro Ortuno, oscd.community
-// Date: 2020-10-23 | Modified: 2026-11-21
+// Date: 2020-10-23 | Modified: 2021-11-27
 // ATT&CK: persistence, privilege-escalation, T1546.014
 // Description: Detects additions to the Emond Launch Daemon that adversaries may use to gain persistence and
 //   elevate privileges.
@@ -16,7 +16,7 @@
 // References:
 //   - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1546.014/T1546.014.md
 //   - https://web.archive.org/web/20221206163749/https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124?gi=f6f6733909bd
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/9493cf5c565d7a01b8f064e01a51e1b94057e4bb/rules/macos/file_event/file_event_macos_emond_launch_daemon.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/3b26628c02b9f77741b6f068e9ce40a87740d455/rules/macos/file_event/file_event_macos_emond_launch_daemon.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

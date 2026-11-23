@@ -7,7 +7,7 @@
 // Sigma ID: 83475063-b1c8-4774-9568-69bbda71a539
 // Status: experimental | Level: medium
 // Author: Liran Ravich, Swachchhanda Shrawan Poudel (Nextron Systems)
-// Date: 2026-05-05 | Modified: 2026-11-21
+// Date: 2026-05-05 | Modified: -
 // ATT&CK: stealth, defense-impairment, persistence, T1112, T1218
 // Description: Detects modifications to the Windows Subsystem for Linux (WSL) InstallLocation registry key.
 //   Attackers can modify this registry key to redirect the execution flow of legitimate WSL
@@ -21,7 +21,7 @@
 //   - https://www.bleepingcomputer.com/news/security/new-malware-uses-windows-subsystem-for-linux-for-stealthy-attacks/
 //   - https://thehackernews.com/2021/09/new-malware-targets-windows-subsystem.html
 //   - https://learn.microsoft.com/en-us/windows/wsl/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/9493cf5c565d7a01b8f064e01a51e1b94057e4bb/rules/windows/registry/registry_set/registry_set_wsl_installlocation_registry_key_modification.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/3b26628c02b9f77741b6f068e9ce40a87740d455/rules/windows/registry/registry_set/registry_set_wsl_installlocation_registry_key_modification.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

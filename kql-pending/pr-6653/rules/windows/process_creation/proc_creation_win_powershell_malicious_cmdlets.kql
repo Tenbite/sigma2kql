@@ -7,7 +7,7 @@
 // Sigma ID: 02030f2f-6199-49ec-b258-ea71b07e03dc
 // Status: test | Level: high
 // Author: Nasreddine Bencherchali (Nextron Systems)
-// Date: 2023-01-02 | Modified: 2026-11-21
+// Date: 2023-01-02 | Modified: 2025-12-10
 // ATT&CK: execution, discovery, T1482, T1087, T1087.001, T1087.002, T1069.001, T1069.002, T1069, T1059.001
 // Description: Detects Commandlet names from well-known PowerShell exploitation frameworks
 // False positives:
@@ -34,7 +34,7 @@
 //   - https://github.com/sadshade/veeam-creds/blob/6010eaf31ba41011b58d6af3950cffbf6f5cea32/Veeam-Get-Creds.ps1
 //   - https://github.com/The-Viper-One/Invoke-PowerDPAPI/
 //   - https://github.com/Arno0x/DNSExfiltrator/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/9493cf5c565d7a01b8f064e01a51e1b94057e4bb/rules/windows/process_creation/proc_creation_win_powershell_malicious_cmdlets.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/3b26628c02b9f77741b6f068e9ce40a87740d455/rules/windows/process_creation/proc_creation_win_powershell_malicious_cmdlets.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

@@ -3,7 +3,14 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-22 14:42 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-23 18:20 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+
+## [#6662](https://github.com/SigmaHQ/sigma/pull/6662) fix: two Windows rules with conditions that can never match
+
+| Rule | Change | Level |
+|---|---|---|
+| [Suspicious Regsvr32 Execution From Remote Share](pr-6662/rules/windows/process_creation/proc_creation_win_regsvr32_remote_share.kql) | update to existing rule | high |
+| [Removal of Potential COM Hijacking Registry Keys](pr-6662/rules/windows/registry/registry_delete/registry_delete_removal_com_hijacking_registry_key.kql) | update to existing rule | medium |
 
 ## [#6660](https://github.com/SigmaHQ/sigma/pull/6660) new: FluxEngine banker rules (registry keys, Run key, attrib.exe hollowing host, Cloudflare API dead drop, stage download)
 
@@ -21,22 +28,6 @@ Rebuilt 2026-11-22 14:42 UTC from 300 open pull requests. When a pull request is
 | [Transparent Tribe PcDirvs Loader File Creation](pr-6659/rules-emerging-threats/2025/TA/Transparent-Tribe/file_event_win_apt_transparent_tribe_pcdirvs_loader.kql) | new rule | high |
 | [Transparent Tribe HTA Dropped In Public Core Folder](pr-6659/rules-emerging-threats/2025/TA/Transparent-Tribe/file_event_win_apt_transparent_tribe_public_core_hta.kql) | new rule | high |
 | [Transparent Tribe Crimson RAT Batch Runner Execution](pr-6659/rules-emerging-threats/2026/TA/Transparent-Tribe/proc_creation_win_apt_transparent_tribe_crimson_rat_runner.kql) | new rule | high |
-
-## [#6658](https://github.com/SigmaHQ/sigma/pull/6658) fix: add missing leading backslash to Image|endswith filters in five rules
-
-| Rule | Change | Level |
-|---|---|---|
-| [Potential CVE-2021-26857 Exploitation Attempt](pr-6658/rules-emerging-threats/2021/Exploits/CVE-2021-26857/proc_creation_win_exploit_cve_2021_26857_msexchange.kql) | update to existing rule | high |
-| [Potentially Suspicious Azure Front Door Connection](pr-6658/rules-threat-hunting/windows/network_connection/net_connection_win_susp_azurefd_connection.kql) | update to existing rule | medium |
-| [New Connection Initiated To Potential Dead Drop Resolver Domain](pr-6658/rules/windows/network_connection/net_connection_win_domain_dead_drop_resolvers.kql) | update to existing rule | high |
-| [Enumeration for 3rd Party Creds From CLI](pr-6658/rules/windows/process_creation/proc_creation_win_registry_enumeration_for_credentials_cli.kql) | update to existing rule | medium |
-| [Renamed Vmnat.exe Execution](pr-6658/rules/windows/process_creation/proc_creation_win_renamed_vmnat.kql) | update to existing rule | high |
-
-## [#6657](https://github.com/SigmaHQ/sigma/pull/6657) fix: Installation of WSL Kali-Linux - correct OriginalFileName
-
-| Rule | Change | Level |
-|---|---|---|
-| [Installation of WSL Kali-Linux](pr-6657/rules/windows/process_creation/proc_creation_win_wsl_kali_linux_installation.kql) | update to existing rule | high |
 
 ## [#6653](https://github.com/SigmaHQ/sigma/pull/6653) chore: replace dead reference links in 85 rules
 
@@ -465,12 +456,6 @@ Rebuilt 2026-11-22 14:42 UTC from 300 open pull requests. When a pull request is
 | Rule | Change | Level |
 |---|---|---|
 | [Chmod Recursive World-Writable Mode on System Directories](pr-6529/rules/linux/process_creation/proc_creation_lnx_chmod_recursive_world_writable_system_dirs.kql) | new rule | high |
-
-## [#6527](https://github.com/SigmaHQ/sigma/pull/6527) fix: Windows Binaries Write Suspicious Extensions - filter AppX deployment and Windows Update writing into WindowsApps / SoftwareDistributio
-
-| Rule | Change | Level |
-|---|---|---|
-| [Windows Binaries Write Suspicious Extensions](pr-6527/rules/windows/file/file_event/file_event_win_shell_write_susp_files_extensions.kql) | update to existing rule | high |
 
 ## [#6526](https://github.com/SigmaHQ/sigma/pull/6526) fix: Suspicious Rundll32 Execution With Image Extension - filter the WebDAV client (davclnt.dll,DavSetCookie)
 
@@ -1300,12 +1285,6 @@ Rebuilt 2026-11-22 14:42 UTC from 300 open pull requests. When a pull request is
 |---|---|---|
 | [WSL COM Proxy-Stub Loaded by Non-WSL Process](pr-6143/rules/windows/image_load/image_load_wsl_com_proxystub_non_wsl.kql) | new rule | high |
 
-## [#6137](https://github.com/SigmaHQ/sigma/pull/6137) Update: add additional Netcat binary variants
-
-| Rule | Change | Level |
-|---|---|---|
-| [Potential Netcat Reverse Shell Execution](pr-6137/rules/linux/process_creation/proc_creation_lnx_netcat_reverse_shell.kql) | update to existing rule | high |
-
 ## [#6134](https://github.com/SigmaHQ/sigma/pull/6134) Add .NET startup hook persistence detection
 
 | Rule | Change | Level |
@@ -1436,10 +1415,4 @@ Rebuilt 2026-11-22 14:42 UTC from 300 open pull requests. When a pull request is
 | Rule | Change | Level |
 |---|---|---|
 | [Remote Management Tool - Ninite Execution From Suspicious Context](pr-6079/rules/windows/process_creation/proc_creation_win_remote_access_tools_ninite.kql) | new rule | medium |
-
-## [#6078](https://github.com/SigmaHQ/sigma/pull/6078) new: Potential Browser Cache Smuggling Payload Extraction
-
-| Rule | Change | Level |
-|---|---|---|
-| [Potential Browser Cache Smuggling Payload Extraction](pr-6078/rules/windows/process_creation/proc_creation_win_browser_cache_smuggling_extraction.kql) | new rule | medium |
 

@@ -7,7 +7,7 @@
 // Sigma ID: ce72ef99-22f1-43d4-8695-419dcb5d9330
 // Status: test | Level: high
 // Author: Nasreddine Bencherchali (Nextron Systems), frack113 , X__Junior (Nextron Systems)
-// Date: 2022-09-01 | Modified: 2026-11-21
+// Date: 2022-09-01 | Modified: 2026-10-17
 // ATT&CK: impact, defense-impairment, T1489, T1685
 // Description: Detects the usage of binaries such as 'net', 'sc' or 'powershell' in order to stop, pause,
 //   disable or delete critical or important Windows services such as AV, Backup, etc. As seen being
@@ -21,7 +21,7 @@
 //   - https://www.nccgroup.com/research/back-in-black-unlocking-a-lockbit-30-ransomware-attack/
 //   - https://www.virustotal.com/gui/file/38283b775552da8981452941ea74191aa0d203edd3f61fb2dee7b0aea3514955
 //   - https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/delete-method-in-class-win32-service
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/9493cf5c565d7a01b8f064e01a51e1b94057e4bb/rules/windows/process_creation/proc_creation_win_susp_service_tamper.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/3b26628c02b9f77741b6f068e9ce40a87740d455/rules/windows/process_creation/proc_creation_win_susp_service_tamper.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

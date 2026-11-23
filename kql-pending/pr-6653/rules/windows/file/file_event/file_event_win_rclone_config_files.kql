@@ -7,14 +7,14 @@
 // Sigma ID: 34986307-b7f4-49be-92f3-e7a4d01ac5db
 // Status: test | Level: medium
 // Author: Aaron Greetham (@beardofbinary) - NCC Group
-// Date: 2021-05-26 | Modified: 2026-11-21
+// Date: 2021-05-26 | Modified: 2023-05-09
 // ATT&CK: exfiltration, T1567.002
 // Description: Detects Rclone config files being created
 // False positives:
 //   - Legitimate Rclone usage
 // References:
 //   - https://www.nccgroup.com/research/detecting-rclone-an-effective-tool-for-exfiltration/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/9493cf5c565d7a01b8f064e01a51e1b94057e4bb/rules/windows/file/file_event/file_event_win_rclone_config_files.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/3b26628c02b9f77741b6f068e9ce40a87740d455/rules/windows/file/file_event/file_event_win_rclone_config_files.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

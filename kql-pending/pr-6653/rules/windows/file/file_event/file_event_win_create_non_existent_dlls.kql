@@ -7,7 +7,7 @@
 // Sigma ID: df6ecb8b-7822-4f4b-b412-08f524b4576c
 // Status: test | Level: medium
 // Author: Nasreddine Bencherchali (Nextron Systems), fornotes
-// Date: 2022-12-01 | Modified: 2026-11-21
+// Date: 2022-12-01 | Modified: 2026-01-24
 // ATT&CK: persistence, privilege-escalation, execution, stealth, T1574.001
 // Description: Detects creation of specific system DLL files that are usually not present on the system (or at
 //   least not in system directories) but may be loaded by legitimate processes. Phantom DLL
@@ -31,7 +31,7 @@
 //   - https://www.hexacorn.com/blog/2025/06/14/wermgr-exe-boot-offdmpsvc-dll-lolbin/
 //   - https://www.hexacorn.com/blog/2025/06/14/wpr-exe-boottrace-phantom-dll-axeonoffhelper-dll-lolbin/
 //   - https://x.com/0gtweet/status/1564131230941122561
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/9493cf5c565d7a01b8f064e01a51e1b94057e4bb/rules/windows/file/file_event/file_event_win_create_non_existent_dlls.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/3b26628c02b9f77741b6f068e9ce40a87740d455/rules/windows/file/file_event/file_event_win_create_non_existent_dlls.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

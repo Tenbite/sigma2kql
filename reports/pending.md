@@ -1,12 +1,12 @@
 # Pending rules run
 
-- Run: 2026-11-22 14:42 UTC
+- Run: 2026-11-23 18:20 UTC
 - Open pull requests checked: 300 (drafts skipped: 4)
-- Pull requests with converted rules: 176
+- Pull requests with converted rules: 172
 
 | Result | Rule files |
 |---|---|
-| Converted and valid | 558 |
+| Converted and valid | 551 |
 | Failed validation | 5 |
 | Failed conversion | 332 |
 | Skipped (filters) | 63 |

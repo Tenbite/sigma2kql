@@ -7,7 +7,7 @@
 // Sigma ID: bb780e0c-16cf-4383-8383-1e5471db6cf9
 // Status: test | Level: medium
 // Author: Sami Ruohonen, Harish Segar, Tim Shelton, Teymur Kheirkhabarov, Vasiliy Burov, oscd.community, Nasreddine Bencherchali
-// Date: 2018-09-05 | Modified: 2026-11-21
+// Date: 2018-09-05 | Modified: 2023-01-30
 // ATT&CK: execution, stealth, T1059.001, T1140, T1027
 // Description: Detects presence of a potentially xor encoded powershell command
 // False positives:
@@ -17,7 +17,7 @@
 //   - https://redcanary.com/blog/yellow-cockatoo/
 //   - https://web.archive.org/web/20230528204156/https://zero2auto.com/2020/05/19/netwalker-re/
 //   - https://web.archive.org/web/20230304082026/https://mez0.cc/posts/cobaltstrike-powershell-exec/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/9493cf5c565d7a01b8f064e01a51e1b94057e4bb/rules/windows/process_creation/proc_creation_win_powershell_xor_commandline.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/3b26628c02b9f77741b6f068e9ce40a87740d455/rules/windows/process_creation/proc_creation_win_powershell_xor_commandline.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

@@ -6,11 +6,11 @@
   "skipped": 684
  },
  "fingerprint": "24af6eea0d1c0c117064f2ec9106bdf5c01622b7a8f48093c1d2131891912e4a",
- "last_mode": "full",
- "last_run": "2026-11-19 15:50 UTC",
+ "last_mode": "incremental",
+ "last_run": "2026-11-23 18:17 UTC",
  "schema_fail_streak": 0,
  "schema_source": "downloaded from https://xdrinternals.com/FullSchema-latest.json (212 tables)",
- "sigma_sha": "698f0912f571d5fac3bf8c51f5421139834a011c",
+ "sigma_sha": "7228cccddc63a771924ab585e072f4fbb63690fb",
  "target": "microsoft_xdr",
  "versions": {
   "kusto-language": "12.4.1",
