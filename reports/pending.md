@@ -1,18 +1,19 @@
 # Pending rules run
 
-- Run: 2026-11-23 18:20 UTC
+- Run: 2026-11-24 17:53 UTC
 - Open pull requests checked: 300 (drafts skipped: 4)
-- Pull requests with converted rules: 172
+- Pull requests with converted rules: 174
 
 | Result | Rule files |
 |---|---|
-| Converted and valid | 551 |
+| Converted and valid | 556 |
 | Failed validation | 5 |
 | Failed conversion | 332 |
-| Skipped (filters) | 63 |
+| Skipped (filters) | 62 |
 
 ## Not converted
 
+- #6668 `rules-emerging-threats/2026/Malware/ROMULUS/proxy_malware_romulus_delivery_urls.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6661 `rules/cloud/azure/signin_logs/azure_account_lockout_correct_password.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6660 `rules-emerging-threats/2026/Malware/FluxEngine/proxy_malware_fluxengine_cloudflare_api_dead_drop.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6660 `rules-emerging-threats/2026/Malware/FluxEngine/proxy_malware_fluxengine_stage_url_msie8_ua.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
@@ -349,4 +350,3 @@
 - #6093 `rules/windows/builtin/security/win_security_nopac_samaccountname_spoofing.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6093 `rules/windows/builtin/security/win_security_ntlm_relay_machine_account_network_logon.yml`: SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: AuthenticationPackageName. Invalid SigmaDetectionItem field name encountered: TargetUserName. Invalid SigmaDetectionItem field name encountered: AuthenticationPackageName. Invalid SigmaDetectionItem field name encountered: 
 - #6086 `rules/cloud/aws/cloudtrail/aws_secretsmanager_batch_get_secret_value.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #6081 `rules/cloud/aws/cloudtrail/aws_bedrock_logging_config_deleted.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:

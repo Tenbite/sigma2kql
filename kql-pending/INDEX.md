@@ -3,14 +3,35 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-23 18:20 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-24 17:53 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
 
-## [#6662](https://github.com/SigmaHQ/sigma/pull/6662) fix: two Windows rules with conditions that can never match
+## [#6668](https://github.com/SigmaHQ/sigma/pull/6668) new: ROMULUS ClickFix delivery platform rules (MSI install, delivery URLs, DeElevate64 Run key, decimal DWORD IP download, Stardock sideload
+
+| Rule | Change | Level |
+|---|---|---|
+| [ROMULUS Silent MSI Install From PowerShell Staged In Temp](pr-6668/rules-emerging-threats/2026/Malware/ROMULUS/proc_creation_win_malware_romulus_msiexec_hex_temp_msi.kql) | new rule | high |
+| [ROMULUS Run Key Persistence Via DeElevate64.EXE](pr-6668/rules-emerging-threats/2026/Malware/ROMULUS/registry_set_malware_romulus_deelevate64_run_key.kql) | new rule | high |
+| [Potential DeElevator64.DLL Sideloading](pr-6668/rules/windows/image_load/image_load_side_load_stardock_deelevator64.kql) | new rule | medium |
+| [PowerShell Download From Decimal DWORD IP URL](pr-6668/rules/windows/process_creation/proc_creation_win_powershell_download_decimal_dword_ip.kql) | new rule | high |
+| [Stardock DeElevate Binary Execution From Non-Standard Location](pr-6668/rules/windows/process_creation/proc_creation_win_susp_stardock_deelevate_non_standard_location.kql) | new rule | medium |
+
+## [#6667](https://github.com/SigmaHQ/sigma/pull/6667) new: DRV File Created In User AppData Folder
+
+| Rule | Change | Level |
+|---|---|---|
+| [DRV File Created In User AppData Folder](pr-6667/rules/windows/file/file_event/file_event_win_susp_drv_file_creation_appdata.kql) | new rule | medium |
+
+## [#6666](https://github.com/SigmaHQ/sigma/pull/6666) new: Inno Setup Uninstaller Created In Windows Root Folder
+
+| Rule | Change | Level |
+|---|---|---|
+| [Inno Setup Uninstaller Created In Windows Root Folder](pr-6666/rules/windows/file/file_event/file_event_win_susp_inno_setup_uninstaller_windows_root.kql) | new rule | medium |
+
+## [#6662](https://github.com/SigmaHQ/sigma/pull/6662) Fix invalid OriginalFileName in `Suspicious Regsvr32 Execution From Remote Share`
 
 | Rule | Change | Level |
 |---|---|---|
 | [Suspicious Regsvr32 Execution From Remote Share](pr-6662/rules/windows/process_creation/proc_creation_win_regsvr32_remote_share.kql) | update to existing rule | high |
-| [Removal of Potential COM Hijacking Registry Keys](pr-6662/rules/windows/registry/registry_delete/registry_delete_removal_com_hijacking_registry_key.kql) | update to existing rule | medium |
 
 ## [#6660](https://github.com/SigmaHQ/sigma/pull/6660) new: FluxEngine banker rules (registry keys, Run key, attrib.exe hollowing host, Cloudflare API dead drop, stage download)
 
@@ -1409,10 +1430,4 @@ Rebuilt 2026-11-23 18:20 UTC from 300 open pull requests. When a pull request is
 | Rule | Change | Level |
 |---|---|---|
 | [DinDoor Backdoor Deno Remote JavaScript Execution From PowerShell](pr-6083/rules-emerging-threats/2026/Malware/DinDoor-Backdoor/proc_creation_win_malware_dindoor_deno_remote_js.kql) | new rule | medium |
-
-## [#6079](https://github.com/SigmaHQ/sigma/pull/6079) new: Remote Management Tool - Ninite Execution From Suspicious Context & improve: End User Consent To Application - context, references, FP 
-
-| Rule | Change | Level |
-|---|---|---|
-| [Remote Management Tool - Ninite Execution From Suspicious Context](pr-6079/rules/windows/process_creation/proc_creation_win_remote_access_tools_ninite.kql) | new rule | medium |
 

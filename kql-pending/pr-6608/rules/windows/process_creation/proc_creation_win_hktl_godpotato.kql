@@ -19,7 +19,7 @@
 //   - https://github.com/BeichenDream/GodPotato
 //   - https://www.ic3.gov/CSA/2025/250219.pdf
 //   - https://unit42.paloaltonetworks.com/manic-menagerie-targets-web-hosting-and-it/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/4994679357c5771693dd94dc81c29058b71ac7d6/rules/windows/process_creation/proc_creation_win_hktl_godpotato.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/76ec5bfd4ecebe900ee19dddb2f07ff8729ddb1f/rules/windows/process_creation/proc_creation_win_hktl_godpotato.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

@@ -1,0 +1,30 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6666 new: Inno Setup Uninstaller Created In Windows Root Folder
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6666
+// Pull request author: edmundpaimon
+// Change: new rule
+// Title: Inno Setup Uninstaller Created In Windows Root Folder
+// Sigma ID: 92b8ffe5-bff1-4db4-aff1-1065b9faa1b5
+// Status: experimental | Level: medium
+// Author: Edmund
+// Date: 2026-11-24 | Modified: -
+// ATT&CK: stealth, T1036.005
+// Description: Detects the creation of an Inno Setup uninstaller ("unins000.exe" or its "unins000.dat" log)
+//   directly in the Windows folder. By default, Inno Setup writes its "unins*" files to the
+//   installation folder, so their presence in "C:\Windows" usually means an installer chose the
+//   Windows folder as its installation folder. Legitimate software rarely installs there. In one
+//   observed case, a fake "Cloudflare Setup" dropper installed to "C:\Windows" and placed a pay-per-
+//   install bundle there.
+// False positives:
+//   - Legacy software that installs into the Windows folder
+// References:
+//   - https://jrsoftware.org/ishelp/topic_setup_uninstallfilesdir.htm
+//   - https://www.virustotal.com/gui/file/93330938600704cff0498e82dad6fa31e9954bb8eaade16d0400f33ac7301c89
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/8d298a8f8e6c8056e7371000165896024f63dbbd/rules/windows/file/file_event/file_event_win_susp_inno_setup_uninstaller_windows_root.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceFileEvents
+| where FolderPath matches regex "(?i)^[a-z]:\\\\Windows\\\\unins\\d{3}\\.(exe|dat)$"

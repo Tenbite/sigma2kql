@@ -1,0 +1,30 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6668 new: ROMULUS ClickFix delivery platform rules (MSI install, delivery URLs, DeElevate64 Run key, decimal DWORD IP download, Stardock sideload
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6668
+// Pull request author: harperjohnsai
+// Change: new rule
+// Title: Stardock DeElevate Binary Execution From Non-Standard Location
+// Sigma ID: 534a4361-51b2-4eca-9bc6-e6b1b4cc0484
+// Status: experimental | Level: medium
+// Author: Harper Johns
+// Date: 2026-11-24 | Modified: -
+// ATT&CK: persistence, privilege-escalation, execution, stealth, T1574.001
+// Description: Detects execution of Stardock's signed `DeElevate64.exe` / `DeElevate.exe` outside the Stardock
+//   installation folders in Program Files. Attackers copy the signed host into a user-writable
+//   folder (for example `%LOCALAPPDATA%\Programs\Stardock Smart DeElevation Tool\`) next to a
+//   patched `DeElevator64.dll` so the signed binary side-loads their loader (ROMULUS ClickFix chain,
+//   BabaDeda/CNCMachineRMS).
+// False positives:
+//   - Portable or per-user installations of Stardock products (Fences, Start11, Groupy)
+// References:
+//   - https://www.huntress.com/blog/chatgpt-custom-gpts-clickfix-rat
+//   - https://blackpointcyber.com/blog/romulus-cncmachinerms/
+//   - https://hijacklibs.net/entries/3rd_party/stardock/deelevator64.html
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/cd44704e28312f874bfcdfcae656722035f5fc0c/rules/windows/process_creation/proc_creation_win_susp_stardock_deelevate_non_standard_location.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where ((FolderPath endswith "\\DeElevate64.exe" or FolderPath endswith "\\DeElevate.exe") or ProcessVersionInfoOriginalFileName =~ "DeElevate.exe") and (not((FolderPath startswith "C:\\Program Files\\Stardock\\" or FolderPath startswith "C:\\Program Files (x86)\\Stardock\\")))

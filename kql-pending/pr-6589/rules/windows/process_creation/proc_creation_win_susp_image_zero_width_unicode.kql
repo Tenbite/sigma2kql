@@ -18,7 +18,9 @@
 //   - Executables stored in user folders whose names contain emoji sequences, which use the zero-width joiner (U+200D) to combine emoji
 // References:
 //   - https://github.com/redcanaryco/atomic-red-team/blob/388942adbd9641f4dfdcf079d7efe9a75ec0ac43/atomics/T1027.018/T1027.018.md
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/fb1a1fc96066014224c6550f6447f23689b7661d/rules/windows/process_creation/proc_creation_win_susp_image_zero_width_unicode.yml
+//   - https://web.archive.org/web/20261023025036/https://www.koi.ai/blog/glassworm-first-self-propagating-worm-using-invisible-code-hits-openvsx-marketplace
+//   - https://web.archive.org/web/20260717080454/https://www.koi.ai/blog/glassworm-goes-mac-fresh-infrastructure-new-tricks
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/f7b4a56fde5241eb6dfa60267d270bb45ac46009/rules/windows/process_creation/proc_creation_win_susp_image_zero_width_unicode.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)
