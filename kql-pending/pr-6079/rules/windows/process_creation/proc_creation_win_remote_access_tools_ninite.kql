@@ -1,0 +1,29 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6079 new: Remote Management Tool - Ninite Execution From Suspicious Context & improve: End User Consent To Application - context, references, FP 
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6079
+// Pull request author: Lorygold
+// Change: new rule
+// Title: Remote Management Tool - Ninite Execution From Suspicious Context
+// Sigma ID: 61593e56-df93-4299-86be-3c4bc7bd93a5
+// Status: experimental | Level: medium
+// Author: Lorena Goldoni
+// Date: 2026-06-23 | Modified: -
+// ATT&CK: command-and-control, T1219, execution, T1072
+// Description: Detects execution of the Ninite / Ninite Pro software deployment tool from a suspicious parent
+//   (browser, mail client, msiexec or script host) or from a user-writable path. Ninite is a
+//   legitimate patch and software deployment utility that adversaries abuse to silently install
+//   software, including as a foothold delivered through phishing or OAuth consent abuse.
+// False positives:
+//   - Authorized use of Ninite for patch management, especially when launched by an RMM agent or a scheduled task. Baseline its normal parents and paths before deploying broadly.
+// References:
+//   - https://ninite.com/help/features/switches.html
+//   - https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-025a
+//   - https://github.com/magicsword-io/LOLRMM
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/5cb9d793be6205179028f9b748619e56045baa56/rules/windows/process_creation/proc_creation_win_remote_access_tools_ninite.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (FolderPath endswith "\\NiniteOne.exe" or FolderPath endswith "\\NinitePro.exe" or FolderPath endswith "\\NiniteAgent.exe" or FolderPath endswith "\\Ninite.exe") and ((InitiatingProcessFolderPath endswith "\\chrome.exe" or InitiatingProcessFolderPath endswith "\\msedge.exe" or InitiatingProcessFolderPath endswith "\\firefox.exe" or InitiatingProcessFolderPath endswith "\\outlook.exe" or InitiatingProcessFolderPath endswith "\\msiexec.exe" or InitiatingProcessFolderPath endswith "\\wscript.exe" or InitiatingProcessFolderPath endswith "\\cscript.exe" or InitiatingProcessFolderPath endswith "\\powershell.exe") or (FolderPath contains "\\Users\\" or FolderPath contains "\\AppData\\" or FolderPath contains "\\Downloads\\" or FolderPath contains "\\Temp\\"))

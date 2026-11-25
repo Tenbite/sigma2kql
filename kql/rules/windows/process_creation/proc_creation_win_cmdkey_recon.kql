@@ -8,10 +8,10 @@
 // False positives:
 //   - Legitimate administrative tasks
 // References:
-//   - https://www.peew.pw/blog/2017/11/26/exploring-cmdkey-an-edge-case-for-privilege-escalation
+//   - https://web.archive.org/web/20230202124626/https://www.peew.pw/blog/2017/11/26/exploring-cmdkey-an-edge-case-for-privilege-escalation
 //   - https://technet.microsoft.com/en-us/library/cc754243(v=ws.11).aspx
 //   - https://github.com/redcanaryco/atomic-red-team/blob/b27a3cb25025161d49ac861cb216db68c46a3537/atomics/T1003.005/T1003.005.md#atomic-test-1---cached-credential-dump-via-cmdkey
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/698f0912f571d5fac3bf8c51f5421139834a011c/rules/windows/process_creation/proc_creation_win_cmdkey_recon.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/876eb7b8cfbcce4d690dff8c3439ecdc7dc8175f/rules/windows/process_creation/proc_creation_win_cmdkey_recon.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)

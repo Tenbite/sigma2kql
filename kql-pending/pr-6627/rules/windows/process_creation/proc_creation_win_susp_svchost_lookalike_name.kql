@@ -22,7 +22,9 @@
 // References:
 //   - https://www.zscaler.com/blogs/cybersecurity-best-practices/process-masquerading
 //   - https://github.com/elastic/detection-rules/blob/f4ef34b1c996da53880053dd497ca546c1b0bbfa/rules/windows/defense_evasion_masquerading_as_svchost.toml
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/5105b0ab719b5c008ec7cad7fbe65e7e8aec3015/rules/windows/process_creation/proc_creation_win_susp_svchost_lookalike_name.yml
+//   - https://trendmicro.com/vinfo/us/threat-encyclopedia/malware/worm_sohanad.yso
+//   - https://www.kaspersky.com/resource-center/threats/dealing-with-svchost-exe-virus-sneak-attack
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/4e4b53a6734da781c4df3b8cc024f13894a396dc/rules/windows/process_creation/proc_creation_win_susp_svchost_lookalike_name.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

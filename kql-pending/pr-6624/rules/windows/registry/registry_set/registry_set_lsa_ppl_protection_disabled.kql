@@ -21,7 +21,9 @@
 //   - https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection
 //   - https://github.com/redcanaryco/atomic-red-team/blob/04a53f0150b6215b5b47d2c13a3f882942fd289d/atomics/T1685/T1685.md
 //   - https://github.com/elastic/detection-rules/blob/f4ef34b1c996da53880053dd497ca546c1b0bbfa/rules/windows/defense_evasion_lsass_ppl_disabled_registry.toml
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/e43a498ead3234e323f6c380c8534fa724d744ff/rules/windows/registry/registry_set/registry_set_lsa_ppl_protection_disabled.yml
+//   - https://itm4n.github.io/lsass-runasppl/
+//   - https://www.scip.ch/en/?labs.20200116=
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/d101a5b65e9e12b33ed62f166a7ec2594a6e5c5d/rules/windows/registry/registry_set/registry_set_lsa_ppl_protection_disabled.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

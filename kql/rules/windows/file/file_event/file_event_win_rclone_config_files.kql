@@ -8,8 +8,8 @@
 // False positives:
 //   - Legitimate Rclone usage
 // References:
-//   - https://research.nccgroup.com/2021/05/27/detecting-rclone-an-effective-tool-for-exfiltration/
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/698f0912f571d5fac3bf8c51f5421139834a011c/rules/windows/file/file_event/file_event_win_rclone_config_files.yml
+//   - https://www.nccgroup.com/research/detecting-rclone-an-effective-tool-for-exfiltration/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/876eb7b8cfbcce4d690dff8c3439ecdc7dc8175f/rules/windows/file/file_event/file_event_win_rclone_config_files.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)

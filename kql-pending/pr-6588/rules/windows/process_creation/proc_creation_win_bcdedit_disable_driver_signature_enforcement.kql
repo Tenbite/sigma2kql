@@ -19,7 +19,10 @@
 //   - https://learn.microsoft.com/en-us/windows-hardware/drivers/install/the-testsigning-boot-configuration-option
 //   - https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/bcdedit--set
 //   - https://github.com/redcanaryco/atomic-red-team/blob/388942adbd9641f4dfdcf079d7efe9a75ec0ac43/atomics/T1553.006/T1553.006.md
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/97b1ace05e90f37f54caee17898064def2e18219/rules/windows/process_creation/proc_creation_win_bcdedit_disable_driver_signature_enforcement.yml
+//   - https://www.virusbulletin.com/uploads/pdf/magazine/2016/VB2016-Cherepanov-Lipovsky.pdf
+//   - https://github.com/HoShiMin/Kernel-Bridge/blob/44b130690c5af5c0eb93d54c435087ffad4c79ab/README.md
+//   - https://github.com/maldevel/driver-loader/blob/ffa6da4cea6e43c427b3e0e5ffed269feb3d6607/README.md
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/15de08533dd638e6bc6ac7b416ae074ab9b12e56/rules/windows/process_creation/proc_creation_win_bcdedit_disable_driver_signature_enforcement.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

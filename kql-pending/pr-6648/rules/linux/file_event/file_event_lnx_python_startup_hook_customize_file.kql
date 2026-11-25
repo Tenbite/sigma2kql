@@ -19,7 +19,9 @@
 //   - https://docs.python.org/3/library/site.html
 //   - https://dfir.ch/posts/publish_python_pth_extension/
 //   - https://github.com/redcanaryco/atomic-red-team/blob/388942adbd9641f4dfdcf079d7efe9a75ec0ac43/atomics/T1546.018/T1546.018.md
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/a3fb526c2adfcb4fae2e4fe3dc8cb15123c781e0/rules/linux/file_event/file_event_lnx_python_startup_hook_customize_file.yml
+//   - https://blog.talosintelligence.com/the-serpents-tongue-luring-the-python-out-of-its-den/
+//   - https://securitylabs.datadoghq.com/articles/litellm-compromised-pypi-docker/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/916b43c3d4e63a69bebd374eebcc95731dc1c8e4/rules/linux/file_event/file_event_lnx_python_startup_hook_customize_file.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

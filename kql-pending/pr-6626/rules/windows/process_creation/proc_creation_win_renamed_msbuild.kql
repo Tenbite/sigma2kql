@@ -19,7 +19,9 @@
 // References:
 //   - https://lolbas-project.github.io/lolbas/Binaries/Msbuild/
 //   - https://github.com/elastic/detection-rules/blob/f4ef34b1c996da53880053dd497ca546c1b0bbfa/rules/windows/defense_evasion_execution_msbuild_started_renamed.toml
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/4a8f1c6fe7cc5e027ac2f07e2bae99969506dfa7/rules/windows/process_creation/proc_creation_win_renamed_msbuild.yml
+//   - https://asec.ahnlab.com/en/93290/
+//   - https://lab52.io/blog/plugx-meeting-invitation-via-msbuild-and-gdata/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/5b5f3371caf1b460acf58b6765ddb97f6a2ccddd/rules/windows/process_creation/proc_creation_win_renamed_msbuild.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

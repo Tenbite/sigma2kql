@@ -22,7 +22,9 @@
 //   - https://research.ifcr.dk/certipy-4-0-esc9-esc10-bloodhound-gui-new-authentication-and-request-methods-and-more-7237d88061f7
 //   - https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation
 //   - https://support.microsoft.com/en-us/topic/kb5014754-certificate-based-authentication-changes-on-windows-domain-controllers-ad2c23b0-15d8-4340-a468-4d4f3b188f16
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/f669b19474f70bf0caf3142411b7509cf48c96b5/rules/windows/registry/registry_set/registry_set_dc_weak_certificate_mapping.yml
+//   - https://hackingarticles.in/adcs-esc10-weak-certificate-mapping/
+//   - https://specterops.io/blog/2022/11/09/certificates-and-pwnage-and-patches-oh-my/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/75bad3a038d40e8621387e4e551df739ec4bb014/rules/windows/registry/registry_set/registry_set_dc_weak_certificate_mapping.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

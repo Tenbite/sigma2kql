@@ -19,7 +19,8 @@
 // References:
 //   - https://www.welivesecurity.com/2020/05/21/no-game-over-winnti-group/
 //   - https://github.com/redcanaryco/atomic-red-team/blob/388942adbd9641f4dfdcf079d7efe9a75ec0ac43/atomics/T1547.012/T1547.012.md
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/a7d493226e6b3693a3a861a29d5670ef717515da/rules/windows/registry/registry_set/registry_set_persistence_print_processor.yml
+//   - https://www.welivesecurity.com/2021/06/09/gelsemium-when-threat-actors-go-gardening/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/6ea3e46c370227ea44b107f3bab690095317d8d9/rules/windows/registry/registry_set/registry_set_persistence_print_processor.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)
