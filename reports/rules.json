@@ -18078,7 +18078,7 @@
  },
  "rules/windows/image_load/image_load_side_load_non_existent_dlls.yml": {
   "logsource": "windows/image_load",
-  "reason": "SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: Signed",
+  "reason": "SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: SignatureStatus. Invalid SigmaDetectionItem field name encountered: Signature. Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem",
   "result": "failed",
   "title": "Potential DLL Sideloading Of Non-Existent DLLs From System Folders"
  },

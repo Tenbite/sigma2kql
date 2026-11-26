@@ -1,0 +1,31 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6542 Add Linux rule: Potential Shell Or Command Execution Via Tar
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6542
+// Pull request author: rafaelsoje
+// Change: new rule
+// Title: Suspicious Child Process Spawned By Tar
+// Sigma ID: a6f9e1fc-83d2-4b2e-a7e6-30c1f2e8b4d9
+// Status: experimental | Level: high
+// Author: Swachchhanda Shrawan Poudel (Nextron Systems)
+// Date: 2026-11-26 | Modified: -
+// ATT&CK: execution, privilege-escalation, T1059.004, T1548.003
+// Description: Detects suspicious child processes spawned by the "tar" utility, such as shells or scripting
+//   interpreters. This may indicate exploitation of GTFOBins techniques via "--checkpoint-
+//   action=exec" or "--to-command" flags, wildcard injection attacks, or sudoers misconfiguration
+//   abuse to achieve command execution or privilege escalation.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://gtfobins.github.io/gtfobins/tar/
+//   - https://www.helpnetsecurity.com/2014/06/27/exploiting-wildcards-on-linux/
+//   - https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/wildcards-spare-tricks.html#tar
+//   - https://git.savannah.gnu.org/cgit/tar.git/tree/src/system.c
+//   - https://git.savannah.gnu.org/cgit/tar.git/tree/src/checkpoint.c
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/70c844e4feb4de0eccb6923d4061b8cb7a7c17ce/rules/linux/process_creation/proc_creation_lnx_susp_tar_children.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where InitiatingProcessFolderPath endswith "/tar" and ((FolderPath endswith "/ash" or FolderPath endswith "/csh" or FolderPath endswith "/fish" or FolderPath endswith "/ksh" or FolderPath endswith "/zsh") or ProcessCommandLine matches regex "(?:^|\\s)-c\\s+['\"]?(/(usr/)?bin/)?(ash|bash|busybox|csh|dash|fish|ksh|mksh|rbash|sh|tcsh|zsh)(?:\\s|['\";|&<>()]|$)" or (ProcessCommandLine contains "chgrp" or ProcessCommandLine contains "chown" or ProcessCommandLine contains "cronjob" or ProcessCommandLine contains "crontab" or ProcessCommandLine contains "curl" or ProcessCommandLine contains "ncat" or ProcessCommandLine contains "netcat" or ProcessCommandLine contains "perl" or ProcessCommandLine contains "php" or ProcessCommandLine contains "python" or ProcessCommandLine contains "ruby" or ProcessCommandLine contains "wget" or ProcessCommandLine contains "whoami"))

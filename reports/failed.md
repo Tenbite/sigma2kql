@@ -103,6 +103,7 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 | No table for log source `sql/application` | 1 |
 | No table for log source `velocity/application` | 1 |
 | No table for log source `database` | 1 |
+| No table for log source `m365/exchange` | 1 |
 | No table for log source `m365/threat_detection` | 1 |
 | No table for log source `cisco/duo` | 1 |
 | No table for log source `linux/clamav` | 1 |
@@ -147,7 +148,6 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 | No table for log source `windows/sysmon` | 1 |
 | No table for log source `windows/sysmon_error` | 1 |
 | No table for log source `windows/sysmon_status` | 1 |
-| No table for log source `m365/exchange` | 1 |
 
 ## By rule
 
@@ -1056,7 +1056,7 @@ Fix the most common ones first by adding a field mapping to `pipelines/custom.ym
 - `rules/windows/image_load/image_load_lsass_unsigned_image_load.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: Signed
 - `rules/windows/image_load/image_load_side_load_keyscrambler.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: Signature. Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: Signed
 - `rules/windows/image_load/image_load_side_load_mfdetours_unsigned.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: SignatureStatus. Invalid SigmaDetectionItem field name encountered: Signature. Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem
-- `rules/windows/image_load/image_load_side_load_non_existent_dlls.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: Signed
+- `rules/windows/image_load/image_load_side_load_non_existent_dlls.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: SignatureStatus. Invalid SigmaDetectionItem field name encountered: Signature. Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem
 - `rules/windows/image_load/image_load_side_load_python.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: SignatureStatus. Invalid SigmaDetectionItem field name encountered: Signature. Invalid SigmaDetectionItem
 - `rules/windows/image_load/image_load_side_load_vmguestlib.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: SignatureStatus. Invalid SigmaDetectionItem fi
 - `rules/windows/image_load/image_load_side_load_vmmap_dbghelp_signed.yml` — SigmaTransformationError: Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name encountered: Signed. Invalid SigmaDetectionItem field name 

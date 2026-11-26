@@ -3,23 +3,20 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-25 17:22 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-26 17:04 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+
+## [#6673](https://github.com/SigmaHQ/sigma/pull/6673) Add logsource definition for the CommandLine requirement in two Exchange file_event rules
+
+| Rule | Change | Level |
+|---|---|---|
+| [Suspicious ASPX File Drop by Exchange](pr-6673/rules/windows/file/file_event/file_event_win_exchange_webshell_drop.kql) | update to existing rule | high |
+| [Suspicious File Drop by Exchange](pr-6673/rules/windows/file/file_event/file_event_win_exchange_webshell_drop_suspicious.kql) | update to existing rule | medium |
 
 ## [#6669](https://github.com/SigmaHQ/sigma/pull/6669) fix: catastrophic backtracking in three Invoke-Obfuscation VAR+ Launcher rules
 
 | Rule | Change | Level |
 |---|---|---|
 | [Invoke-Obfuscation VAR+ Launcher](pr-6669/rules/windows/process_creation/proc_creation_win_hktl_invoke_obfuscation_var.kql) | update to existing rule | high |
-
-## [#6668](https://github.com/SigmaHQ/sigma/pull/6668) new: ROMULUS ClickFix delivery platform rules (MSI install, delivery URLs, DeElevate64 Run key, decimal DWORD IP download, Stardock sideload
-
-| Rule | Change | Level |
-|---|---|---|
-| [ROMULUS Silent MSI Install From PowerShell Staged In Temp](pr-6668/rules-emerging-threats/2026/Malware/ROMULUS/proc_creation_win_malware_romulus_msiexec_hex_temp_msi.kql) | new rule | high |
-| [ROMULUS Run Key Persistence Via DeElevate64.EXE](pr-6668/rules-emerging-threats/2026/Malware/ROMULUS/registry_set_malware_romulus_deelevate64_run_key.kql) | new rule | high |
-| [Potential DeElevator64.DLL Sideloading](pr-6668/rules/windows/image_load/image_load_side_load_stardock_deelevator64.kql) | new rule | medium |
-| [PowerShell Download From Decimal DWORD IP URL](pr-6668/rules/windows/process_creation/proc_creation_win_powershell_download_decimal_dword_ip.kql) | new rule | high |
-| [Stardock DeElevate Binary Execution From Non-Standard Location](pr-6668/rules/windows/process_creation/proc_creation_win_susp_stardock_deelevate_non_standard_location.kql) | new rule | medium |
 
 ## [#6667](https://github.com/SigmaHQ/sigma/pull/6667) new: DRV File Created In User AppData Folder
 
@@ -359,7 +356,8 @@ Rebuilt 2026-11-25 17:22 UTC from 300 open pull requests. When a pull request is
 
 | Rule | Change | Level |
 |---|---|---|
-| [Potential Shell Or Command Execution Via Tar](pr-6542/rules/linux/process_creation/proc_creation_lnx_tar_shell_execution.kql) | new rule | high |
+| [Suspicious Child Process Spawned By Tar](pr-6542/rules/linux/process_creation/proc_creation_lnx_susp_tar_children.kql) | new rule | high |
+| [Command Execution Attempt via Tar - Linux](pr-6542/rules/linux/process_creation/proc_creation_lnx_tar_cmd_execution.kql) | new rule | medium |
 
 ## [#6540](https://github.com/SigmaHQ/sigma/pull/6540) Sigma: PavinLoader fake-driver MSI campaign (MSBuild from %LOCALAPPDATA%, MSBUILDENABLEALLPROPERTYFUNCTIONS, fake dllhost/taskhostw tasks, m
 
@@ -1363,16 +1361,4 @@ Rebuilt 2026-11-25 17:22 UTC from 300 open pull requests. When a pull request is
 | Rule | Change | Level |
 |---|---|---|
 | [DinDoor Backdoor Deno Remote JavaScript Execution From PowerShell](pr-6083/rules-emerging-threats/2026/Malware/DinDoor-Backdoor/proc_creation_win_malware_dindoor_deno_remote_js.kql) | new rule | medium |
-
-## [#6079](https://github.com/SigmaHQ/sigma/pull/6079) new: Remote Management Tool - Ninite Execution From Suspicious Context & improve: End User Consent To Application - context, references, FP 
-
-| Rule | Change | Level |
-|---|---|---|
-| [Remote Management Tool - Ninite Execution From Suspicious Context](pr-6079/rules/windows/process_creation/proc_creation_win_remote_access_tools_ninite.kql) | new rule | medium |
-
-## [#6078](https://github.com/SigmaHQ/sigma/pull/6078) new: Potential Browser Cache Smuggling Payload Extraction
-
-| Rule | Change | Level |
-|---|---|---|
-| [Potential Browser Cache Smuggling Payload Extraction](pr-6078/rules/windows/process_creation/proc_creation_win_browser_cache_smuggling_extraction.kql) | new rule | medium |
 

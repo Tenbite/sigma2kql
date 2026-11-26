@@ -1,21 +1,23 @@
 # Pending rules run
 
-- Run: 2026-11-25 17:22 UTC
+- Run: 2026-11-26 17:04 UTC
 - Open pull requests checked: 300 (drafts skipped: 4)
-- Pull requests with converted rules: 174
+- Pull requests with converted rules: 172
 
 | Result | Rule files |
 |---|---|
-| Converted and valid | 501 |
+| Converted and valid | 497 |
 | Failed validation | 5 |
-| Failed conversion | 311 |
-| Skipped (filters) | 58 |
+| Failed conversion | 313 |
+| Skipped (filters) | 57 |
 
 ## Not converted
 
+- #6672 `rules/cloud/aws/cloudtrail/aws_cloudtrail_eks_admin_access_policy_associated.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6671 `rules/cloud/aws/cloudtrail/aws_cloudtrail_s3_object_encrypted_with_sse_c.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
+- #6670 `rules/cloud/m365/audit/microsoft365_exchange_add_mailboxpermission.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6669 `rules/windows/powershell/powershell_module/posh_pm_invoke_obfuscation_var.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6669 `rules/windows/powershell/powershell_script/posh_ps_invoke_obfuscation_var.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
-- #6668 `rules-emerging-threats/2026/Malware/ROMULUS/proxy_malware_romulus_delivery_urls.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6661 `rules/cloud/azure/signin_logs/azure_account_lockout_correct_password.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6660 `rules-emerging-threats/2026/Malware/FluxEngine/proxy_malware_fluxengine_cloudflare_api_dead_drop.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:
 - #6660 `rules-emerging-threats/2026/Malware/FluxEngine/proxy_malware_fluxengine_stage_url_msie8_ua.yml`: SigmaTransformationError: Unable to determine table name from rule.  The query table is determined in the following order of priority:

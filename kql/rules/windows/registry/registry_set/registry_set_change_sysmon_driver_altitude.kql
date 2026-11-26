@@ -13,7 +13,7 @@
 //   - https://youtu.be/zSihR3lTf7g
 //   - https://github.com/trustedsec/SysmonCommunityGuide/blob/557dbd51b98952bc26f698620e48dfc7833b5cf0/chapters/the-sysmon-driver.md
 //   - https://medium.com/@matterpreter/shhmon-silencing-sysmon-via-driver-unload-682b5be57650
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/698f0912f571d5fac3bf8c51f5421139834a011c/rules/windows/registry/registry_set/registry_set_change_sysmon_driver_altitude.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/876eb7b8cfbcce4d690dff8c3439ecdc7dc8175f/rules/windows/registry/registry_set/registry_set_change_sysmon_driver_altitude.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)

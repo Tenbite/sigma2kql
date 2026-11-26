@@ -11,7 +11,7 @@
 // References:
 //   - https://twitter.com/med0x2e/status/1520402518685200384
 //   - https://github.com/elastic/detection-rules/blob/dd224fb3f81d0b4bf8593c5f02a029d647ba2b2d/rules/windows/credential_access_relay_ntlm_auth_via_http_spoolss.toml
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/698f0912f571d5fac3bf8c51f5421139834a011c/rules/windows/process_creation/proc_creation_win_rundll32_ntlmrelay.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/876eb7b8cfbcce4d690dff8c3439ecdc7dc8175f/rules/windows/process_creation/proc_creation_win_rundll32_ntlmrelay.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language 12.4.1, live Defender schema)
