@@ -17,8 +17,7 @@
 // References:
 //   - https://gtfobins.github.io/gtfobins/tar/
 //   - https://www.helpnetsecurity.com/2014/06/27/exploiting-wildcards-on-linux/
-//   - https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/wildcards-spare-tricks.html#tar
-// Sigma rule: https://github.com/SigmaHQ/sigma/blob/70c844e4feb4de0eccb6923d4061b8cb7a7c17ce/rules/linux/process_creation/proc_creation_lnx_tar_cmd_execution.yml
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/73fdbbb374825353d1bcf5c984d73910654b6fbe/rules/linux/process_creation/proc_creation_lnx_tar_cmd_execution.yml
 // License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
 // Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
 // Validation: passed (Kusto.Language, Defender schema)

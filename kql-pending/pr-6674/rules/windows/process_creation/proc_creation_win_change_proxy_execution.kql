@@ -1,0 +1,28 @@
+// PENDING: from an OPEN SigmaHQ pull request. Not reviewed or merged by SigmaHQ yet.
+// Pull request: #6674 new: Potential Proxy Execution Via Change.EXE
+// Pull request URL: https://github.com/SigmaHQ/sigma/pull/6674
+// Pull request author: Eduard-exe
+// Change: new rule
+// Title: Potential Proxy Execution Via Change.EXE
+// Sigma ID: d352d46b-9569-4d0a-be3e-94467981788b
+// Status: experimental | Level: high
+// Author: Eduard Marian
+// Date: 2026-11-27 | Modified: -
+// ATT&CK: stealth, T1218
+// Description: Detects Change.EXE spawning one of its helper binaries (chglogon.exe, chgport.exe, chgusr.exe)
+//   from a location other than the Windows system directories. Change.EXE launches the helper that
+//   matches its first argument (logon, port, user) from its own folder. Attackers can copy
+//   Change.EXE to a writable folder next to a payload renamed to one of these helpers, so the
+//   payload runs as a child of a signed Microsoft binary.
+// False positives:
+//   - Unlikely
+// References:
+//   - https://lolbas-project.github.io/lolbas/Binaries/Change/
+// Sigma rule: https://github.com/SigmaHQ/sigma/blob/264a390f7fbdc9a29f7e58ead2c4a0718df23af0/rules/windows/process_creation/proc_creation_win_change_proxy_execution.yml
+// License: Detection Rule License (DRL) 1.1 - https://github.com/SigmaHQ/Detection-Rule-License
+// Converted by sigma2kql (target: microsoft_xdr, pySigma 1.5.1, pySigma-backend-kusto 1.0.1)
+// Validation: passed (Kusto.Language, Defender schema)
+// Machine-generated and not tested against real telemetry. Verify before use as a detection.
+
+DeviceProcessEvents
+| where (InitiatingProcessFolderPath endswith "\\change.exe" and (FolderPath endswith "\\chglogon.exe" or FolderPath endswith "\\chgport.exe" or FolderPath endswith "\\chgusr.exe")) and (not((FolderPath startswith "C:\\Windows\\System32\\" or FolderPath startswith "C:\\Windows\\SysWOW64\\")))

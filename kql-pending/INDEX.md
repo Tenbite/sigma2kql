@@ -3,7 +3,13 @@
 > [!CAUTION]
 > These rules come from **open pull requests that SigmaHQ has not reviewed or merged**. They may change, be rejected, or be wrong. Machine-converted and untested. Use for early hunting only.
 
-Rebuilt 2026-11-26 17:04 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+Rebuilt 2026-11-27 16:49 UTC from 300 open pull requests. When a pull request is merged or closed, its pending rules are removed automatically on the next run.
+
+## [#6674](https://github.com/SigmaHQ/sigma/pull/6674) new: Potential Proxy Execution Via Change.EXE
+
+| Rule | Change | Level |
+|---|---|---|
+| [Potential Proxy Execution Via Change.EXE](pr-6674/rules/windows/process_creation/proc_creation_win_change_proxy_execution.kql) | new rule | high |
 
 ## [#6673](https://github.com/SigmaHQ/sigma/pull/6673) Add logsource definition for the CommandLine requirement in two Exchange file_event rules
 
